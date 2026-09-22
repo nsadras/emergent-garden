@@ -30,8 +30,13 @@ class EcologyWorld(World):
             "memory_reset",
             "no_recycling",
             "no_attacks",
+            "no_cue",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
+        if (ablation == "no_cue" and config.ecology_version < 3) or (
+            ablation == "no_attacks" and config.ecology_version < 2
+        ):
+            raise ValueError("Ablation requires a version containing that feature")
         self.rng = {
             name: torch.Generator(device=self.device).manual_seed(seed + 104729 * i)
             for i, name in enumerate(("world", "initial", "mutation", "birth", "evaluation"))
@@ -62,8 +67,15 @@ class EcologyWorld(World):
         c = self.config
         self.sensor_angles = torch.tensor([-135, -45, 45, 135], device=self.device) * math.pi / 180
         self.fields = [SmellField(c, self.device) for _ in range(2 + (c.ecology_version >= 2))]
+        if c.ecology_version >= 3:
+            self.fields.append(SmellField(c, self.device))
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
+        self.patch_phases = (
+            self.rand((c.patches,)) * c.patch_period
+            if c.ecology_version >= 3
+            else torch.zeros(c.patches, device=self.device)
+        )
         self.food_pos = torch.empty((0, 2), device=self.device)
         self.food_energy = torch.empty(0, device=self.device)
         self.food_expiry = torch.empty(0, dtype=torch.long, device=self.device)
@@ -103,6 +115,8 @@ class EcologyWorld(World):
         if c.ecology_version >= 2:
             for key in ("attack", "armor", "meat_acquired", "bitten"):
                 a[key] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 3:
+            a["memory_tau"] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -120,6 +134,8 @@ class EcologyWorld(World):
         a["diet"] = traits[:, 2]
         if self.config.ecology_version >= 2:
             a["attack"], a["armor"] = traits[:, 3], traits[:, 4]
+        if self.config.ecology_version >= 3:
+            a["memory_tau"] = 0.2 + 4.8 * traits[:, 5]
 
     def patch_stock(self):
         stock = torch.zeros(self.config.patches, device=self.device)
@@ -162,6 +178,11 @@ class EcologyWorld(World):
         c = self.config
         pos = self.disk(n, c.diameter / 2 - c.food_radius)
         patch = torch.randint(c.patches, (n,), generator=self.rng["world"], device=self.device)
+        if c.ecology_version >= 3 and hasattr(self, "agents"):
+            activity = self.patch_activity()
+            if not bool(activity.sum() > 0):
+                return
+            patch = torch.multinomial(activity, n, replacement=True, generator=self.rng["world"])
         offsets = self.disk(n, c.patch_radius) - c.diameter / 2
         clustered = self.rand((n,)) < c.patch_fraction
         stock = self.patch_stock()
@@ -177,6 +198,18 @@ class EcologyWorld(World):
         self.append_food(pos[keep], energy, 0, patch[keep])
         self.totals["food_spawned"] += energy.double().sum().item()
 
+    def patch_activity(self):
+        c = self.config
+        phase = (self.time + self.patch_phases) % c.patch_period
+        duty = c.resource_burst / c.patch_period
+        return c.resource_floor + (phase < c.resource_burst).float() * (1 - c.resource_floor) / duty
+
+    def patch_cues(self):
+        c = self.config
+        phase = (self.time + self.patch_phases) % c.patch_period
+        end = c.patch_period - c.cue_lead
+        return (phase >= end - c.cue_duration) & (phase < end)
+
     def rebuild_fields(self):
         for kind, field in enumerate(self.fields[:2]):
             mask = (self.food_kind == kind) & (self.food_ready <= self.tick)
@@ -184,6 +217,16 @@ class EcologyWorld(World):
         if self.config.ecology_version >= 2:
             self.fields[2].rebuild(
                 self.agents["pos"], self.config.food_energy * self.agents["area"]
+            )
+        if self.config.ecology_version >= 3:
+            cues = self.patch_cues()
+            self.fields[3].rebuild(
+                self.patch_positions[cues],
+                torch.full(
+                    (int(cues.sum()),),
+                    self.config.food_energy * self.config.cue_strength,
+                    device=self.device,
+                ),
             )
 
     def sensors(self, index):
@@ -196,10 +239,10 @@ class EcologyWorld(World):
             centers = self.disk(len(index), c.diameter / 2 - c.body_radius * 1.3, "evaluation")
             pos = pos - a["pos"][index, None] + centers[:, None]
         channels = []
-        for field in self.fields:
+        for channel, field in enumerate(self.fields):
             smell = field.sample(pos)
             smell = smell / (smell + c.smell_scale)
-            if self.ablation == "disabled":
+            if self.ablation == "disabled" or (self.ablation == "no_cue" and channel == 3):
                 smell.zero_()
             channels.append(smell)
         channels.extend(
@@ -226,7 +269,8 @@ class EcologyWorld(World):
         if self.ablation == "memory_reset":
             a["h"][index] = 0
         if self.controller == "neural":
-            hidden, actions = advance(c, a["genome"][index], inputs, a["h"][index])
+            tau = a["memory_tau"][index] if c.ecology_version >= 3 else None
+            hidden, actions = advance(c, a["genome"][index], inputs, a["h"][index], tau)
             a["h"][index], a["actions"][index] = hidden, actions
         elif self.controller == "random":
             a["actions"][index] = self.rand((len(index), c.output_size), "evaluation")
@@ -383,6 +427,8 @@ class EcologyWorld(World):
         for key in ("attack", "armor", "meat_acquired", "bitten"):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
+        if "memory_tau" in self.agents:
+            result["memory_tau"] = self.agents["memory_tau"][index].item()
         return result
 
     def mutate(self, genome):
@@ -483,7 +529,8 @@ class EcologyWorld(World):
             expired = self.food_expiry <= self.tick
             self.totals["food_expired"] += self.food_energy[expired].double().sum().item()
             self.filter_food(~expired)
-            self.spawn_accumulator += c.food_rate * c.dt
+            activity = self.patch_activity().mean().item() if c.ecology_version >= 3 else 1.0
+            self.spawn_accumulator += c.food_rate * c.dt * activity
             n = int(self.spawn_accumulator + 1e-9)
             self.spawn_accumulator -= n
             self.spawn_food(n)
@@ -525,6 +572,9 @@ class EcologyWorld(World):
             result["mean_armor"] = a["armor"].mean().item() if n else 0
             fraction = a["meat_acquired"] / a["acquired"].clamp_min(1e-20)
             result["meat_eaters"] = int(((fraction > 0.2) & (a["acquired"] > 20)).sum())
+        if c.ecology_version >= 3:
+            result["mean_memory_tau"] = a["memory_tau"].mean().item() if n else 0
+            result["cue_patches"] = int(self.patch_cues().sum())
         result["patch_stock"] = self.patch_stock().tolist()
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
@@ -573,6 +623,7 @@ class EcologyWorld(World):
             "food_kind",
             "food_patch",
             "patch_positions",
+            "patch_phases",
             "founders",
         ):
             result[key] = getattr(self, key).clone()
@@ -604,13 +655,15 @@ class EcologyWorld(World):
             "food_kind",
             "food_patch",
             "patch_positions",
+            "patch_phases",
             "founders",
         ):
-            value = (
-                torch.zeros_like(state["food_expiry"])
-                if key == "food_ready" and key not in state
-                else state[key]
-            )
+            if key == "food_ready" and key not in state:
+                value = torch.zeros_like(state["food_expiry"])
+            elif key == "patch_phases" and key not in state:
+                value = torch.zeros(self.config.patches)
+            else:
+                value = state[key]
             setattr(self, key, value.to(device).clone())
         self.sensor_angles = torch.tensor([-135, -45, 45, 135], device=self.device) * math.pi / 180
         self.fields = [SmellField(self.config, self.device) for _ in state["fields"]]

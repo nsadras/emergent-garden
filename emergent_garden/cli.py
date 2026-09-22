@@ -12,6 +12,7 @@ import torch
 
 from .config import Config
 from .experiments import calibration, community_assay, evaluate
+from .probes import probe_run
 from .runtime import StopFlag
 from .storage import RunStore, load_checkpoint, runtime_metadata
 from .world import create_world as World
@@ -206,6 +207,12 @@ def parser():
     assay.add_argument("--seconds", type=float, default=180)
     assay.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
     assay.add_argument("--modes", nargs="+", default=["none", "disabled", "no_recycling"])
+    probe = sub.add_parser("probe", help="Measure history dependence after a vanished forecast cue")
+    probe.add_argument("run", type=Path)
+    probe.add_argument("--output", type=Path, required=True)
+    probe.add_argument("--genomes", type=int, default=64)
+    probe.add_argument("--delays", type=float, nargs="+", default=[1.0, 3.0, 6.0])
+    probe.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
     return root
 
 
@@ -271,6 +278,8 @@ def main():
                 args.modes,
                 stop,
             )
+        elif args.command == "probe":
+            probe_run(args.run, args.output, args.genomes, args.delays, choose_device(args.device))
     except (ValueError, OSError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return_code = 1

@@ -148,3 +148,70 @@ do not establish evolved pursuit, escape, or an escalating arms race.
 Artifacts: `runs/v2-pilot`, `runs/v2-assay`, `runs/v2-video` (30-second MP4).
 [Compact evidence](docs/results/v2.json). Decision: retain predation at its tested
 costs, then introduce forecast cues and direct tests of history dependence.
+
+### V3 design — forecast cues and history probes
+
+Patch supply now bursts for 10 seconds of each 60-second cycle, with 15% of the
+mean supply rate between bursts. Burst amplitude preserves mean *offered*
+supply; actual injected food still respects patch caps. Patch phases are seeded
+independently. A distinct chemical cue lasts 2 seconds and ends 3 seconds before
+the next burst. A sixth trait controls the recurrent integration time constant
+between 0.2 and 5 seconds (with gene bounds narrowing the reachable interval).
+
+The first pilot retained the old 180-second food lifetime. That allows food to
+outlast three cycles and can leave an immediate food cue throughout the waiting
+period. A second experiment shortens fresh-food lifetime to **18 seconds**, while
+retaining the other settings. Both experiments are preserved. Detritus retains
+its separate 240-second lifetime and maturation delay.
+
+`garden probe RUN --output FILE.json` supplies paired left/right forecast-cue
+histories to the same sampled controller and then identical observations for
+1, 3, and 6 seconds. It reports motor history effects and whether their sign
+points toward the past cue, with state-reset controls. This is an isolated
+controller probe, not a claim of successful navigation. Community assays add
+`no_cue` and `memory_reset` treatments. State resets alter ordinary dynamics as
+well as stored information; performance changes alone cannot prove useful memory.
+
+[Zou et al.](https://arxiv.org/abs/2102.12638) evolved recurrent controllers in an
+explicit spatial/working-memory maze task. Their result motivates testing history
+directly, but differs from our ecology and does not imply spontaneous learning.
+
+V3 passes 47 tests, including forecast timing, mean offered resource supply,
+selective cue removal, history/reset controls, and full checkpoint replay.
+
+| Seed | Seconds | Population | Births | Max generation | Mean neural time constant |
+|---|---:|---:|---:|---:|---:|
+| 11 | 1800 | 40 | 158 | 11 | 1.03 s |
+| 12 | 1800 | 44 | 181 | 6 | 2.38 s |
+| 13 | 1800 | 29 | 149 | 8 | 1.87 s |
+
+These are the revised 18-second fresh-food-lifetime runs. All persisted;
+absolute energy residuals were below 0.033 units. The original long-food pilots
+also persisted, at populations 92/71/79. The shorter lifetime produces a much
+sparser ecology; it is retained as an explicit temporal-pressure experiment.
+
+Seed-11 descendant community assays (three fresh environments, 180 seconds):
+
+| Treatment | Final populations | Births |
+|---|---|---|
+| Normal | 40 / 38 / 37 | 18 / 9 / 21 |
+| Forecast cue removed | 36 / 45 / 38 | 13 / 14 / 27 |
+| Recurrent state reset each update | 3 / 3 / 4 | 1 / 2 / 2 |
+| All chemical sensing removed | 28 / 23 / 23 | 12 / 6 / 16 |
+
+There is a sensory benefit in this sample and a strong dependence on recurrent
+dynamics. **Useful forecast memory is not established**: removing the forecast
+cue has mixed effects. The isolated probe detects a mean absolute turn difference
+of 0.0274 after a 3-second gap, but only 1/39 sampled descendants turns in the
+cue-aligned direction. All reset controls have zero history effect. Intrinsic
+dynamics can support circling or other movement patterns without adaptive recall.
+
+Artifacts: `runs/v3-pilot`, `runs/v3-short-food`, `runs/v3-assay`, `runs/v3-video`.
+[Compact trajectories](docs/results/v3.json) and independent-run probes
+([11](docs/results/v3-probe-11.json), [12](docs/results/v3-probe-12.json),
+[13](docs/results/v3-probe-13.json)) retain the numerical evidence. Additional
+community assays of evolutionary seeds 12/13 test whether the sensory effect
+generalizes; their results will be included in the next checkpoint report.
+
+Decision: preserve the controls and negative forecast result. Proceed to bounded
+developmental morphology to expand the ways creatures can sense and act.

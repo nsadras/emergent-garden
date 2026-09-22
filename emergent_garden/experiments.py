@@ -53,7 +53,9 @@ def calibration(config, output, seeds, seconds, device, controller="neural", sto
 
 
 def trial(config, genome, seed, seconds, device, ablation, stop=None):
-    config = replace(config, initial_population=1, mutation_probability=0.0)
+    config = replace(
+        config, initial_population=1, mutation_probability=0.0, trait_mutation_probability=0.0
+    )
     world = World(config, seed, device, ablation=ablation)
     world.agents["genome"][0] = genome.to(device)
     if config.ecology_version:

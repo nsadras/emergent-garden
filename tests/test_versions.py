@@ -104,7 +104,7 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-@pytest.mark.parametrize("version", [1, 2])
+@pytest.mark.parametrize("version", [1, 2, 3])
 def test_ecology_checkpoint_full_replay(config, tmp_path, version):
     w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
     w.step(17)
@@ -210,3 +210,77 @@ def test_armor_reduces_damage_and_has_maintenance_cost(config):
     armored.hunt()
     assert armored.agents["bitten"][2] < unarmored.agents["bitten"][2]
     assert armored.costs()[0][2] > unarmored.costs()[0][2]
+
+
+def test_forecast_precedes_burst_and_disappears_before_it(config):
+    w = eco(
+        config,
+        ecology_version=3,
+        patches=1,
+        patch_period=12.0,
+        resource_burst=2.0,
+        cue_lead=2.0,
+        cue_duration=1.0,
+    )
+    w.patch_phases.zero_()
+    w.tick = 9 * config.physics_hz
+    assert w.patch_cues().item()
+    assert w.patch_activity().item() == pytest.approx(w.config.resource_floor)
+    w.tick = 11 * config.physics_hz
+    assert not w.patch_cues().item()
+    assert w.patch_activity().item() == pytest.approx(w.config.resource_floor)
+    w.tick = 12 * config.physics_hz
+    assert not w.patch_cues().item()
+    assert w.patch_activity().item() > 1.0
+
+
+def test_cue_ablation_preserves_other_senses(config):
+    w = eco(config, ecology_version=3, initial_food=20)
+    w.fields[3].grid.fill_(10.0)
+    index = torch.arange(w.population)
+    normal = w.sensors(index)
+    w.ablation = "no_cue"
+    ablated = w.sensors(index)
+    assert ablated[:, 12:16].count_nonzero() == 0
+    torch.testing.assert_close(ablated[:, :12], normal[:, :12])
+    torch.testing.assert_close(ablated[:, 16:], normal[:, 16:])
+
+
+def test_probe_separates_history_from_present_input(config):
+    from emergent_garden.probes import cue_probe
+
+    w = eco(config, ecology_version=3, initial_population=1)
+    c = w.config
+    g = torch.zeros_like(w.agents["genome"])
+    g[0, 13], g[0, 14] = -1.0, 1.0
+    output = c.hidden_size * c.input_size + c.hidden_size**2 + c.hidden_size
+    g[0, output], g[0, output + c.hidden_size] = -2.0, 2.0
+    normal = cue_probe(c, g, 3.0)
+    reset = cue_probe(c, g, 3.0, reset=True)
+    assert normal["cue_aligned_turn"][0] > 0.01
+    assert reset["history_effect"] == [0.0]
+
+
+def test_burst_schedule_preserves_mean_offered_supply(config):
+    w = eco(
+        config,
+        ecology_version=3,
+        initial_population=1,
+        patches=1,
+        patch_period=12.0,
+        resource_burst=2.0,
+        cue_lead=2.0,
+        cue_duration=1.0,
+        resource_floor=0.0,
+        patch_capacity=10000.0,
+        food_rate=5.0,
+        basal_cost=0.0,
+        propulsion_cost=0.0,
+    )
+    w.controller = "rest"
+    w.patch_phases.zero_()
+    w.agents["pos"][0] = 25
+    w.patch_positions[0] = 90
+    w.step(12 * config.physics_hz)
+    assert w.totals["food_spawned"] == 5 * 12 * config.food_energy
+    assert abs(w.metrics()["energy_balance_error"]) < 0.001

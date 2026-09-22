@@ -23,6 +23,11 @@ class Config:
     predation_efficiency: float = 0.65
     armor_protection: float = 0.8
     attack_cost: float = 0.25
+    resource_burst: float = 10.0
+    resource_floor: float = 0.15
+    cue_lead: float = 3.0
+    cue_duration: float = 2.0
+    cue_strength: float = 20.0
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -89,7 +94,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2):
+        if self.ecology_version not in (0, 1, 2, 3):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -97,6 +102,14 @@ class Config:
             raise ValueError("Invalid ecology probability")
         if not 0 <= self.predation_efficiency <= 1 or not 0 <= self.armor_protection <= 1:
             raise ValueError("Predation efficiency and armor protection must be in [0, 1]")
+        if not 0 <= self.resource_floor <= 1:
+            raise ValueError("resource_floor must be in [0, 1]")
+        if self.ecology_version >= 3 and (
+            self.resource_burst <= 0
+            or self.cue_duration <= 0
+            or self.resource_burst + self.cue_duration + self.cue_lead >= self.patch_period
+        ):
+            raise ValueError("Burst and cue timing must fit within patch_period")
         if self.initial_population > self.capacity:
             raise ValueError("initial_population must not exceed capacity")
         if self.body_radius >= self.diameter / 2:
@@ -130,6 +143,8 @@ class Config:
 
     @property
     def input_size(self):
+        if self.ecology_version >= 3:
+            return 18
         if self.ecology_version >= 2:
             return 14
         return 10 if self.ecology_version else 6
@@ -140,6 +155,8 @@ class Config:
 
     @property
     def trait_count(self):
+        if self.ecology_version >= 3:
+            return 6
         if self.ecology_version >= 2:
             return 5
         return 3 if self.ecology_version else 0

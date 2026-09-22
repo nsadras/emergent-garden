@@ -24,7 +24,7 @@ def initial_brains(config, count, device, generator):
     return torch.cat(pieces, 1).clamp(-config.weight_limit, config.weight_limit)
 
 
-def advance(config, genome, inputs, hidden):
+def advance(config, genome, inputs, hidden, tau=None):
     h, ni, no = config.hidden_size, config.input_size, config.output_size
     offset = 0
 
@@ -38,6 +38,10 @@ def advance(config, genome, inputs, hidden):
     bias, wo, bo = take(h, (h,)), take(no * h, (no, h)), take(no, (no,))
     drive = (wi @ inputs[..., None]).squeeze(-1)
     drive += (wr @ hidden[..., None]).squeeze(-1) + bias
-    alpha = 1 - math.exp(-1 / (config.controller_hz * config.neural_tau))
+    alpha = (
+        1 - math.exp(-1 / (config.controller_hz * config.neural_tau))
+        if tau is None
+        else 1 - torch.exp(-1 / (config.controller_hz * tau[:, None]))
+    )
     hidden = (1 - alpha) * hidden + alpha * drive.tanh()
     return hidden, ((wo @ hidden[..., None]).squeeze(-1) + bo).sigmoid()
