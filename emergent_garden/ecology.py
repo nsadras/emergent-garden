@@ -12,6 +12,7 @@ import torch
 from .brain import advance, initial_brains
 from .config import Config
 from .field import SmellField
+from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .spatial import neighbors
 from .world import World, genome_hash
 
@@ -31,10 +32,14 @@ class EcologyWorld(World):
             "no_recycling",
             "no_attacks",
             "no_cue",
+            "pooled",
+            "rotated",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
-        if (ablation == "no_cue" and config.ecology_version < 3) or (
-            ablation == "no_attacks" and config.ecology_version < 2
+        if (
+            (ablation == "no_cue" and config.ecology_version < 3)
+            or (ablation == "no_attacks" and config.ecology_version < 2)
+            or (ablation == "pooled" and config.ecology_version < 4)
         ):
             raise ValueError("Ablation requires a version containing that feature")
         self.rng = {
@@ -117,6 +122,9 @@ class EcologyWorld(World):
                 a[key] = torch.zeros(n, device=self.device)
         if c.ecology_version >= 3:
             a["memory_tau"] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 4:
+            a["module_h"] = torch.zeros((n, MAX_MODULES, c.hidden_size), device=self.device)
+            a["module_actions"] = torch.zeros((n, MAX_MODULES, c.output_size), device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -136,6 +144,8 @@ class EcologyWorld(World):
             a["attack"], a["armor"] = traits[:, 3], traits[:, 4]
         if self.config.ecology_version >= 3:
             a["memory_tau"] = 0.2 + 4.8 * traits[:, 5]
+        if self.config.ecology_version >= 4:
+            develop_modules(self.config, a, traits)
 
     def patch_stock(self):
         stock = torch.zeros(self.config.patches, device=self.device)
@@ -230,28 +240,43 @@ class EcologyWorld(World):
             )
 
     def sensors(self, index):
-        a, c = self.agents, self.config
+        if self.config.ecology_version >= 4:
+            values = self.module_sensors(index)
+            mask = self.agents["module_mask"][index]
+            return (values * mask[..., None]).sum(1) / mask.sum(1)[:, None]
+        a = self.agents
         angle = a["heading"][index, None] + self.sensor_angles
         pos = a["pos"][index, None] + a["radius"][index, None, None] * torch.stack(
             (angle.cos(), angle.sin()), -1
         )
+        return self.sense_positions(index, pos)
+
+    def module_sensors(self, index):
+        a = self.agents
+        centers = module_centers(a, index)
+        angle = a["heading"][index, None] + self.sensor_angles
+        around = a["core_radius"][index, None, None] * torch.stack((angle.cos(), angle.sin()), -1)
+        return self.sense_positions(index, centers[:, :, None] + around[:, None])
+
+    def sense_positions(self, index, pos):
+        a, c = self.agents, self.config
+        prefix = pos.shape[:-2]
         if self.ablation == "shuffled":
-            centers = self.disk(len(index), c.diameter / 2 - c.body_radius * 1.3, "evaluation")
-            pos = pos - a["pos"][index, None] + centers[:, None]
+            centers = self.disk(len(index), c.diameter / 2 - c.max_body_radius, "evaluation")
+            shift = (centers - a["pos"][index]).reshape(len(index), *([1] * (pos.ndim - 2)), 2)
+            pos = pos + shift
         channels = []
         for channel, field in enumerate(self.fields):
             smell = field.sample(pos)
             smell = smell / (smell + c.smell_scale)
+            if self.ablation == "rotated":
+                smell = smell.roll(2, dims=-1)
             if self.ablation == "disabled" or (self.ablation == "no_cue" and channel == 3):
                 smell.zero_()
             channels.append(smell)
-        channels.extend(
-            (
-                (a["energy"][index] / (c.max_energy * a["area"][index]))[:, None],
-                a["contact"][index, None],
-            )
-        )
-        return torch.cat(channels, 1)
+        for values in (a["energy"][index] / (c.max_energy * a["area"][index]), a["contact"][index]):
+            channels.append(values.reshape(len(index), *([1] * len(prefix))).expand(*prefix, 1))
+        return torch.cat(channels, -1)
 
     def update_controllers(self):
         a, c = self.agents, self.config
@@ -262,16 +287,42 @@ class EcologyWorld(World):
         )
         if not len(index):
             return
-        inputs = self.sensors(index)
+        module_inputs = self.module_sensors(index) if c.ecology_version >= 4 else None
+        if module_inputs is not None:
+            mask = a["module_mask"][index]
+            inputs = (module_inputs * mask[..., None]).sum(1) / mask.sum(1)[:, None]
+            if self.ablation == "pooled":
+                module_inputs = inputs[:, None].expand(-1, MAX_MODULES, -1)
+        else:
+            inputs = self.sensors(index)
         a["inputs"][index] = inputs
         a["contact"][index] = 0
         a["cold"][index] = False
         if self.ablation == "memory_reset":
             a["h"][index] = 0
+            if c.ecology_version >= 4:
+                a["module_h"][index] = 0
         if self.controller == "neural":
             tau = a["memory_tau"][index] if c.ecology_version >= 3 else None
-            hidden, actions = advance(c, a["genome"][index], inputs, a["h"][index], tau)
-            a["h"][index], a["actions"][index] = hidden, actions
+            if c.ecology_version >= 4:
+                count = len(index)
+                genomes = a["genome"][index, None].expand(-1, MAX_MODULES, -1)
+                times = tau[:, None].expand(-1, MAX_MODULES).reshape(-1)
+                hidden, actions = advance(
+                    c,
+                    genomes.reshape(-1, c.parameter_count),
+                    module_inputs.reshape(-1, c.input_size),
+                    a["module_h"][index].reshape(-1, c.hidden_size),
+                    times,
+                )
+                hidden = hidden.reshape(count, MAX_MODULES, c.hidden_size) * mask[..., None]
+                actions = actions.reshape(count, MAX_MODULES, c.output_size) * mask[..., None]
+                a["module_h"][index], a["module_actions"][index] = hidden, actions
+                a["h"][index] = hidden.sum(1) / mask.sum(1)[:, None]
+                a["actions"][index] = actions.sum(1) / mask.sum(1)[:, None]
+            else:
+                hidden, actions = advance(c, a["genome"][index], inputs, a["h"][index], tau)
+                a["h"][index], a["actions"][index] = hidden, actions
         elif self.controller == "random":
             a["actions"][index] = self.rand((len(index), c.output_size), "evaluation")
         elif self.controller == "rest":
@@ -287,6 +338,10 @@ class EcologyWorld(World):
             turn = (2 * turn).clamp(-1, 1)
             a["actions"][index, :2] = torch.stack((0.7 - turn, 0.7 + turn), 1).clamp(0, 1)
         a["motors"][index] = a["actions"][index, :2]
+        if c.ecology_version >= 4 and self.controller != "neural":
+            a["module_actions"][index] = (
+                a["actions"][index, None] * a["module_mask"][index, :, None]
+            )
 
     def project_walls(self):
         a, c = self.agents, self.config
@@ -298,7 +353,7 @@ class EcologyWorld(World):
 
     def overlap_pairs(self):
         a, c = self.agents, self.config
-        i, j = neighbors(a["pos"], a["pos"], 2.6 * c.body_radius, c.diameter)
+        i, j = neighbors(a["pos"], a["pos"], 2 * c.max_body_radius, c.diameter)
         valid = (i < j) & (
             (a["pos"][i] - a["pos"][j]).norm(dim=1) < a["radius"][i] + a["radius"][j]
         )
@@ -307,9 +362,15 @@ class EcologyWorld(World):
     def move(self):
         a, c = self.agents, self.config
         speed = c.max_speed * a["power"] * a["motors"].mean(1) / a["area"].sqrt()
+        if c.ecology_version >= 4:
+            speed = (
+                c.max_speed * a["power"] * a["motors"].mean(1) / (a["core_radius"] / c.body_radius)
+            )
         if c.ecology_version >= 2:
             speed /= 1 + 0.5 * a["armor"]
         turn = math.radians(c.max_turn_degrees) * (a["motors"][:, 1] - a["motors"][:, 0])
+        if c.ecology_version >= 4:
+            turn = math.radians(c.max_turn_degrees) * module_turn(a)
         middle = a["heading"] + turn * c.dt / 2
         old = a["pos"].clone()
         a["pos"] += speed[:, None] * torch.stack((middle.cos(), middle.sin()), 1) * c.dt
@@ -342,8 +403,14 @@ class EcologyWorld(World):
 
     def feed(self):
         a, c = self.agents, self.config
-        i, j = neighbors(a["pos"], self.food_pos, 1.3 * c.body_radius + c.food_radius, c.diameter)
+        i, j = neighbors(a["pos"], self.food_pos, c.max_body_radius + c.food_radius, c.diameter)
         hit = (a["pos"][i] - self.food_pos[j]).norm(dim=1) <= a["radius"][i] + c.food_radius
+        if c.ecology_version >= 4:
+            centers = module_centers(a)
+            distance = (centers[i] - self.food_pos[j, None]).norm(dim=-1)
+            hit &= (
+                (distance <= a["core_radius"][i, None] + c.food_radius) & a["module_mask"][i]
+            ).any(1)
         hit &= self.food_ready[j] <= self.tick
         i, j = i[hit], j[hit]
         if not len(i):
@@ -390,7 +457,7 @@ class EcologyWorld(World):
         a, c = self.agents, self.config
         if c.ecology_version < 2 or self.ablation == "no_attacks" or not self.population:
             return
-        reach = 2.6 * c.body_radius + c.attack_reach
+        reach = 2 * c.max_body_radius + c.attack_reach
         i, j = neighbors(a["pos"], a["pos"], reach, c.diameter)
         delta = a["pos"][j] - a["pos"][i]
         distance = delta.norm(dim=1)
@@ -402,6 +469,8 @@ class EcologyWorld(World):
             return
         targets = torch.bincount(i, minlength=self.population).clamp_min(1)
         bites = c.bite_rate * c.dt * a["attack"][i] * a["actions"][i, 2] / targets[i]
+        if c.ecology_version >= 4:
+            bites *= a["modules"][i]
         bites *= 1 - c.armor_protection * a["armor"][j]
         demanded = torch.zeros_like(a["energy"]).index_add_(0, j, bites)
         bites *= (a["energy"] / demanded.clamp_min(1e-20)).clamp_max(1)[j]
@@ -429,6 +498,9 @@ class EcologyWorld(World):
                 result[key] = self.agents[key][index].item()
         if "memory_tau" in self.agents:
             result["memory_tau"] = self.agents["memory_tau"][index].item()
+        for key in ("modules", "body_axis", "core_radius"):
+            if key in self.agents:
+                result[key] = self.agents[key][index].item()
         return result
 
     def mutate(self, genome):
@@ -476,7 +548,7 @@ class EcologyWorld(World):
                 occupied = torch.cat([occupied] + [x["pos"] for x in children])
                 radii = torch.cat([radii] + [x["radius"] for x in children])
             valid = (positions - c.diameter / 2).norm(dim=1) <= c.diameter / 2 - child["radius"][0]
-            q, p = neighbors(positions, occupied, 2.6 * c.body_radius, c.diameter)
+            q, p = neighbors(positions, occupied, 2 * c.max_body_radius, c.diameter)
             collide = (positions[q] - occupied[p]).norm(dim=1) < child["radius"][0] + radii[p]
             valid[q[collide]] = False
             options = valid.nonzero().flatten()
@@ -490,6 +562,11 @@ class EcologyWorld(World):
             a["energy"][i] -= debit
             a["offspring"][i] += 1
             self.totals["births"] += 1
+            if c.ecology_version >= 4:
+                key = f"module_births_{int(child['modules'][0])}"
+                self.totals[key] = self.totals.get(key, 0) + 1
+                if child["modules"][0] != a["modules"][i]:
+                    self.totals["structural_births"] = self.totals.get("structural_births", 0) + 1
             self.totals["reproduction"] += float(overhead)
             self.events.append(
                 dict(
@@ -502,6 +579,7 @@ class EcologyWorld(World):
                     genome_hash=genome_hash(child["genome"][0]),
                     radius=float(child["radius"][0]),
                     diet=float(child["diet"][0]),
+                    **({"modules": int(child["modules"][0])} if c.ecology_version >= 4 else {}),
                 )
             )
             self.next_id += 1
@@ -515,9 +593,20 @@ class EcologyWorld(World):
         a, c = self.agents, self.config
         propulsion = c.propulsion_cost * a["power"].square() * a["motors"].square().sum(1) * c.dt
         maintenance = c.basal_cost * (0.25 + 0.75 * a["area"]) * c.dt
+        copies = a["modules"] if c.ecology_version >= 4 else 1.0
+        if c.ecology_version >= 4:
+            propulsion = (
+                c.propulsion_cost
+                * a["power"].square()
+                * a["module_actions"][..., :2].square().sum((1, 2))
+                * c.dt
+            )
+            maintenance += 0.04 * (copies - 1) * c.dt
         if c.ecology_version >= 2:
-            maintenance += (0.15 * a["attack"].square() + 0.25 * a["armor"].square()) * c.dt
-            maintenance += c.attack_cost * a["actions"][:, 2].square() * c.dt
+            maintenance += (
+                (0.15 * a["attack"].square() + 0.25 * a["armor"].square()) * c.dt * copies
+            )
+            maintenance += c.attack_cost * a["actions"][:, 2].square() * c.dt * copies
         return maintenance, propulsion
 
     @torch.no_grad()
@@ -575,6 +664,11 @@ class EcologyWorld(World):
         if c.ecology_version >= 3:
             result["mean_memory_tau"] = a["memory_tau"].mean().item() if n else 0
             result["cue_patches"] = int(self.patch_cues().sum())
+        if c.ecology_version >= 4:
+            result["module_histogram"] = [
+                int((a["modules"] == k).sum()) for k in range(1, MAX_MODULES + 1)
+            ]
+            result["mean_modules"] = a["modules"].float().mean().item() if n else 0
         result["patch_stock"] = self.patch_stock().tolist()
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
@@ -609,6 +703,7 @@ class EcologyWorld(World):
             next_id=self.next_id,
             spawn_accumulator=self.spawn_accumulator,
             initial_energy=self.initial_energy,
+            seeded_from=getattr(self, "seeded_from", None),
             totals=self.totals.copy(),
             events=self.events.copy(),
             agents={k: v.clone() for k, v in self.agents.items()},
@@ -646,6 +741,7 @@ class EcologyWorld(World):
         ):
             setattr(self, key, state[key])
         self.totals, self.events = state["totals"].copy(), state["events"].copy()
+        self.seeded_from = state.get("seeded_from")
         self.agents = {k: v.to(device).clone() for k, v in state["agents"].items()}
         for key in (
             "food_pos",

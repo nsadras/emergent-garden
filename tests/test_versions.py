@@ -104,7 +104,7 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-@pytest.mark.parametrize("version", [1, 2, 3])
+@pytest.mark.parametrize("version", [1, 2, 3, 4])
 def test_ecology_checkpoint_full_replay(config, tmp_path, version):
     w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
     w.step(17)
@@ -284,3 +284,162 @@ def test_burst_schedule_preserves_mean_offered_supply(config):
     w.step(12 * config.physics_hz)
     assert w.totals["food_spawned"] == 5 * 12 * config.food_energy
     assert abs(w.metrics()["energy_balance_error"]) < 0.001
+
+
+def test_development_repeats_bounded_modules_and_pays_for_tissue(config):
+    w = eco(config, ecology_version=4, initial_population=3)
+    a, c = w.agents, w.config
+    a["genome"][:, c.brain_parameter_count :] = 0
+    a["genome"][:, c.brain_parameter_count + 6] = torch.tensor([-3.0, 0.0, 3.0])
+    w.develop(a)
+    assert a["modules"].tolist() == [1, 2, 3]
+    assert a["module_mask"].sum(1).tolist() == [1, 2, 3]
+    assert (a["radius"] <= c.max_body_radius).all()
+    assert a["area"][0] < a["area"][1] < a["area"][2]
+    assert (
+        a["module_offset"].norm(dim=-1) + a["core_radius"][:, None] <= a["radius"][:, None] + 1e-5
+    ).all()
+
+
+def test_modules_have_local_sensing_and_independent_state(config):
+    w = eco(config, ecology_version=4, initial_population=1)
+    w.agents["genome"][0, w.config.brain_parameter_count + 6] = 3.0
+    w.develop(w.agents)
+    # An external gradient gives each repeated circuit distinct observations.
+    w.fields[0].grid[:] = torch.arange(config.grid_size)[None, :]
+    values = w.module_sensors(torch.tensor([0]))
+    assert not torch.equal(values[:, 0], values[:, 2])
+    w.update_controllers()
+    assert not torch.equal(w.agents["module_h"][:, 0], w.agents["module_h"][:, 2])
+    w.ablation = "pooled"
+    w.agents["module_h"].zero_()
+    w.update_controllers()
+    torch.testing.assert_close(w.agents["module_h"][:, 0], w.agents["module_h"][:, 2])
+
+
+def test_rotated_senses_preserve_local_intensity(config):
+    w = eco(config, ecology_version=4, initial_food=40)
+    index = torch.arange(w.population)
+    before = w.module_sensors(index)
+    w.ablation = "rotated"
+    after = w.module_sensors(index)
+    for start in range(0, w.config.input_size - 2, 4):
+        torch.testing.assert_close(
+            after[..., start : start + 4], before[..., start : start + 4].roll(2, -1)
+        )
+        torch.testing.assert_close(
+            after[..., start : start + 4].mean(-1), before[..., start : start + 4].mean(-1)
+        )
+
+
+def test_module_lever_arms_change_turning_and_inactive_parts_are_silent(config):
+    from emergent_garden.morphology import module_turn
+
+    w = eco(config, ecology_version=4, initial_population=1)
+    a = w.agents
+    a["genome"][:, w.config.brain_parameter_count :] = 0
+    w.develop(a)
+    a["module_actions"].zero_()
+    a["module_actions"][0, 0, :2] = 1
+    first = module_turn(a).item()
+    a["module_actions"].zero_()
+    a["module_actions"][0, 1, :2] = 1
+    assert first * module_turn(a).item() < 0
+    w.update_controllers()
+    assert a["module_h"][0, 2].count_nonzero() == 0
+    assert a["module_actions"][0, 2].count_nonzero() == 0
+
+
+def test_food_requires_contact_with_a_digestive_module(config):
+    w = eco(config, ecology_version=4, initial_population=1)
+    a = w.agents
+    a["genome"][:, w.config.brain_parameter_count :] = 0
+    w.develop(a)
+    a["pos"][0], a["heading"][0] = 64, 0
+    offset = torch.tensor([[-1.0, 1.0]]) / (2**0.5) * 5.5
+    w.append_food(a["pos"] + offset, torch.tensor([20.0]), 0)
+    before = a["energy"].clone()
+    w.feed()
+    torch.testing.assert_close(before, a["energy"])
+    assert w.food_energy.item() == 20
+
+
+def test_developmental_birth_inherits_structure_and_resets_each_circuit(config):
+    w = eco(
+        config,
+        ecology_version=4,
+        initial_population=1,
+        mutation_probability=0.0,
+        trait_mutation_probability=0.0,
+    )
+    w.agents["pos"][0] = 64
+    w.agents["energy"] = config.max_energy * w.agents["area"]
+    w.agents["module_h"].fill_(0.4)
+    w.reproduce()
+    assert w.population == 2
+    for key in ("modules", "module_mask", "module_offset", "core_radius", "area"):
+        torch.testing.assert_close(w.agents[key][0], w.agents[key][1])
+    assert w.agents["module_h"][1].count_nonzero() == 0
+    assert w.agents["module_h"][0].count_nonzero() > 0
+
+
+def test_modular_rendering_is_read_only(config):
+    from emergent_garden.viewer import Renderer
+
+    w = eco(config, ecology_version=4, initial_food=20)
+    other = EcologyWorld.from_state(w.state_dict())
+    renderer = Renderer(256)
+    renderer.zoom = 4
+    renderer.center = w.agents["pos"][0].numpy()
+    renderer.selected = 0
+    for _ in range(3):
+        w.step(4)
+        renderer.draw(w)
+        other.step(4)
+    for key in w.agents:
+        torch.testing.assert_close(w.agents[key], other.agents[key], rtol=0, atol=0)
+
+
+def test_genome_transfer_preserves_existing_circuit_and_neutralizes_new_inputs(config):
+    from emergent_garden.brain import advance
+    from emergent_garden.inheritance import upgrade_genomes
+
+    source = eco(config)
+    target = replace(source.config, ecology_version=4)
+    genome = upgrade_genomes(source.config, target, source.agents["genome"])
+    inputs = torch.linspace(0.0, 1.0, source.config.input_size).expand(2, -1)
+    expanded = torch.ones((2, target.input_size))  # New channels can be active immediately.
+    expanded[:, : source.config.input_size - 2] = inputs[:, :-2]
+    expanded[:, -2:] = inputs[:, -2:]
+    hidden = torch.full((2, config.hidden_size), 0.1)
+    old_h, old_actions = advance(source.config, source.agents["genome"], inputs, hidden)
+    tau = 0.2 + 4.8 * genome[:, target.brain_parameter_count + 5].sigmoid()
+    new_h, new_actions = advance(target, genome, expanded, hidden, tau)
+    torch.testing.assert_close(new_h, old_h)
+    torch.testing.assert_close(new_actions[:, :2], old_actions)
+    torch.testing.assert_close(
+        genome[:, target.brain_parameter_count : target.brain_parameter_count + 3],
+        source.agents["genome"][:, source.config.brain_parameter_count :],
+    )
+
+
+def test_seeded_population_records_origins_and_replays(config, tmp_path):
+    from emergent_garden.inheritance import seed_population
+    from emergent_garden.storage import RunStore
+
+    old = eco(config, ecology_version=3)
+    store = RunStore(tmp_path / "source", old)
+    store.checkpoint(old)
+    store.close()
+    w = eco(config, ecology_version=4)
+    seed_population(w, tmp_path / "source")
+    assert w.agents["modules"].tolist() == [1, 1]
+    assert w.agents["module_h"].count_nonzero() == 0
+    assert len(w.seeded_from["source_ids"]) == w.population
+    resumed = EcologyWorld.from_state(w.state_dict())
+    assert resumed.seeded_from == w.seeded_from
+    w.step(21)
+    resumed.step(21)
+    for key in w.agents:
+        torch.testing.assert_close(w.agents[key], resumed.agents[key], rtol=0, atol=0)
+    assert abs(w.metrics()["energy_balance_error"]) < 0.01

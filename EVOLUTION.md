@@ -215,3 +215,80 @@ generalizes; their results will be included in the next checkpoint report.
 
 Decision: preserve the controls and negative forecast result. Proceed to bounded
 developmental morphology to expand the ways creatures can sense and act.
+
+The additional V3 assays generalized the chemical-input effect: across all
+seven matched environment pairs from three independent evolutionary runs,
+normal descendant communities ended with more survivors than communities with
+all chemical inputs zeroed. Seed-12 pairs were 51/39 versus 36/30; seed-13 pairs
+were 30/32 versus 14/17. Forecast removal still had mixed effects. State resets
+left only 1–4 survivors in these additional trials. This supports a role for
+chemical input and recurrent dynamics, but does not isolate spatial gradient
+following from intensity responses, or useful memory from motor dynamics.
+
+### V4 design — bounded developmental bodies
+
+Three additional genes specify module count (1–3), spacing, and the axis of
+placement. A decoder repeats a template containing four chemical sensors, two
+propulsion actuators, a digestive surface, and a copy of the inherited recurrent
+circuit. Circuit **parameters are shared**, but each module has its own state
+and local measurements. Child neural states start empty.
+
+Modules live within a circular exclusion membrane. This deliberately retains
+simple collision physics; the visible membrane is the physical collision shape.
+Feeding requires contact with a digestive module, rather than any point inside
+the membrane. Off-center thrust produces torque. Tissue, membrane, extra neural
+circuits, weapon capacity, and active propulsion all have costs; birth investment
+scales with the developed body. More modules increase total bite capacity and
+its associated costs. Copy-number mutations can fail to produce a child when
+the parent cannot afford the body, without charging a failed birth.
+
+This is a small developmental grammar with nine trait genes plus the shared
+brain template. It is **not arbitrary topology, articulated mechanics, or an
+unbounded genome**. It expands inherited physical organization in a testable way.
+
+The first 18-second-food pilot produced very sparse populations. The next
+experiment extends fresh-food lifetime to **45 seconds**: the last food from a
+10-second burst expires before the next 60-second cycle, leaving an opportunity
+for the forecast cue. Other parameters remain unchanged.
+
+V4 passes 57 tests. Developmental tests cover bounded assembly, tissue costs,
+local sensing and separate neural states, off-center torque, digestive contact,
+heritable structure with fresh child states, observation purity, checkpoint
+replay, and neutral extension of existing neural circuits during version transfer.
+
+| Random-founder seed | Food lifetime | Seconds | Population | Births | Max generation | Modules 1 / 2 / 3 |
+|---|---:|---:|---:|---:|---:|---|
+| 11 | 18 s | 1800 | 5 | 40 | 5 | 0 / 5 / 0 |
+| 12 | 18 s | 1800 | 5 | 20 | 2 | 5 / 0 / 0 |
+| 13 | 18 s | 1800 | 63 | 301 | 10 | 63 / 0 / 0 |
+| 11 | 45 s | 2400 | 9 | 89 | 11 | 0 / 9 / 0 |
+| 12 | 45 s | 2400 | 33 | 148 | 7 | 33 / 0 / 0 |
+| 13 | 45 s | 2400 | 60 | 405 | 13 | 60 / 0 / 0 |
+
+These results show viable repeated bodies in one run, but **do not show an
+advantage for greater morphological complexity**. Three-module bodies disappeared
+in these experiments. Absolute energy residuals remained below 0.025 units.
+
+An explicit `--seed-from RUN` facility transfers living genomes into a fresh
+world. Existing neural weights and trait meanings are preserved. New sensory
+weights start at zero, new effector biases at -2, and a new module-count gene
+starts with one module near a duplication boundary. New bodies receive their
+ordinary founder energy and empty neural state; this is not checkpoint resume.
+Source run and source IDs are recorded. Hidden sizes must match; backward
+version transfers are rejected.
+
+V4 seeded from V3 evolutionary seed 11 reached population 59, 498 births, and
+generation 16 at 2,400 seconds in its first new environment (seed 21). All living
+bodies had one module. Two further environments are being evaluated. These
+experiments share an evolved source population and are not independent origins
+of adaptation. A `pooled` assay removes the modules' distinct local readings
+while preserving body geometry and costs. A `rotated` sensory control reverses
+directional channels while preserving their instantaneous mean intensity.
+
+Artifacts: `runs/v4-pilot`, `runs/v4-recovery`, `runs/v4-seeded`, `runs/v4-body-assay`,
+and `runs/v4-video` (30-second recording and zoomed inspection).
+[Compact evidence](docs/results/v4.json).
+
+Decision: retain the 45-second preset and explicit genotype transfer, keep the
+cost of extra body structure, and test persistent chemical trails in V5. Greater
+body complexity remains an evolutionary opportunity, not a rewarded objective.

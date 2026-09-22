@@ -94,7 +94,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3):
+        if self.ecology_version not in (0, 1, 2, 3, 4):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -114,7 +114,7 @@ class Config:
             raise ValueError("initial_population must not exceed capacity")
         if self.body_radius >= self.diameter / 2:
             raise ValueError("Body must fit in the dish")
-        if self.ecology_version and 1.3 * self.body_radius >= self.diameter / 2:
+        if self.ecology_version and self.max_body_radius >= self.diameter / 2:
             raise ValueError("Largest inherited body must fit in the dish")
         if self.detritus_delay >= self.detritus_lifetime:
             raise ValueError("Detritus must mature before it expires")
@@ -155,6 +155,8 @@ class Config:
 
     @property
     def trait_count(self):
+        if self.ecology_version >= 4:
+            return 9
         if self.ecology_version >= 3:
             return 6
         if self.ecology_version >= 2:
@@ -165,6 +167,10 @@ class Config:
     def brain_parameter_count(self):
         h = self.hidden_size
         return self.input_size * h + h * h + h + self.output_size * h + self.output_size
+
+    @property
+    def max_body_radius(self):
+        return self.body_radius * (3.9 if self.ecology_version >= 4 else 1.3)
 
     @classmethod
     def from_dict(cls, data):

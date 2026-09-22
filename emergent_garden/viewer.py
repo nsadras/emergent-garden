@@ -98,6 +98,14 @@ class Renderer:
         for key in ("radius", "power", "diet", "attack", "armor", "actions"):
             if key in a:
                 data[key] = a[key].detach().cpu().numpy()
+        if "modules" in a:
+            from .morphology import module_centers
+
+            for key in ("core_radius", "modules", "module_actions"):
+                data[key] = a[key].detach().cpu().numpy()
+            data["module_positions"], _ = self.transform(
+                module_centers(a).cpu().numpy(), c.diameter
+            )
         positions, _ = self.transform(data["pos"], c.diameter)
         r = max(2, round(c.body_radius * scale))
         for i, pos in enumerate(positions):
@@ -109,7 +117,16 @@ class Renderer:
             if "diet" in data and self.color_mode == "diet":
                 d = float(data["diet"][i])
                 color = (int(235 - 130 * d), int(156 + 76 * d), int(89 + 46 * d))
-            pygame.draw.circle(surface, color, pos.astype(int), r)
+            if "modules" in data:
+                pygame.draw.circle(surface, tuple(int(v * 0.2) for v in color), pos.astype(int), r)
+                pygame.draw.circle(
+                    surface, tuple(int(v * 0.55) for v in color), pos.astype(int), r, 1
+                )
+                core_r = max(2, round(float(data["core_radius"][i]) * scale))
+                for part in data["module_positions"][i, : data["modules"][i]]:
+                    pygame.draw.circle(surface, color, part.astype(int), core_r)
+            else:
+                pygame.draw.circle(surface, color, pos.astype(int), r)
             angle = data["heading"][i]
             forward = np.array([math.cos(angle), math.sin(angle)])
             pygame.draw.line(surface, (14, 32, 36), pos, pos + forward * r, max(1, r // 5))
@@ -124,16 +141,27 @@ class Renderer:
             if "armor" in data and data["armor"][i] > 0.65 and self.zoom >= 2:
                 pygame.draw.circle(surface, (167, 191, 210), pos.astype(int), r, 2)
             if self.zoom >= 2:
-                for sensor_angle in (-135, -45, 45, 135):
-                    theta = angle + math.radians(sensor_angle)
-                    sensor = pos + r * np.array([math.cos(theta), math.sin(theta)])
-                    pygame.draw.circle(surface, (213, 254, 192), sensor.astype(int), 2)
-                for side, activation in zip((1, -1), data["motors"][i], strict=True):
-                    lateral = np.array([-forward[1], forward[0]]) * side
-                    base = pos + lateral * r * 0.6 - forward * r * 0.4
-                    pygame.draw.line(
-                        surface, (252, 186, 106), base, base - forward * (3 + activation * r), 2
-                    )
+                components = [(pos, r, data["motors"][i])]
+                if "modules" in data:
+                    components = [
+                        (data["module_positions"][i, k], core_r, data["module_actions"][i, k, :2])
+                        for k in range(data["modules"][i])
+                    ]
+                for center, part_r, motors in components:
+                    for sensor_angle in (-135, -45, 45, 135):
+                        theta = angle + math.radians(sensor_angle)
+                        sensor = center + part_r * np.array([math.cos(theta), math.sin(theta)])
+                        pygame.draw.circle(surface, (213, 254, 192), sensor.astype(int), 2)
+                    for side, activation in zip((1, -1), motors, strict=True):
+                        lateral = np.array([-forward[1], forward[0]]) * side
+                        base = center + lateral * part_r * 0.6 - forward * part_r * 0.4
+                        pygame.draw.line(
+                            surface,
+                            (252, 186, 106),
+                            base,
+                            base - forward * (3 + activation * part_r),
+                            2,
+                        )
             if int(data["id"][i]) == self.selected:
                 pygame.draw.circle(surface, (251, 240, 192), pos.astype(int), r + 5, 2)
         header = pygame.Surface((self.size, 74), pygame.SRCALPHA)
@@ -165,7 +193,8 @@ class Renderer:
         chosen = np.flatnonzero(data["id"] == self.selected) if self.selected is not None else []
         if len(chosen):
             i = chosen[0]
-            panel = pygame.Surface((285, 248 if "attack" in data else 222), pygame.SRCALPHA)
+            height = 270 if "modules" in data else 248 if "attack" in data else 222
+            panel = pygame.Surface((285, height), pygame.SRCALPHA)
             panel.fill((6, 14, 21, 230))
             surface.blit(panel, (18, 92))
             self.text(f"Creature {self.selected} / lineage {data['lineage'][i]}", (30, 103))
@@ -189,6 +218,12 @@ class Renderer:
                 self.text(
                     f"Weapon {data['attack'][i]:.0%}  Armor {data['armor'][i]:.0%}",
                     (30, 306),
+                    small=True,
+                )
+            if "modules" in data:
+                self.text(
+                    f"{data['modules'][i]} modules / {len(data['h'][i])} neurons each",
+                    (30, 327),
                     small=True,
                 )
         return surface

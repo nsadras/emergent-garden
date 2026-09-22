@@ -14,7 +14,9 @@ from .storage import RunStore, atomic_save
 from .world import create_world as World
 
 
-def calibration(config, output, seeds, seconds, device, controller="neural", stop=None):
+def calibration(
+    config, output, seeds, seconds, device, controller="neural", stop=None, seed_from=None
+):
     root = Path(output)
     root.mkdir(parents=True, exist_ok=False)
     results = []
@@ -22,6 +24,10 @@ def calibration(config, output, seeds, seconds, device, controller="neural", sto
         if stop is not None and stop.requested:
             break
         world = World(config, seed, device, controller)
+        if seed_from:
+            from .inheritance import seed_population
+
+            seed_population(world, seed_from)
         store = RunStore(root / f"seed-{seed}", world)
         store.measure(world)
         target = math.ceil(seconds * config.physics_hz)

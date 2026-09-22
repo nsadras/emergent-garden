@@ -64,6 +64,7 @@ def runtime_metadata(world):
         source_sha256=digest.hexdigest(),
         controller=world.controller,
         ablation=world.ablation,
+        seeded_from=getattr(world, "seeded_from", None),
         created=time.time(),
     )
     if world.device.type == "cuda":

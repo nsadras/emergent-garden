@@ -12,6 +12,7 @@ import torch
 
 from .config import Config
 from .experiments import calibration, community_assay, evaluate
+from .inheritance import seed_population
 from .probes import probe_run
 from .runtime import StopFlag
 from .storage import RunStore, load_checkpoint, runtime_metadata
@@ -35,6 +36,8 @@ def run(args, stop):
         if args.resume
         else World(Config.load(args.config), args.seed, device, args.controller)
     )
+    if args.seed_from:
+        seed_population(world, args.seed_from)
     output = args.output or Path("runs") / datetime.now().strftime("%Y%m%d-%H%M%S-%f")
     store = RunStore(output, world, args.resume)
     viewer = recorder = None
@@ -167,6 +170,9 @@ def parser():
     )
     run_parser.add_argument("--output", type=Path)
     run_parser.add_argument("--resume", type=Path)
+    run_parser.add_argument(
+        "--seed-from", type=Path, help="Initialize founders from another run's living genomes"
+    )
     run_parser.add_argument("--view", action="store_true")
     run_parser.add_argument("--record", action="store_true")
     run_parser.add_argument("--video-speed", type=float)
@@ -186,6 +192,7 @@ def parser():
     calibrate.add_argument("--seeds", type=int, nargs="+", default=[1, 2, 3, 4, 5])
     calibrate.add_argument("--seconds", type=float, default=600)
     calibrate.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    calibrate.add_argument("--seed-from", type=Path)
     calibrate.add_argument(
         "--controller", choices=["neural", "forager", "rest", "random"], default="neural"
     )
@@ -240,6 +247,8 @@ def main():
         elif args.command == "run":
             if args.resume and args.config:
                 raise ValueError("A resumed run uses the checkpoint configuration; omit --config")
+            if args.resume and args.seed_from:
+                raise ValueError("Choose either exact checkpoint resume or genotype seeding")
             if args.video_speed is not None and (
                 not math.isfinite(args.video_speed) or args.video_speed <= 0
             ):
@@ -254,6 +263,7 @@ def main():
                 choose_device(args.device),
                 args.controller,
                 stop=stop,
+                seed_from=args.seed_from,
             )
         elif args.command == "evaluate":
             if args.genomes < 1:
