@@ -1,11 +1,16 @@
 # Emergent Garden
 
-A continuous 2D artificial-life dish. Creatures have four local smell sensors,
-energy and contact inputs, 16 recurrent neural units, and two propulsion actuators.
-They consume food particles, spend energy, and produce offspring with mutated
-brains. There is no behavioral reward or global parent ranking.
+A continuous 2D artificial-life world with evolving neural controllers, resource
+cycling, predation, inherited bodies, and persistent chemical trails. Creatures
+spend energy, reproduce, and mutate. There is no behavioral reward or global
+parent ranking. V0 and every subsequent experimental preset remain available.
 
-![A V0 dish after 600 simulated seconds](docs/preview.png)
+![V5 modular creatures and their chemical trails](docs/v5-detail.png)
+
+The five-version development record, including failed hypotheses and controlled
+comparisons, is in [EVOLUTION.md](EVOLUTION.md). Persistence and sensory effects
+have been observed; useful forecast memory, communication, and open-ended
+intelligence have not been established.
 
 ## Start watching
 
@@ -13,16 +18,25 @@ Python 3.13 and all Python packages are managed with **uv**:
 
 ```bash
 uv sync --locked
-uv run garden run --view --device cpu --seconds 0
+uv run garden run --config configs/v5.toml --seed 11 --view --device cpu --seconds 0
 ```
 
 `--seconds 0` runs until you close the window, press Ctrl+C, or the population
 becomes extinct. A checkpoint and preview are saved on exit. Every run gets its
 own directory under `runs/`; a supplied `--output` directory must not already exist.
 
-The default preset starts 256 creatures in a 1,024-unit dish, with continuous
-reproduction and a capacity of 2,048. At full view creatures are about eight pixels
-across; zoom in to inspect their sensors and actuator activity.
+V5 starts 192 creatures in a 768-unit dish, with a capacity of 1,024. Each body
+has one to three modules, each with local sensors, propulsion, and a 16-unit
+recurrent circuit. A circular membrane defines collision geometry; the inner
+modules collect food. Zoom in to inspect the body, actuators, and inherited traits.
+Green bodies favor fresh food; amber bodies favor detritus. Red marks show attacks.
+
+Seed 11 is a verified starting point: seeds 11–13 persisted for three simulated
+hours. Survival is not guaranteed; seed 1 became extinct after 732 simulated
+seconds. There is no automatic reseeding. To watch an already evolved population
+from the local experiments, resume `runs/v5-native-long-11/latest.pt`.
+
+Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures).
 
 | Control | Action |
 | --- | --- |
@@ -32,6 +46,8 @@ across; zoom in to inspect their sensors and actuator activity.
 | Right-drag | Pan |
 | Left-click | Select a creature and inspect energy, lineage, and neural activity |
 | `F` | Toggle the smell overlay |
+| Tab | Cycle fresh food, detritus, organisms, forecast cues, and secretion fields |
+| `C` | Switch between inherited diet and lineage colors |
 | `R` | Reset the camera |
 | Escape / close window | Save and exit |
 
@@ -39,10 +55,10 @@ across; zoom in to inspect their sensors and actuator activity.
 
 ```bash
 # Run an experiment without a window; record a 100x timelapse.
-uv run garden run --device cpu --seconds 3600 --record --output runs/experiment-1
+uv run garden run --config configs/v5.toml --seed 11 --device cpu --seconds 3600 --record --output runs/experiment-1
 
 # Run overnight until stopped; sample video at a higher timelapse speed.
-uv run garden run --device cpu --seconds 0 --record --video-speed 1000 --output runs/overnight-1
+uv run garden run --config configs/v5.toml --seed 11 --device cpu --seconds 0 --record --video-speed 1000 --output runs/overnight-1
 
 # Resume for 600 additional simulated seconds, optionally with a window.
 uv run garden run --resume runs/experiment-1/latest.pt --device cpu --seconds 600 --view
@@ -66,11 +82,13 @@ Run outputs include:
 - `metrics.jsonl` and `events.jsonl`: population, resources, costs, births, deaths,
   genetic diversity, lineages, and throughput.
 - `latest.pt`: an atomic full-world checkpoint.
+- `checkpoints/`: periodic full-state archives when `archive_sim_seconds > 0`;
+  the V5 preset archives every 600 simulated seconds.
 - `founders.pt` and `population.pt`: initial and current genomes for evaluation.
 - `preview.png`, `summary.json`, and optional `timelapse.mp4`.
 
-`latest.pt` and `population.pt` retain the latest saved state, not every historical
-population. Copy checkpoints you want to archive before continuing a long run.
+`latest.pt` and `population.pt` retain the latest saved state. V0–V4 presets leave
+automatic historical archives disabled; set `archive_sim_seconds` to enable them.
 Independent resumed runs write to new directories, preserving the source run.
 
 ## CPU and GPU
@@ -89,6 +107,9 @@ measured roughly 5–6x simulated speed on CPU and about 0.9x on the 5080. The c
 CUDA path is functional but has significant overhead from small, dynamic tensor
 operations. Throughput depends on population, contacts, field resolution, and
 recording; measure a representative run before allocating an overnight experiment.
+The later V5 long runs achieved about 11–13x on CPU while running concurrently.
+V5 also passed an RTX 5080 checkpoint-continuation smoke test; this is not a
+full-size GPU performance benchmark.
 
 CPU execution defaults to one PyTorch thread because these operations are small.
 To experiment with another setting, use `uv run garden --threads 2 run ...`.
@@ -97,16 +118,26 @@ do not. `doctor` reports the selected backend and package/runtime versions.
 
 ## Configure an experiment
 
-The agreed starting values are in [configs/v0.toml](configs/v0.toml).
+The original starting values are in [configs/v0.toml](configs/v0.toml).
+
+| Preset | Added mechanics |
+| --- | --- |
+| [V1](configs/v1.toml) | Recoverable patches, delayed detritus, inherited size/power/diet |
+| [V2](configs/v2.toml) | Costly predation, defense, organism odor |
+| [V3](configs/v3.toml) | Forecast cues, pulsed resources, inherited neural timescales |
+| [V4](configs/v4.toml) | A developmental genome that repeats and places sensor/motor modules |
+| [V5](configs/v5.toml) | Costly secretion, diffusion, decay, and historical archives |
 
 ```bash
-uv run garden config configs/my-experiment.toml
+cp configs/v5.toml configs/my-experiment.toml
 # Edit the new file, then run it:
 uv run garden run --config configs/my-experiment.toml --device cpu --view
 ```
 
-Partial TOML files inherit unspecified defaults. Unknown keys and invalid values
-are rejected. Keep physics/controller/field rates at integer ratios. Tune food
+Partial TOML files inherit unspecified **V0 code defaults**, not a version preset.
+`uv run garden config PATH` writes those V0 defaults; copy a later preset to start
+an experiment with its full settings. Unknown keys and invalid values are rejected.
+Keep physics/controller/field rates at integer ratios. Tune food
 supply, metabolism, and food spacing first, and change one group of parameters at
 a time. The saved configuration makes each experiment reviewable.
 
@@ -120,7 +151,7 @@ uv run garden calibrate --device cpu --output runs/calibration-1
 uv run garden calibrate --device cpu --controller forager --seeds 1 --seconds 120 --output runs/forager-1
 uv run garden calibrate --device cpu --controller rest --seeds 1 --seconds 120 --output runs/rest-1
 
-# Compare saved founders and living descendants on fresh environments.
+# V0: compare saved founders and living descendants on fresh environments.
 uv run garden evaluate runs/calibration-1/seed-1 --device cpu --output runs/evaluation-1
 
 # A smaller exploratory evaluation before committing to the full batch.
@@ -160,24 +191,51 @@ handling, mutation, birth failures, recurrent state, field sampling, exact CPU
 checkpoint continuation, and independence from rendering/recording.
 
 - [V0 specification and implementation milestones](PLAN.md)
-- [Initial validation results and current limitations](VALIDATION.md)
+- [V0 validation results](VALIDATION.md)
+- [V1–V5 experiments, evidence, and limitations](EVOLUTION.md)
 - [Original long-term research specification](spec.md)
-# Experimental ecology versions
 
-V0 is preserved. The successive ecology experiments and their evidence are
-recorded in [EVOLUTION.md](EVOLUTION.md).
+## Ecology assays and version transfer
+
+V1+ evaluations retain a whole community so feeding partners and competitors
+remain present. `assay` samples founders and descendants into fresh environments,
+disables mutation, preserves reproduction, and records each complete trial:
 
 ```bash
-uv run garden run --config configs/v1.toml --device cpu --view --seconds 0
-uv run garden run --config configs/v1.toml --device cpu --seconds 3600 --record
-uv run garden assay runs/YOUR_RUN --output runs/YOUR_ASSAY --seconds 180
+uv run garden assay runs/experiment-1 --output runs/ecology-assay \
+  --seeds 10001 10002 10003 --seconds 240 \
+  --modes none disabled rotated no_signal no_emission memory_reset
+
+uv run garden probe runs/experiment-1 --output runs/cue-probe.json
+
+# Initialize a new world from living genomes in an earlier experiment.
+uv run garden run --config configs/v5.toml --seed-from runs/earlier-v4-run \
+  --device cpu --seconds 3600 --output runs/inherited-v5
 ```
 
-V1 adds fixed recoverable patches, fresh food (green), detritus (amber), and
-inherited body size, motor capacity, and digestion allocation. Creature colors
-show diet by default: green favors fresh food, amber favors detritus. Press **C**
-to switch to lineage colors and **Tab** to change the displayed chemical field.
-Click a creature to inspect its inherited traits. Existing controls still work.
+`disabled` zeros chemical inputs; `rotated` reverses directional readings while
+retaining their mean intensity. `no_signal` removes secretion sensing;
+`no_emission` suppresses production while retaining its cost. `memory_reset`
+clears recurrent state before each controller update. Other controls include
+`no_recycling`, `no_attacks`, `no_cue`, `pooled` module observations, and spatially
+`shuffled` readings. Version-specific controls require the corresponding version.
 
-These versions are ecological experiments. Diversity and persistence do not by
-themselves demonstrate evolved sensing, memory, intelligence, or species.
+The cue probe compares different past cues followed by identical current inputs.
+It measures intrinsic history dependence, not successful navigation or learning.
+State resets also disrupt ordinary movement dynamics, so their effects alone
+do not demonstrate useful memory. Community transplants have inherited body
+differences and corresponding differences in founder energy endowment.
+
+`--seed-from` preserves inherited circuits and existing traits while neutralizing
+new sensory connections. New founders have fresh neural state, ages, and energy;
+source IDs and generations are recorded. This is distinct from exact `--resume`.
+Transfer supports equal hidden sizes and forward version changes, and rejects
+weight limits that would alter the source circuit. Python callers should use
+`create_world(config)` from `emergent_garden.world` to select the correct engine.
+
+The committed [version trajectories](docs/evolution-versions.png),
+[V5 random-founder trajectories](docs/evolution-native.png), and
+[V5 inherited-population trajectories](docs/evolution-long.png) are generated
+with `uv run python scripts/plot_results.py`. The script uses raw recorded metrics
+when present and falls back to committed compact evidence. SVG versions are also saved.
+Raw runs and videos stay under `runs/`; compact evidence is in `docs/results/`.

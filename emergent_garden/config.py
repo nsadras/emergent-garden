@@ -28,6 +28,12 @@ class Config:
     cue_lead: float = 3.0
     cue_duration: float = 2.0
     cue_strength: float = 20.0
+    signal_rate: float = 200.0
+    signal_cost: float = 0.12
+    signal_diffusion: float = 12.0
+    signal_half_life: float = 30.0
+    signal_scale: float = 1.0
+    archive_sim_seconds: float = 0.0
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -87,14 +93,15 @@ class Config:
             "patches patch_period grid_size smell_sigma smell_cutoff smell_scale birth_energy "
             "max_energy reproduction_threshold reproduction_debit birth_attempts birth_gap "
             "birth_retry hidden_size neural_tau weight_limit physics_hz controller_hz field_hz "
-            "metrics_period checkpoint_wall_seconds viewer_size viewer_fps video_fps video_speed"
+            "metrics_period checkpoint_wall_seconds viewer_size viewer_fps video_fps video_speed "
+            "signal_half_life signal_scale"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4):
+        if self.ecology_version not in (0, 1, 2, 3, 4, 5):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -143,6 +150,8 @@ class Config:
 
     @property
     def input_size(self):
+        if self.ecology_version >= 5:
+            return 22
         if self.ecology_version >= 3:
             return 18
         if self.ecology_version >= 2:
@@ -151,6 +160,8 @@ class Config:
 
     @property
     def output_size(self):
+        if self.ecology_version >= 5:
+            return 4
         return 3 if self.ecology_version >= 2 else 2
 
     @property

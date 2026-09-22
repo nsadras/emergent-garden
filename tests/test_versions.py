@@ -104,7 +104,7 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-@pytest.mark.parametrize("version", [1, 2, 3, 4])
+@pytest.mark.parametrize("version", [1, 2, 3, 4, 5])
 def test_ecology_checkpoint_full_replay(config, tmp_path, version):
     w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
     w.step(17)
@@ -421,6 +421,17 @@ def test_genome_transfer_preserves_existing_circuit_and_neutralizes_new_inputs(c
         genome[:, target.brain_parameter_count : target.brain_parameter_count + 3],
         source.agents["genome"][:, source.config.brain_parameter_count :],
     )
+    with pytest.raises(ValueError, match="weight_limit"):
+        upgrade_genomes(source.config, replace(target, weight_limit=0.1), source.agents["genome"])
+
+
+def test_legacy_api_cannot_silently_run_a_new_preset_as_v0(config):
+    from emergent_garden.world import World, create_world
+
+    c = replace(config, ecology_version=5)
+    with pytest.raises(ValueError, match="create_world"):
+        World(c)
+    assert isinstance(create_world(c), EcologyWorld)
 
 
 def test_seeded_population_records_origins_and_replays(config, tmp_path):
@@ -443,3 +454,78 @@ def test_seeded_population_records_origins_and_replays(config, tmp_path):
     for key in w.agents:
         torch.testing.assert_close(w.agents[key], resumed.agents[key], rtol=0, atol=0)
     assert abs(w.metrics()["energy_balance_error"]) < 0.01
+
+
+def test_trail_diffusion_conserves_mass_inside_dish_and_decays(config):
+    from emergent_garden.field import TrailField
+
+    c = replace(config, signal_half_life=10.0)
+    field = TrailField(c, torch.device("cpu"))
+    field.deposit(torch.tensor([[64.0, 64.0], [123.0, 64.0]]), torch.tensor([10.0, 20.0]))
+    assert field.mass() == pytest.approx(30.0, abs=1e-5)
+    decayed = field.advance(10.0)
+    assert decayed == pytest.approx(15.0, abs=1e-5)
+    assert field.mass() == pytest.approx(15.0, abs=1e-4)
+    assert field.grid[~field.mask].count_nonzero() == 0
+    assert field.grid.min() >= 0
+
+
+def test_emission_on_last_tick_is_paid_and_energy_conservative(config):
+    w = eco(config, ecology_version=5, initial_population=1)
+    w.agents["energy"][:] = 0.001
+    w.initial_energy = float(w.agents["energy"].sum())
+    w.agents["actions"][:, 3] = 1.0
+    w.update_controllers = lambda: None
+    w.step()
+    assert w.population == 0
+    assert 0 < w.totals["signaling_cost"] < 0.001
+    assert w.totals["signal_emitted"] == pytest.approx(
+        w.totals["signaling_cost"] * w.config.signal_rate / w.config.signal_cost, rel=1e-6
+    )
+    assert abs(w.metrics()["energy_balance_error"]) < 1e-8
+
+
+def test_emission_and_reception_controls_keep_other_dynamics_matched(config):
+    w = eco(config, ecology_version=5, initial_food=20)
+    w.ablation = "no_signal"
+    other = EcologyWorld.from_state(w.state_dict())
+    other.ablation = "no_emission"
+    w.step(120)
+    other.step(120)
+    for key in w.agents:
+        torch.testing.assert_close(w.agents[key], other.agents[key], rtol=0, atol=0)
+    assert w.fields[4].mass() > 0
+    assert other.fields[4].mass() == 0
+    assert w.totals["signaling_cost"] == other.totals["signaling_cost"]
+    assert abs(w.metrics()["signal_balance_error"]) < 0.01
+    assert abs(w.metrics()["energy_balance_error"]) < 0.01
+
+
+def test_periodic_archive_retains_multiple_replayable_states(config, tmp_path):
+    from emergent_garden.storage import RunStore
+
+    w = eco(config, ecology_version=5, archive_sim_seconds=0.1)
+    store = RunStore(tmp_path / "run", w)
+    for _ in range(3):
+        w.step(6)
+        store.measure(w)
+    store.close()
+    paths = sorted((tmp_path / "run" / "checkpoints").glob("*.pt"))
+    assert len(paths) == 3
+    first = load_checkpoint(paths[0])
+    last = load_checkpoint(paths[-1])
+    first.step(last.tick - first.tick)
+    for key in w.agents:
+        torch.testing.assert_close(first.agents[key], last.agents[key], rtol=0, atol=0)
+    torch.testing.assert_close(first.fields[4].grid, last.fields[4].grid, rtol=0, atol=0)
+
+
+def test_long_chemical_ledger_uses_the_fields_representable_decay(config):
+    from emergent_garden.field import TrailField
+
+    field = TrailField(config, torch.device("cpu"))
+    decayed = 0.0
+    for _ in range(400):
+        field.deposit(torch.tensor([[64.0, 64.0]]), torch.tensor([20.0]))
+        decayed += field.advance(0.2)
+    assert abs(8000 - decayed - field.mass()) < 0.003

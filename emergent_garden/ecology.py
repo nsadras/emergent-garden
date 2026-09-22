@@ -11,7 +11,7 @@ import torch
 
 from .brain import advance, initial_brains
 from .config import Config
-from .field import SmellField
+from .field import SmellField, TrailField
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .spatial import neighbors
 from .world import World, genome_hash
@@ -34,12 +34,15 @@ class EcologyWorld(World):
             "no_cue",
             "pooled",
             "rotated",
+            "no_signal",
+            "no_emission",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
             (ablation == "no_cue" and config.ecology_version < 3)
             or (ablation == "no_attacks" and config.ecology_version < 2)
             or (ablation == "pooled" and config.ecology_version < 4)
+            or (ablation in ("no_signal", "no_emission") and config.ecology_version < 5)
         ):
             raise ValueError("Ablation requires a version containing that feature")
         self.rng = {
@@ -68,12 +71,17 @@ class EcologyWorld(World):
             predation_absorbed=0.0,
             predation_loss=0.0,
             predation_kills=0,
+            signaling_cost=0.0,
+            signal_emitted=0.0,
+            signal_decayed=0.0,
         )
         c = self.config
         self.sensor_angles = torch.tensor([-135, -45, 45, 135], device=self.device) * math.pi / 180
         self.fields = [SmellField(c, self.device) for _ in range(2 + (c.ecology_version >= 2))]
         if c.ecology_version >= 3:
             self.fields.append(SmellField(c, self.device))
+        if c.ecology_version >= 5:
+            self.fields.append(TrailField(c, self.device))
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -268,10 +276,15 @@ class EcologyWorld(World):
         channels = []
         for channel, field in enumerate(self.fields):
             smell = field.sample(pos)
-            smell = smell / (smell + c.smell_scale)
+            scale = c.signal_scale if channel == 4 else c.smell_scale
+            smell = smell / (smell + scale)
             if self.ablation == "rotated":
                 smell = smell.roll(2, dims=-1)
-            if self.ablation == "disabled" or (self.ablation == "no_cue" and channel == 3):
+            if (
+                self.ablation == "disabled"
+                or (self.ablation == "no_cue" and channel == 3)
+                or (self.ablation == "no_signal" and channel == 4)
+            ):
                 smell.zero_()
             channels.append(smell)
         for values in (a["energy"][index] / (c.max_energy * a["area"][index]), a["contact"][index]):
@@ -607,7 +620,18 @@ class EcologyWorld(World):
                 (0.15 * a["attack"].square() + 0.25 * a["armor"].square()) * c.dt * copies
             )
             maintenance += c.attack_cost * a["actions"][:, 2].square() * c.dt * copies
+        if c.ecology_version >= 5:
+            maintenance += c.signal_cost * a["area"] * a["actions"][:, 3].square() * c.dt
         return maintenance, propulsion
+
+    def emit(self, paid_fraction):
+        a, c = self.agents, self.config
+        activity = a["area"] * a["actions"][:, 3].square() * c.dt * paid_fraction
+        self.totals["signaling_cost"] += (activity * c.signal_cost).double().sum().item()
+        if self.ablation != "no_emission":
+            amounts = activity * c.signal_rate
+            self.fields[4].deposit(a["pos"], amounts)
+            self.totals["signal_emitted"] += amounts.double().sum().item()
 
     @torch.no_grad()
     def step(self, steps=1):
@@ -638,6 +662,8 @@ class EcologyWorld(World):
             self.totals["maintenance"] += maintenance.double().sum().item()
             self.totals["propulsion"] += propulsion.double().sum().item()
             self.totals["organism_steps"] += self.population
+            if c.ecology_version >= 5:
+                self.emit(scale)
             self.remove_dead()
             self.feed()
             if c.ecology_version >= 2:
@@ -645,6 +671,8 @@ class EcologyWorld(World):
                 self.remove_dead()
             self.reproduce()
             self.tick += 1
+            if c.ecology_version >= 5 and self.tick % (c.physics_hz // c.field_hz) == 0:
+                self.totals["signal_decayed"] += self.fields[4].advance(1 / c.field_hz)
 
     def metrics(self):
         result = super().metrics()
@@ -669,6 +697,13 @@ class EcologyWorld(World):
                 int((a["modules"] == k).sum()) for k in range(1, MAX_MODULES + 1)
             ]
             result["mean_modules"] = a["modules"].float().mean().item() if n else 0
+        if c.ecology_version >= 5:
+            mass = self.fields[4].mass()
+            result["signal_mass"] = mass
+            result["signal_balance_error"] = (
+                result["signal_emitted"] - result["signal_decayed"] - mass
+            )
+            result["mean_secretion"] = a["actions"][:, 3].mean().item() if n else 0
         result["patch_stock"] = self.patch_stock().tolist()
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
@@ -762,7 +797,10 @@ class EcologyWorld(World):
                 value = state[key]
             setattr(self, key, value.to(device).clone())
         self.sensor_angles = torch.tensor([-135, -45, 45, 135], device=self.device) * math.pi / 180
-        self.fields = [SmellField(self.config, self.device) for _ in state["fields"]]
+        self.fields = [
+            (TrailField if i == 4 else SmellField)(self.config, self.device)
+            for i in range(len(state["fields"]))
+        ]
         for field, grid in zip(self.fields, state["fields"], strict=True):
             field.grid = grid.to(device).clone()
         self.field = self.fields[0]

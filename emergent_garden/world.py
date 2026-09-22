@@ -18,6 +18,8 @@ def genome_hash(genome):
 class World:
     def __init__(self, config=None, seed=1, device="cpu", controller="neural", ablation="none"):
         self.config = (config or Config()).validate()
+        if self.config.ecology_version:
+            raise ValueError("Use create_world(config) for V1 and later ecologies")
         self.device = torch.device(device)
         self.seed = seed
         self.controller = controller

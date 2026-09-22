@@ -2,6 +2,12 @@
 
 V0 baseline: commit `84e0c48`. Python dependencies remain managed by uv.
 
+All five versions are implemented and evaluated. Six V5 runs completed three
+simulated hours; independent random-founder runs reached living generations
+39/26/41, while inherited populations reached 26/28/86. The final suite passes
+64 tests. Persistence is demonstrated for those runs; increasing complexity and
+communication are not. Seed 1 also produced an extinction, recorded below.
+
 The objective is a persistent artificial ecology with inherited differences,
 organism-mediated resource flows, and experimentally demonstrated uses of
 information. Open-ended evolution, learning, intelligence, cooperation, and
@@ -279,7 +285,7 @@ version transfers are rejected.
 
 V4 seeded from V3 evolutionary seed 11 reached population 59, 498 births, and
 generation 16 at 2,400 seconds in its first new environment (seed 21). All living
-bodies had one module. Two further environments are being evaluated. These
+bodies had one module. Results for two further environments appear below. These
 experiments share an evolved source population and are not independent origins
 of adaptation. A `pooled` assay removes the modules' distinct local readings
 while preserving body geometry and costs. A `rotated` sensory control reverses
@@ -292,3 +298,212 @@ and `runs/v4-video` (30-second recording and zoomed inspection).
 Decision: retain the 45-second preset and explicit genotype transfer, keep the
 cost of extra body structure, and test persistent chemical trails in V5. Greater
 body complexity remains an evolutionary opportunity, not a rewarded objective.
+
+The two further V4 environments seeded from V3 completed 2,400 seconds with
+populations 69/66, births 426/398, and maximum generations 14/11. All survivors
+had one module. The two-module body assay ended with 34/30 descendants under
+normal local sensing, 33/30 with module observations pooled, and 8/11 with
+chemical input disabled. This establishes no clear advantage from separate
+module observations in these short trials.
+
+### V5 design — persistent secretion and integrated experiments
+
+A fourth neural output controls chemical secretion. Production and its energy
+cost both scale with squared activation and developed body area. On a starvation
+tick, secretion is reduced by the same fraction as the paid metabolic costs.
+Chemical quantity is separate from food energy and cannot be consumed.
+
+Secretion accumulates on the existing grid, diffuses at 12 square units/second,
+and decays with a 30-second half-life. Bilinear deposition preserves injected
+quantity at boundaries; flux crosses only shared faces of cells inside the dish.
+Diffusion automatically substeps to maintain a stable explicit update. Decay
+and diffusion run at field frequency; deposition occurs at physics frequency.
+The field persists after producers move or die and supplies four new readings
+to each module. These are potential traces or signals, with no assigned meaning.
+
+`no_signal` removes reception; `no_emission` suppresses physical production while
+retaining its metabolic cost. With initially empty chemical fields and mutation
+disabled these controls give identical organism trajectories, which is checked.
+They cannot distinguish self-trail navigation from communication between agents.
+
+V5 archives complete states every 600 simulated seconds. Energy costs remain in
+the global ledger; signaling cost is also reported as an informational subset of
+maintenance. A separate chemical ledger tracks deposition, decay, and grid mass.
+Pilot runs exposed a roughly 4.4-parts-per-million drift from accounting with
+the analytical decay factor while the field multiplies by its float32 value.
+The ledger now uses that same representable factor. This changes accounting,
+not the concentration update or organism trajectories; original pilot evidence
+and its residuals are retained.
+
+Three independent random-founder V5 pilots completed 1,800 seconds:
+
+| Seed | Population | Births | Max generation | Modules 1 / 2 / 3 |
+|---|---:|---:|---:|---|
+| 11 | 37 | 144 | 7 | 9 / 18 / 10 |
+| 12 | 36 | 160 | 8 | 0 / 35 / 1 |
+| 13 | 29 | 102 | 8 | 10 / 18 / 1 |
+
+These runs retain more morphological variety than the tested V4 starts. Network
+dimensions and founder samples also changed, so this is not evidence that
+secretion caused the difference. Longer continuation tests check whether the
+variety persists. Three further long runs initialize from V4's evolved populations;
+these share earlier ancestry and are reported separately from random starts.
+
+### V5 results — persistence, narrowing diversity, mixed sensory effects
+
+Each random-founder pilot was resumed for another 9,000 seconds without changing
+its physical dynamics, giving 10,800 simulated seconds in total:
+
+| Original seed | Population | Births | Max living generation | Modules 1 / 2 / 3 | Founding lineages |
+|---|---:|---:|---:|---|---:|
+| 11 | 52 | 1176 | 39 | 11 / 41 / 0 | 2 |
+| 12 | 52 | 1236 | 26 | 0 / 52 / 0 | 1 |
+| 13 | 60 | 1476 | 41 | 11 / 49 / 0 | 2 |
+
+All three populations recovered after a large initial decline. Two-module bodies
+persisted, but three-module bodies disappeared. These body types were already
+present among random founders. Five successful births changed module count in
+seed 11; none did in the other two runs. This is limited structural exploration,
+not evidence of an evolutionary trend toward larger bodies.
+
+All final survivors favored fresh food by the inherited allocation threshold.
+Predation still contributed to intake: 36/24/47 survivors met the measured
+meat-eating criterion, and the runs recorded 468/483/604 predation deaths.
+Different feeding mechanisms coexist, but specialized scavenger lineages and
+broad morphological diversity were not sustained. Founding-lineage counts do
+not represent species counts.
+
+![V5 random-founder body composition and intake](docs/evolution-native.png)
+
+The lower panels report community intake averaged over two-minute windows.
+Predation is a transfer between organisms, not another external energy source.
+The curves show ecological activity; they do not isolate genetic adaptation
+from changes in population size, composition, or the environment.
+
+The other three long runs used `--seed-from` on V4 environments 21/22/23, which
+all descend from V3 evolutionary seed 11. Their generation counters restart
+at zero when the new world is initialized:
+
+| V5 environment seed | V4 source environment | Population | Births | Max living generation | Modules 1 / 2 / 3 |
+|---|---:|---:|---:|---:|---|
+| 31 | 21 | 77 | 1574 | 26 | 77 / 0 / 0 |
+| 32 | 22 | 88 | 1723 | 28 | 88 / 0 / 0 |
+| 33 | 23 | 81 | 2174 | 86 | 81 / 0 / 0 |
+
+These runs also persisted for 10,800 seconds without reseeding or reaching the
+population cap. Their inherited one-module bodies remained unchanged in module
+count. Their shared earlier ancestry and transfer initialization prevent treating
+them as three further independent random origins, or as a paired comparison of
+one-module and two-module designs.
+
+![V5 runs initialized from V4](docs/evolution-long.png)
+
+Survival is seed-dependent. A separate V5 check with the CLI's default seed 1
+became extinct at **732.17 seconds**, after six births. Seed 41 reached population
+10 after 600 seconds, having fallen as low as four. These additional checks were
+not selected for long continuation. The launch examples explicitly use seed 11
+as a verified viewing start; this does not establish a general survival rate.
+
+An early community assay of seed-11 descendants at 1,800 seconds used three
+fresh environments for 240 seconds each. Final populations were 59/45/25 under
+normal sensing, 46/33/26 without trail reception, and the identical 46/33/26
+without physical emission but with its costs retained. Rotating directional
+readings gave 59/33/33, and removing all chemical inputs gave 25/23/38. Trail
+reception was not consistently beneficial even within that source population.
+
+The final assay transplanted descendants from each independent 10,800-second
+run into two new environments, again for 240 seconds with mutation disabled.
+Cells below show **final population / births**. All trials start with 192
+sampled organisms, fresh neural states, and empty trail fields.
+
+| Evolution seed | Environment seed | Founders | Descendants | No trail sensing | Rotated readings | No chemical inputs |
+|---|---|---|---|---|---|---|
+| 11 | 10011 | 39 / 48 | 69 / 68 | 69 / 81 | 69 / 68 | 64 / 66 |
+| 11 | 10012 | 42 / 57 | 57 / 65 | 69 / 92 | 67 / 91 | 52 / 44 |
+| 12 | 10011 | 23 / 22 | 61 / 33 | 37 / 43 | 63 / 41 | 57 / 40 |
+| 12 | 10012 | 15 / 15 | 63 / 40 | 38 / 45 | 61 / 45 | 57 / 49 |
+| 13 | 10011 | 19 / 18 | 56 / 39 | 50 / 47 | 56 / 49 | 13 / 11 |
+| 13 | 10012 | 10 / 5 | 47 / 41 | 47 / 38 | 51 / 49 | 9 / 10 |
+
+Descendants ended with larger populations than founder transplants in all six
+pairs. This includes inherited differences in body size, costs, and initial
+energy investment; it is not a clean estimate of individual behavioral fitness.
+Removing all chemical inputs reduced final population in all six pairs, but
+births did not improve consistently with sensing. Removing trails alone gave
+three positive, two tied, and one negative population effects for normal sensing;
+normal sensing produced fewer births in five of those six pairs. Reversing
+directional readings rarely harmed final population. Ambient chemical intensity
+or altered controller dynamics could explain these effects without directional
+navigation. **Useful trail following and communication remain unestablished.**
+
+### Final validation and reproduction
+
+- **64 tests pass**, including original V0 regressions, every version's state
+  replay, conservative energy transfers, paid secretion, diffusion/decay,
+  developmental bodies, transfer provenance, and treatment controls. Ruff lint,
+  formatting, and the locked uv dependency resolution pass.
+- A full-size late V5 checkpoint resumed with exact CPU agreement after saving
+  between updates, including agents, resource arrays, fields, totals, and random
+  states. An original V0 checkpoint still loads and advances.
+- V5 CUDA simulation and checkpoint continuation passed on the RTX 5080 with
+  PyTorch 2.11.0+cu128 at 1e-5 tolerance. This small smoke check used about 9 MB of
+  allocated GPU tensor memory; it is not a full-population performance benchmark.
+- The six long runs achieved roughly 11–13x simulated/wall speed on CPU while
+  running concurrently. The late video run achieved 9.3x with recording enabled.
+- The six long runs' final absolute energy residuals were below 0.43 units,
+  against roughly 4.9–5.2 million injected food-energy units. Pilot and inherited
+  runs retain the earlier chemical-accounting offset. The resumed random-origin
+  runs retain that offset from their source checkpoint, with less than 0.4 units
+  of additional change during 9,000 seconds. A fresh corrected-code 600-second
+  run had chemical residual 0.0102 against 1.78 million emitted units.
+- Historical archives retained 18 checkpoints per full long run, split as three
+  pilot plus 15 continuation checkpoints for the random origins. Full states,
+  events, sampled genomes, configuration, and source hashes remain under `runs/`.
+- Early and late V5 MP4s were decoded and their changing frames checked. Both
+  are approximately 30-second, 1024-square, 30 FPS recordings. The illustrated
+  three-module creature is an early surviving founder, not a newly evolved body.
+  Plots also regenerate from committed compact evidence without local raw runs.
+
+Artifacts: [V5 compact evidence](docs/results/v5.json),
+[final verification](docs/results/final-verification.json),
+[late video](runs/v5-late-video/timelapse.mp4), and
+[early video](runs/v5-video/timelapse.mp4). Videos and full states are local
+artifacts excluded from git. The final assays are under `runs/v5-late-assay-*`.
+Earlier evidence is in `docs/results/v1.json` through `v4.json`, including late
+V3/V4 comparisons completed during the next version.
+
+To repeat a random-founder long experiment and its community assay:
+
+```bash
+uv sync --locked
+uv run garden run --config configs/v5.toml --seed 11 --device cpu \
+  --seconds 10800 --output runs/repeat-v5-11
+uv run garden assay runs/repeat-v5-11 --device cpu \
+  --seeds 10011 10012 --seconds 240 --modes none no_signal rotated disabled \
+  --output runs/repeat-v5-11-assay
+uv run python scripts/plot_results.py
+```
+
+These commands use the final accounting code; historical raw runs retain their
+recorded source hashes and numerical residuals. Reproduction across hardware or
+library versions is not guaranteed to be bit-identical. The plotting command
+recreates the documented experiments' figures, rather than automatically adding
+a newly named run.
+
+### What the loop established and what should come next
+
+The result is a watchable artificial ecology: heritable neural controllers and
+bodies survive, consume, reproduce, mutate, affect resource availability, prey
+on one another, and leave persistent environmental traces. Multi-module bodies
+can persist. None of the experiments established open-ended novelty, lifetime
+learning, predictive planning, cooperative signaling, or increasing intelligence.
+Adding mechanisms expanded what was possible but did not reliably preserve
+ecological or morphological diversity.
+
+The next experiment should address that observed bottleneck before adding more
+outputs: spatially separated resource niches and refuges, with matched tests of
+whether they preserve distinct feeding strategies across many seeds. A useful
+communication experiment would also need sender/receiver interventions that
+distinguish information left by another creature from self-trails or ambient
+density, while retaining meaningful energy costs. Those are follow-up research
+directions, not implemented V6 features.

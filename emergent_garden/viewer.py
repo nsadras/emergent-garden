@@ -50,11 +50,18 @@ class Renderer:
         if self.show_field:
             fields = getattr(world, "fields", [world.field])
             field = fields[self.field_index % len(fields)].grid.detach().cpu().numpy()
-            strength = (field / (field + c.smell_scale) * 100).astype(np.uint8)
-            rgb = np.zeros((*field.shape, 3), dtype=np.uint8)
-            rgb[..., 0] = 13 + strength // 5
-            rgb[..., 1] = 31 + strength // 2
-            rgb[..., 2] = 37 + strength // 4
+            norm = c.signal_scale if self.field_index == 4 else c.smell_scale
+            strength = field / (field + norm) * 100
+            tints = (
+                (0.2, 0.5, 0.25),
+                (0.8, 0.4, 0.05),
+                (0.3, 0.5, 0.8),
+                (0.7, 0.25, 0.7),
+                (0.15, 0.8, 0.9),
+            )
+            rgb = (
+                np.array([13, 31, 37]) + strength[..., None] * np.array(tints[self.field_index])
+            ).astype(np.uint8)
             rgb[~world.field.mask.cpu().numpy()] = (8, 17, 23)
             layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
             side = max(1, int(c.diameter * scale))

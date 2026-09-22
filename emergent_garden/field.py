@@ -67,3 +67,60 @@ class SmellField:
             align_corners=False,
         )
         return sampled.reshape(shape)
+
+
+class TrailField(SmellField):
+    """Persistent concentration with conservative diffusion in an impermeable dish.
+
+    Deposits are amounts, divided by cell area. Fluxes cross only faces shared
+    by two valid cells. Stable explicit substeps support different resolutions.
+    """
+
+    def __init__(self, config, device):
+        super().__init__(config, device)
+        self.edges_x = self.mask[:, 1:] & self.mask[:, :-1]
+        self.edges_y = self.mask[1:] & self.mask[:-1]
+
+    def mass(self):
+        return self.grid.double().sum().item() * self.cell**2
+
+    def deposit(self, positions, amounts):
+        n = self.config.grid_size
+        if not len(positions):
+            return
+        p = positions / self.cell - 0.5
+        base, frac = p.floor().long(), p - p.floor()
+        indices, weights = [], []
+        for dx, dy in ((0, 0), (0, 1), (1, 0), (1, 1)):
+            xy = (base + torch.tensor([dx, dy], device=self.device)).clamp(0, n - 1)
+            weight = (frac[:, 0] if dx else 1 - frac[:, 0]) * (frac[:, 1] if dy else 1 - frac[:, 1])
+            weight *= self.mask[xy[:, 1], xy[:, 0]]
+            indices.append(xy[:, 1] * n + xy[:, 0])
+            weights.append(weight)
+        weights = torch.stack(weights, 1)
+        weights /= weights.sum(1, keepdim=True).clamp_min(1e-20)
+        values = amounts[:, None] * weights / self.cell**2
+        self.grid.flatten().index_add_(0, torch.stack(indices, 1).flatten(), values.flatten())
+
+    def advance(self, seconds):
+        coefficient = self.config.signal_diffusion * seconds / self.cell**2
+        steps = max(1, math.ceil(coefficient / 0.24))
+        rate = coefficient / steps
+        before = self.mass()
+        for _ in range(steps):
+            flux_x = (self.grid[:, 1:] - self.grid[:, :-1]) * rate * self.edges_x
+            flux_y = (self.grid[1:] - self.grid[:-1]) * rate * self.edges_y
+            delta = torch.zeros_like(self.grid)
+            delta[:, :-1] += flux_x
+            delta[:, 1:] -= flux_x
+            delta[:-1] += flux_y
+            delta[1:] -= flux_y
+            self.grid = (self.grid + delta).clamp_min(0)
+        factor = float(
+            torch.tensor(
+                math.exp(-math.log(2) * seconds / self.config.signal_half_life),
+                dtype=self.grid.dtype,
+            )
+        )
+        self.grid *= factor
+        return before * (1 - factor)

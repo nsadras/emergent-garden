@@ -1,5 +1,8 @@
 # Emergent Garden: V0 implementation plan
 
+This is the preserved V0 specification. Subsequent V1–V5 designs, parameter
+changes, experiments, and limitations are recorded in [EVOLUTION.md](EVOLUTION.md).
+
 Status: V0 software implemented; population persistence verified. Reproducible
 foraging improvement and a sensory advantage remain experimental criteria.
 Recorded: 2026-09-22.

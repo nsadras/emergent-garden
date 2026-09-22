@@ -1,5 +1,8 @@
 # V0 initial validation
 
+For the five subsequent versions and their current validation, see
+[EVOLUTION.md](EVOLUTION.md). This document preserves the original V0 results.
+
 Recorded 2026-09-22. These are implementation checks and initial experiments,
 not a claim of robust evolved chemotaxis or lifetime learning.
 

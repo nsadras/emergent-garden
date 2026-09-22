@@ -42,7 +42,11 @@ def upgrade_genomes(source, target, genomes):
         if target.ecology_version >= 4 and source.ecology_version < 4:
             traits[:, 6] = -0.75  # One module, near a viable duplication mutation.
         traits[:, : source.trait_count] = genomes[:, source.brain_parameter_count :]
-    return out.clamp(-target.weight_limit, target.weight_limit)
+    if (out.abs() > target.weight_limit).any():
+        raise ValueError(
+            "Transfer exceeds target weight_limit; increase it to preserve the circuit"
+        )
+    return out
 
 
 def seed_population(world, path):
@@ -67,6 +71,7 @@ def seed_population(world, path):
         path=str(path),
         ecology_version=source.ecology_version,
         source_ids=saved["ids"][selection].tolist(),
+        source_generations=saved["generations"][selection].tolist(),
         interpretation="Sampled living genotypes initialize zero-age founders with fresh states. "
         "New sensory weights start at zero; new effector biases start at -2. "
         "New modular bodies start with one module near the duplication boundary.",

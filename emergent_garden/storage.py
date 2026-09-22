@@ -95,6 +95,13 @@ class RunStore:
         self.started = time.perf_counter()
         self.initial_time = world.time
         self.initial_steps = world.totals["organism_steps"]
+        period = world.config.archive_sim_seconds
+        self.archive_period = max(1, round(period * world.config.physics_hz)) if period else None
+        self.next_archive_tick = (
+            (world.tick // self.archive_period + 1) * self.archive_period
+            if self.archive_period
+            else None
+        )
 
     def write_events(self, world):
         for event in world.events:
@@ -115,6 +122,9 @@ class RunStore:
         self.metrics_file.write(json.dumps(metric, allow_nan=False) + "\n")
         self.metrics_file.flush()
         self.write_events(world)
+        if self.next_archive_tick is not None and world.tick >= self.next_archive_tick:
+            save_checkpoint(world, self.path / "checkpoints" / f"tick-{world.tick:012d}.pt")
+            self.next_archive_tick = (world.tick // self.archive_period + 1) * self.archive_period
         return metric
 
     def checkpoint(self, world):
