@@ -28,6 +28,8 @@ class Renderer:
         self.center = None
         self.selected = None
         self.show_field = True
+        self.field_index = 0
+        self.color_mode = "diet"
 
     def transform(self, points, diameter):
         points = np.asarray(points, dtype=np.float64)
@@ -46,7 +48,8 @@ class Renderer:
         radius = int(c.diameter / 2 * scale)
         pygame.draw.circle(surface, (13, 31, 37), dish_center.astype(int), radius)
         if self.show_field:
-            field = world.field.grid.detach().cpu().numpy()
+            fields = getattr(world, "fields", [world.field])
+            field = fields[self.field_index % len(fields)].grid.detach().cpu().numpy()
             strength = (field / (field + c.smell_scale) * 100).astype(np.uint8)
             rgb = np.zeros((*field.shape, 3), dtype=np.uint8)
             rgb[..., 0] = 13 + strength // 5
@@ -72,9 +75,13 @@ class Renderer:
         pygame.draw.circle(surface, (74, 133, 137), dish_center.astype(int), radius, 2)
         food, _ = self.transform(world.food_pos.detach().cpu().numpy(), c.diameter)
         food_radius = max(1, round(c.food_radius * scale))
-        for pos in food:
+        kinds = (
+            world.food_kind.cpu().numpy() if hasattr(world, "food_kind") else np.zeros(len(food))
+        )
+        for pos, kind in zip(food, kinds, strict=True):
             if (pos >= -food_radius).all() and (pos < self.size + food_radius).all():
-                pygame.draw.circle(surface, (131, 192, 104), pos.astype(int), food_radius)
+                color = (131, 192, 104) if kind == 0 else (221, 158, 83)
+                pygame.draw.circle(surface, color, pos.astype(int), food_radius)
         visible = (
             "pos",
             "id",
@@ -88,12 +95,20 @@ class Renderer:
             "h",
         )
         data = {key: a[key].detach().cpu().numpy() for key in visible}
+        for key in ("radius", "power", "diet"):
+            if key in a:
+                data[key] = a[key].detach().cpu().numpy()
         positions, _ = self.transform(data["pos"], c.diameter)
         r = max(2, round(c.body_radius * scale))
         for i, pos in enumerate(positions):
+            if "radius" in data:
+                r = max(2, round(float(data["radius"][i]) * scale))
             if (pos < -r).any() or (pos > self.size + r).any():
                 continue
             color = lineage_color(int(data["lineage"][i]))
+            if "diet" in data and self.color_mode == "diet":
+                d = float(data["diet"][i])
+                color = (int(235 - 130 * d), int(156 + 76 * d), int(89 + 46 * d))
             pygame.draw.circle(surface, color, pos.astype(int), r)
             angle = data["heading"][i]
             forward = np.array([math.cos(angle), math.sin(angle)])
@@ -133,7 +148,7 @@ class Renderer:
         chosen = np.flatnonzero(data["id"] == self.selected) if self.selected is not None else []
         if len(chosen):
             i = chosen[0]
-            panel = pygame.Surface((260, 192), pygame.SRCALPHA)
+            panel = pygame.Surface((285, 222), pygame.SRCALPHA)
             panel.fill((6, 14, 21, 230))
             surface.blit(panel, (18, 92))
             self.text(f"Creature {self.selected} / lineage {data['lineage'][i]}", (30, 103))
@@ -146,6 +161,13 @@ class Renderer:
                 color = (100, 200, 160) if activity >= 0 else (120, 133, 230)
                 x = 30 + j * min(13, 224 / len(data["h"][i]))
                 pygame.draw.line(surface, color, (x, 239), (x, 239 - float(activity) * 25), 6)
+            if "diet" in data:
+                self.text(
+                    f"Radius {data['radius'][i]:.1f}  Power {data['power'][i]:.2f}",
+                    (30, 264),
+                    small=True,
+                )
+                self.text(f"Fresh-food allocation {data['diet'][i]:.0%}", (30, 285), small=True)
         return surface
 
     def save(self, world, path):
@@ -179,6 +201,12 @@ class Viewer(Renderer):
                     self.speed = max(0.125, self.speed / 2)
                 elif event.key == pygame.K_f:
                     self.show_field = not self.show_field
+                elif event.key == pygame.K_TAB:
+                    self.field_index = (self.field_index + 1) % len(
+                        getattr(world, "fields", [world.field])
+                    )
+                elif event.key == pygame.K_c:
+                    self.color_mode = "lineage" if self.color_mode == "diet" else "diet"
                 elif event.key == pygame.K_r:
                     self.zoom, self.center = 1, None
             elif event.type == pygame.MOUSEWHEEL:
@@ -210,7 +238,8 @@ class Viewer(Renderer):
         state = "PAUSED" if self.paused else f"{self.speed:g}x"
         self.draw(
             world,
-            f"{state} | Space pause | +/- speed | Scroll zoom | Right-drag pan | F smell | R reset",
+            f"{state} | Space pause | +/- speed | Scroll zoom | Right-drag pan | "
+            "F field | Tab channel | C color | R reset",
         )
         self.window.blit(self.surface, (0, 0))
         pygame.display.flip()

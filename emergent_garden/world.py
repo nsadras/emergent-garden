@@ -515,6 +515,10 @@ class World:
 
     @classmethod
     def from_state(cls, state, device="cpu"):
+        if state["version"] == 2:
+            from .ecology import EcologyWorld
+
+            return EcologyWorld.from_state(state, device)
         if state["version"] != 1:
             raise ValueError("Unsupported checkpoint version")
         # Skip initialization entirely: resuming must not consume any random numbers.
@@ -551,3 +555,12 @@ class World:
                 ) from exc
             self.rng[name] = generator
         return self
+
+
+def create_world(config=None, seed=1, device="cpu", controller="neural", ablation="none"):
+    config = config or Config()
+    if config.ecology_version:
+        from .ecology import EcologyWorld
+
+        return EcologyWorld(config, seed, device, controller, ablation)
+    return World(config, seed, device, controller, ablation)

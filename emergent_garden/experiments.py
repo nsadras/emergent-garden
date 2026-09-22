@@ -11,7 +11,7 @@ import torch
 
 from .config import Config
 from .storage import RunStore, atomic_save
-from .world import World
+from .world import create_world as World
 
 
 def calibration(config, output, seeds, seconds, device, controller="neural", stop=None):
@@ -56,6 +56,10 @@ def trial(config, genome, seed, seconds, device, ablation, stop=None):
     config = replace(config, initial_population=1, mutation_probability=0.0)
     world = World(config, seed, device, ablation=ablation)
     world.agents["genome"][0] = genome.to(device)
+    if config.ecology_version:
+        world.develop(world.agents)
+        world.agents["energy"] = config.birth_energy * world.agents["area"]
+        world.initial_energy = world.agents["energy"].double().sum().item()
     world.founders = world.agents["genome"].clone()
     target = math.ceil(seconds * config.physics_hz)
     record = None
@@ -167,3 +171,84 @@ def evaluate(run, output, count, seeds, seconds, device, stop=None):
     )
     (output / "summary.json").write_text(json.dumps(report, indent=2))
     return report
+
+
+def community_assay(run, output, seeds, seconds, device, modes, stop=None):
+    """Transplant whole sampled communities into matched, independent environments.
+
+    Mutation is disabled for both brain and trait genes, but births remain active.
+    Comparing founder/descendant communities measures collective performance, not
+    individual fitness or proof of adaptive cognition. Interventions can disrupt
+    ordinary controller dynamics and should be interpreted with behavioral probes.
+    """
+    run, output = Path(run), Path(output)
+    c = replace(
+        Config.load(run / "config.toml"), mutation_probability=0.0, trait_mutation_probability=0.0
+    )
+    if not c.ecology_version:
+        raise ValueError("Use evaluate for V0; community assays require V1 or later")
+    from .ecology import EcologyWorld
+
+    founders = torch.load(run / "founders.pt", weights_only=True, map_location="cpu")["genomes"]
+    final = torch.load(run / "population.pt", weights_only=True, map_location="cpu")
+    descendants = final["genomes"][final["generations"] > 0]
+    if not len(founders) or not len(descendants):
+        raise ValueError("Assay requires founders and living descendants")
+    # Validate all modes before creating output or doing expensive work.
+    for mode in modes:
+        EcologyWorld(replace(c, initial_population=0, initial_food=0), ablation=mode)
+    output.mkdir(parents=True, exist_ok=False)
+    c.save(output / "config.toml")
+    atomic_save(dict(founders=founders, descendants=descendants), output / "source-genomes.pt")
+    rows = []
+    target = math.ceil(seconds * c.physics_hz)
+    for seed in seeds:
+        for group, genomes in (("founders", founders), ("descendants", descendants)):
+            selection = torch.Generator().manual_seed(seed + 1299709)
+            chosen = genomes[
+                torch.randint(len(genomes), (c.initial_population,), generator=selection)
+            ]
+            for mode in ["none"] if group == "founders" else modes:
+                if stop is not None and stop.requested:
+                    (output / "summary.json").write_text(
+                        json.dumps(dict(completed=False, trials=rows), indent=2)
+                    )
+                    return rows
+                w = EcologyWorld(c, seed, device, ablation=mode)
+                w.agents["genome"] = chosen.to(device).clone()
+                w.develop(w.agents)
+                w.agents["energy"] = c.birth_energy * w.agents["area"]
+                w.initial_energy = w.agents["energy"].double().sum().item()
+                # Transplanting changes radii; project initial overlaps before time starts.
+                w.move()
+                w.founders = chosen.to(device).clone()
+                path = output / f"{seed}-{group}-{mode}"
+                store = RunStore(path, w, run)
+                try:
+                    store.measure(w)
+                    while w.tick < target and w.population and not (stop and stop.requested):
+                        w.step(min(c.physics_hz, target - w.tick))
+                        if w.tick % (c.physics_hz * 5) == 0:
+                            store.measure(w)
+                    row = dict(seed=seed, group=group, ablation=mode, **store.measure(w))
+                    row["completed"] = w.tick >= target or not w.population
+                    rows.append(row)
+                    with (output / "trials.jsonl").open("a") as stream:
+                        stream.write(json.dumps(row) + "\n")
+                    print(
+                        f"assay {seed}/{group}/{mode}: population={w.population}, "
+                        f"births={w.totals['births']}",
+                        flush=True,
+                    )
+                finally:
+                    store.checkpoint(w)
+                    store.close()
+    report = dict(
+        completed=all(r["completed"] for r in rows),
+        trials=rows,
+        interpretation="Paired community transplants retain resource feedback and competition. "
+        "Founders and descendants may differ in initial body energy investment. "
+        "State resets perturb controller dynamics; they alone do not establish useful memory.",
+    )
+    (output / "summary.json").write_text(json.dumps(report, indent=2))
+    return rows

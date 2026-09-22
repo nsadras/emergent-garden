@@ -11,10 +11,10 @@ from pathlib import Path
 import torch
 
 from .config import Config
-from .experiments import calibration, evaluate
+from .experiments import calibration, community_assay, evaluate
 from .runtime import StopFlag
 from .storage import RunStore, load_checkpoint, runtime_metadata
-from .world import World
+from .world import create_world as World
 
 
 def choose_device(requested):
@@ -197,6 +197,15 @@ def parser():
     evaluation.add_argument("--seeds", type=int, nargs="+", default=list(range(10001, 10009)))
     evaluation.add_argument("--seconds", type=float, default=120)
     evaluation.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    assay = sub.add_parser(
+        "assay", help="Compare matched founder/descendant communities and interventions"
+    )
+    assay.add_argument("run", type=Path)
+    assay.add_argument("--output", type=Path, required=True)
+    assay.add_argument("--seeds", type=int, nargs="+", default=[10001, 10002, 10003])
+    assay.add_argument("--seconds", type=float, default=180)
+    assay.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    assay.add_argument("--modes", nargs="+", default=["none", "disabled", "no_recycling"])
     return root
 
 
@@ -209,7 +218,7 @@ def main():
         torch.set_num_threads(args.threads)
         if hasattr(args, "seconds") and (not math.isfinite(args.seconds) or args.seconds < 0):
             raise ValueError("--seconds must be finite and nonnegative")
-        if args.command in ("calibrate", "evaluate") and args.seconds <= 0:
+        if args.command in ("calibrate", "evaluate", "assay") and args.seconds <= 0:
             raise ValueError("Experiments require a positive duration")
         if args.command == "config":
             if args.path.exists():
@@ -252,6 +261,16 @@ def main():
                 stop=stop,
             )
             print(json.dumps(report["groups"], indent=2))
+        elif args.command == "assay":
+            community_assay(
+                args.run,
+                args.output,
+                args.seeds,
+                args.seconds,
+                choose_device(args.device),
+                args.modes,
+                stop,
+            )
     except (ValueError, OSError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return_code = 1

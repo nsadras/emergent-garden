@@ -11,6 +11,13 @@ import tomli_w
 @dataclass
 class Config:
     schema_version: int = 1
+    ecology_version: int = 0
+    patch_capacity: float = 2400.0
+    detritus_fraction: float = 0.35
+    detritus_lifetime: float = 240.0
+    detritus_delay: float = 0.0
+    trait_mutation_probability: float = 0.15
+    trait_mutation_sigma: float = 0.15
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -77,10 +84,20 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
+        if self.ecology_version not in (0, 1):
+            raise ValueError("Unsupported ecology version")
+        if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
+            raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
+        if not 0 <= self.detritus_fraction < 1 or not 0 <= self.trait_mutation_probability <= 1:
+            raise ValueError("Invalid ecology probability")
         if self.initial_population > self.capacity:
             raise ValueError("initial_population must not exceed capacity")
         if self.body_radius >= self.diameter / 2:
             raise ValueError("Body must fit in the dish")
+        if self.ecology_version and 1.3 * self.body_radius >= self.diameter / 2:
+            raise ValueError("Largest inherited body must fit in the dish")
+        if self.detritus_delay >= self.detritus_lifetime:
+            raise ValueError("Detritus must mature before it expires")
         if self.patch_radius + self.food_radius >= self.diameter / 2:
             raise ValueError("Food patches must fit in the dish")
         if self.grid_size < 8 or self.viewer_size < 128 or self.viewer_size % 2:
@@ -102,8 +119,24 @@ class Config:
 
     @property
     def parameter_count(self):
+        return self.brain_parameter_count + self.trait_count
+
+    @property
+    def input_size(self):
+        return 10 if self.ecology_version else 6
+
+    @property
+    def output_size(self):
+        return 2
+
+    @property
+    def trait_count(self):
+        return 3 if self.ecology_version else 0
+
+    @property
+    def brain_parameter_count(self):
         h = self.hidden_size
-        return 6 * h + h * h + h + 2 * h + 2
+        return self.input_size * h + h * h + h + self.output_size * h + self.output_size
 
     @classmethod
     def from_dict(cls, data):

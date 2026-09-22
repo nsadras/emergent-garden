@@ -162,3 +162,22 @@ checkpoint continuation, and independence from rendering/recording.
 - [V0 specification and implementation milestones](PLAN.md)
 - [Initial validation results and current limitations](VALIDATION.md)
 - [Original long-term research specification](spec.md)
+# Experimental ecology versions
+
+V0 is preserved. The successive ecology experiments and their evidence are
+recorded in [EVOLUTION.md](EVOLUTION.md).
+
+```bash
+uv run garden run --config configs/v1.toml --device cpu --view --seconds 0
+uv run garden run --config configs/v1.toml --device cpu --seconds 3600 --record
+uv run garden assay runs/YOUR_RUN --output runs/YOUR_ASSAY --seconds 180
+```
+
+V1 adds fixed recoverable patches, fresh food (green), detritus (amber), and
+inherited body size, motor capacity, and digestion allocation. Creature colors
+show diet by default: green favors fresh food, amber favors detritus. Press **C**
+to switch to lineage colors and **Tab** to change the displayed chemical field.
+Click a creature to inspect its inherited traits. Existing controls still work.
+
+These versions are ecological experiments. Diversity and persistence do not by
+themselves demonstrate evolved sensing, memory, intelligence, or species.
