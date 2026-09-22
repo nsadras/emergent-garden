@@ -18,6 +18,11 @@ class Config:
     detritus_delay: float = 0.0
     trait_mutation_probability: float = 0.15
     trait_mutation_sigma: float = 0.15
+    bite_rate: float = 60.0
+    attack_reach: float = 3.0
+    predation_efficiency: float = 0.65
+    armor_protection: float = 0.8
+    attack_cost: float = 0.25
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -84,12 +89,14 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1):
+        if self.ecology_version not in (0, 1, 2):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
         if not 0 <= self.detritus_fraction < 1 or not 0 <= self.trait_mutation_probability <= 1:
             raise ValueError("Invalid ecology probability")
+        if not 0 <= self.predation_efficiency <= 1 or not 0 <= self.armor_protection <= 1:
+            raise ValueError("Predation efficiency and armor protection must be in [0, 1]")
         if self.initial_population > self.capacity:
             raise ValueError("initial_population must not exceed capacity")
         if self.body_radius >= self.diameter / 2:
@@ -123,14 +130,18 @@ class Config:
 
     @property
     def input_size(self):
+        if self.ecology_version >= 2:
+            return 14
         return 10 if self.ecology_version else 6
 
     @property
     def output_size(self):
-        return 2
+        return 3 if self.ecology_version >= 2 else 2
 
     @property
     def trait_count(self):
+        if self.ecology_version >= 2:
+            return 5
         return 3 if self.ecology_version else 0
 
     @property

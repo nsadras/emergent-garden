@@ -8,7 +8,7 @@ from emergent_garden.storage import load_checkpoint, save_checkpoint
 
 
 def eco(config, **changes):
-    return EcologyWorld(replace(config, ecology_version=1, **changes))
+    return EcologyWorld(replace(config, **{"ecology_version": 1, **changes}))
 
 
 def place_food(w, energy=20.0, kind=0):
@@ -104,8 +104,9 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-def test_ecology_checkpoint_full_replay(config, tmp_path):
-    w = eco(config, initial_food=50, food_rate=10.0)
+@pytest.mark.parametrize("version", [1, 2])
+def test_ecology_checkpoint_full_replay(config, tmp_path, version):
+    w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
     w.step(17)
     save_checkpoint(w, tmp_path / "state.pt")
     other = load_checkpoint(tmp_path / "state.pt")
@@ -154,3 +155,58 @@ def test_community_assay_preserves_phenotypes_and_disables_mutation(config, tmp_
     assert resumed.config.mutation_probability == 0
     assert resumed.config.trait_mutation_probability == 0
     assert (resumed.agents["radius"] > 0).all()
+
+
+def attacking_world(config):
+    w = eco(config, ecology_version=2, initial_population=3)
+    a = w.agents
+    a["pos"] = torch.tensor([[60.0, 60.0], [60.0, 68.0], [68.0, 64.0]])
+    a["radius"][:] = 4
+    a["area"][:] = 1
+    a["heading"][:] = 0
+    a["attack"][:] = torch.tensor([1.0, 1.0, 0.0])
+    a["armor"][:] = 0
+    a["actions"][:, 2] = 1
+    a["energy"][:] = torch.tensor([20.0, 20.0, 1.0])
+    w.initial_energy = 41.0
+    return w
+
+
+def test_simultaneous_predation_caps_shared_prey_and_conserves_energy(config):
+    w = attacking_world(config)
+    w.hunt()
+    assert w.agents["energy"][2] == 0
+    assert w.agents["meat_acquired"].sum().item() == pytest.approx(0.65)
+    assert w.agents["bitten"].sum().item() == pytest.approx(1.0)
+    assert w.totals["predation_kills"] == 1
+    assert abs(w.metrics()["energy_balance_error"]) < 1e-4
+    w.remove_dead()
+    assert w.population == 2
+    assert w.events[-1]["bitten"] == 1
+
+
+def test_attack_storage_caps_and_ablation(config):
+    w = attacking_world(config)
+    w.agents["energy"][:2] = config.max_energy
+    w.initial_energy = 501.0
+    w.hunt()
+    assert (w.agents["energy"][:2] == config.max_energy).all()
+    assert w.totals["predation_loss"] == 1.0
+    assert abs(w.metrics()["energy_balance_error"]) < 1e-4
+    other = attacking_world(config)
+    other.ablation = "no_attacks"
+    before = other.agents["energy"].clone()
+    other.hunt()
+    torch.testing.assert_close(before, other.agents["energy"])
+
+
+def test_armor_reduces_damage_and_has_maintenance_cost(config):
+    unarmored = attacking_world(config)
+    armored = attacking_world(config)
+    for w in (unarmored, armored):
+        w.agents["energy"][2] = 100.0
+    armored.agents["armor"][2] = 1.0
+    unarmored.hunt()
+    armored.hunt()
+    assert armored.agents["bitten"][2] < unarmored.agents["bitten"][2]
+    assert armored.costs()[0][2] > unarmored.costs()[0][2]

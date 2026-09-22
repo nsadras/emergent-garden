@@ -23,7 +23,14 @@ class EcologyWorld(World):
         self.seed, self.controller, self.ablation = seed, controller, ablation
         if controller not in ("neural", "forager", "rest", "random"):
             raise ValueError(f"Unknown controller: {controller}")
-        if ablation not in ("none", "disabled", "shuffled", "memory_reset", "no_recycling"):
+        if ablation not in (
+            "none",
+            "disabled",
+            "shuffled",
+            "memory_reset",
+            "no_recycling",
+            "no_attacks",
+        ):
             raise ValueError(f"Unknown ablation: {ablation}")
         self.rng = {
             name: torch.Generator(device=self.device).manual_seed(seed + 104729 * i)
@@ -48,10 +55,13 @@ class EcologyWorld(World):
             detritus_created=0.0,
             fresh_absorbed=0.0,
             detritus_absorbed=0.0,
+            predation_absorbed=0.0,
+            predation_loss=0.0,
+            predation_kills=0,
         )
         c = self.config
         self.sensor_angles = torch.tensor([-135, -45, 45, 135], device=self.device) * math.pi / 180
-        self.fields = [SmellField(c, self.device) for _ in range(2)]
+        self.fields = [SmellField(c, self.device) for _ in range(2 + (c.ecology_version >= 2))]
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.food_pos = torch.empty((0, 2), device=self.device)
@@ -90,6 +100,9 @@ class EcologyWorld(World):
         a["actions"] = torch.zeros((n, c.output_size), device=self.device)
         for key in ("radius", "area", "power", "diet", "fresh_acquired", "detritus_acquired"):
             a[key] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 2:
+            for key in ("attack", "armor", "meat_acquired", "bitten"):
+                a[key] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -105,6 +118,8 @@ class EcologyWorld(World):
         a["area"] = (a["radius"] / self.config.body_radius).square()
         a["power"] = 0.5 + traits[:, 1]
         a["diet"] = traits[:, 2]
+        if self.config.ecology_version >= 2:
+            a["attack"], a["armor"] = traits[:, 3], traits[:, 4]
 
     def patch_stock(self):
         stock = torch.zeros(self.config.patches, device=self.device)
@@ -163,9 +178,13 @@ class EcologyWorld(World):
         self.totals["food_spawned"] += energy.double().sum().item()
 
     def rebuild_fields(self):
-        for kind, field in enumerate(self.fields):
+        for kind, field in enumerate(self.fields[:2]):
             mask = (self.food_kind == kind) & (self.food_ready <= self.tick)
             field.rebuild(self.food_pos[mask], self.food_energy[mask])
+        if self.config.ecology_version >= 2:
+            self.fields[2].rebuild(
+                self.agents["pos"], self.config.food_energy * self.agents["area"]
+            )
 
     def sensors(self, index):
         a, c = self.agents, self.config
@@ -244,6 +263,8 @@ class EcologyWorld(World):
     def move(self):
         a, c = self.agents, self.config
         speed = c.max_speed * a["power"] * a["motors"].mean(1) / a["area"].sqrt()
+        if c.ecology_version >= 2:
+            speed /= 1 + 0.5 * a["armor"]
         turn = math.radians(c.max_turn_degrees) * (a["motors"][:, 1] - a["motors"][:, 0])
         middle = a["heading"] + turn * c.dt / 2
         old = a["pos"].clone()
@@ -290,6 +311,8 @@ class EcologyWorld(World):
         recycled = fresh.float() * recycle_fraction
         # Ablating recycling dissipates that same fraction, preserving assimilation.
         assimilated = efficiency * (1 - fresh.float() * c.detritus_fraction)
+        if c.ecology_version >= 2:
+            assimilated *= 1 - 0.55 * a["attack"][i]
         claims = torch.bincount(j, minlength=len(self.food_energy)).clamp_min(1)
         shares = self.food_energy[j] / claims[j]
         requested = torch.zeros_like(a["energy"]).index_add_(0, i, shares * assimilated)
@@ -319,10 +342,47 @@ class EcologyWorld(World):
         # Base death recording includes genome hashes and individual life histories.
         super().remove_dead()
 
+    def hunt(self):
+        a, c = self.agents, self.config
+        if c.ecology_version < 2 or self.ablation == "no_attacks" or not self.population:
+            return
+        reach = 2.6 * c.body_radius + c.attack_reach
+        i, j = neighbors(a["pos"], a["pos"], reach, c.diameter)
+        delta = a["pos"][j] - a["pos"][i]
+        distance = delta.norm(dim=1)
+        forward = torch.stack((a["heading"].cos(), a["heading"].sin()), 1)
+        facing = (delta * forward[i]).sum(1) >= 0.5 * distance
+        hit = (i != j) & facing & (distance <= a["radius"][i] + a["radius"][j] + c.attack_reach)
+        i, j = i[hit], j[hit]
+        if not len(i):
+            return
+        targets = torch.bincount(i, minlength=self.population).clamp_min(1)
+        bites = c.bite_rate * c.dt * a["attack"][i] * a["actions"][i, 2] / targets[i]
+        bites *= 1 - c.armor_protection * a["armor"][j]
+        demanded = torch.zeros_like(a["energy"]).index_add_(0, j, bites)
+        bites *= (a["energy"] / demanded.clamp_min(1e-20)).clamp_max(1)[j]
+        lost = torch.zeros_like(a["energy"]).index_add_(0, j, bites)
+        available = (a["energy"] - lost).clamp_min(0)
+        meals = bites * c.predation_efficiency
+        requested = torch.zeros_like(a["energy"]).index_add_(0, i, meals)
+        room = (c.max_energy * a["area"] - available).clamp_min(0)
+        meals *= (room / requested.clamp_min(1e-20)).clamp_max(1)[i]
+        received = torch.zeros_like(a["energy"]).index_add_(0, i, meals)
+        a["energy"] = available + received
+        a["acquired"] += received
+        a["meat_acquired"] += received
+        a["bitten"] += lost
+        self.totals["predation_absorbed"] += received.double().sum().item()
+        self.totals["predation_loss"] += lost.double().sum().item() - received.double().sum().item()
+        self.totals["predation_kills"] += int((a["energy"] <= 0).sum())
+
     def agent_record(self, index):
         result = super().agent_record(index)
         for key in ("radius", "power", "diet", "fresh_acquired", "detritus_acquired"):
             result[key] = self.agents[key][index].item()
+        for key in ("attack", "armor", "meat_acquired", "bitten"):
+            if key in self.agents:
+                result[key] = self.agents[key][index].item()
         return result
 
     def mutate(self, genome):
@@ -409,6 +469,9 @@ class EcologyWorld(World):
         a, c = self.agents, self.config
         propulsion = c.propulsion_cost * a["power"].square() * a["motors"].square().sum(1) * c.dt
         maintenance = c.basal_cost * (0.25 + 0.75 * a["area"]) * c.dt
+        if c.ecology_version >= 2:
+            maintenance += (0.15 * a["attack"].square() + 0.25 * a["armor"].square()) * c.dt
+            maintenance += c.attack_cost * a["actions"][:, 2].square() * c.dt
         return maintenance, propulsion
 
     @torch.no_grad()
@@ -441,6 +504,9 @@ class EcologyWorld(World):
             self.totals["organism_steps"] += self.population
             self.remove_dead()
             self.feed()
+            if c.ecology_version >= 2:
+                self.hunt()
+                self.remove_dead()
             self.reproduce()
             self.tick += 1
 
@@ -454,6 +520,11 @@ class EcologyWorld(World):
         result["grazers"] = int((a["diet"] > 0.65).sum())
         result["scavengers"] = int((a["diet"] < 0.35).sum())
         result["generalists"] = n - result["grazers"] - result["scavengers"]
+        if c.ecology_version >= 2:
+            result["mean_attack"] = a["attack"].mean().item() if n else 0
+            result["mean_armor"] = a["armor"].mean().item() if n else 0
+            fraction = a["meat_acquired"] / a["acquired"].clamp_min(1e-20)
+            result["meat_eaters"] = int(((fraction > 0.2) & (a["acquired"] > 20)).sum())
         result["patch_stock"] = self.patch_stock().tolist()
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
@@ -470,6 +541,7 @@ class EcologyWorld(World):
             - result["propulsion"]
             - result["reproduction"]
             - result["digestion_loss"]
+            - result.get("predation_loss", 0.0)
             - result["death_energy"]
             - result["living_energy"]
             - result["food_energy"]
@@ -534,7 +606,11 @@ class EcologyWorld(World):
             "patch_positions",
             "founders",
         ):
-            value = state.get(key, torch.zeros_like(state["food_expiry"]))
+            value = (
+                torch.zeros_like(state["food_expiry"])
+                if key == "food_ready" and key not in state
+                else state[key]
+            )
             setattr(self, key, value.to(device).clone())
         self.sensor_angles = torch.tensor([-135, -45, 45, 135], device=self.device) * math.pi / 180
         self.fields = [SmellField(self.config, self.device) for _ in state["fields"]]

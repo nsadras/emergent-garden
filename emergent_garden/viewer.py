@@ -95,7 +95,7 @@ class Renderer:
             "h",
         )
         data = {key: a[key].detach().cpu().numpy() for key in visible}
-        for key in ("radius", "power", "diet"):
+        for key in ("radius", "power", "diet", "attack", "armor", "actions"):
             if key in a:
                 data[key] = a[key].detach().cpu().numpy()
         positions, _ = self.transform(data["pos"], c.diameter)
@@ -113,6 +113,16 @@ class Renderer:
             angle = data["heading"][i]
             forward = np.array([math.cos(angle), math.sin(angle)])
             pygame.draw.line(surface, (14, 32, 36), pos, pos + forward * r, max(1, r // 5))
+            if "attack" in data and data["attack"][i] * data["actions"][i, 2] > 0.2:
+                pygame.draw.line(
+                    surface,
+                    (243, 100, 107),
+                    pos + forward * r * 0.6,
+                    pos + forward * (r + 3),
+                    max(1, r // 4),
+                )
+            if "armor" in data and data["armor"][i] > 0.65 and self.zoom >= 2:
+                pygame.draw.circle(surface, (167, 191, 210), pos.astype(int), r, 2)
             if self.zoom >= 2:
                 for sensor_angle in (-135, -45, 45, 135):
                     theta = angle + math.radians(sensor_angle)
@@ -130,6 +140,13 @@ class Renderer:
         header.fill((8, 17, 23, 232))
         surface.blit(header, (0, 0))
         surface.blit(self.title.render("EMERGENT GARDEN", True, (205, 239, 221)), (22, 14))
+        if c.ecology_version and self.size >= 640:
+            names = ("fresh food", "detritus", "organisms", "forecast", "secretions")
+            self.text(
+                f"V{c.ecology_version} | {names[self.field_index]} field | {self.color_mode}",
+                (self.size - 320, 22),
+                small=True,
+            )
         generation = int(data["generation"].max()) if world.population else 0
         self.text(
             f"{world.time:,.1f}s   |   {world.population} creatures   |   "
@@ -148,7 +165,7 @@ class Renderer:
         chosen = np.flatnonzero(data["id"] == self.selected) if self.selected is not None else []
         if len(chosen):
             i = chosen[0]
-            panel = pygame.Surface((285, 222), pygame.SRCALPHA)
+            panel = pygame.Surface((285, 248 if "attack" in data else 222), pygame.SRCALPHA)
             panel.fill((6, 14, 21, 230))
             surface.blit(panel, (18, 92))
             self.text(f"Creature {self.selected} / lineage {data['lineage'][i]}", (30, 103))
@@ -168,6 +185,12 @@ class Renderer:
                     small=True,
                 )
                 self.text(f"Fresh-food allocation {data['diet'][i]:.0%}", (30, 285), small=True)
+            if "attack" in data:
+                self.text(
+                    f"Weapon {data['attack'][i]:.0%}  Armor {data['armor'][i]:.0%}",
+                    (30, 306),
+                    small=True,
+                )
         return surface
 
     def save(self, world, path):

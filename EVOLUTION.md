@@ -98,3 +98,53 @@ revised preset is retained under `runs/v1-mature-assay`.
 
 Decision: retain the maturation delay and proceed to costly contact predation.
 Do not claim evolved chemotaxis or memory from these trajectories.
+
+The revised V1 assay (three held-out seeds, 180 seconds) ended with 153/172/169
+descendants under normal sensing, 152/170/163 without smell, and 127/139/151
+without recycling. Birth counts were higher without smell in all three pairs.
+This reinforces the need to distinguish population persistence from sensory use.
+
+### V2 design — costly predation and defense
+
+A third chemical channel indicates local organism density. A neural output
+controls a forward-facing bite within three units of the body surface. Weapon
+investment reduces particle digestion and adds maintenance; armor reduces damage
+but adds maintenance and movement drag. Attack attempts also cost energy.
+There are no protected lineages or predefined predator/prey classes.
+
+All attacks in a tick are settled simultaneously. Multiple attackers share a
+prey's available energy; storage caps limit assimilation; remaining energy is
+dissipated. Predation transfers energy rather than generating food. Reproduction
+investment prevents profitable perpetual parent/offspring energy cycles.
+
+The `no_attacks` assay suppresses transfers while retaining the same weapon and
+attempt costs. It measures the ecological effect of attacks under fixed traits,
+not the optimal ecology of a newly evolved peaceful population.
+
+[Wagner et al.](https://arxiv.org/abs/1310.1369) observed digital predator/prey
+coevolution exploring alternative behavioral strategies, while emphasizing that
+ever-increasing trait complexity is not inevitable. This motivates the experiment
+without predicting that our much smaller system will reproduce their findings.
+
+V2 passes 42 tests. New checks cover simultaneous attacks on shared prey, storage
+limits, armor costs, attack suppression, and exact V2 checkpoint replay.
+
+| Seed | Seconds | Population | Births | Max generation | Predation deaths | Meat-eating survivors |
+|---|---:|---:|---:|---:|---:|---:|
+| 11 | 1200 | 66 | 208 | 6 | 67 | 21 |
+| 12 | 1200 | 88 | 339 | 9 | 148 | 40 |
+| 13 | 1200 | 80 | 338 | 11 | 69 | 10 |
+
+Meat-eating survivors have acquired >20 total energy and >20% of their intake
+from predation during their own lives. This is an observed feeding category,
+not an inherited species label. All populations persisted; absolute energy
+residuals were below 0.016 units. No parameter change was required for viability.
+
+Matched community assays on seed-12 descendants (two new seeds, 180 seconds)
+ended at populations 104/94 with attacks and 112/137 without attacks. Births
+were 82/72 versus 80/98. Attacks materially alter the ecology; these observations
+do not establish evolved pursuit, escape, or an escalating arms race.
+
+Artifacts: `runs/v2-pilot`, `runs/v2-assay`, `runs/v2-video` (30-second MP4).
+[Compact evidence](docs/results/v2.json). Decision: retain predation at its tested
+costs, then introduce forecast cues and direct tests of history dependence.
