@@ -1,0 +1,249 @@
+"""Pygame observer and streaming MP4 recorder; neither changes the world state."""
+
+import colorsys
+import math
+import os
+from pathlib import Path
+
+os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
+
+import imageio_ffmpeg
+import numpy as np
+import pygame
+
+
+def lineage_color(identifier):
+    return tuple(int(v * 255) for v in colorsys.hsv_to_rgb((identifier * 0.618034) % 1, 0.55, 0.96))
+
+
+class Renderer:
+    def __init__(self, size=1024):
+        pygame.font.init()
+        self.size = size
+        self.surface = pygame.Surface((size, size))
+        self.font = pygame.font.Font(None, 23)
+        self.small = pygame.font.Font(None, 18)
+        self.title = pygame.font.Font(None, 32)
+        self.zoom = 1.0
+        self.center = None
+        self.selected = None
+        self.show_field = True
+
+    def transform(self, points, diameter):
+        points = np.asarray(points, dtype=np.float64)
+        center = self.center if self.center is not None else np.array([diameter / 2] * 2)
+        scale = (self.size - 70) / diameter * self.zoom
+        return (points - center) * scale + self.size / 2, scale
+
+    def text(self, value, point, color=(210, 229, 230), small=False):
+        self.surface.blit((self.small if small else self.font).render(value, True, color), point)
+
+    def draw(self, world, status=""):
+        c, a = world.config, world.agents
+        surface = self.surface
+        surface.fill((8, 17, 23))
+        dish_center, scale = self.transform(np.array([c.diameter / 2] * 2), c.diameter)
+        radius = int(c.diameter / 2 * scale)
+        pygame.draw.circle(surface, (13, 31, 37), dish_center.astype(int), radius)
+        if self.show_field:
+            field = world.field.grid.detach().cpu().numpy()
+            strength = (field / (field + c.smell_scale) * 100).astype(np.uint8)
+            rgb = np.zeros((*field.shape, 3), dtype=np.uint8)
+            rgb[..., 0] = 13 + strength // 5
+            rgb[..., 1] = 31 + strength // 2
+            rgb[..., 2] = 37 + strength // 4
+            rgb[~world.field.mask.cpu().numpy()] = (8, 17, 23)
+            layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
+            side = max(1, int(c.diameter * scale))
+            # Rendering zooms above 2x uses a crop to keep temporary surfaces bounded.
+            n = c.grid_size
+            top_left, _ = self.transform(np.array([0.0, 0.0]), c.diameter)
+            x0 = max(0, int(-top_left[0] / side * n))
+            y0 = max(0, int(-top_left[1] / side * n))
+            x1 = min(n, math.ceil((self.size - top_left[0]) / side * n))
+            y1 = min(n, math.ceil((self.size - top_left[1]) / side * n))
+            if x1 > x0 and y1 > y0:
+                cropped = layer.subsurface((x0, y0, x1 - x0, y1 - y0))
+                resized = pygame.transform.smoothscale(
+                    cropped,
+                    (max(1, round((x1 - x0) * side / n)), max(1, round((y1 - y0) * side / n))),
+                )
+                surface.blit(resized, top_left + np.array([x0, y0]) * side / n)
+        pygame.draw.circle(surface, (74, 133, 137), dish_center.astype(int), radius, 2)
+        food, _ = self.transform(world.food_pos.detach().cpu().numpy(), c.diameter)
+        food_radius = max(1, round(c.food_radius * scale))
+        for pos in food:
+            if (pos >= -food_radius).all() and (pos < self.size + food_radius).all():
+                pygame.draw.circle(surface, (131, 192, 104), pos.astype(int), food_radius)
+        visible = (
+            "pos",
+            "id",
+            "lineage",
+            "heading",
+            "motors",
+            "generation",
+            "energy",
+            "age",
+            "offspring",
+            "h",
+        )
+        data = {key: a[key].detach().cpu().numpy() for key in visible}
+        positions, _ = self.transform(data["pos"], c.diameter)
+        r = max(2, round(c.body_radius * scale))
+        for i, pos in enumerate(positions):
+            if (pos < -r).any() or (pos > self.size + r).any():
+                continue
+            color = lineage_color(int(data["lineage"][i]))
+            pygame.draw.circle(surface, color, pos.astype(int), r)
+            angle = data["heading"][i]
+            forward = np.array([math.cos(angle), math.sin(angle)])
+            pygame.draw.line(surface, (14, 32, 36), pos, pos + forward * r, max(1, r // 5))
+            if self.zoom >= 2:
+                for sensor_angle in (-135, -45, 45, 135):
+                    theta = angle + math.radians(sensor_angle)
+                    sensor = pos + r * np.array([math.cos(theta), math.sin(theta)])
+                    pygame.draw.circle(surface, (213, 254, 192), sensor.astype(int), 2)
+                for side, activation in zip((1, -1), data["motors"][i], strict=True):
+                    lateral = np.array([-forward[1], forward[0]]) * side
+                    base = pos + lateral * r * 0.6 - forward * r * 0.4
+                    pygame.draw.line(
+                        surface, (252, 186, 106), base, base - forward * (3 + activation * r), 2
+                    )
+            if int(data["id"][i]) == self.selected:
+                pygame.draw.circle(surface, (251, 240, 192), pos.astype(int), r + 5, 2)
+        header = pygame.Surface((self.size, 74), pygame.SRCALPHA)
+        header.fill((8, 17, 23, 232))
+        surface.blit(header, (0, 0))
+        surface.blit(self.title.render("EMERGENT GARDEN", True, (205, 239, 221)), (22, 14))
+        generation = int(data["generation"].max()) if world.population else 0
+        self.text(
+            f"{world.time:,.1f}s   |   {world.population} creatures   |   "
+            f"{len(food)} food   |   generation {generation}",
+            (22, 47),
+            small=True,
+        )
+        panel = pygame.Surface((self.size, 42), pygame.SRCALPHA)
+        panel.fill((8, 17, 23, 232))
+        surface.blit(panel, (0, self.size - 42))
+        self.text(
+            status or "Particle scents / inherited recurrent brains / continuous life",
+            (20, self.size - 31),
+            small=True,
+        )
+        chosen = np.flatnonzero(data["id"] == self.selected) if self.selected is not None else []
+        if len(chosen):
+            i = chosen[0]
+            panel = pygame.Surface((260, 192), pygame.SRCALPHA)
+            panel.fill((6, 14, 21, 230))
+            surface.blit(panel, (18, 92))
+            self.text(f"Creature {self.selected} / lineage {data['lineage'][i]}", (30, 103))
+            self.text(f"Energy {data['energy'][i]:.1f}   Age {data['age'][i]:.1f}s", (30, 133))
+            self.text(
+                f"Generation {data['generation'][i]}   Children {data['offspring'][i]}", (30, 159)
+            )
+            self.text("Neural activity", (30, 189), small=True)
+            for j, activity in enumerate(data["h"][i]):
+                color = (100, 200, 160) if activity >= 0 else (120, 133, 230)
+                x = 30 + j * min(13, 224 / len(data["h"][i]))
+                pygame.draw.line(surface, color, (x, 239), (x, 239 - float(activity) * 25), 6)
+        return surface
+
+    def save(self, world, path):
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        pygame.image.save(self.draw(world), str(path))
+
+
+class Viewer(Renderer):
+    def __init__(self, size=1024):
+        super().__init__(size)
+        pygame.display.init()
+        self.window = pygame.display.set_mode((size, size))
+        pygame.display.set_caption("Emergent Garden")
+        self.paused = False
+        self.speed = 1.0
+        self.running = True
+        self.drag = None
+
+    def events(self, world):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.running = False
+                elif event.key == pygame.K_SPACE:
+                    self.paused = not self.paused
+                elif event.key in (pygame.K_EQUALS, pygame.K_PLUS, pygame.K_KP_PLUS):
+                    self.speed = min(1024, self.speed * 2)
+                elif event.key in (pygame.K_MINUS, pygame.K_KP_MINUS):
+                    self.speed = max(0.125, self.speed / 2)
+                elif event.key == pygame.K_f:
+                    self.show_field = not self.show_field
+                elif event.key == pygame.K_r:
+                    self.zoom, self.center = 1, None
+            elif event.type == pygame.MOUSEWHEEL:
+                self.zoom = min(8, max(1, self.zoom * 1.25**event.y))
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and world.population:
+                    positions, scale = self.transform(
+                        world.agents["pos"].cpu().numpy(), world.config.diameter
+                    )
+                    distances = np.linalg.norm(positions - event.pos, axis=1)
+                    index = int(distances.argmin())
+                    self.selected = (
+                        int(world.agents["id"][index])
+                        if distances[index] < max(12, world.config.body_radius * scale)
+                        else None
+                    )
+                elif event.button == 3:
+                    self.drag = event.pos
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 3:
+                self.drag = None
+            elif event.type == pygame.MOUSEMOTION and self.drag is not None:
+                if self.center is None:
+                    self.center = np.array([world.config.diameter / 2] * 2)
+                scale = (self.size - 70) / world.config.diameter * self.zoom
+                self.center -= np.array(event.rel) / scale
+        return self.running
+
+    def present(self, world):
+        state = "PAUSED" if self.paused else f"{self.speed:g}x"
+        self.draw(
+            world,
+            f"{state} | Space pause | +/- speed | Scroll zoom | Right-drag pan | F smell | R reset",
+        )
+        self.window.blit(self.surface, (0, 0))
+        pygame.display.flip()
+
+    def close(self):
+        pygame.display.quit()
+
+
+class Recorder:
+    def __init__(self, path, size, fps=30, speed=100, start_time=0):
+        self.renderer = Renderer(size)
+        self.period = speed / fps
+        self.next_time = start_time
+        self.frames = 0
+        self.path = Path(path)
+        self.writer = imageio_ffmpeg.write_frames(
+            str(path),
+            (size, size),
+            fps=fps,
+            codec="libx264",
+            pix_fmt_in="rgb24",
+            pix_fmt_out="yuv420p",
+            macro_block_size=2,
+            ffmpeg_log_level="error",
+        )
+        self.writer.send(None)
+
+    def observe(self, world):
+        if world.time + 1e-9 >= self.next_time:
+            surface = self.renderer.draw(world)
+            self.writer.send(pygame.image.tobytes(surface, "RGB"))
+            self.frames += 1
+            self.next_time += self.period
+
+    def close(self):
+        self.writer.close()

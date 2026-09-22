@@ -1,0 +1,40 @@
+[project]
+name = "emergent-garden"
+version = "0.1.0"
+description = "A continuous artificial-life dish with evolving recurrent neural controllers"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "torch>=2.7,<3",
+    "numpy>=2.2",
+    "pygame-ce>=2.5",
+    "imageio-ffmpeg>=0.6",
+    "tomli-w>=1.2",
+]
+
+[project.scripts]
+garden = "emergent_garden.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8.3", "ruff>=0.11"]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
