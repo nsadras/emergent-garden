@@ -35,6 +35,8 @@ def fork_challenge(source, mode, reverse, target_tick):
     if mode == "erase_activity":
         w.agents["module_h"].zero_()
         w.agents["h"].zero_()
+        if w.config.ecology_version >= 14:
+            w.agents["module_internal"].zero_()
     if mode == "no_plasticity":
         w.ablation = "no_plasticity"
     # The challenge has a single controlled quality transition. Hide subsequent

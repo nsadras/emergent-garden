@@ -1,0 +1,86 @@
+[
+  {
+    "path": "runs/v13-native-221",
+    "time": 1800.0,
+    "populations": [
+      43
+    ],
+    "matched_founders_sha256": "f3144243374bb6f3928acda1309bb0949b22377f3f00153d33b9fa8740f69ad7",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.0393991918208485,
+    "energy_injected": 791416.4233551025,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 4.3655745685100555e-10
+  },
+  {
+    "path": "runs/v13-native-222",
+    "time": 1800.0,
+    "populations": [
+      42
+    ],
+    "matched_founders_sha256": "a35c8acd8fb4c084e3b5fb059900083515c40d5c3b5d3e182d3167f259a90148",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.023314489677431993,
+    "energy_injected": 837691.8713645935,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 8.731149137020111e-11
+  },
+  {
+    "path": "runs/v13-native-223",
+    "time": 1800.0,
+    "populations": [
+      25
+    ],
+    "matched_founders_sha256": "3fe2e163f56019d80edb8704fe7cfcb4643b5240727fd58d0de0b54772f0a5ec",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.22172331982437754,
+    "energy_injected": 807072.2850608826,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 3.7834979593753815e-10
+  },
+  {
+    "path": "runs/v13-native-adult-221",
+    "time": 1800.0,
+    "populations": [
+      45
+    ],
+    "matched_founders_sha256": "f3144243374bb6f3928acda1309bb0949b22377f3f00153d33b9fa8740f69ad7",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.04679345876866137,
+    "energy_injected": 794896.4233551025,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.673470251262188e-10
+  },
+  {
+    "path": "runs/v13-native-adult-222",
+    "time": 1800.0,
+    "populations": [
+      43
+    ],
+    "matched_founders_sha256": "a35c8acd8fb4c084e3b5fb059900083515c40d5c3b5d3e182d3167f259a90148",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.004735911286843475,
+    "energy_injected": 815791.8713645935,
+    "maximum_packet_credit_error": 6.661338147750939e-16,
+    "maximum_detritus_balance_error": 5.820766091346741e-11
+  },
+  {
+    "path": "runs/v13-native-adult-223",
+    "time": 1800.0,
+    "populations": [
+      17
+    ],
+    "matched_founders_sha256": "3fe2e163f56019d80edb8704fe7cfcb4643b5240727fd58d0de0b54772f0a5ec",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.04329488724033581,
+    "energy_injected": 794992.2850608826,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 3.2014213502407074e-10
+  }
+]

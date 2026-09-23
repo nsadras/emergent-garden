@@ -203,6 +203,11 @@ def association_run(run, output, count=64, rounds=3, device="cpu"):
             " This cue-only assay supplies no motor exploration or energetic consequences; "
             "it tests the recurrent mechanism, not V12 motor learning."
         )
+    if config.ecology_version >= 14:
+        report["body_coordination_tested"] = False
+        report["interpretation"] += (
+            " It also omits positional inputs and routing between body modules."
+        )
     for label, pool in (("founders", founders), ("descendants", descendants)):
         if not len(pool):
             raise ValueError(f"No genomes for {label}")

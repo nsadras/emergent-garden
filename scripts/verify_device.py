@@ -122,6 +122,10 @@ def main():
     if args.exercise_growth:
         assert metric["growths"] > 0
         assert metric["development_cost"] > 0
+    if c.ecology_version >= 14:
+        assert metric["internal_signaling_cost"] > 0
+        assert metric["mean_internal_magnitude"] > 0
+        assert (w.agents["module_internal"].abs() <= 1).all()
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
         metadata=runtime_metadata(w),

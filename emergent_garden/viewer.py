@@ -145,6 +145,7 @@ class Renderer:
             "neurons",
             "connections",
             "target_modules",
+            "module_internal",
         ):
             if key in a:
                 data[key] = a[key].detach().cpu().numpy()
@@ -175,6 +176,17 @@ class Renderer:
                 core_r = max(2, round(float(data["core_radius"][i]) * scale))
                 for part in data["module_positions"][i, : data["modules"][i]]:
                     pygame.draw.circle(surface, color, part.astype(int), core_r)
+                if "module_internal" in data and self.zoom >= 2:
+                    for k in range(int(data["modules"][i]) - 1):
+                        strength = np.abs(data["module_internal"][i, k : k + 2]).mean()
+                        tint = (40, int(85 + 135 * strength), int(105 + 135 * strength))
+                        pygame.draw.line(
+                            surface,
+                            tint,
+                            data["module_positions"][i, k],
+                            data["module_positions"][i, k + 1],
+                            max(1, core_r // 8),
+                        )
             else:
                 pygame.draw.circle(surface, color, pos.astype(int), r)
             angle = data["heading"][i]
@@ -267,6 +279,8 @@ class Renderer:
                 height += 42
             if c.ecology_version >= 12:
                 height += 42
+            if c.ecology_version >= 14:
+                height += 18 * (int(data["modules"][i]) + 1) + 8
             if self.show_brain:
                 height += 150
                 if c.ecology_version >= 12:
@@ -349,6 +363,15 @@ class Renderer:
                 )
                 self.text(f"Motor offsets {magnitude:.4f}", (30, 453), small=True)
                 self.text(f"Exploration {exploration:.2f}   Rate {rate:.3f}", (30, 474), small=True)
+            if c.ecology_version >= 14:
+                self.text("Internal signals (A / B)", (30, 500), small=True)
+                for k in range(int(data["modules"][i])):
+                    first, second = data["module_internal"][i, k]
+                    self.text(
+                        f"Module {k + 1}   {first:+.3f} / {second:+.3f}",
+                        (30, 518 + 18 * k),
+                        small=True,
+                    )
             if self.show_brain:
                 self.draw_brain(world, i, 92 + height - (220 if c.ecology_version >= 12 else 146))
         return surface

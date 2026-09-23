@@ -40,6 +40,8 @@ def upgrade_genomes(source, target, genomes):
     new[4][:, source.output_size :] = -2.0
     if target.ecology_version >= 7 and source.ecology_version < 7:
         new[4][:, 4] = 0.0  # Signed plasticity modulation starts at zero.
+    if target.ecology_version >= 14 and source.ecology_version < 14:
+        new[4][:, 5:7] = 0.0  # Internal signals are signed around sigmoid(0).
     if target.trait_count:
         traits = out[
             :, target.brain_parameter_count : target.brain_parameter_count + target.trait_count
@@ -75,6 +77,15 @@ def upgrade_genomes(source, target, genomes):
             mi[:, :h] = 1
             mr[:, :h, :h] = 1
             mo[:, :, :h] = 1
+        if target.ecology_version >= 14 and source.ecology_version < 14:
+            from .coordination import BODY_INPUTS
+
+            # Neutral weights preserve the circuit's existing computations.
+            # Enable the new paths so an ordinary weight mutation can use them;
+            # their additional construction/maintenance costs apply immediately.
+            for name in BODY_INPUTS:
+                mi[:, :, target.input_names.index(name)] = nodes
+            mo[:, 5:7] = nodes[:, None]
         if ((nodes > 0.5).sum(1) < target.min_neurons).any():
             raise ValueError("Source has fewer active neurons than the destination minimum")
     continuous = out[:, : target.brain_parameter_count + target.trait_count]

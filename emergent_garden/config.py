@@ -55,6 +55,8 @@ class Config:
     growth_reserve: float = 50.0
     growth_delay: float = 10.0
     growth_retry: float = 1.0
+    internal_tau: float = 0.3
+    internal_cost: float = 0.01
     neuron_maintenance: float = 0.0005
     synapse_maintenance: float = 0.00001
     neuron_construction: float = 0.05
@@ -137,14 +139,14 @@ class Config:
             "plasticity_limit plasticity_trace_tau "
             "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate "
             "motor_learning_limit motor_trace_tau motor_baseline_tau "
-            "motor_half_life growth_reserve growth_delay growth_retry"
+            "motor_half_life growth_reserve growth_delay growth_retry internal_tau"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(14):
+        if self.ecology_version not in range(15):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -250,12 +252,18 @@ class Config:
         if self.ecology_version >= 10:
             channels.append("shelter")
         names = [f"{channel}_{angle}" for channel in channels for angle in (-135, -45, 45, 135)]
+        if self.ecology_version >= 14:
+            from .coordination import BODY_INPUTS
+
+            names.extend(BODY_INPUTS)
         if self.ecology_version >= 6:
             names.extend(("food_feedback", "damage_feedback"))
         return (*names, "energy", "contact")
 
     @property
     def output_size(self):
+        if self.ecology_version >= 14:
+            return 7
         if self.ecology_version >= 7:
             return 5
         if self.ecology_version >= 5:

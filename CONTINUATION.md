@@ -933,6 +933,9 @@ plans without a new module event. The [six-run records](docs/results/v13-pilots.
 [matched-founder and phenotype audit](docs/results/v13-pilot-audit.json), and
 [reconstructed developmental histories](docs/results/v13-pilot-development.json)
 retain the evidence. The largest absolute energy residual was 0.0105 units.
+The [pilot figure](docs/v13-development-pilots.png) uses ten-second samples to
+retain the short-lived two-module body in environment 212; two-minute sampling
+would have missed that episode.
 
 The first juvenile pilot provides a concrete example of the newly accessible life cycle:
 creature 300, descended from single-module founder 118, was born at 417.63 s
@@ -944,8 +947,155 @@ survival of larger bodies. A recording from 600 to 900 seconds is saved at
 `runs/v13-video/timelapse.mp4`; all 901 frames decoded at 1,024×1,024 and 30 FPS
 in the [video verification](docs/results/v13-video.json).
 
-Six fresh 3,600-second trials compare juvenile and fully formed births in
-environments 221/222/223. Three separate random-founder runs use the same seed
-numbers and a 1,800-second horizon to test establishment without transferred
-foraging circuits. These experiments
-are still running; their outcomes will determine the next changes.
+All six fresh 3,600-second assembled-community trials completed:
+
+| Environment | Juvenile: population / births / expressed module counts (1, 2, 3) | Fully formed: population / births / expressed module counts (1, 2, 3) |
+| --- | --- | --- |
+| 221 | 51 / 1,125 / (27, 24, 0) | 60 / 939 / (60, 0, 0) |
+| 222 | 44 / 937 / (18, 26, 0) | 40 / 899 / (40, 0, 0) |
+| 223 | 38 / 864 / (18, 18, 2) | 49 / 982 / (49, 0, 0) |
+
+Both source ancestries survived in every trial. Juvenile development did not
+consistently increase population or births, but it made larger reproducing
+bodies accessible in all three environments. Two-module parents produced
+559/357/392 offspring. Three-module parents produced six offspring in environment
+222, although no three-module body survived there to the endpoint. Three-module
+growth occurred 3/3/2 times, and two such bodies remained in environment 223.
+The fully formed treatments attempted 32/18/39 explicit module mutations but
+accepted no larger offspring. See the [figure](docs/v13-development.png),
+[six full records](docs/results/v13.json), [audit](docs/results/v13-audit.json),
+and [parenthood/growth reconstruction](docs/results/v13-development.json).
+Largest absolute energy residual was 0.0654 units, and all food-credit checks passed.
+
+### Fresh random founders
+
+Six separate random-founder trials, with no transferred foraging circuits,
+completed 1,800 seconds in the same three environments:
+
+| Environment | Juvenile offspring: population / births / two-module bodies | Fully formed offspring: population / births / two-module bodies |
+| --- | --- | --- |
+| 221 | 43 / 138 / 9 | 45 / 157 / 2 |
+| 222 | 42 / 392 / 34 | 43 / 216 / 41 |
+| 223 | 25 / 104 / 10 | 17 / 72 / 8 |
+
+All six retained reproducing populations. Unlike the assembled sources, these
+random founders include genes for larger bodies. Both treatments start those
+founders as juveniles, and they can grow before producing their first offspring.
+The comparison therefore changes offspring development, not founder development.
+It does **not** establish that juvenile offspring are necessary for larger bodies
+or that V13 beats the original fully formed V11 initialization. It shows viable
+random establishment with V13 founder development, and mixed effects of the
+offspring rule. The clearest access result remains the one-module-source experiment.
+
+The [population/body figure](docs/v13-development-native.png),
+[six histories](docs/results/v13-native.json), [invariant audit](docs/results/v13-native-audit.json),
+and [event reconstruction](docs/results/v13-native-development.json) are retained.
+Maximum absolute energy residual was 0.222 units, within one part per million
+of injected energy in each run; food-credit conservation checks also passed.
+All three juvenile-offspring populations are continuing to three simulated
+hours under `runs/v13-native-long-221`, `-222`, and `-223`.
+
+## V14 — local coordination within a developing body
+
+V13 provides a reproducing modular body, but its repeated circuits have no
+direct neural connection. V14 adds local body-position readings and private
+signals between adjacent modules. Connected local controllers are inspired by
+[Sims (1994)](https://www.karlsims.com/papers/siggraph94.pdf), which generated local
+circuits alongside repeated body parts and allowed neural connections between
+adjacent parts. Our model retains a rigid 2D body and local energy-funded
+reproduction; it does not reproduce that paper's articulated physics or
+task-ranked selection. The hypothesis is that local coordination may help
+shared circuits control a growing body. Usefulness must be measured.
+
+### Interface and timing
+
+Each module now receives 40 inputs and produces seven sigmoid outputs.
+The old 36 inputs retain their meanings. Four added readings are the module's
+two coordinates in its own body frame, divided by twice the core radius, and
+two incoming internal signals. Coordinates and signals are bounded within
+[-1, 1]. Coordinates describe expressed geometry, not an absolute world location
+or a hidden food-quality label. A one-module body has zero coordinates and no
+incoming neighbor signals.
+
+Outputs 0–4 remain left/right propulsion, attack, secretion, and plasticity
+modulation. Outputs 5–6 specify two internal emissions through `2 × output − 1`.
+Their held values follow a discrete low-pass update with a 0.3-second time
+constant at the configured controller rate. Every controller reads the previous
+signals before any updated signal is committed. Routing averages adjacent
+active modules along the body chain, excludes self-connections, and never
+crosses between creatures. Information can traverse at most one module boundary
+per controller update.
+
+Maintaining a signal costs `0.01 × (A² + B²)` energy per module per second.
+This is included in maintenance and energetic motor feedback, and tracked in
+its own informational counter without being charged twice. A newly grown
+module's signals start at zero and remain zero until its first control update.
+Offspring inherit no signals. Neural-activity erasure and recurrent-memory reset
+also clear the internal signal state; erasing only plastic weights leaves it intact.
+
+The inherited template still has up to 32 recurrent nodes, initially 16 active,
+with evolving masks and the same 13 developmental traits. Its genome now holds
+5,140 values. Transfers preserve old weights, named sensory channels, masks,
+and traits, and initialize all new weights and signal biases to zero. The new
+input/output paths are enabled for existing active neurons, so an ordinary
+weight mutation can use them without waiting for a separate edge mutation.
+Their construction and maintenance charges apply immediately: six extra
+connections per active neuron. Tests preserve the old circuit's computed
+outputs to floating-point tolerance; this is not a claim of unchanged full-world
+trajectories across versions.
+
+### Controls and verification
+
+`no_internal` suppresses received signals while retaining emission and its costs.
+`no_body_sense` suppresses only the two body coordinates. `no_coordination`
+suppresses both kinds of new readings. The resulting four treatments keep the
+same genomes, anatomy, available actions, and cost rules; their trajectories
+and actual expenditure can subsequently differ. The preset keeps motor
+exploration at zero as in V13. The isolated-circuit association assay explicitly
+reports that it does not test body coordination.
+
+An additional `self_internal` intervention feeds each module its own held
+signals in place of its neighbors' signals. Single-module bodies still receive
+zero, as they do normally. This preserves an extra local memory loop while
+removing information from other modules, helping distinguish inter-module
+coordination from the benefit of merely adding recurrent state. It is available
+for subsequent fixed-genotype assays and is not part of the four evolution treatments.
+
+All 186 tests pass. Coverage includes private adjacent routing, exclusion of self and
+inactive modules, delayed causal influence on motors, bounded position readings,
+separate interventions, energy costs including starvation, newborn/growth resets,
+neutral inherited circuit extension, and checkpoint replay. Mechanical
+[CPU](docs/results/v14-cpu-coordination.json) and
+[CUDA](docs/results/v14-cuda-coordination.json) exercises passed exact replay
+through four births and six/nine growth events with active internal signaling.
+Energy residuals were -0.000109 and -0.000944 units; peak CUDA allocation was
+about 37.5 MB. These mechanical checks do not demonstrate evolved coordination.
+
+Eight 600-second pilot trials test all four interventions in environments
+231/232. Half of each community comes from V13 native environment 222 at 1,800
+seconds, where all 42 survivors encoded two modules; half comes from the
+previously used V7 scavenger source. The fresh-food-biased V13 source had mean
+diet allocation 0.685 and three founder ancestries, so it is not a pure dietary
+guild or a single independently evolved genotype. All eight pilots completed:
+
+| Environment | Both channels: population / births | Body position only | Internal reception only | Neither |
+| --- | --- | --- | --- | --- |
+| 231 | 62 / 109 | 64 / 102 | 59 / 104 | 61 / 104 |
+| 232 | 64 / 127 | 68 / 129 | 54 / 114 | 64 / 111 |
+
+Both source ancestries persisted in every pilot, with no consistent advantage
+for the complete interface. Signal magnitude averaged 0.0022–0.0068 across
+all pilot endpoints; nonzero emissions also occurred when reception was disabled.
+[All eight histories](docs/results/v14-pilots.json) and the
+[matched-founder audit](docs/results/v14-pilot-audit.json) are retained.
+Maximum absolute energy residual was 0.0199 units, with all food-credit checks passing.
+The [inspector preview](docs/v14-preview.png) shows a body selected for visible
+emission, not measured communication benefit.
+
+Twelve 3,600-second trials now compare all four treatments in new environments
+241/242/243, retaining the same source pools. Signal activity by itself will
+not count as evidence of beneficial communication.
+
+`runs/v14-video/timelapse.mp4` records the full-interface pilot in environment
+231 from 600 to 900 seconds. All 901 frames decoded at 1,024×1,024 and 30 FPS;
+the [verification record](docs/results/v14-video.json) retains frame hashes.

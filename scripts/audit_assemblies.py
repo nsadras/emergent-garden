@@ -1,4 +1,4 @@
-"""Audit completed assembly batches, matched founders, and conserved food credits.
+"""Audit completed assembly batches or native runs, matched founders, and food credits.
 
 Treatments with the same seed and assembly condition must share their sampled
 founder genomes, source provenance, and patch layout. Different conditions may
@@ -26,29 +26,46 @@ def main():
     references, records = {}, []
     for root in args.runs:
         report = json.loads((root / "summary.json").read_text())
-        if not report["completed"] or not all(row["completed"] for row in report["trials"]):
-            raise ValueError(f"Assembly batch is incomplete: {root}")
-        for trial in report["trials"]:
-            path = root / f"seed-{trial['seed']}"
+        native = "stop_reason" in report
+        if native:
+            if report["stop_reason"] not in ("duration", "extinction"):
+                raise ValueError(f"Native run is incomplete: {root}")
+            meta = json.loads((root / "metadata.json").read_text())
+            trials = [dict(seed=meta["seed"], final=report)]
+        else:
+            if not report["completed"] or not all(row["completed"] for row in report["trials"]):
+                raise ValueError(f"Assembly batch is incomplete: {root}")
+            trials = report["trials"]
+        for trial in trials:
+            path = root if native else root / f"seed-{trial['seed']}"
             world = load_checkpoint(path / "latest.pt")
             metric = world.metrics()
-            assert world.time >= report["duration"] or world.population == 0
+            if not native:
+                assert world.time >= report["duration"] or world.population == 0
+            else:
+                first = json.loads((path / "metrics.jsonl").read_text().splitlines()[0])
+                assert first["tick"] == 0, "Native comparison requires initialization history"
             assert world.time == trial["final"]["time"]
             assert world.population == trial["final"]["population"]
             founders = torch.load(path / "founders.pt", weights_only=True)["genomes"]
             torch.testing.assert_close(founders, world.founders, rtol=0, atol=0)
-            key = (world.seed, report["condition"])
+            provenance = getattr(world, "seeded_from", None)
+            if native:
+                assert provenance is None, "This path requires native random founders"
+            key = (world.seed, "native" if native else report["condition"])
             reference = references.setdefault(
                 key,
-                (founders, world.seeded_from, world.patch_positions, world.patch_phases),
+                (founders, provenance, world.patch_positions, world.patch_phases),
             )
             torch.testing.assert_close(reference[0], founders, rtol=0, atol=0)
-            assert reference[1] == world.seeded_from
+            assert reference[1] == provenance
             torch.testing.assert_close(reference[2], world.patch_positions, rtol=0, atol=0)
             torch.testing.assert_close(reference[3], world.patch_phases, rtol=0, atol=0)
-            labels = torch.tensor(world.seeded_from["founder_sources"])[world.agents["lineage"]]
-            populations = [(labels == group).sum().item() for group in range(2)]
-            assert populations == [g["population"] for g in trial["origins"]["groups"]]
+            populations = [world.population]
+            if not native:
+                labels = torch.tensor(provenance["founder_sources"])[world.agents["lineage"]]
+                populations = [(labels == group).sum().item() for group in range(2)]
+                assert populations == [g["population"] for g in trial["origins"]["groups"]]
             cached_topology_exact = None
             if world.config.ecology_version >= 8:
                 for name, actual in zip(
@@ -87,6 +104,9 @@ def main():
                 ):
                     assert a[key][~a["module_mask"]].count_nonzero() == 0
                 development_exact = True
+                if world.config.ecology_version >= 14:
+                    assert a["module_internal"][~a["module_mask"]].count_nonzero() == 0
+                    assert (a["module_internal"].abs() <= 1).all()
             packet_error = credit_error = None
             if world.config.ecology_version >= 9:
                 differences = world.food_credit.sum(1) - world.food_energy.double()

@@ -11,6 +11,7 @@ import torch
 
 from .brain import advance, controller_step, initial_brains
 from .config import Config
+from .coordination import BODY_INPUTS, body_inputs, signal_cost, update_signals
 from .development import grow, mutate_module_count
 from .field import ShelterField, SmellField, TrailField
 from .landscape import ReversalLandscape
@@ -53,6 +54,10 @@ class EcologyWorld(World):
             "no_motor_reward",
             "no_exploration",
             "adult_births",
+            "no_internal",
+            "no_body_sense",
+            "no_coordination",
+            "self_internal",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -63,6 +68,10 @@ class EcologyWorld(World):
             or (ablation in ("no_identity", "no_feedback") and config.ecology_version < 6)
             or (ablation == "no_plasticity" and config.ecology_version < 7)
             or (ablation == "adult_births" and config.ecology_version < 13)
+            or (
+                ablation in ("no_internal", "no_body_sense", "no_coordination", "self_internal")
+                and config.ecology_version < 14
+            )
             or (ablation in ("no_shelter", "no_shelter_cue") and config.ecology_version < 10)
             or (
                 ablation in ("unlimited_feeding", "unlimited_handling")
@@ -152,6 +161,8 @@ class EcologyWorld(World):
                 module_mutation_events=0,
                 module_event_births=0,
             )
+        if c.ecology_version >= 14:
+            self.totals["internal_signaling_cost"] = 0.0
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -246,6 +257,9 @@ class EcologyWorld(World):
                 device=self.device,
             )
             a["development_spent"] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 14:
+            a["module_internal"] = torch.zeros((n, MAX_MODULES, 2), device=self.device)
+            a["internal_spent"] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -411,7 +425,22 @@ class EcologyWorld(World):
         centers = module_centers(a, index)
         angle = a["heading"][index, None] + self.sensor_angles
         around = a["core_radius"][index, None, None] * torch.stack((angle.cos(), angle.sin()), -1)
-        return self.sense_positions(index, centers[:, :, None] + around[:, None])
+        values = self.sense_positions(index, centers[:, :, None] + around[:, None])
+        if self.config.ecology_version >= 14:
+            extra = body_inputs(a, index)
+            if self.ablation == "self_internal":
+                extra[..., 2:] = (
+                    a["module_internal"][index]
+                    * a["module_mask"][index, :, None]
+                    * (a["modules"][index] > 1)[:, None, None]
+                )
+            if self.ablation in ("no_body_sense", "no_coordination"):
+                extra[..., :2] = 0
+            if self.ablation in ("no_internal", "no_coordination"):
+                extra[..., 2:] = 0
+            start = self.config.input_names.index(BODY_INPUTS[0])
+            values[..., start : start + len(BODY_INPUTS)] = extra
+        return values
 
     def sense_positions(self, index, pos):
         a, c = self.agents, self.config
@@ -437,6 +466,8 @@ class EcologyWorld(World):
             ):
                 smell.zero_()
             channels.append(smell)
+        if c.ecology_version >= 14:
+            channels.append(torch.zeros((*prefix, len(BODY_INPUTS)), device=self.device))
         if c.ecology_version >= 6:
             for name in ("food_feedback", "damage_feedback"):
                 value = a[name][index] / (c.feedback_scale * a["area"][index])
@@ -457,6 +488,8 @@ class EcologyWorld(World):
         )
         if not len(index):
             return
+        if c.ecology_version >= 14 and self.ablation == "memory_reset":
+            a["module_internal"][index] = 0
         module_inputs = self.module_sensors(index) if c.ecology_version >= 4 else None
         if module_inputs is not None:
             mask = a["module_mask"][index]
@@ -565,6 +598,8 @@ class EcologyWorld(World):
             turn = torch.where(smell.max(1).values > 0.001, torch.atan2(dy, dx) / math.pi, wander)
             turn = (2 * turn).clamp(-1, 1)
             a["actions"][index, :2] = torch.stack((0.7 - turn, 0.7 + turn), 1).clamp(0, 1)
+        if c.ecology_version >= 14 and self.controller in ("rest", "forager"):
+            a["actions"][index, 5:7] = 0.5
         a["motors"][index] = a["actions"][index, :2]
         if c.ecology_version >= 12:
             a["motor_reward"][index] = 0
@@ -573,6 +608,8 @@ class EcologyWorld(World):
             a["module_actions"][index] = (
                 a["actions"][index, None] * a["module_mask"][index, :, None]
             )
+        if c.ecology_version >= 14:
+            update_signals(c, a, index)
 
     def project_walls(self):
         a, c = self.agents, self.config
@@ -816,6 +853,7 @@ class EcologyWorld(World):
             "motor_change",
             "development_spent",
             "target_modules",
+            "internal_spent",
         ):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
@@ -976,6 +1014,8 @@ class EcologyWorld(World):
             maintenance += a["brain_maintenance"] * c.dt
         if c.ecology_version >= 12:
             maintenance += c.motor_learning_cost * copies * c.dt
+        if c.ecology_version >= 14:
+            maintenance += signal_cost(c, a)
         return maintenance, propulsion
 
     def emit(self, paid_fraction):
@@ -1039,6 +1079,10 @@ class EcologyWorld(World):
             self.totals["maintenance"] += maintenance.double().sum().item()
             self.totals["propulsion"] += propulsion.double().sum().item()
             self.totals["organism_steps"] += self.population
+            if c.ecology_version >= 14:
+                paid = signal_cost(c, a) * scale
+                a["internal_spent"] += paid
+                self.totals["internal_signaling_cost"] += paid.double().sum().item()
             if c.ecology_version >= 7:
                 self.totals["plasticity_cost"] += (
                     (c.plasticity_cost * a["modules"] * c.dt * scale).double().sum().item()
@@ -1129,6 +1173,11 @@ class EcologyWorld(World):
             result["target_module_histogram"] = torch.bincount(a["target_modules"], minlength=4)[
                 1:
             ].tolist()
+        if c.ecology_version >= 14:
+            count = max(1, 2 * int(a["modules"].sum()))
+            result["mean_internal_magnitude"] = (
+                a["module_internal"].abs().double().sum().item() / count
+            )
         if c.ecology_version >= 9:
             result.update(self.trophic.metrics(self.food_credit, self.food_kind))
         if c.ecology_version >= 10:

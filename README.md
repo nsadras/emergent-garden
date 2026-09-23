@@ -85,7 +85,22 @@ In three short matched pilots, two-module parents reproduced in two juvenile
 treatments, while fully formed births produced no larger children. The
 [adult](docs/v13-preview.png) and [juvenile](docs/v13-juvenile.png) previews show
 one parent and its offspring; a verified recording is at
-`runs/v13-video/timelapse.mp4`. Longer persistence tests are underway.
+`runs/v13-video/timelapse.mp4`. [Three one-hour comparisons](docs/v13-development.png)
+retained larger bodies in every juvenile treatment and none in the fully formed
+offspring controls. Three-module bodies also reproduced. Population and birth
+counts did not consistently improve. [Fresh random populations](docs/v13-development-native.png)
+persisted for 30 minutes under both offspring rules; their founders already
+included larger body plans. Three-hour continuations are underway.
+
+The experimental [V14 preset](configs/v14.toml) adds private signals between
+adjacent modules within a body, plus each module's body-relative coordinates.
+Its shared circuit has 40 sensory inputs and seven outputs, including two signed
+internal emissions. Signals incur energy costs and reach neighboring controllers
+on their next update. [The inspector](docs/v14-preview.png) shows the held signals.
+Matched tests remove position readings, signal reception, or both; a self-signal
+control distinguishes extra local memory from information sharing. Short pilots
+showed no consistent benefit, and longer comparisons are underway.
+A verified recording is at `runs/v14-video/timelapse.mp4`.
 
 ## Start watching
 

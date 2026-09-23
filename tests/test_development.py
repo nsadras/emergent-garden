@@ -247,10 +247,11 @@ def test_module_mutation_requires_representable_counts(config):
     ).validate()
 
 
-def test_rendering_a_juvenile_does_not_advance_development(config):
+@pytest.mark.parametrize("version", [13, 14])
+def test_rendering_a_juvenile_does_not_advance_development(config, version):
     from emergent_garden.viewer import Renderer
 
-    w = juvenile(config, 3)
+    w = juvenile(config, 3, ecology_version=version)
     before = w.state_dict()
     renderer = Renderer(640)
     renderer.selected = 0

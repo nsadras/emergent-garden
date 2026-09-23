@@ -12,7 +12,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument("runs", type=Path, nargs="+")
+    parser.add_argument(
+        "--interval", type=int, default=120, help="History sampling interval in seconds"
+    )
     args = parser.parse_args()
+    if args.interval <= 0:
+        parser.error("--interval must be positive")
     entries = []
     for root in args.runs:
         candidates = [root] if (root / "metrics.jsonl").exists() else sorted(root.glob("*/"))
@@ -26,14 +31,15 @@ def main():
                 path=str(path),
                 metadata=meta,
                 final=rows[-1],
-                checkpoints=[r for r in rows if r["tick"] == 0 or r["time"] % 120 == 0],
+                checkpoint_interval=args.interval,
+                checkpoints=[r for r in rows if r["tick"] == 0 or r["time"] % args.interval == 0],
             )
             origins = path / "origins.jsonl"
             if origins.exists():
                 history = [json.loads(line) for line in origins.read_text().splitlines()]
                 entry["ancestry"] = dict(
                     final=history[-1],
-                    checkpoints=[r for r in history if r["time"] % 120 == 0],
+                    checkpoints=[r for r in history if r["time"] % args.interval == 0],
                     first_absent=[
                         next(
                             (r["time"] for r in history if r["groups"][k]["population"] == 0), None

@@ -1,0 +1,122 @@
+[
+  {
+    "path": "runs/v14-full-pilots/seed-231",
+    "time": 600.0,
+    "populations": [
+      33,
+      29
+    ],
+    "matched_founders_sha256": "617056dd02a21e39af41c43d632468f666dc84f9e86d930ef80b00554b231a9a",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.007756218470603926,
+    "energy_injected": 295716.5846481323,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 5.820766091346741e-11
+  },
+  {
+    "path": "runs/v14-full-pilots/seed-232",
+    "time": 600.0,
+    "populations": [
+      28,
+      36
+    ],
+    "matched_founders_sha256": "75aa5706e17b06b381152a6962a7f89ad2f795796f6f22898b0ecefed1d31035",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.0018533702423155773,
+    "energy_injected": 300693.7494125366,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 6.548361852765083e-11
+  },
+  {
+    "path": "runs/v14-no-internal-pilots/seed-231",
+    "time": 600.0,
+    "populations": [
+      30,
+      34
+    ],
+    "matched_founders_sha256": "617056dd02a21e39af41c43d632468f666dc84f9e86d930ef80b00554b231a9a",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.0037830604596820194,
+    "energy_injected": 297736.5846481323,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 7.275957614183426e-12
+  },
+  {
+    "path": "runs/v14-no-internal-pilots/seed-232",
+    "time": 600.0,
+    "populations": [
+      29,
+      39
+    ],
+    "matched_founders_sha256": "75aa5706e17b06b381152a6962a7f89ad2f795796f6f22898b0ecefed1d31035",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.017884801480249735,
+    "energy_injected": 301373.7494125366,
+    "maximum_packet_credit_error": 1.1102230246251565e-16,
+    "maximum_detritus_balance_error": 1.0186340659856796e-10
+  },
+  {
+    "path": "runs/v14-no-body-sense-pilots/seed-231",
+    "time": 600.0,
+    "populations": [
+      27,
+      32
+    ],
+    "matched_founders_sha256": "617056dd02a21e39af41c43d632468f666dc84f9e86d930ef80b00554b231a9a",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.013868814872694202,
+    "energy_injected": 294496.5846481323,
+    "maximum_packet_credit_error": 5.551115123125783e-17,
+    "maximum_detritus_balance_error": 4.3655745685100555e-11
+  },
+  {
+    "path": "runs/v14-no-body-sense-pilots/seed-232",
+    "time": 600.0,
+    "populations": [
+      20,
+      34
+    ],
+    "matched_founders_sha256": "75aa5706e17b06b381152a6962a7f89ad2f795796f6f22898b0ecefed1d31035",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.014234303544071736,
+    "energy_injected": 299673.7494125366,
+    "maximum_packet_credit_error": 3.469446951953614e-18,
+    "maximum_detritus_balance_error": 8.731149137020111e-11
+  },
+  {
+    "path": "runs/v14-neither-pilots/seed-231",
+    "time": 600.0,
+    "populations": [
+      29,
+      32
+    ],
+    "matched_founders_sha256": "617056dd02a21e39af41c43d632468f666dc84f9e86d930ef80b00554b231a9a",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.006802435033023357,
+    "energy_injected": 294116.5846481323,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 2.9103830456733704e-11
+  },
+  {
+    "path": "runs/v14-neither-pilots/seed-232",
+    "time": 600.0,
+    "populations": [
+      29,
+      35
+    ],
+    "matched_founders_sha256": "75aa5706e17b06b381152a6962a7f89ad2f795796f6f22898b0ecefed1d31035",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.019831653555229423,
+    "energy_injected": 302413.7494125366,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.5279510989785194e-10
+  }
+]
