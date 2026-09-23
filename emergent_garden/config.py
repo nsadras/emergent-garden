@@ -74,6 +74,7 @@ class Config:
     motor_trace_tau: float = 2.0
     motor_baseline_tau: float = 10.0
     motor_half_life: float = 120.0
+    motor_noise_tau: float = 0.0
     exploration_min: float = 0.05
     exploration_max: float = 0.5
     motor_learning_cost: float = 0.02
@@ -159,7 +160,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(21):
+        if self.ecology_version not in range(22):
             raise ValueError("Unsupported ecology version")
         if self.sensory_contrast not in (0, 1):
             raise ValueError("sensory_contrast must be 0 or 1")
@@ -167,6 +168,8 @@ class Config:
             raise ValueError("Contrast sensing requires ecology_version >= 17")
         if self.sensor_radius_scale != 1 and self.ecology_version < 20:
             raise ValueError("Variable sensor radius requires ecology_version >= 20")
+        if self.motor_noise_tau and self.ecology_version < 21:
+            raise ValueError("Correlated motor exploration requires ecology_version >= 21")
         if self.gut_capacity and self.ecology_version < 18:
             raise ValueError("Carried food requires ecology_version >= 18")
         if self.initial_recurrent_density > 1:

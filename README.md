@@ -7,7 +7,7 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-The current experimental release is **V20 / package 0.21.0**. Research resumed
+The current experimental release is **V21 / package 0.22.0**. Research resumed
 on September 23, focusing on scarce, valuable food and affordable exploration.
 The [foraging experiments](docs/FORAGING.md) found that faster food processing
 supported all three tested populations for 30 minutes; a new optional spatial
@@ -19,6 +19,11 @@ learning. Initial outcomes are mixed. Paired descendant tests show conditional
 benefits from motor updates; shuffled-return controls remain mixed.
 [V20](docs/SENSOR_RADIUS.md) tests a wider sensory footprint: directional signals
 increase, while reproduction remains dependent on the start.
+[V21](docs/PERSISTENT_EXPLORATION.md) tests two-second exploratory motor changes
+with a matching conditional learning rule. Twelve paired pilots show mixed
+ecological effects; persistent noise alone reduces births in all three starts.
+The movement diagnostic shows changed routes, without a consistent increase in
+net travel. Longer and same-genotype learning comparisons are in progress.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 

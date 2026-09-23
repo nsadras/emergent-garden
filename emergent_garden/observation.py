@@ -221,9 +221,12 @@ class ControllerObserver:
             # Motor learning is applied before action selection; recurrent
             # learning is applied afterwards (and was captured above).
             sample.motor_plastic = array(a["module_motor_plastic"][i, :count])
-            trait = a["genome"][i, c.brain_parameter_count + 12].sigmoid().item()
-            sigma = c.exploration_min + (c.exploration_max - c.exploration_min) * trait
-            sample.noise = array(motor_noise[local, :count]) * sigma
+            if c.ecology_version >= 21:
+                sample.noise = array(a["module_motor_applied_noise"][i, :count])
+            else:
+                trait = a["genome"][i, c.brain_parameter_count + 12].sigmoid().item()
+                sigma = c.exploration_min + (c.exploration_max - c.exploration_min) * trait
+                sample.noise = array(motor_noise[local, :count]) * sigma
         self.sample = sample
 
 

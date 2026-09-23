@@ -1,9 +1,10 @@
 """Local, acquired motor readouts with exploratory eligibility traces.
 
-Gaussian exploration is applied to the two motor logits. Its likelihood score
-is noise / standard_deviation, where noise is a unit normal draw. Multiplying
-that score by presynaptic activity produces an eligibility trace for a motor
-connection. A body's later net energetic return modulates that trace.
+Gaussian exploration is applied to the two motor logits. For independent
+samples, noise / standard_deviation times presynaptic activity gives a motor
+connection's likelihood score. V21's correlated policy also differentiates its
+historical mean. A body's later net energetic return modulates the accumulated
+eligibility trace.
 
 This is a bounded online policy-gradient approximation, not backpropagation
 through the environment or a guarantee of useful behavior. Both readouts and
@@ -35,20 +36,38 @@ def shuffled_returns(reward, elapsed, generator):
 
 def motor_state(config, genomes):
     n, h = len(genomes), config.hidden_size
-    return dict(
+    state = dict(
         motor_plastic=genomes.new_zeros((n, 2, h + 1)),
         motor_trace=genomes.new_zeros((n, 2, h + 1)),
         motor_baseline=genomes.new_zeros(n),
     )
+    if config.ecology_version >= 21:
+        from .exploration import history_state
+
+        state.update(history_state(h, genomes))
+    return state
 
 
-def motor_policy(config, genomes, hidden, logits, state, noise, reward, elapsed, learning=True):
+def motor_policy(
+    config,
+    genomes,
+    hidden,
+    logits,
+    state,
+    noise,
+    reward,
+    elapsed,
+    learning=True,
+    *,
+    exploration_enabled=True,
+):
     """Credit previous actions before choosing the next exploratory action.
 
     `reward` is integrated over the elapsed interval and already normalized by
     body size and feedback scale. It must exclude reproduction transfers.
     `noise` is supplied by the caller's checkpointed random stream. Zero noise
-    is a deterministic assay intervention; it contributes no new eligibility.
+    contributes no new eligibility. With correlated exploration, its historical
+    contribution persists unless `exploration_enabled=False` also removes it.
     """
     c = config
     traits = genomes[:, c.brain_parameter_count + 11 : c.brain_parameter_count + 13].sigmoid()
@@ -80,15 +99,38 @@ def motor_policy(config, genomes, hidden, logits, state, noise, reward, elapsed,
         # hidden-layer width or many changes combining in the same direction.
         features /= features.norm(dim=-1, keepdim=True).clamp_min(1)
     changed = logits.clone()
-    changed[:, :2] += (plastic @ features[..., None]).squeeze(-1) + sigma[:, None] * noise
+    history = {}
+    credit_features = features
+    if c.ecology_version >= 21:
+        from .exploration import sample_motors
+
+        sampled, score, credit_features, history = sample_motors(
+            features,
+            logits[:, :2],
+            plastic,
+            state,
+            noise,
+            sigma,
+            elapsed,
+            c.motor_noise_tau,
+            exploration_enabled,
+        )
+        changed[:, :2] = sampled
+    else:
+        if not exploration_enabled:
+            noise = torch.zeros_like(noise)
+        changed[:, :2] += (plastic @ features[..., None]).squeeze(-1) + sigma[:, None] * noise
     actions = changed.sigmoid()
     if learning:
         # A preset may explicitly disable exploration. There is then no
         # likelihood score and no new eligibility, including for the bias.
-        score = torch.where(sigma[:, None] > 0, noise / sigma[:, None].clamp_min(1e-20), 0)
-        eligibility = score[:, :, None] * features[:, None, :] * actions[:, 4, None, None]
+        if c.ecology_version < 21:
+            score = torch.where(sigma[:, None] > 0, noise / sigma[:, None].clamp_min(1e-20), 0)
+        eligibility = score[:, :, None] * credit_features[:, None, :] * actions[:, 4, None, None]
         trace = state["motor_trace"] * torch.exp(-elapsed / c.motor_trace_tau)[:, None, None]
         trace = (trace + eligibility) * mask
     else:
         trace = torch.zeros_like(state["motor_trace"])
-    return dict(motor_plastic=plastic, motor_trace=trace, motor_baseline=baseline), actions
+    return dict(
+        motor_plastic=plastic, motor_trace=trace, motor_baseline=baseline, **history
+    ), actions

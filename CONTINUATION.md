@@ -1,8 +1,8 @@
 # Continuing evolution experiments
 
 Development **resumed at the user's request on September 23, 2026**, after the
-V15 pause and subsequent interface/resource work. The current iteration is V20
-(package 0.21.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
+V15 pause and subsequent interface/resource work. The current iteration is V21
+(package 0.22.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
 meals and affordable exploration. Current evidence, historical interrupted work,
 and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
@@ -23,6 +23,17 @@ but mixed reproduction. All three four-radius starts reached 1,800 seconds, but 
 the radius-1 controls. The shuffled-return control has also completed; the
 evidence still supports conditional effects rather than a general learning advantage. All 322 tests pass; CPU/CUDA mechanics and replay
 checks pass. The active research loop continues.
+
+[V21](docs/PERSISTENT_EXPLORATION.md) tests temporally correlated exploratory
+motor commands with the corresponding conditional likelihood score. All 12
+matched pilots are complete: persistence raises births in two of three starts
+when motor updates are enabled, and lowers births in all three disabled-update
+controls. All six neutral runs match V19's complete common physical state and
+recorded measurements exactly. The empty-plane circuit diagnostic confirms
+changed routes but no consistent increase in net displacement. All 336 tests,
+Ruff checks, and CPU/CUDA exact replay exercises pass. Thirty-minute extensions
+and matched-genotype learning transplants are in progress, with explicit
+boundaries in the linked result record.
 
 ## Research sequence
 

@@ -95,6 +95,7 @@ def controller_step(
     reward=None,
     elapsed=None,
     evolved_rule=True,
+    exploration_enabled=True,
 ):
     """One circuit update; acquired synaptic offsets never modify the genome.
 
@@ -127,6 +128,7 @@ def controller_step(
             if elapsed is None
             else elapsed,
             learning=plasticity and motor_learning,
+            exploration_enabled=exploration_enabled,
         )
         result.update(acquired)
     if config.ecology_version < 7:

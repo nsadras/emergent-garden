@@ -369,8 +369,14 @@ class Inspector:
                 MUTED,
             )
         if c.ecology_version >= 20:
+            radius_text = f"Receptors sample at {c.sensor_radius_scale:g} x each module's radius."
+            if c.ecology_version >= 21:
+                radius_text = (
+                    f"Receptors: {c.sensor_radius_scale:g} x module radius"
+                    f"  |  Motor noise persistence: {c.motor_noise_tau:g} s"
+                )
             self.text(
-                f"Receptors sample at {c.sensor_radius_scale:g} x each module's radius.",
+                radius_text,
                 (22, top + 147),
                 MUTED,
             )

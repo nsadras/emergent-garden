@@ -109,7 +109,7 @@ def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
     assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
-@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20])
+@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20, 21])
 def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, monkeypatch):
     c = replace(
         config,
@@ -120,6 +120,7 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         initial_neuron_spread=8 if version >= 19 else 0,
         initial_recurrent_density=0.5 if version >= 19 else 1.0,
         sensor_radius_scale=4 if version >= 20 else 1,
+        motor_noise_tau=2 if version >= 21 else 0,
     )
     w = create_world(c)
     a = w.agents
@@ -140,6 +141,13 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         a["module_motor_plastic"].fill_(0.06)
         a["module_motor_trace"].fill_(0.1)
         a["motor_reward"].fill_(5)
+    if version >= 21:
+        w.tick = c.physics_hz // c.controller_hz
+        a["module_motor_previous_features"].fill_(0.05)
+        a["module_motor_previous_base"].fill_(0.1)
+        a["module_motor_previous_logits"][..., 0].fill_(0.4)
+        a["module_motor_previous_logits"][..., 1].fill_(-0.2)
+        a["module_motor_history_ready"].fill_(True)
     if version >= 6:
         a["food_feedback"].fill_(4)
         a["damage_feedback"].fill_(2)
@@ -204,6 +212,9 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         (19, "shuffled"),
         (20, "shuffled"),
         (20, "shuffled_motor_reward"),
+        (21, "none"),
+        (21, "no_exploration"),
+        (21, "shuffled_motor_reward"),
     ],
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
@@ -222,6 +233,7 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
             initial_neuron_spread=8 if version >= 19 else 0,
             initial_recurrent_density=0.5 if version >= 19 else 1.0,
             sensor_radius_scale=4 if version >= 20 else 1,
+            motor_noise_tau=2 if version >= 21 else 0,
         ),
         ablation=ablation,
     )

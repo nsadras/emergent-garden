@@ -1,9 +1,35 @@
-# Development handoff — V20
+# Development handoff — V21
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V20 / package 0.21.0**. Python and dependencies remain
+The current code is **V21 / package 0.22.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V21: persistent motor exploration
+
+[V21](docs/PERSISTENT_EXPLORATION.md) adds two-second correlated motor exploration
+with the matching conditional likelihood score. Previous features/logits are
+acquired module state, retained by checkpoints and reset at birth/growth. No
+genome or interface dimensions change. The observer displays the actual applied
+perturbation and persistence time. Use `configs/v21.toml` for persistence and
+`configs/v21-baseline.toml` for independent noise; the remaining settings match
+V19's gentle learning preset, including receptor radius 1.
+
+All 12 matched pilots are complete. Independent-noise births are 288/265/156
+with learning and 367/264/310 without. Persistent-noise births are 128/314/365
+with learning and 10/102/160 without. All six independent runs reproduce V19's
+complete common physical state and recorded measurements exactly. A separate
+192-circuit movement diagnostic confirms the intended temporal correlation,
+but finds no consistent net-displacement improvement. All 336 tests, Ruff
+checks, and separate CPU/CUDA exact replay exercises pass. The three inspector
+tabs fit 640–1,024-pixel heights.
+
+Both persistent-noise groups are being continued to 1,800 seconds for every
+seed. The first noise-only start became extinct at 1,397.63 seconds. Matched
+descendant transplants into seeds 801/802 compare own, disabled, and shuffled
+motor-learning signals with mutation disabled. These follow-ups remain in
+progress and are not represented as completed evidence in the pilot audit.
+Keep the research loop active and preserve the user's `configs/v16.toml` edits.
 
 ## V20: sensory reach and a learning control
 
@@ -44,7 +70,7 @@ starts. The [audit](docs/results/v19-circuits.json) includes 15 pilots and all
 12 continuations. The 18 paired learning transplants are complete: births
 improved in five of six descendant pairs, food intake in three. These
 conditional effects do not establish adaptive credit assignment. Shuffled-return
-follow-ups are complete: four of six favor own-return learning for births. Do not confuse them with completed results.
+follow-ups are complete: four of six favor own-return learning for births.
 
 A new synthetic food-response probe separates inherited turning bias from
 directional sensitivity. Selected populations differ considerably; its outputs
