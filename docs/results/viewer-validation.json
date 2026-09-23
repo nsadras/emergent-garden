@@ -56,5 +56,23 @@
       1604,
       984
     ]
+  },
+  "initial_camera": {
+    "projected_dish_radius_in_panel_widths": 1,
+    "physical_diameter_changed": false,
+    "window_heights_checked": [
+      640,
+      768,
+      984,
+      1024
+    ],
+    "reset_key": "R",
+    "overview_key": "Home",
+    "targeted_tests_passed": 38,
+    "preview_module": 1,
+    "preview_window_size": [
+      1604,
+      984
+    ]
   }
 }

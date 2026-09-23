@@ -179,11 +179,17 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | `C` | Switch between inherited diet and lineage colors |
 | `B` | Hide/show the inspector sidebar |
 | Brain / Body / Details buttons | Switch between the network, morphology/weight maps, and diagnostics |
-| `R` | Reset the camera and stop following |
+| `R` | Restore the initial close view and stop following |
+| Home | Center and fit the entire circular dish |
 | Escape / close window | Save and exit |
 
 The Pygame viewer opens with trails and an inspector sidebar. The window is
-resizable and initially fits the desktop. The header has a transparent background,
+resizable and initially fits the desktop. The live camera starts centered and
+zoomed in so the circular dish's radius is one viewing-panel width, putting its
+boundary beyond the screen. This changes the view, not the habitat's physical
+size or food density. Scroll to adjust zoom, use Home for a whole-dish overview,
+or `R` to restore the initial view. Recordings and saved previews keep the overview.
+The header has a transparent background,
 and controls are stacked at the bottom left. The inspector adapts to the window's
 height without scrolling. Trails follow body centers, are sampled
 at 5 Hz of **simulated time**, and freeze when paused. They also appear in new

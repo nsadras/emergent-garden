@@ -15,6 +15,9 @@ inherited/acquired/effective weight maps, follow-camera, and paused stepping.
 The header background is transparent and controls are stacked at the bottom left.
 The inspector fits the window without scrolling; the Details tab holds the drive
 breakdown and legend, and graph spacing and weight-map sizes adapt to the height.
+The live viewer starts centered with a projected dish radius of one panel width,
+filling the screen with habitat. `R` restores this view and Home fits the whole
+dish. The physical circular world and recording framing are unchanged.
 Trails sample simulation time at 5 Hz, retain up to 120 seconds, and also appear
 in new recordings. The default visible duration is 30 seconds.
 

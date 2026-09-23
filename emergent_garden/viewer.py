@@ -322,6 +322,7 @@ class Renderer:
                 "B  inspector   |   M  module",
                 "F  field   |   Tab  channel",
                 "C  colors   |   R  reset camera",
+                "Home  whole-dish overview",
                 "Esc  save and exit",
             ]
         if c.ecology_version >= 6:
@@ -344,6 +345,7 @@ class Viewer(Renderer):
         # Fit the initial window to the desktop, including the inspector.
         size = min(size, max(256, desktop[1] - 96), max(256, desktop[0] - Inspector.width - 48))
         super().__init__(size)
+        self.zoom = self.default_zoom
         self.inspector = Inspector()
         self.observer = ControllerObserver()
         self.observed_world = None
@@ -356,6 +358,12 @@ class Viewer(Renderer):
         self.drag = None
         self.following = False
         self.step_ticks = 0
+
+    @property
+    def default_zoom(self):
+        # At startup the projected dish radius equals one viewing-panel width.
+        # This covers the panel's corners while leaving enough habitat visible.
+        return 2 * self.size / (self.size - 70)
 
     def observe(self, world):
         super().observe(world)
@@ -374,7 +382,9 @@ class Viewer(Renderer):
 
     def resize(self, width, height):
         sidebar = Inspector.width if self.show_brain else 0
+        relative_zoom = self.zoom / self.default_zoom
         self.size = max(128, min(height, width - sidebar))
+        self.zoom = min(8, max(1, relative_zoom * self.default_zoom))
         self.surface = pygame.Surface((self.size, self.size))
         self.trail_layer = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
         self.window = pygame.display.set_mode((self.size + sidebar, self.size), pygame.RESIZABLE)
@@ -435,6 +445,8 @@ class Viewer(Renderer):
                 elif event.key == pygame.K_c:
                     self.color_mode = "lineage" if self.color_mode == "diet" else "diet"
                 elif event.key == pygame.K_r:
+                    self.zoom, self.center, self.following = self.default_zoom, None, False
+                elif event.key == pygame.K_HOME:
                     self.zoom, self.center, self.following = 1, None, False
             elif event.type == pygame.MOUSEWHEEL:
                 if not self.show_brain or pygame.mouse.get_pos()[0] < self.size:
