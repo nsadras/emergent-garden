@@ -167,7 +167,7 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | Space | Pause/resume |
 | `N` while paused | Advance one controller interval using the usual physics ticks |
 | `+` / `-` | Increase/decrease simulation speed |
-| Mouse wheel | Zoom the dish, up to 8x; scroll when over the inspector |
+| Mouse wheel over the dish | Zoom, up to 8x |
 | Right-drag | Pan |
 | Left-click | Select a creature; click a hidden neuron in the inspector to inspect its links |
 | `T` | Cycle fading trails: all creatures, selected creature, off |
@@ -178,12 +178,14 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | Tab | Cycle resource, organism, forecast, secretion, patch-identity, and shelter fields |
 | `C` | Switch between inherited diet and lineage colors |
 | `B` | Hide/show the inspector sidebar |
-| Brain / Body buttons | Switch between live neural activity and morphology/learned weight maps |
+| Brain / Body / Details buttons | Switch between the network, morphology/weight maps, and diagnostics |
 | `R` | Reset the camera and stop following |
 | Escape / close window | Save and exit |
 
 The Pygame viewer opens with trails and an inspector sidebar. The window is
-resizable and initially fits the desktop. Trails follow body centers, are sampled
+resizable and initially fits the desktop. The header has a transparent background,
+and controls are stacked at the bottom left. The inspector adapts to the window's
+height without scrolling. Trails follow body centers, are sampled
 at 5 Hz of **simulated time**, and freeze when paused. They also appear in new
 recordings. History starts when the viewer/recorder opens; checkpoints do not
 contain old trails. A dead creature's trail fades normally, and its last inspected
@@ -198,14 +200,15 @@ exploration is listed separately. Inputs are copied at the controller update,
 including consumed feedback and each module's local senses, rather than sampled
 again during rendering. A selection made while paused waits for `N` or resume.
 
-Below the graph, a drive breakdown separates inputs, recurrent state, and bias.
+The **Details** tab separates inputs, recurrent state, and bias in a drive breakdown.
 The field mean/contrast readout splits each field's four sensors into their shared
 mean and directional differences, then reports their weighted drive RMS over
 active neurons. It is a sensitivity diagnostic, not a measure of intelligence or
 proof of why a behavior evolved. The **Body / learning** tab includes the actual
 body turn command, expressed modules, learning-rule coefficients, and inherited,
 acquired, and effective recurrent weight maps. Each module has separate acquired
-state. Scroll inside the sidebar to reach details on smaller displays.
+state. Secondary diagnostics and the color legend live in **Details** so the
+main graph can stay fully visible; weight maps adapt to the available height.
 
 The inspector reads the latest controller update (usually 10 Hz), so slow the
 simulation or use pause/step to examine rapid decisions. Inspection and trail

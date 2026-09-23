@@ -1,4 +1,4 @@
-"""A scrollable Pygame panel for one body's actual controller samples."""
+"""A window-fitted Pygame panel for one body's actual controller samples."""
 
 import math
 
@@ -28,9 +28,12 @@ class Inspector:
     def __init__(self):
         self.font = pygame.font.Font(None, 22)
         self.small = pygame.font.Font(None, 18)
+        self.graph_fonts = [pygame.font.Font(None, size) for size in (18, 16, 14, 12)]
         self.title = pygame.font.Font(None, 30)
         self.surface = None
-        self.scroll = 0
+        self.layout_height = 640
+        self.scale = 1.0
+        self.offset_x = 0
         self.content_height = 0
         self.module = 0
         self.neuron = 0
@@ -51,27 +54,24 @@ class Inspector:
         self.buttons.append((rect, action))
 
     def click(self, point):
-        point = (point[0], point[1] + self.scroll)
+        point = ((point[0] - self.offset_x) / self.scale, point[1] / self.scale)
         for rect, action in self.buttons:
             if rect.collidepoint(point):
                 kind, value = action
                 setattr(self, kind, value)
-                if kind == "tab":
-                    self.scroll = 0
                 return
         for identifier, pos in self.nodes:
             if math.dist(point, pos) < 12:
                 self.neuron = identifier
                 return
 
-    def wheel(self, amount, height):
-        self.scroll = min(max(0, self.content_height - height), max(0, self.scroll - amount * 48))
-
     def draw(self, world, selected, observer, height, following=False):
         if selected != self.identifier:
-            self.identifier, self.module, self.scroll = selected, 0, 0
-        capacity = 480 + max(world.config.input_size, world.config.hidden_size) * 16
-        self.surface = pygame.Surface((self.width, max(height, capacity)))
+            self.identifier, self.module = selected, 0
+        self.layout_height = max(640, height)
+        self.scale = height / self.layout_height
+        self.offset_x = (self.width - round(self.width * self.scale)) // 2
+        self.surface = pygame.Surface((self.width, self.layout_height))
         self.surface.fill(BG)
         self.buttons, self.nodes = [], []
         pygame.draw.line(self.surface, (45, 74, 84), (0, 0), (0, self.surface.get_height()), 2)
@@ -86,7 +86,7 @@ class Inspector:
                 "T   trails: all / selected / off         [ / ]   trail duration",
                 "G   follow the selected creature      M   next body module",
                 "Space   pause / resume                  N   advance one controller interval",
-                "B   hide / show this panel               Mouse wheel here   scroll",
+                "B   hide / show this panel               Details   diagnostics and legend",
                 "",
                 "Trails fade in simulated seconds. Pausing freezes them.",
                 "New selections show their first sample on the next controller update.",
@@ -96,15 +96,16 @@ class Inspector:
             self.content_height = 440
         else:
             self.content_height = self.draw_selected(world, selected, observer, following)
-        self.scroll = min(self.scroll, max(0, self.content_height - height))
+        if self.scale == 1:
+            return self.surface
+        # Keep even very small windows complete, including clickable controls.
+        # Ordinary desktop sizes use the native-size adaptive layout above.
         visible = pygame.Surface((self.width, height))
-        visible.blit(self.surface, (0, -self.scroll))
-        if self.content_height > height:
-            length = max(24, int(height * height / self.content_height))
-            top = round((height - length) * self.scroll / (self.content_height - height))
-            pygame.draw.rect(
-                visible, (74, 113, 121), (self.width - 6, top, 4, length), border_radius=2
-            )
+        visible.fill(BG)
+        scaled = pygame.transform.smoothscale(
+            self.surface, (round(self.width * self.scale), height)
+        )
+        visible.blit(scaled, (self.offset_x, 0))
         return visible
 
     def draw_selected(self, world, selected, observer, following):
@@ -121,28 +122,27 @@ class Inspector:
         state = (
             "following" if following and i is not None else "selected" if i is not None else "died"
         )
-        self.text(f"Creature {selected}  /  {state}", (22, 56), GOLD, self.font)
+        self.text(f"Creature {selected}  /  {state}", (22, 52), GOLD, self.font)
         if i is not None:
             self.text(
                 f"Lineage {int(a['lineage'][i])}    Generation {int(a['generation'][i])}    "
-                f"Children {int(a['offspring'][i])}",
-                (22, 83),
+                f"Children {int(a['offspring'][i])}    "
+                f"Energy {float(a['energy'][i]):.1f}    Age {float(a['age'][i]):.1f}s",
+                (22, 78),
                 MUTED,
-            )
-            self.text(
-                f"Energy {float(a['energy'][i]):.1f}    Age {float(a['age'][i]):.1f}s", (22, 105)
             )
         else:
             self.text(
                 "Last controller sample retained. Select another creature to continue.",
-                (22, 88),
+                (22, 78),
                 MUTED,
             )
-        self.button("Brain", (22, 137, 86, 28), ("tab", "brain"), self.tab == "brain")
-        self.button("Body / learning", (116, 137, 130, 28), ("tab", "body"), self.tab == "body")
-        self.text("Module", (290, 145), MUTED)
+        self.button("Brain", (22, 102, 86, 28), ("tab", "brain"), self.tab == "brain")
+        self.button("Body / learning", (116, 102, 130, 28), ("tab", "body"), self.tab == "body")
+        self.button("Details", (254, 102, 86, 28), ("tab", "details"), self.tab == "details")
+        self.text("Module", (366, 110), MUTED)
         for k in range(count):
-            self.button(str(k + 1), (354 + 48 * k, 137, 40, 28), ("module", k), k == self.module)
+            self.button(str(k + 1), (430 + 48 * k, 102, 40, 28), ("module", k), k == self.module)
         if self.tab == "body":
             return self.draw_body(world, i, sample)
         if sample is None or self.module >= len(sample.inputs):
@@ -157,7 +157,7 @@ class Inspector:
             return 282
         self.text(
             f"Sample t={sample.time:,.3f}s  /  tick {sample.tick}  /  {c.controller_hz} Hz",
-            (22, 179),
+            (22, 142),
             MUTED,
         )
         if sample.controller != "neural":
@@ -169,6 +169,8 @@ class Inspector:
             for j, value in enumerate(sample.actions[self.module]):
                 self.text(f"{OUTPUTS[j]}   {value:.4f}", (22, 253 + j * 25))
             return 290 + 25 * c.output_size
+        if self.tab == "details":
+            return self.draw_details(sample)
         return self.draw_brain(sample)
 
     def draw_brain(self, sample):
@@ -178,8 +180,14 @@ class Inspector:
             self.neuron = int(active[0]) if len(active) else 0
         focus = self.neuron
         c = sample.config
-        extent = max(310, (max(c.input_size, len(active)) - 1) * 16)
-        y0 = 244
+        rows = max(c.input_size, len(active))
+        extent = min(max(310, (rows - 1) * 16), self.layout_height - 242)
+        spacing = extent / max(1, rows - 1)
+        graph_font = next(
+            (font for font in self.graph_fonts if font.get_height() < spacing),
+            self.graph_fonts[-1],
+        )
+        y0 = 186
         input_pos = np.column_stack(
             (np.full(c.input_size, 222), np.linspace(y0, y0 + extent, c.input_size))
         )
@@ -198,11 +206,9 @@ class Inspector:
             (np.full(c.output_size, 474), np.linspace(y0 + 10, y0 + extent - 10, c.output_size))
         )
         wi, wr, _, wo, _ = sample.matrices(k)
-        self.text("INPUTS", (22, 207), POSITIVE)
-        self.text(f"RECURRENT  {len(active)}/{c.hidden_size}", (290, 207), POSITIVE)
-        self.text("OUTPUTS", (485, 207), POSITIVE)
-        self.text("Sensor angle relative to heading", (22, 224), MUTED)
-        self.text(f"Links touching h{focus:02d}  /  click a neuron", (290, 224), MUTED)
+        self.text("INPUTS", (22, 165), POSITIVE)
+        self.text(f"RECURRENT  {len(active)}/{c.hidden_size}", (290, 165), POSITIVE)
+        self.text("OUTPUTS", (485, 165), POSITIVE)
 
         def link(start, end, weight, bend=False):
             if abs(weight) < 1e-6:
@@ -235,8 +241,8 @@ class Inspector:
         for j, (name, pos) in enumerate(zip(c.input_names, input_pos, strict=True)):
             value = sample.inputs[k, j]
             label = name.replace("identity_", "id ").replace("_feedback", " fb").replace("_", " ")
-            self.text(label, (22, pos[1] - 5))
-            self.text(f"{value:+.4f}", (124, pos[1] - 5), MUTED)
+            self.text(label, (22, pos[1] - 5), font=graph_font)
+            self.text(f"{value:+.4f}", (124, pos[1] - 5), MUTED, graph_font)
             pygame.draw.rect(self.surface, (29, 47, 57), (177, pos[1] - 3, 30, 6))
             pygame.draw.rect(
                 self.surface,
@@ -249,7 +255,7 @@ class Inspector:
             pygame.draw.circle(self.surface, activity_color(value), pos, 6)
             if j == focus:
                 pygame.draw.circle(self.surface, GOLD, pos, 10, 1)
-            label = self.small.render(f"{j:02d} {value:+.2f}", True, TEXT, BG)
+            label = graph_font.render(f"{j:02d} {value:+.2f}", True, TEXT, BG)
             self.surface.blit(label, (pos[0] + 13, pos[1] - 5))
             self.nodes.append((int(j), pos))
         for j, pos in enumerate(output_pos):
@@ -257,7 +263,28 @@ class Inspector:
             pygame.draw.circle(self.surface, activity_color(value), pos, 6)
             self.text(OUTPUTS[j], (pos[0] + 14, pos[1] - 12))
             self.text(f"{value:.4f}", (pos[0] + 14, pos[1] + 5), GOLD)
-        top = y0 + extent + 30
+        top = y0 + extent + 22
+        self.text(
+            f"h{focus:02d}: {sample.previous[k, focus]:+.3f} -> {sample.hidden[k, focus]:+.3f}"
+            "    |    Click a neuron to inspect its links.",
+            (22, top),
+            GOLD,
+        )
+        self.text(
+            "Open Details for drive contributions, motor noise, and the color legend.",
+            (22, top + 18),
+            MUTED,
+        )
+        return top + 34
+
+    def draw_details(self, sample):
+        k = self.module
+        active = np.flatnonzero(sample.nodes)
+        if self.neuron not in active:
+            self.neuron = int(active[0]) if len(active) else 0
+        focus = self.neuron
+        c = sample.config
+        top = 190
         incoming, recurrent, bias = sample.drives(k)
         self.text(
             f"h{focus:02d}: {sample.previous[k, focus]:+.3f} -> {sample.hidden[k, focus]:+.3f}",
@@ -303,11 +330,23 @@ class Inspector:
                 (22, top + 126),
                 MUTED,
             )
-        return int(top + 156)
+        self.text("Sensor angles are relative to the body's heading.", (22, top + 168), MUTED)
+        self.text(
+            "The selected neuron's links enter from inputs and previous recurrent state;",
+            (22, top + 189),
+            MUTED,
+        )
+        self.text(
+            "its outgoing links feed the outputs. Inactive neural slots are omitted.",
+            (22, top + 210),
+            MUTED,
+        )
+        self.text("Choose Brain to return to the live graph.", (22, top + 252), POSITIVE)
+        return top + 282
 
     def draw_body(self, world, i, sample):
         a, c = world.agents, world.config
-        top = 192
+        top = 148
         if i is not None:
             rows = []
             if "radius" in a:
@@ -365,17 +404,19 @@ class Inspector:
                 )
                 rows.append("Learning rule A / B / C / D: " + " / ".join(f"{v:+.2f}" for v in rule))
             for row in rows:
-                self.text(row, (22, top), TEXT, self.font)
-                top += 28
+                self.text(row, (22, top))
+                top += 22
         if sample is None or self.module >= len(sample.inputs) or sample.controller != "neural":
             self.text("Weight maps appear after a neural controller sample.", (22, top + 22), MUTED)
             return top + 70
         self.text(
             f"Recurrent weights used at t={sample.time:.3f}s (row = target, column = source)",
-            (22, top + 15),
+            (22, top + 8),
             MUTED,
         )
-        top += 47
+        top += 30
+        reserve = 130 if sample.motor_plastic is not None else 64
+        side = min(176, self.layout_height - top - reserve)
         base = sample.parts[1] * sample.masks[1]
         plastic = sample.plastic[self.module] * sample.masks[1]
         for x, values, label in (
@@ -384,18 +425,11 @@ class Inspector:
             (420, base + plastic, "Effective"),
         ):
             self.text(label, (x, top), POSITIVE)
-            self.heatmap(values, sample.masks[1], (x, top + 25), (176, 176), 0.5)
-        top += 229
-        self.text(
-            "All three maps share a fixed +/-0.5 color scale; darker = near zero.", (22, top), MUTED
-        )
-        self.text(
-            "Inactive connections are black. These are sampled weights, before the next update.",
-            (22, top + 22),
-            MUTED,
-        )
+            self.heatmap(values, sample.masks[1], (x, top + 20), (side, side), 0.5)
+        top += side + 32
+        self.text("Maps: fixed +/-0.5 scale. Dark = near zero; black = inactive.", (22, top), MUTED)
         if sample.motor_plastic is not None:
-            top += 62
+            top += 30
             self.text(
                 f"Acquired motor readouts (weights + bias), +/-{c.motor_learning_limit:g}",
                 (22, top),
@@ -405,12 +439,12 @@ class Inspector:
             self.heatmap(
                 sample.motor_plastic[self.module],
                 mask,
-                (22, top + 26),
-                (574, 40),
+                (22, top + 22),
+                (574, 32),
                 c.motor_learning_limit,
             )
-            top += 80
-        return top + 65
+            top += 54
+        return top + 14
 
     def heatmap(self, values, mask, pos, size, limit):
         strength = np.clip(np.abs(values) / max(limit, 1e-9), 0, 1)[..., None]

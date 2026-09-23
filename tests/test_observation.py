@@ -225,6 +225,16 @@ def test_viewer_module_controls_resize_and_detach(config, monkeypatch):
         assert viewer.inspector.module == 1
         viewer.present(w)
         np.testing.assert_array_equal(viewer.center, w.agents["pos"][0].numpy())
+        # A small window scales the whole panel; module clicks still line up.
+        panel = viewer.inspector
+        module_button = next(rect for rect, action in panel.buttons if action == ("module", 2))
+        panel.click(
+            (
+                panel.offset_x + module_button.centerx * panel.scale,
+                module_button.centery * panel.scale,
+            )
+        )
+        assert panel.module == 2
         # Sidebar clicks cannot accidentally deselect a creature in the dish.
         pygame.event.post(
             pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=(viewer.size + 40, 60))
@@ -232,9 +242,11 @@ def test_viewer_module_controls_resize_and_detach(config, monkeypatch):
         viewer.events(w)
         assert viewer.selected == 0
         viewer.resize(1300, 700)
-        viewer.inspector.scroll = 10000
-        viewer.present(w)
-        assert viewer.inspector.scroll <= max(0, viewer.inspector.content_height - viewer.size)
+        for tab in ("brain", "body", "details"):
+            panel.tab = tab
+            viewer.present(w)
+            assert panel.content_height <= panel.layout_height
+            assert panel.surface.get_height() == viewer.size
     finally:
         viewer.close()
     assert not hasattr(w, "controller_observer")

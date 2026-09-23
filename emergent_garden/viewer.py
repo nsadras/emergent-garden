@@ -286,9 +286,6 @@ class Renderer:
                     part = data["module_positions"][i, k]
                     pygame.draw.circle(surface, (255, 255, 240), part, core_r + 2, 1)
                     self.text(str(k + 1), part + (core_r + 4, -core_r), small=True)
-        header = pygame.Surface((self.size, 74), pygame.SRCALPHA)
-        header.fill((8, 17, 23, 232))
-        surface.blit(header, (0, 0))
         surface.blit(self.title.render("EMERGENT GARDEN", True, (205, 239, 221)), (22, 14))
         if c.ecology_version and self.size >= 640:
             names = (
@@ -313,26 +310,26 @@ class Renderer:
             (22, 47),
             small=True,
         )
-        panel = pygame.Surface((self.size, 62), pygame.SRCALPHA)
-        panel.fill((8, 17, 23, 232))
-        surface.blit(panel, (0, self.size - 62))
-        description = "Particle scents / inherited recurrent brains / continuous life"
+        lines = [f"Trails: {self.trail_mode} / {self.trail_seconds}s"]
+        if status:
+            lines = [
+                status,
+                "Space  pause / resume",
+                "N  step   |   +/-  speed",
+                "Wheel  zoom   |   Right-drag  pan",
+                "Click  select   |   G  follow",
+                f"T  trails: {self.trail_mode}   |   [ / ]  {self.trail_seconds}s",
+                "B  inspector   |   M  module",
+                "F  field   |   Tab  channel",
+                "C  colors   |   R  reset camera",
+                "Esc  save and exit",
+            ]
         if c.ecology_version >= 6:
             favorable = "A" if world.landscape.favorable == 0 else "B"
-            description = (
-                f"High-quality patches: {favorable} | Tab: field | C: body colors | B: brain"
-            )
-        self.text(
-            status or description,
-            (20, self.size - 51),
-            small=True,
-        )
-        self.text(
-            f"Trails: {self.trail_mode} / {self.trail_seconds}s   |   T mode   [ / ] duration"
-            "   |   B inspector   G follow   M module",
-            (20, self.size - 28),
-            small=True,
-        )
+            lines.insert(1, f"High-quality patches: {favorable}")
+        top = self.size - 16 - len(lines) * 18
+        for j, line in enumerate(lines):
+            self.text(line, (20, top + 18 * j), small=True)
         return surface
 
     def save(self, world, path):
@@ -440,9 +437,7 @@ class Viewer(Renderer):
                 elif event.key == pygame.K_r:
                     self.zoom, self.center, self.following = 1, None, False
             elif event.type == pygame.MOUSEWHEEL:
-                if self.show_brain and pygame.mouse.get_pos()[0] >= self.size:
-                    self.inspector.wheel(event.y, self.size)
-                else:
+                if not self.show_brain or pygame.mouse.get_pos()[0] < self.size:
                     self.zoom = min(8, max(1, self.zoom * 1.25**event.y))
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.show_brain and event.pos[0] >= self.size:
@@ -468,7 +463,7 @@ class Viewer(Renderer):
                             index = candidates[np.argmin(distances[candidates])]
                             self.selected = int(world.agents["id"][index])
                     if self.selected != self.inspector.identifier:
-                        self.inspector.module, self.inspector.scroll = 0, 0
+                        self.inspector.module = 0
                         self.inspector.identifier = self.selected
                     self.observer.select(self.selected)
                 elif event.button == 3:
@@ -490,10 +485,7 @@ class Viewer(Renderer):
                 self.center = array(world.agents["pos"][match[0]])
         self.selected_module = self.inspector.module
         state = "PAUSED" if self.paused else f"{self.speed:g}x"
-        status = f"{state} | Space pause | N step | +/- speed | Wheel zoom"
-        if self.size >= 800:
-            status += " | Right-drag pan | F field | Tab channel | C color | R reset"
-        self.draw(world, status)
+        self.draw(world, state)
         self.window.blit(self.surface, (0, 0))
         if self.show_brain:
             panel = self.inspector.draw(

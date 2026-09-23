@@ -34,5 +34,27 @@
     "trail_hz": 5,
     "visible_trail_seconds": 30
   },
-  "interpretation": "Interface validation only. CPU and CUDA were compared separately against same-device controls; no cross-device trajectory equivalence is claimed. No new evolutionary experiment was started."
+  "interpretation": "Interface validation only. CPU and CUDA were compared separately against same-device controls; no cross-device trajectory equivalence is claimed. No new evolutionary experiment was started.",
+  "layout_refinement": {
+    "targeted_tests_passed": 38,
+    "inspector_heights_checked": [
+      640,
+      768,
+      984,
+      1024
+    ],
+    "tabs_checked": [
+      "brain",
+      "body",
+      "details"
+    ],
+    "all_tabs_fit_without_scrolling": true,
+    "transparent_header": true,
+    "controls": "vertical, bottom left",
+    "preview_module": 2,
+    "preview_window_size": [
+      1604,
+      984
+    ]
+  }
 }
