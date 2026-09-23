@@ -1,4 +1,4 @@
-"""Reconstruct V13 body stages and parenthood from complete, unresumed run histories.
+"""Reconstruct V13 body stages and parenthood from complete recorded histories.
 
 These descriptive counts measure access to body plans and reproduction. They do
 not assign fitness to module counts or treat relatives as independent trials.
@@ -11,12 +11,13 @@ from pathlib import Path
 
 import torch
 
+from emergent_garden.history import read_history
 from emergent_garden.morphology import module_count
 from emergent_garden.storage import load_checkpoint
 
 
-def summarize(path):
-    rows = [json.loads(line) for line in (path / "metrics.jsonl").read_text().splitlines()]
+def summarize(path, follow_resumes=False):
+    segments, rows, events = read_history(path, follow_resumes)
     if rows[0]["tick"] != 0:
         raise ValueError(f"Need the full history from initialization: {path}")
     w = load_checkpoint(path / "latest.pt")
@@ -29,8 +30,7 @@ def summarize(path):
     reproductive_parents = {k: set() for k in (1, 2, 3)}
     grown, energy, explicit_events = set(), 0.0, 0
     first_larger_parent = None
-    for line in (path / "events.jsonl").read_text().splitlines():
-        e = json.loads(line)
+    for e in events:
         if e["event"] == "growth":
             identifier = e["id"]
             assert stage[identifier] == e["from_modules"]
@@ -63,6 +63,7 @@ def summarize(path):
         assert plan[identifier] == int(w.agents["target_modules"][i])
     return dict(
         path=str(path),
+        history_segments=[str(s["path"]) for s in segments],
         time=w.time,
         ablation=w.ablation,
         population=w.population,
@@ -85,13 +86,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runs", type=Path, nargs="+", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--follow-resumes", action="store_true")
     args = parser.parse_args()
     torch.set_num_threads(1)
     records = []
     for root in args.runs:
         paths = [root] if (root / "metrics.jsonl").exists() else sorted(root.glob("seed-*"))
         for path in paths:
-            records.append(summarize(path))
+            records.append(summarize(path, args.follow_resumes))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(dict(interpretation=__doc__, runs=records), indent=2) + "\n")
     print(f"Reconstructed {len(records)} complete developmental histories: {args.output}")

@@ -1,0 +1,167 @@
+{
+  "interpretation": "Reconstruct V13 body stages and parenthood from complete recorded histories.\n\nThese descriptive counts measure access to body plans and reproduction. They do\nnot assign fitness to module counts or treat relatives as independent trials.\n",
+  "runs": [
+    {
+      "path": "runs/v13-native-long-221",
+      "history_segments": [
+        "runs/v13-native-221",
+        "runs/v13-native-long-221"
+      ],
+      "time": 10800.0,
+      "ablation": "none",
+      "population": 58,
+      "births": 956,
+      "founder_plans": [
+        60,
+        59,
+        73
+      ],
+      "birth_plans": [
+        827,
+        128,
+        1
+      ],
+      "births_by_parent_modules": [
+        855,
+        101,
+        0
+      ],
+      "distinct_reproductive_parents": [
+        416,
+        29,
+        0
+      ],
+      "growth_to_modules": [
+        0,
+        111,
+        1
+      ],
+      "distinct_grown_creatures": 111,
+      "development_energy": 2188.027967453003,
+      "living_module_histogram": [
+        57,
+        1,
+        0
+      ],
+      "living_target_histogram": [
+        57,
+        1,
+        0
+      ],
+      "first_larger_parent": {
+        "time": 140.43333333333334,
+        "parent": 188,
+        "child": 193
+      },
+      "event_reconstruction_passed": true
+    },
+    {
+      "path": "runs/v13-native-long-222",
+      "history_segments": [
+        "runs/v13-native-222",
+        "runs/v13-native-long-222"
+      ],
+      "time": 10800.0,
+      "ablation": "none",
+      "population": 73,
+      "births": 2952,
+      "founder_plans": [
+        56,
+        67,
+        69
+      ],
+      "birth_plans": [
+        919,
+        2006,
+        27
+      ],
+      "births_by_parent_modules": [
+        908,
+        2044,
+        0
+      ],
+      "distinct_reproductive_parents": [
+        307,
+        201,
+        0
+      ],
+      "growth_to_modules": [
+        0,
+        1118,
+        6
+      ],
+      "distinct_grown_creatures": 1118,
+      "development_energy": 23826.775584220886,
+      "living_module_histogram": [
+        60,
+        13,
+        0
+      ],
+      "living_target_histogram": [
+        49,
+        24,
+        0
+      ],
+      "first_larger_parent": {
+        "time": 80.63333333333333,
+        "parent": 88,
+        "child": 193
+      },
+      "event_reconstruction_passed": true
+    },
+    {
+      "path": "runs/v13-native-long-223",
+      "history_segments": [
+        "runs/v13-native-223",
+        "runs/v13-native-long-223"
+      ],
+      "time": 10800.0,
+      "ablation": "none",
+      "population": 28,
+      "births": 726,
+      "founder_plans": [
+        60,
+        76,
+        56
+      ],
+      "birth_plans": [
+        190,
+        504,
+        32
+      ],
+      "births_by_parent_modules": [
+        182,
+        522,
+        22
+      ],
+      "distinct_reproductive_parents": [
+        69,
+        70,
+        1
+      ],
+      "growth_to_modules": [
+        0,
+        266,
+        7
+      ],
+      "distinct_grown_creatures": 266,
+      "development_energy": 9414.541010856628,
+      "living_module_histogram": [
+        14,
+        14,
+        0
+      ],
+      "living_target_histogram": [
+        6,
+        22,
+        0
+      ],
+      "first_larger_parent": {
+        "time": 244.03333333333333,
+        "parent": 138,
+        "child": 196
+      },
+      "event_reconstruction_passed": true
+    }
+  ]
+}

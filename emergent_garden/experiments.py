@@ -66,7 +66,7 @@ def calibration(
     return results
 
 
-def trial(config, genome, seed, seconds, device, ablation, stop=None):
+def trial(config, genome, seed, seconds, device, ablation, stop=None, *, record_keys=()):
     config = replace(
         config,
         initial_population=1,
@@ -85,6 +85,7 @@ def trial(config, genome, seed, seconds, device, ablation, stop=None):
     world.founders = world.agents["genome"].clone()
     target = math.ceil(seconds * config.physics_hz)
     record = None
+    first_growth = None
     while world.tick < target and world.population:
         if stop is not None and stop.requested:
             raise InterruptedError("Evaluation stopped; completed trials are saved in trials.jsonl")
@@ -92,6 +93,8 @@ def trial(config, genome, seed, seconds, device, ablation, stop=None):
         for event in world.events:
             if event["event"] == "death" and event["id"] == 0:
                 record = event
+            if event["event"] == "growth" and event["id"] == 0 and first_growth is None:
+                first_growth = event["time"]
         world.events.clear()
     if record is None:
         index = (world.agents["id"] == 0).nonzero().flatten()
@@ -99,7 +102,10 @@ def trial(config, genome, seed, seconds, device, ablation, stop=None):
             record = world.agent_record(int(index[0]))
     if record is None:
         raise RuntimeError("Evaluation lost the founding organism record")
-    return {key: record[key] for key in ("acquired", "spent", "age", "offspring", "distance")}
+    record["survived"] = record.get("event") != "death"
+    record["first_growth_time"] = first_growth
+    keys = ("acquired", "spent", "age", "offspring", "distance", *record_keys)
+    return {key: record[key] for key in keys}
 
 
 def summary(rows):

@@ -1,0 +1,182 @@
+[
+  {
+    "path": "runs/v14-full-mixed/seed-241",
+    "time": 3600.0,
+    "populations": [
+      27,
+      23
+    ],
+    "matched_founders_sha256": "ab05ffca3802da09a00d08f4a917aa25c6d1537d39668151e58a1d1a16d82e83",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.012111022655517445,
+    "energy_injected": 1690251.0863494873,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 5.820766091346741e-10
+  },
+  {
+    "path": "runs/v14-full-mixed/seed-242",
+    "time": 3600.0,
+    "populations": [
+      22,
+      23
+    ],
+    "matched_founders_sha256": "621dc9dfa5860281c34eb74bc7db27eb4dcdd7ca8eeebda32371162442db3760",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.05583332727837842,
+    "energy_injected": 1599858.2600708008,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 1.4260876923799515e-09
+  },
+  {
+    "path": "runs/v14-full-mixed/seed-243",
+    "time": 3600.0,
+    "populations": [
+      22,
+      28
+    ],
+    "matched_founders_sha256": "08ba9c4c494854c90946ea5d1840a6d39f9dc7567901215085bc3a39505ea869",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.13088869654529844,
+    "energy_injected": 1665776.3097686768,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 4.656612873077393e-10
+  },
+  {
+    "path": "runs/v14-no-internal-mixed/seed-241",
+    "time": 3600.0,
+    "populations": [
+      33,
+      36
+    ],
+    "matched_founders_sha256": "ab05ffca3802da09a00d08f4a917aa25c6d1537d39668151e58a1d1a16d82e83",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.13515698902847362,
+    "energy_injected": 1667651.0863494873,
+    "maximum_packet_credit_error": 5.551115123125783e-17,
+    "maximum_detritus_balance_error": 2.473825588822365e-09
+  },
+  {
+    "path": "runs/v14-no-internal-mixed/seed-242",
+    "time": 3600.0,
+    "populations": [
+      25,
+      27
+    ],
+    "matched_founders_sha256": "621dc9dfa5860281c34eb74bc7db27eb4dcdd7ca8eeebda32371162442db3760",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.08993646217641071,
+    "energy_injected": 1644938.2600708008,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.0477378964424133e-09
+  },
+  {
+    "path": "runs/v14-no-internal-mixed/seed-243",
+    "time": 3600.0,
+    "populations": [
+      27,
+      29
+    ],
+    "matched_founders_sha256": "08ba9c4c494854c90946ea5d1840a6d39f9dc7567901215085bc3a39505ea869",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.05475951985863503,
+    "energy_injected": 1668956.3097686768,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.6589183360338211e-09
+  },
+  {
+    "path": "runs/v14-no-body-sense-mixed/seed-241",
+    "time": 3600.0,
+    "populations": [
+      30,
+      43
+    ],
+    "matched_founders_sha256": "ab05ffca3802da09a00d08f4a917aa25c6d1537d39668151e58a1d1a16d82e83",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.1352316236898332,
+    "energy_injected": 1687651.0863494873,
+    "maximum_packet_credit_error": 1.6653345369377348e-16,
+    "maximum_detritus_balance_error": 7.275957614183426e-10
+  },
+  {
+    "path": "runs/v14-no-body-sense-mixed/seed-242",
+    "time": 3600.0,
+    "populations": [
+      38,
+      21
+    ],
+    "matched_founders_sha256": "621dc9dfa5860281c34eb74bc7db27eb4dcdd7ca8eeebda32371162442db3760",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.0958770623037708,
+    "energy_injected": 1658878.2600708008,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.4551915228366852e-10
+  },
+  {
+    "path": "runs/v14-no-body-sense-mixed/seed-243",
+    "time": 3600.0,
+    "populations": [
+      24,
+      29
+    ],
+    "matched_founders_sha256": "08ba9c4c494854c90946ea5d1840a6d39f9dc7567901215085bc3a39505ea869",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.002543747232266469,
+    "energy_injected": 1666736.3097686768,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 2.9103830456733704e-11
+  },
+  {
+    "path": "runs/v14-neither-mixed/seed-241",
+    "time": 3600.0,
+    "populations": [
+      30,
+      30
+    ],
+    "matched_founders_sha256": "ab05ffca3802da09a00d08f4a917aa25c6d1537d39668151e58a1d1a16d82e83",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.13579484786168905,
+    "energy_injected": 1680251.0863494873,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 3.4924596548080444e-10
+  },
+  {
+    "path": "runs/v14-neither-mixed/seed-242",
+    "time": 3600.0,
+    "populations": [
+      34,
+      31
+    ],
+    "matched_founders_sha256": "621dc9dfa5860281c34eb74bc7db27eb4dcdd7ca8eeebda32371162442db3760",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.07208094443558366,
+    "energy_injected": 1645298.2600708008,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 8.440110832452774e-10
+  },
+  {
+    "path": "runs/v14-neither-mixed/seed-243",
+    "time": 3600.0,
+    "populations": [
+      24,
+      35
+    ],
+    "matched_founders_sha256": "08ba9c4c494854c90946ea5d1840a6d39f9dc7567901215085bc3a39505ea869",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.12611021474913287,
+    "energy_injected": 1668576.3097686768,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 3.1141098588705063e-09
+  }
+]

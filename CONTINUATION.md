@@ -992,8 +992,47 @@ The [population/body figure](docs/v13-development-native.png),
 and [event reconstruction](docs/results/v13-native-development.json) are retained.
 Maximum absolute energy residual was 0.222 units, within one part per million
 of injected energy in each run; food-credit conservation checks also passed.
-All three juvenile-offspring populations are continuing to three simulated
-hours under `runs/v13-native-long-221`, `-222`, and `-223`.
+All three juvenile-offspring populations completed three simulated hours under
+`runs/v13-native-long-221`, `-222`, and `-223`. Every preselected environment
+continued; none was dropped after its 30-minute result.
+
+| Environment | Population / births / living generation | Expressed modules (1, 2, 3) | Births by two-/three-module parents |
+| --- | --- | --- | --- |
+| 221 | 58 / 956 / 31 | (57, 1, 0) | 101 / 0 |
+| 222 | 73 / 2,952 / 30 | (60, 13, 0) | 2,044 / 0 |
+| 223 | 28 / 726 / 19 | (14, 14, 0) | 522 / 22 |
+
+The [full trajectories](docs/v13-development-long.png) show substantially
+different outcomes: larger bodies became rare in 221, remained common in 222,
+and coexisted with single-module bodies in 223. Twenty-four and 22 survivors
+in the latter two runs encoded two-module plans; some had not yet grown.
+All 22 births by three-module parents in 223 came from one individual, and no
+three-module creature remained at any endpoint. These counts demonstrate
+physical access and reproduction, not a general selective advantage of size.
+
+Environment 222 also retained 37 fresh-food specialists and 36 scavengers,
+with mean diet allocations 0.906 and 0.129. They descend from founders 32 and
+101, whose initial allocations were already 0.869 and 0.145. This is ecological
+sorting and persistence from random founders, not evidence that a new dietary
+split evolved. Fixed-genotype tests of these two dietary pools, alone, together,
+and with recycling disabled, are now checking their ecological dependence.
+Those follow-ups deliberately select this successful community; they cannot
+estimate how often native populations establish a food web.
+
+The [three histories](docs/results/v13-native-long.json),
+[invariant audit](docs/results/v13-native-long-audit.json), and
+[event reconstruction](docs/results/v13-native-long-development.json) include
+both saved segments. Resume boundaries must agree on every physical metric,
+configuration, seed, controller, and intervention before records are joined.
+All growth and birth events reconcile with the final checkpoint. Maximum
+absolute energy residual was 1.317 units against more than 4.8 million units
+injected in that run (0.274 parts per million); food-credit checks also passed.
+
+The verified recording `runs/v13-native-long-video/timelapse.mp4` follows
+environment 222 from 10,800 to 11,100 seconds. All 901 frames decoded at
+1,024×1,024 and 30 FPS; the [video audit](docs/results/v13-native-long-video.json)
+retains frame hashes. This is an illustrative continuation, outside the
+three-hour comparison horizon.
 
 ## V14 — local coordination within a developing body
 
@@ -1092,9 +1131,38 @@ Maximum absolute energy residual was 0.0199 units, with all food-credit checks p
 The [inspector preview](docs/v14-preview.png) shows a body selected for visible
 emission, not measured communication benefit.
 
-Twelve 3,600-second trials now compare all four treatments in new environments
-241/242/243, retaining the same source pools. Signal activity by itself will
-not count as evidence of beneficial communication.
+Twelve 3,600-second trials completed all four treatments in new environments
+241/242/243, retaining the same source pools:
+
+| Environment | Both channels: population / births | Body position only | Internal reception only | Neither |
+| --- | --- | --- | --- | --- |
+| 241 | 50 / 896 | 69 / 751 | 73 / 879 | 60 / 851 |
+| 242 | 45 / 762 | 52 / 826 | 59 / 987 | 65 / 971 |
+| 243 | 50 / 677 | 56 / 684 | 53 / 687 | 59 / 687 |
+
+Both source ancestries persisted in every trial. The complete interface produced
+fewer living bodies than each restricted treatment in every environment, while
+birth counts were mixed. Population is not individual fitness, and the evolving
+trajectories diverge, but these comparisons establish no consistent community
+benefit. Signal magnitudes averaged 0.0141–0.0315 across endpoints, including
+the reception-disabled treatments. Nonzero emission is not evidence of useful
+communication. See the [ancestry trajectories](docs/v14-coordination-communities.png),
+[12 histories](docs/results/v14.json), and [audit](docs/results/v14-audit.json).
+All founder, neural topology, development, and food-credit checks passed;
+maximum absolute energy residual was 0.136 units.
+
+`scripts/assay_coordination.py` now tests eight distinct two-module grazer
+genotypes from each completed full-interface community. Selection is uniform
+without replacement among eligible living genotypes, using a fixed selection
+seed. Each genotype starts as a fresh juvenile in three new 128-unit habitats
+for 240 seconds, paired across all four interventions plus `self_internal`.
+Every genetic mutation pathway is disabled. Age, growth, intake, reproduction,
+and death are recorded for the original body; clonal offspring may share its
+dish. This can test use of the interface without ongoing genetic selection,
+but related genotypes and repeated habitats are not independent evolutionary
+replicates, and the assay habitat differs from the evolution dish. The script
+retains exact source checkpoint hashes, selected genomes, package source,
+experiment source, and completed trials if interrupted. Results are pending.
 
 `runs/v14-video/timelapse.mp4` records the full-interface pilot in environment
 231 from 600 to 900 seconds. All 901 frames decoded at 1,024×1,024 and 30 FPS;

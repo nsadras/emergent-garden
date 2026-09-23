@@ -235,3 +235,22 @@ def test_coordination_sensor_channels_do_not_replace_energy_and_feedback(config)
     assert inputs[..., -1].eq(1).all()
     assert inputs[..., -2].eq(c.birth_energy / c.max_energy).all()
     assert (inputs[..., c.input_names.index("food_feedback")] > 0).all()
+
+
+def test_lifetime_trial_tracks_development_and_death_without_survivor_filtering(config):
+    from emergent_garden.experiments import trial
+
+    w = organism(config, 2, growth_delay=0.1, growth_reserve=10.0)
+    genome = w.agents["genome"][0].clone()
+    before = genome.clone()
+    keys = ("survived", "first_growth_time", "modules", "target_modules", "development_spent")
+    # This seed places the juvenile far enough from the wall to grow.
+    live = trial(w.config, genome, 10022, 0.2, "cpu", "none", record_keys=keys)
+    assert live["survived"] and live["modules"] == live["target_modules"] == 2
+    assert live["first_growth_time"] > 0 and live["development_spent"] > 0
+    dead = trial(
+        replace(w.config, basal_cost=100000.0), genome, 10022, 0.2, "cpu", "none", record_keys=keys
+    )
+    assert not dead["survived"] and dead["modules"] == 1
+    assert dead["first_growth_time"] is None and dead["development_spent"] == 0
+    torch.testing.assert_close(genome, before, rtol=0, atol=0)

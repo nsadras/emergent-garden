@@ -13,6 +13,7 @@ from pathlib import Path
 
 import torch
 
+from emergent_garden.history import read_history
 from emergent_garden.storage import load_checkpoint
 from emergent_garden.topology import counts
 
@@ -21,6 +22,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runs", type=Path, nargs="+", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--follow-resumes", action="store_true")
     args = parser.parse_args()
     torch.set_num_threads(1)
     references, records = {}, []
@@ -43,7 +45,8 @@ def main():
             if not native:
                 assert world.time >= report["duration"] or world.population == 0
             else:
-                first = json.loads((path / "metrics.jsonl").read_text().splitlines()[0])
+                _, rows, _ = read_history(path, args.follow_resumes)
+                first = rows[0]
                 assert first["tick"] == 0, "Native comparison requires initialization history"
             assert world.time == trial["final"]["time"]
             assert world.population == trial["final"]["population"]

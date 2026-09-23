@@ -1,0 +1,44 @@
+[
+  {
+    "path": "runs/v13-native-long-221",
+    "time": 10800.0,
+    "populations": [
+      58
+    ],
+    "matched_founders_sha256": "f3144243374bb6f3928acda1309bb0949b22377f3f00153d33b9fa8740f69ad7",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.1594842317608709,
+    "energy_injected": 4699316.423355103,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 2.444721758365631e-08
+  },
+  {
+    "path": "runs/v13-native-long-222",
+    "time": 10800.0,
+    "populations": [
+      73
+    ],
+    "matched_founders_sha256": "a35c8acd8fb4c084e3b5fb059900083515c40d5c3b5d3e182d3167f259a90148",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.001725952995911939,
+    "energy_injected": 4989171.8713645935,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 2.561137080192566e-09
+  },
+  {
+    "path": "runs/v13-native-long-223",
+    "time": 10800.0,
+    "populations": [
+      28
+    ],
+    "matched_founders_sha256": "3fe2e163f56019d80edb8704fe7cfcb4643b5240727fd58d0de0b54772f0a5ec",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -1.3165570152850705,
+    "energy_injected": 4812972.285060883,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.1641532182693481e-09
+  }
+]

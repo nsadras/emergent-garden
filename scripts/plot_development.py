@@ -32,6 +32,8 @@ def main():
             ("none", "Juvenile offspring", "#278e6a"),
             ("adult_births", "Fully formed offspring", "#7965a8"),
         ):
+            if (seed, mode) not in records:
+                continue
             points = history(records[seed, mode])
             times = [r["time"] / 60 for r in points]
             axes[row, 0].plot(times, [r["population"] for r in points], color=color, label=label)
@@ -62,11 +64,18 @@ def main():
     for ax in axes[0]:
         ax.legend(fontsize=8)
     fig.suptitle(args.title, fontsize=14)
+    controlled = any(mode == "adult_births" for _, mode in records)
+    description = (
+        "Founders are identical one-module newborns in both treatments; "
+        "their encoded plans may be larger."
+        if controlled
+        else "Independent native starts; all three preselected populations continued "
+        "from 30 minutes to three hours without resetting."
+    )
     fig.text(
         0.5,
         0.015,
-        "Founders are identical one-module newborns in both treatments; "
-        "their encoded plans may be larger.\n"
+        description + "\n"
         "Genetic mutation remains active. Curves describe body sizes, not independent species.",
         ha="center",
         fontsize=9,

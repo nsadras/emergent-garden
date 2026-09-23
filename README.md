@@ -90,7 +90,12 @@ retained larger bodies in every juvenile treatment and none in the fully formed
 offspring controls. Three-module bodies also reproduced. Population and birth
 counts did not consistently improve. [Fresh random populations](docs/v13-development-native.png)
 persisted for 30 minutes under both offspring rules; their founders already
-included larger body plans. Three-hour continuations are underway.
+included larger body plans. [All three native populations](docs/v13-development-long.png)
+also persisted for three simulated hours, ending with 58, 73, and 28 creatures.
+Larger bodies remained common in two populations and became rare in the third.
+One population retained both fresh-food specialists and scavengers descended
+from differently allocated founders. Its verified recording is at
+`runs/v13-native-long-video/timelapse.mp4`.
 
 The experimental [V14 preset](configs/v14.toml) adds private signals between
 adjacent modules within a body, plus each module's body-relative coordinates.
@@ -99,7 +104,9 @@ internal emissions. Signals incur energy costs and reach neighboring controllers
 on their next update. [The inspector](docs/v14-preview.png) shows the held signals.
 Matched tests remove position readings, signal reception, or both; a self-signal
 control distinguishes extra local memory from information sharing. Short pilots
-showed no consistent benefit, and longer comparisons are underway.
+and [twelve hour-long comparisons](docs/v14-coordination-communities.png)
+showed no consistent population or reproduction benefit. Fixed-genotype
+lifetime assays are checking immediate use of the interface separately.
 A verified recording is at `runs/v14-video/timelapse.mp4`.
 
 ## Start watching
@@ -108,25 +115,29 @@ Python 3.13 and all Python packages are managed with **uv**:
 
 ```bash
 uv sync --locked
-uv run garden run --config configs/v7.toml --seed 71 --view --device cpu --seconds 0
+uv run garden run --config configs/v13.toml --seed 222 --view --device cpu --seconds 0
 ```
 
 `--seconds 0` runs until you close the window, press Ctrl+C, or the population
 becomes extinct. A checkpoint and preview are saved on exit. Every run gets its
 own directory under `runs/`; a supplied `--output` directory must not already exist.
 
-V7 starts 192 creatures in a 512-unit dish, with a capacity of 1,024. Each body
-has one to three modules, each with local sensors, propulsion, and a 16-unit
-recurrent circuit with its own acquired synaptic state. A circular membrane
+V13 starts 192 juvenile creatures in a 512-unit dish, with a capacity of 1,024.
+Each inherited body plan encodes one to three modules, which grow as food and
+space permit. Modules have local sensors, propulsion, and a shared recurrent
+template with up to 32 neurons, initially 16 active. Each module has its own
+acquired neural state. A circular membrane
 defines collision geometry; the inner
 modules collect food. Zoom in to inspect the body, actuators, and inherited traits.
 Green bodies favor fresh food; amber bodies favor detritus. Red marks show attacks.
 
-V7 seed 71 is a verified starting point: it persisted for three simulated hours,
-ending with 44 creatures and living generation 46. Survival is not guaranteed,
-and there is no automatic reseeding. To watch that already evolved population,
-resume `runs/v7-bounded-long-71/latest.pt`. The earlier V5 preset and its verified
-seeds 11–13 remain available; see [its experiment record](EVOLUTION.md).
+V13 seed 222 is a verified starting point: it persisted for three simulated
+hours, ending with 73 creatures, two dietary groups, and living generation 30.
+Survival is not guaranteed, and there is no automatic reseeding. To watch the
+already evolved population, resume `runs/v13-native-long-222/latest.pt`.
+V7 seed 71 also has a verified three-hour population at
+`runs/v7-bounded-long-71/latest.pt`. The earlier presets remain available;
+see [their experiment record](EVOLUTION.md).
 
 Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures).
 

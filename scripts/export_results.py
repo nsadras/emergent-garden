@@ -7,11 +7,14 @@ import argparse
 import json
 from pathlib import Path
 
+from emergent_garden.history import read_history
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument("runs", type=Path, nargs="+")
+    parser.add_argument("--follow-resumes", action="store_true")
     parser.add_argument(
         "--interval", type=int, default=120, help="History sampling interval in seconds"
     )
@@ -25,10 +28,11 @@ def main():
             metrics = path / "metrics.jsonl"
             if not metrics.exists():
                 continue
-            rows = [json.loads(line) for line in metrics.read_text().splitlines()]
+            segments, rows, _ = read_history(path, args.follow_resumes)
             meta = json.loads((path / "metadata.json").read_text())
             entry = dict(
                 path=str(path),
+                history_segments=[str(s["path"]) for s in segments],
                 metadata=meta,
                 final=rows[-1],
                 checkpoint_interval=args.interval,
