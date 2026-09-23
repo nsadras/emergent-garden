@@ -55,10 +55,19 @@ def main():
         assert torch.equal(w.rng[key].get_state(), replay.rng[key].get_state()), key
     for key in w.totals:
         assert abs(w.totals[key] - replay.totals[key]) < 1e-3, key
+    if c.ecology_version >= 9:
+        torch.testing.assert_close(w.food_credit, replay.food_credit, rtol=0, atol=tolerance)
+        for key, original in w.trophic.state_dict().items():
+            torch.testing.assert_close(
+                original, replay.trophic.state_dict()[key], rtol=0, atol=tolerance
+            )
     metric = w.metrics()
     assert abs(metric["energy_balance_error"]) < 0.01
     if c.ecology_version >= 7:
         assert metric["mean_plastic_magnitude"] > 0
+    if c.ecology_version >= 9:
+        assert max(map(abs, metric["trophic_detritus_balance_error"])) < 1e-7
+        torch.testing.assert_close(w.food_credit.sum(1), w.food_energy.double())
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
         metadata=runtime_metadata(w),

@@ -16,6 +16,7 @@ from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .spatial import neighbors
 from .topology import counts, initial_structure, mutate_structure
+from .trophic import TrophicLedger, guilds
 from .world import World, genome_hash
 
 
@@ -116,6 +117,9 @@ class EcologyWorld(World):
         self.food_ready = torch.empty(0, dtype=torch.long, device=self.device)
         self.food_kind = torch.empty(0, dtype=torch.long, device=self.device)
         self.food_patch = torch.empty(0, dtype=torch.long, device=self.device)
+        if c.ecology_version >= 9:
+            self.food_credit = torch.empty((0, 4), dtype=torch.float64, device=self.device)
+            self.trophic = TrophicLedger(self.device)
         self.spawn_food(c.initial_food)
         n = c.initial_population
         self.agents = self.empty_agents(n)
@@ -209,7 +213,7 @@ class EcologyWorld(World):
         stock.index_add_(0, self.food_patch[assigned], self.food_energy[assigned])
         return stock
 
-    def append_food(self, positions, energy, kind, patches=None):
+    def append_food(self, positions, energy, kind, patches=None, credits=None):
         n, c = len(energy), self.config
         if not n:
             return
@@ -226,6 +230,13 @@ class EcologyWorld(World):
         )
         ready = self.tick + (math.ceil(c.detritus_delay * c.physics_hz) if kind else 0)
         self.food_ready = torch.cat((self.food_ready, torch.full((n,), ready, device=self.device)))
+        if c.ecology_version >= 9:
+            if credits is None:
+                credits = torch.zeros((n, 4), dtype=torch.float64, device=self.device)
+                credits[:, 3] = energy.double()
+            self.food_credit = torch.cat((self.food_credit, credits))
+            if kind == 1:
+                self.trophic.detritus_introduced += credits.sum(0)
 
     def filter_food(self, keep):
         for key in (
@@ -237,6 +248,8 @@ class EcologyWorld(World):
             "food_patch",
         ):
             setattr(self, key, getattr(self, key)[keep])
+        if self.config.ecology_version >= 9:
+            self.food_credit = self.food_credit[keep]
 
     def spawn_food(self, n):
         if not n:
@@ -552,18 +565,38 @@ class EcologyWorld(World):
         remains = torch.zeros_like(self.food_energy).index_add_(0, j, shares * recycled)
         recycle_mask = remains > 0
         det_pos, det_energy = self.food_pos[recycle_mask].clone(), remains[recycle_mask]
-        self.food_energy = (self.food_energy - consumed).clamp_min(0)
+        new_energy = (self.food_energy - consumed).clamp_min(0)
+        credits = None
+        if c.ecology_version >= 9:
+            consumers = guilds(a["diet"][i])
+            self.food_credit = self.trophic.feeding(
+                self.food_energy,
+                new_energy,
+                self.food_kind,
+                self.food_credit,
+                j,
+                consumers,
+                received,
+            )
+            credits = self.trophic.recycled_credits(
+                len(self.food_energy), j, consumers, shares * recycled, recycle_mask, det_energy
+            )
+        self.food_energy = new_energy
         self.totals["food_absorbed"] += received.double().sum().item()
         self.totals["detritus_created"] += det_energy.double().sum().item()
         self.totals["digestion_loss"] += (
             (shares - received - shares * recycled).double().sum().item()
         )
         self.filter_food(self.food_energy > 0)
-        self.append_food(det_pos, det_energy, 1)
+        self.append_food(det_pos, det_energy, 1, credits=credits)
 
-    def remove_dead(self):
+    def remove_dead(self, cause="unspecified"):
         # Base death recording includes genome hashes and individual life histories.
+        start = len(self.events)
         super().remove_dead()
+        if self.config.ecology_version >= 9:
+            for event in self.events[start:]:
+                event["cause"] = cause
 
     def hunt(self):
         a, c = self.agents, self.config
@@ -602,6 +635,9 @@ class EcologyWorld(World):
         self.totals["predation_absorbed"] += received.double().sum().item()
         self.totals["predation_loss"] += lost.double().sum().item() - received.double().sum().item()
         self.totals["predation_kills"] += int((a["energy"] <= 0).sum())
+        if c.ecology_version >= 9:
+            groups = guilds(a["diet"])
+            self.trophic.predation(groups[j], groups[i], meals, groups[a["energy"] <= 0])
 
     def agent_record(self, index):
         result = super().agent_record(index)
@@ -778,6 +814,10 @@ class EcologyWorld(World):
                     )
             expired = self.food_expiry <= self.tick
             self.totals["food_expired"] += self.food_energy[expired].double().sum().item()
+            if c.ecology_version >= 9:
+                self.trophic.detritus_expired += self.food_credit[
+                    expired & (self.food_kind == 1)
+                ].sum(0)
             self.filter_food(~expired)
             activity = self.patch_activity().mean().item() if c.ecology_version >= 3 else 1.0
             self.spawn_accumulator += c.food_rate * c.dt * activity
@@ -809,11 +849,11 @@ class EcologyWorld(World):
                 )
             if c.ecology_version >= 5:
                 self.emit(scale)
-            self.remove_dead()
+            self.remove_dead("maintenance")
             self.feed()
             if c.ecology_version >= 2:
                 self.hunt()
-                self.remove_dead()
+                self.remove_dead("predation")
             self.reproduce()
             self.tick += 1
             if c.ecology_version >= 5 and self.tick % (c.physics_hz // c.field_hz) == 0:
@@ -868,6 +908,8 @@ class EcologyWorld(World):
             result["neuron_histogram"] = torch.bincount(
                 a["neurons"], minlength=c.hidden_size + 1
             ).tolist()
+        if c.ecology_version >= 9:
+            result.update(self.trophic.metrics(self.food_credit, self.food_kind))
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
         overlap = a["radius"][i] + a["radius"][j] - (a["pos"][i] - a["pos"][j]).norm(dim=1)
@@ -922,6 +964,9 @@ class EcologyWorld(World):
             result[key] = getattr(self, key).clone()
         if self.config.ecology_version >= 6:
             result["landscape"] = self.landscape.state_dict()
+        if self.config.ecology_version >= 9:
+            result["food_credit"] = self.food_credit.clone()
+            result["trophic"] = self.trophic.state_dict()
         return result
 
     @classmethod
@@ -971,6 +1016,9 @@ class EcologyWorld(World):
         self.field = self.fields[0]
         if self.config.ecology_version >= 6:
             self.landscape = ReversalLandscape.from_state(self.config, state["landscape"], device)
+        if self.config.ecology_version >= 9:
+            self.food_credit = state["food_credit"].to(device).clone()
+            self.trophic = TrophicLedger.from_state(state["trophic"], device)
         self.rng = {}
         for name, rng_state in state["rng"].items():
             generator = torch.Generator(device=self.device)

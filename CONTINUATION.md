@@ -326,7 +326,11 @@ disabling plasticity throughout yielded 16,774/15,995. Survival also varied by
 intervention. These are state effects in one community, not proof of learning.
 
 A 30.03-second V8 video decoded to 901 frames at 1,024×1,024; the circuit inspector
-was visually checked. Random seed 123 is continuing to three simulated hours.
+was visually checked. Random seed 123 completed three simulated hours with 56
+living creatures, 3,341 births, and maximum living generation 87. Its mean active
+circuit had 16.30 neurons and its mean fresh-food allocation was 0.916. The
+[long-run record](docs/results/v8-long.json) retains the trajectory; this is one
+surviving origin, not a general survival guarantee.
 
 ## Community assembly experiment
 
@@ -354,8 +358,65 @@ balanced mixtures, pure-source treatments, neutral genome padding, reset states,
 and saved ancestry. Different body sizes retain different founder energy.
 
 The purpose is to test coexistence and resource use. These are deliberately
-assembled populations, not spontaneous speciation. Aggregate intake cannot tell
-whose detritus was eaten or establish cooperation; causal food-flow provenance
-would be the next useful measurement if the communities persist together.
-Current batches are `runs/v8-assembly-grazers`, `v8-assembly-scavengers`, and
-`v8-assembly-mixed`. Their results will guide the next ecological addition.
+assembled populations, not spontaneous speciation. All 15 trials completed:
+
+| Treatment | Final grazer/scavenger ancestry, environments 151 / 152 / 153 |
+| --- | --- |
+| Grazer source alone | 47/0; 53/0; 61/0 |
+| Scavenger source alone | 0/44; 0/42; 0/43 |
+| Mixture, all mechanisms | 0/43; 0/41; 0/44 |
+| Mixture, attacks disabled | 35/47; 60/36; 18/52 |
+| Mixture, recycling disabled | 58/0; 49/0; 59/0 |
+
+Grazer ancestry disappeared at 2,378, 1,494, and 1,252 seconds in the mixtures.
+Removing attacks retained both ancestries for the measured hour; that does not
+establish indefinite coexistence. Removing recycling eliminated scavenger
+ancestry after 137, 127, and 147 seconds. The recycling intervention preserves
+primary assimilation and dissipates the otherwise recycled energy. The attack
+intervention disables bites while retaining weapon costs and digestive penalties.
+[The plot](docs/v8-assembly.png) is generated from [compact records](docs/results/v8-assembly.json).
+
+These interventions establish dependence on the mechanisms in these particular
+communities. They do not identify each direct transfer or prove cooperation.
+
+## V9 — food-flow provenance
+
+V9 adds passive accounting with the same physical laws and 32-input/5-output
+controllers as V8. Each food packet carries four energy-credit values: material
+produced by grazer-, generalist-, or scavenger-allocated bodies, or externally
+introduced material with no attributed producer. Reporting bins are diet >0.65,
+0.35–0.65 inclusive, and <0.35. They are not species or labels available to brains.
+Producer guild is measured when fresh food is processed; consumer guild is
+measured when material is eaten. Ancestry remains separately recorded.
+
+Several bodies consuming one fresh packet still create exactly one detritus
+packet, carrying their proportional contributions. Partial feeding preserves that
+mixture. The ledger follows absorbed energy, digestive dissipation, expiration,
+and remaining stock separately for each producer. Another matrix records actual
+prey-to-predator assimilation. Death records label the immediate final step as
+maintenance or predation; prior bite damage can still contribute to a later
+maintenance death. These measurements cannot infer cooperation or independent
+primary-energy sources, because energy can be transferred more than once.
+
+Tests cover shared packets, partial uptake, expiry, unattributed additions,
+disabled recycling, simultaneous attacks, and save/resume. A paired V8/V9 test
+checks exact CPU equality of physical agents, food, fields, random streams, and
+totals through births, deaths, and nutritional reversals. Rendering is also
+checked as an observer. CPU and RTX 5080 replay checks pass; the latter reports
+an energy residual of 0.000382 and zero detritus-credit residual in its small
+eight-second test. This is a correctness check, not a performance benchmark.
+
+Traced repeats of the three mixed communities, with and without attacks, are
+running under `runs/v9-traced-mixed` and `runs/v9-traced-no-attacks`. Their sources
+are archived at process import. Results will distinguish recycling within a
+feeding guild from transfers between guilds, and will be checked against the
+corresponding V8 physical endpoints.
+
+The next environmental hypothesis is spatial shelter that locally obstructs
+attacks for any organism. It will be tested against an otherwise matched world
+without protection. Research motivates testing refuges, not presuming success:
+[Li et al. (2017)](https://peerj.com/articles/2993/) found coexistence effects in
+their modeled predator–prey systems, while [an empirical study of intraguild
+predation](https://pubmed.ncbi.nlm.nih.gov/23004014/) found that habitat complexity
+weakened predation without promoting coexistence. Our mixed omnivores differ
+from both systems and need their own controls.

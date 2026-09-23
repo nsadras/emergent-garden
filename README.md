@@ -35,6 +35,12 @@ variation and mixed ecological effects. The [brain inspector](docs/v8-preview.pn
 shows the expressed circuit and acquired changes. A V8 video is saved locally
 at `runs/v8-video/timelapse.mp4`.
 
+The [V9 preset](configs/v9.toml) traces detritus producers and consumers and
+predation transfers, while preserving V8's physics. [Community assembly trials](docs/v8-assembly.png)
+found that two evolved lineages persisted together when attacks were disabled;
+with attacks active, grazer ancestry disappeared in all three tested mixtures.
+The accounting will guide experiments on sustaining richer food webs.
+
 ## Start watching
 
 Python 3.13 and all Python packages are managed with **uv**:
@@ -156,6 +162,9 @@ The original starting values are in [configs/v0.toml](configs/v0.toml).
 | [V4](configs/v4.toml) | A developmental genome that repeats and places sensor/motor modules |
 | [V5](configs/v5.toml) | Costly secretion, diffusion, decay, and historical archives |
 | [V6](configs/v6.toml) | Hidden quality reversals, patch identities, and experienced food/damage inputs |
+| [V7](configs/v7.toml) | Inherited rules for within-lifetime synaptic change |
+| [V8](configs/v8.toml) | Evolving neurons and connections with construction and maintenance costs |
+| [V9](configs/v9.toml) | Passive food-flow provenance, predation transfers, and immediate death causes |
 
 ```bash
 cp configs/v5.toml configs/my-experiment.toml
