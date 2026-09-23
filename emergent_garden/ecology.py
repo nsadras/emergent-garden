@@ -9,7 +9,7 @@ from dataclasses import asdict
 
 import torch
 
-from .brain import advance, initial_brains
+from .brain import advance, controller_step, initial_brains
 from .config import Config
 from .field import SmellField, TrailField
 from .landscape import ReversalLandscape
@@ -39,6 +39,7 @@ class EcologyWorld(World):
             "no_emission",
             "no_identity",
             "no_feedback",
+            "no_plasticity",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -47,6 +48,7 @@ class EcologyWorld(World):
             or (ablation == "pooled" and config.ecology_version < 4)
             or (ablation in ("no_signal", "no_emission") and config.ecology_version < 5)
             or (ablation in ("no_identity", "no_feedback") and config.ecology_version < 6)
+            or (ablation == "no_plasticity" and config.ecology_version < 7)
         ):
             raise ValueError("Ablation requires a version containing that feature")
         self.rng = {
@@ -93,6 +95,8 @@ class EcologyWorld(World):
             self.totals.update(
                 quality_reversals=0, high_quality_absorbed=0.0, low_quality_absorbed=0.0
             )
+        if c.ecology_version >= 7:
+            self.totals.update(plasticity_cost=0.0, plasticity_changes=0.0)
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -147,6 +151,11 @@ class EcologyWorld(World):
         if c.ecology_version >= 6:
             for key in ("food_feedback", "damage_feedback", "high_acquired", "low_acquired"):
                 a[key] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 7:
+            for key in ("module_plastic", "module_trace"):
+                a[key] = torch.zeros(
+                    (n, MAX_MODULES, c.hidden_size, c.hidden_size), device=self.device
+                )
         return a
 
     def initial_genomes(self, n):
@@ -357,14 +366,34 @@ class EcologyWorld(World):
                 count = len(index)
                 genomes = a["genome"][index, None].expand(-1, MAX_MODULES, -1)
                 times = tau[:, None].expand(-1, MAX_MODULES).reshape(-1)
-                hidden, actions = advance(
+                state = dict(hidden=a["module_h"][index].reshape(-1, c.hidden_size))
+                if c.ecology_version >= 7:
+                    for key in ("plastic", "trace"):
+                        state[key] = a[f"module_{key}"][index].reshape(
+                            -1, c.hidden_size, c.hidden_size
+                        )
+                updated, actions = controller_step(
                     c,
                     genomes.reshape(-1, c.parameter_count),
                     module_inputs.reshape(-1, c.input_size),
-                    a["module_h"][index].reshape(-1, c.hidden_size),
+                    state,
                     times,
+                    plasticity=self.ablation != "no_plasticity",
                 )
-                hidden = hidden.reshape(count, MAX_MODULES, c.hidden_size) * mask[..., None]
+                hidden = (
+                    updated["hidden"].reshape(count, MAX_MODULES, c.hidden_size) * mask[..., None]
+                )
+                if c.ecology_version >= 7:
+                    for key in ("plastic", "trace"):
+                        values = updated[key].reshape(
+                            count, MAX_MODULES, c.hidden_size, c.hidden_size
+                        )
+                        values = values * mask[..., None, None]
+                        if key == "plastic":
+                            self.totals["plasticity_changes"] += (
+                                (values - a["module_plastic"][index]).abs().double().sum().item()
+                            )
+                        a[f"module_{key}"][index] = values
                 actions = actions.reshape(count, MAX_MODULES, c.output_size) * mask[..., None]
                 a["module_h"][index], a["module_actions"][index] = hidden, actions
                 a["h"][index] = hidden.sum(1) / mask.sum(1)[:, None]
@@ -672,6 +701,8 @@ class EcologyWorld(World):
             maintenance += c.attack_cost * a["actions"][:, 2].square() * c.dt * copies
         if c.ecology_version >= 5:
             maintenance += c.signal_cost * a["area"] * a["actions"][:, 3].square() * c.dt
+        if c.ecology_version >= 7:
+            maintenance += c.plasticity_cost * copies * c.dt
         return maintenance, propulsion
 
     def emit(self, paid_fraction):
@@ -722,6 +753,10 @@ class EcologyWorld(World):
             self.totals["maintenance"] += maintenance.double().sum().item()
             self.totals["propulsion"] += propulsion.double().sum().item()
             self.totals["organism_steps"] += self.population
+            if c.ecology_version >= 7:
+                self.totals["plasticity_cost"] += (
+                    (c.plasticity_cost * a["modules"] * c.dt * scale).double().sum().item()
+                )
             if c.ecology_version >= 5:
                 self.emit(scale)
             self.remove_dead()
@@ -769,6 +804,12 @@ class EcologyWorld(World):
             result["favorable_identity"] = self.landscape.favorable
             result["next_quality_reversal"] = self.landscape.next_tick * c.dt
             result["patch_identities"] = self.landscape.identities.tolist()
+        if c.ecology_version >= 7:
+            count = max(1, int(a["modules"].sum()) * c.hidden_size**2)
+            result["mean_plastic_magnitude"] = (
+                a["module_plastic"].abs().double().sum().item() / count
+            )
+            result["mean_modulation"] = (2 * a["actions"][:, 4] - 1).mean().item() if n else 0
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
         overlap = a["radius"][i] + a["radius"][j] - (a["pos"][i] - a["pos"][j]).norm(dim=1)

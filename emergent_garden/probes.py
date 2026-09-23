@@ -7,7 +7,7 @@ from pathlib import Path
 
 import torch
 
-from .brain import advance
+from .brain import controller_step, initial_state
 from .config import Config
 from .world import genome_hash
 
@@ -23,21 +23,21 @@ def cue_probe(config, genomes, delay, reset=False):
         raise ValueError("Cue probes require V3+ and a finite positive delay")
     g = genomes.repeat_interleave(2, dim=0)
     tau = 0.2 + 4.8 * g[:, config.brain_parameter_count + 5].sigmoid()
-    hidden = torch.zeros((len(g), config.hidden_size), device=g.device)
+    state = initial_state(config, g)
     neutral = torch.zeros((len(g), config.input_size), device=g.device)
     neutral[:, -2] = 0.5
     for _ in range(2 * config.controller_hz):
-        hidden, _ = advance(config, g, neutral, hidden, tau)
+        state, _ = controller_step(config, g, neutral, state, tau)
     cue = neutral.clone()
     cue[0::2, 12:16] = torch.tensor([0.2, 0.8, 0.0, 0.0], device=g.device)
     cue[1::2, 12:16] = torch.tensor([0.0, 0.0, 0.8, 0.2], device=g.device)
     for _ in range(config.controller_hz):
-        hidden, _ = advance(config, g, cue, hidden, tau)
+        state, _ = controller_step(config, g, cue, state, tau)
     steps = math.ceil(delay * config.controller_hz)
     for _ in range(steps):
         if reset:
-            hidden.zero_()
-        hidden, actions = advance(config, g, neutral, hidden, tau)
+            state["hidden"].zero_()
+        state, actions = controller_step(config, g, neutral, state, tau)
     turns = (actions[:, 1] - actions[:, 0]).reshape(-1, 2)
     difference = turns[:, 1] - turns[:, 0]
     return dict(
@@ -67,7 +67,8 @@ def probe_run(run, output, count, delays, device="cpu"):
             "Identical current observations after distinct cue histories. A nonzero effect shows "
             "controller history dependence; a positive sign points toward the former cue. "
             "Neither establishes ecological usefulness, learned memory, or intelligence. "
-            "For modular bodies this probes the shared neural template in isolation."
+            "For modular bodies this probes the shared neural template in isolation. "
+            "V7 activation resets retain acquired synaptic offsets and eligibility traces."
         ),
     )
     for label, pool in (("founders", founders), ("descendants", descendants)):
@@ -92,7 +93,11 @@ def association_probe(config, genomes, rounds=3, mode="none"):
     differs. Opposite exposure orders and mirrored probe positions control for
     recency and pre-existing turning bias.
     """
-    if config.ecology_version < 6 or rounds < 1 or mode not in ("none", "no_feedback", "reset_h"):
+    if (
+        config.ecology_version < 6
+        or rounds < 1
+        or mode not in ("none", "no_feedback", "reset_h", "no_plasticity")
+    ):
         raise ValueError("Association probes require V6+, positive rounds, and a supported mode")
     n = len(genomes)
     g = genomes.repeat_interleave(4, dim=0)
@@ -100,14 +105,17 @@ def association_probe(config, genomes, rounds=3, mode="none"):
     order = torch.tensor([0, 1, 0, 1], device=device).repeat(n)
     favorable = torch.tensor([0, 0, 1, 1], device=device).repeat(n)
     tau = 0.2 + 4.8 * g[:, config.brain_parameter_count + 5].sigmoid()
-    hidden = torch.zeros((len(g), config.hidden_size), device=device)
+    state = initial_state(config, g)
     neutral = torch.zeros((len(g), config.input_size), device=device)
     neutral[:, config.input_names.index("energy")] = 0.5
     cue_indices = [config.input_names.index(f"identity_{label}_-135") for label in ("a", "b")]
     feedback = config.input_names.index("food_feedback")
 
+    def step(inputs, current):
+        return controller_step(config, g, inputs, current, tau, plasticity=mode != "no_plasticity")
+
     def train(good):
-        nonlocal hidden
+        nonlocal state
         for _ in range(rounds):
             for presentation in (0, 1):
                 identity = (order + presentation) % 2
@@ -117,16 +125,16 @@ def association_probe(config, genomes, rounds=3, mode="none"):
                 for tick in range(2 * config.controller_hz):
                     if tick == 2 * config.controller_hz - 1 and mode != "no_feedback":
                         inputs[:, feedback] = torch.where(identity == good, 0.5, 0.2)
-                    hidden, _ = advance(config, g, inputs, hidden, tau)
+                    state, _ = step(inputs, state)
                 for _ in range(config.controller_hz):
-                    hidden, _ = advance(config, g, neutral, hidden, tau)
+                    state, _ = step(neutral, state)
 
     def preference():
-        state = hidden.clone()
+        delayed = {key: value.clone() for key, value in state.items()}
         for _ in range(3 * config.controller_hz):
-            state, _ = advance(config, g, neutral, state, tau)
+            delayed, _ = step(neutral, delayed)
         if mode == "reset_h":
-            state.zero_()
+            delayed["hidden"].zero_()
         turns = []
         for a_on_right in (False, True):
             inputs = neutral.clone()
@@ -134,21 +142,27 @@ def association_probe(config, genomes, rounds=3, mode="none"):
             left = right.flip(0)
             for index, side in zip(cue_indices, (a_on_right, not a_on_right), strict=True):
                 inputs[:, index : index + 4] = right if side else left
-            branch = state.clone()
+            branch = {key: value.clone() for key, value in delayed.items()}
             for _ in range(config.controller_hz):
-                branch, actions = advance(config, g, inputs, branch, tau)
+                branch, actions = step(inputs, branch)
             turns.append(actions[:, 1] - actions[:, 0])
         return ((turns[1] - turns[0]) / 2).reshape(n, 2, 2).mean(2)
 
     initial = preference()
     train(favorable)
     acquired = preference()
+    magnitude = (
+        state["plastic"].abs().reshape(n, 4, -1).mean((1, 2)).tolist()
+        if "plastic" in state
+        else [0.0] * n
+    )
     train(1 - favorable)
     reversed_preference = preference()
     return dict(
         mode=mode,
         rounds=rounds,
         initial_a_preference=initial.mean(1).tolist(),
+        plastic_magnitude_after_training=magnitude,
         a_preference_after_a_high=acquired[:, 0].tolist(),
         a_preference_after_b_high=acquired[:, 1].tolist(),
         association_alignment=((acquired[:, 0] - acquired[:, 1]) / 2).tolist(),
@@ -185,7 +199,11 @@ def association_run(run, output, count=64, rounds=3, device="cpu"):
             genomes=[genome_hash(g) for g in chosen],
             trials=[
                 association_probe(config, chosen, rounds, mode)
-                for mode in ("none", "no_feedback", "reset_h")
+                for mode in (
+                    ("none", "no_feedback", "reset_h", "no_plasticity")
+                    if config.ecology_version >= 7
+                    else ("none", "no_feedback", "reset_h")
+                )
             ],
         )
     output.parent.mkdir(parents=True, exist_ok=True)

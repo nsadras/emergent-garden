@@ -10,6 +10,7 @@ from pathlib import Path
 
 import torch
 
+from .challenges import challenge_run
 from .config import Config
 from .experiments import calibration, community_assay, evaluate
 from .inheritance import seed_population
@@ -34,7 +35,7 @@ def run(args, stop):
     world = (
         load_checkpoint(args.resume, device)
         if args.resume
-        else World(Config.load(args.config), args.seed, device, args.controller)
+        else World(Config.load(args.config), args.seed, device, args.controller, args.ablation)
     )
     if args.seed_from:
         seed_population(world, args.seed_from)
@@ -170,6 +171,7 @@ def parser():
     )
     run_parser.add_argument("--output", type=Path)
     run_parser.add_argument("--resume", type=Path)
+    run_parser.add_argument("--ablation", default="none", help="Sensory or mechanism intervention")
     run_parser.add_argument(
         "--seed-from", type=Path, help="Initialize founders from another run's living genomes"
     )
@@ -193,6 +195,7 @@ def parser():
     calibrate.add_argument("--seconds", type=float, default=600)
     calibrate.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     calibrate.add_argument("--seed-from", type=Path)
+    calibrate.add_argument("--ablation", default="none")
     calibrate.add_argument(
         "--controller", choices=["neural", "forager", "rest", "random"], default="neural"
     )
@@ -226,6 +229,11 @@ def parser():
     association.add_argument("--genomes", type=int, default=64)
     association.add_argument("--rounds", type=int, default=3)
     association.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    challenge = sub.add_parser("challenge", help="Test acquired state in cloned living communities")
+    challenge.add_argument("run", type=Path)
+    challenge.add_argument("--output", type=Path, required=True)
+    challenge.add_argument("--seconds", type=float, default=180)
+    challenge.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
     return root
 
 
@@ -255,6 +263,10 @@ def main():
                 raise ValueError("A resumed run uses the checkpoint configuration; omit --config")
             if args.resume and args.seed_from:
                 raise ValueError("Choose either exact checkpoint resume or genotype seeding")
+            if args.resume and args.ablation != "none":
+                raise ValueError(
+                    "Exact resume retains its intervention; use assay for interventions"
+                )
             if args.video_speed is not None and (
                 not math.isfinite(args.video_speed) or args.video_speed <= 0
             ):
@@ -270,6 +282,7 @@ def main():
                 args.controller,
                 stop=stop,
                 seed_from=args.seed_from,
+                ablation=args.ablation,
             )
         elif args.command == "evaluate":
             if args.genomes < 1:
@@ -300,6 +313,8 @@ def main():
             association_run(
                 args.run, args.output, args.genomes, args.rounds, choose_device(args.device)
             )
+        elif args.command == "challenge":
+            challenge_run(args.run, args.output, args.seconds, choose_device(args.device), stop)
     except (ValueError, OSError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return_code = 1

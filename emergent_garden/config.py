@@ -40,6 +40,12 @@ class Config:
     high_quality: float = 1.0
     identity_strength: float = 20.0
     feedback_scale: float = 10.0
+    plasticity_rate: float = 0.2
+    plasticity_limit: float = 1.0
+    plasticity_trace_tau: float = 2.0
+    plasticity_half_life_min: float = 30.0
+    plasticity_half_life_max: float = 600.0
+    plasticity_cost: float = 0.02
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -100,14 +106,16 @@ class Config:
             "max_energy reproduction_threshold reproduction_debit birth_attempts birth_gap "
             "birth_retry hidden_size neural_tau weight_limit physics_hz controller_hz field_hz "
             "metrics_period checkpoint_wall_seconds viewer_size viewer_fps video_fps video_speed "
-            "signal_half_life signal_scale quality_period feedback_scale identity_strength"
+            "signal_half_life signal_scale quality_period feedback_scale identity_strength "
+            "plasticity_limit plasticity_trace_tau "
+            "plasticity_half_life_min plasticity_half_life_max"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6):
+        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -121,6 +129,8 @@ class Config:
             raise ValueError("Require 0 <= low_quality <= high_quality <= 1 and jitter in [0, 1)")
         if self.ecology_version >= 6 and self.patches < 2:
             raise ValueError("Reversal ecology requires at least two patches")
+        if self.plasticity_half_life_max < self.plasticity_half_life_min:
+            raise ValueError("Plasticity half-life bounds must be ordered")
         if self.ecology_version >= 3 and (
             self.resource_burst <= 0
             or self.cue_duration <= 0
@@ -182,12 +192,16 @@ class Config:
 
     @property
     def output_size(self):
+        if self.ecology_version >= 7:
+            return 5
         if self.ecology_version >= 5:
             return 4
         return 3 if self.ecology_version >= 2 else 2
 
     @property
     def trait_count(self):
+        if self.ecology_version >= 7:
+            return 11
         if self.ecology_version >= 4:
             return 9
         if self.ecology_version >= 3:

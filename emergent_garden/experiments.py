@@ -15,7 +15,15 @@ from .world import create_world as World
 
 
 def calibration(
-    config, output, seeds, seconds, device, controller="neural", stop=None, seed_from=None
+    config,
+    output,
+    seeds,
+    seconds,
+    device,
+    controller="neural",
+    stop=None,
+    seed_from=None,
+    ablation="none",
 ):
     root = Path(output)
     root.mkdir(parents=True, exist_ok=False)
@@ -23,7 +31,7 @@ def calibration(
     for seed in seeds:
         if stop is not None and stop.requested:
             break
-        world = World(config, seed, device, controller)
+        world = World(config, seed, device, controller, ablation)
         if seed_from:
             from .inheritance import seed_population
 

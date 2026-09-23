@@ -31,6 +31,8 @@ def upgrade_genomes(source, target, genomes):
     new[1][:], new[2][:] = old[1], old[2]
     new[3][:, : source.output_size], new[4][:, : source.output_size] = old[3], old[4]
     new[4][:, source.output_size :] = -2.0
+    if target.ecology_version >= 7 and source.ecology_version < 7:
+        new[4][:, 4] = 0.0  # Signed plasticity modulation starts at zero.
     if target.trait_count:
         traits = out[:, target.brain_parameter_count :]
         if target.ecology_version >= 2 and source.ecology_version < 2:
@@ -40,6 +42,8 @@ def upgrade_genomes(source, target, genomes):
             traits[:, 5] = math.log(p / (1 - p))
         if target.ecology_version >= 4 and source.ecology_version < 4:
             traits[:, 6] = -0.75  # One module, near a viable duplication mutation.
+        if target.ecology_version >= 7 and source.ecology_version < 7:
+            traits[:, 9] = -2.0  # Modest learning rate; decay starts at its midpoint.
         traits[:, : source.trait_count] = genomes[:, source.brain_parameter_count :]
     if (out.abs() > target.weight_limit).any():
         raise ValueError(
@@ -72,7 +76,8 @@ def seed_population(world, path):
         source_ids=saved["ids"][selection].tolist(),
         source_generations=saved["generations"][selection].tolist(),
         interpretation="Sampled living genotypes initialize zero-age founders with fresh states. "
-        "New sensory weights start at zero; new effector biases start at -2. "
+        "New sensory weights start at zero; new physical effector biases start at -2. "
+        "Plasticity modulation starts at zero and learned synaptic changes are empty. "
         "New modular bodies start with one module near the duplication boundary.",
     )
     world.rebuild_fields()

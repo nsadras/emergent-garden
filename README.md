@@ -15,6 +15,17 @@ intelligence have not been established.
 Continuing experiments on learning and evolving neural architecture are recorded
 in [CONTINUATION.md](CONTINUATION.md). The experimental [V6 preset](configs/v6.toml)
 adds patch identities with changing nutritional value and food/damage feedback.
+The [V7 preset](configs/v7.toml) adds heritable plasticity rules: each body module
+can alter its recurrent connections during life, and offspring inherit the rule
+with fresh synaptic state. These mechanisms are implemented; useful association
+learning has not yet emerged in the measured populations.
+
+To inspect V7 locally, resume `runs/v7-inherited-plastic/seed-81/latest.pt` with
+`--view`, or start `uv run garden run --config configs/v7.toml --seed 71 --view
+--device cpu --seconds 0`. [The inspector](docs/v7-preview.png) shows synaptic
+change and the modulation gate. A verified 30-second recording is at
+`runs/v7-video/timelapse.mp4`. The original wider plasticity range remains in
+[v7-wide.toml](configs/v7-wide.toml); every checkpoint retains its own settings.
 
 ## Start watching
 
@@ -218,6 +229,13 @@ uv run garden probe runs/experiment-1 --output runs/cue-probe.json
 # V6+: counterbalanced cue/outcome associations and reversal responses.
 uv run garden association runs/your-v6-run --output runs/association-probe.json
 
+# V7+: intervene on acquired state in cloned living communities.
+uv run garden challenge runs/your-v7-run --output runs/state-challenge --seconds 180
+
+# Matched evolution with the plasticity mechanism disabled but its cost retained.
+uv run garden calibrate --config configs/v7.toml --ablation no_plasticity \
+  --seeds 71 72 73 --seconds 3600 --output runs/frozen-plasticity --device cpu
+
 # Initialize a new world from living genomes in an earlier experiment.
 uv run garden run --config configs/v5.toml --seed-from runs/earlier-v4-run \
   --device cpu --seconds 3600 --output runs/inherited-v5
@@ -228,8 +246,18 @@ retaining their mean intensity. `no_signal` removes secretion sensing;
 `no_emission` suppresses production while retaining its cost. `memory_reset`
 clears recurrent state before each controller update. Other controls include
 `no_recycling`, `no_attacks`, `no_cue`, `pooled` module observations, and spatially
-`shuffled` readings. V6 adds `no_identity` and `no_feedback`. Version-specific
-controls require the corresponding version.
+`shuffled` readings. V6 adds `no_identity` and `no_feedback`; V7 adds
+`no_plasticity`, which removes acquired synaptic offsets and suppresses further
+updates while preserving cost. `memory_reset` clears neural activity but retains
+plastic offsets and traces. Version-specific controls require the corresponding
+version.
+
+The acquired-state challenge keeps the original living community, disables
+mutation, and tracks its members through survival, feeding, and reproduction.
+It compares retained state, erased synapses, erased activity, and disabled
+plasticity with both unchanged and reversed food quality. Its branches share
+the starting environment and random states; they are paired interventions, not
+independent evolutionary samples. Erasure effects alone do not establish learning.
 
 The cue probe compares different past cues followed by identical current inputs.
 It measures intrinsic history dependence, not successful navigation or learning.
@@ -250,3 +278,7 @@ The committed [version trajectories](docs/evolution-versions.png),
 with `uv run python scripts/plot_results.py`. The script uses raw recorded metrics
 when present and falls back to committed compact evidence. SVG versions are also saved.
 Raw runs and videos stay under `runs/`; compact evidence is in `docs/results/`.
+
+The [V7 plasticity comparisons](docs/v7-learning.png) use
+`uv run python scripts/plot_learning.py`. They include failed starts and the
+original plasticity settings, as well as the tighter experimental preset.

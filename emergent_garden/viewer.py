@@ -215,6 +215,8 @@ class Renderer:
         if len(chosen):
             i = chosen[0]
             height = 270 if "modules" in data else 248 if "attack" in data else 222
+            if "module_plastic" in a:
+                height += 48
             panel = pygame.Surface((285, height), pygame.SRCALPHA)
             panel.fill((6, 14, 21, 230))
             surface.blit(panel, (18, 92))
@@ -247,6 +249,12 @@ class Renderer:
                     (30, 327),
                     small=True,
                 )
+            if "module_plastic" in a:
+                count = int(data["modules"][i])
+                magnitude = a["module_plastic"][i, :count].abs().mean().item()
+                modulation = 2 * data["module_actions"][i, :count, 4].mean() - 1
+                self.text(f"Synaptic change {magnitude:.4f}", (30, 348), small=True)
+                self.text(f"Learning gate {modulation:+.2f}", (30, 369), small=True)
         return surface
 
     def save(self, world, path):
