@@ -518,6 +518,10 @@ class EcologyWorld(World):
             a["h"][index] = 0
             if c.ecology_version >= 4:
                 a["module_h"][index] = 0
+        observer = getattr(self, "controller_observer", None)
+        if observer is not None:
+            observer.before_controller(self, index, inputs, module_inputs)
+        noise = None
         if self.controller == "neural":
             tau = a["memory_tau"][index] if c.ecology_version >= 3 else None
             if c.ecology_version >= 4:
@@ -621,6 +625,8 @@ class EcologyWorld(World):
             )
         if c.ecology_version >= 14:
             update_signals(c, a, index)
+        if observer is not None:
+            observer.after_controller(self, noise)
 
     def project_walls(self):
         a, c = self.agents, self.config

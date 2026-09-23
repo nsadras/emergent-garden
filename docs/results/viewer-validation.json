@@ -1,0 +1,38 @@
+{
+  "date": "2026-09-23",
+  "package_version": "0.16.1",
+  "ecology_version": 15,
+  "tests_passed": 227,
+  "new_observation_test_cases": 22,
+  "ruff_lint_and_format": "passed",
+  "cpu_cli": {
+    "complete_state_bitwise_equal": true,
+    "source": "runs/v15-evolving-mixed/seed-271/checkpoints/tick-000000072000.pt",
+    "physics_ticks": 60,
+    "pause_step_intervals": 3,
+    "resumed_viewer_speed": 32,
+    "recorded_frames": 61
+  },
+  "cuda": {
+    "device": "NVIDIA GeForce RTX 5080",
+    "physics_ticks": 30,
+    "complete_state_bitwise_equal": true,
+    "ecology_version": 15,
+    "initial_population": 12,
+    "initial_food": 200,
+    "seed": 19,
+    "ablation": "shuffled"
+  },
+  "preview": {
+    "path": "docs/viewer.png",
+    "source_creature": 577,
+    "modules": 2,
+    "start_time": 2400,
+    "end_time": 2432,
+    "final_population": 84,
+    "sampled_trail_points": 13933,
+    "trail_hz": 5,
+    "visible_trail_seconds": 30
+  },
+  "interpretation": "Interface validation only. CPU and CUDA were compared separately against same-device controls; no cross-device trajectory equivalence is claimed. No new evolutionary experiment was started."
+}

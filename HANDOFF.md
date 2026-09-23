@@ -1,9 +1,32 @@
 # Development handoff — V15
 
-Development was paused at the user's request on **September 22, 2026**. All
-simulation processes have stopped. The current code is **V15 / package 0.16.0**;
-Python and dependencies remain managed with **uv**. The detailed design and
+Autonomous ecology development was paused at the user's request on
+**September 22, 2026**, and its experiment processes were stopped. A bounded
+interface update followed on September 23; the research loop remains paused.
+The current code is **V15 / package 0.16.1**. Python and dependencies remain
+managed with **uv**. The detailed design and
 experiment history is in [CONTINUATION.md](CONTINUATION.md).
+
+## September 23 interface update
+
+Pygame now provides fading centroid trails, a resizable window with an inspector sidebar,
+module selection, live input/hidden/output values, focused connection graphs,
+inherited/acquired/effective weight maps, follow-camera, and paused stepping.
+Trails sample simulation time at 5 Hz, retain up to 120 seconds, and also appear
+in new recordings. The default visible duration is 30 seconds.
+
+Controller inputs are captured at the actual update boundary. Recurrent weights
+include acquired offsets **before** their update; motor readouts include learned
+offsets **after** their update, as used by the controller. This avoids resampling
+cleared feedback or consuming the shuffled-sensing random stream. The observer
+copies only the selected creature's modules. Neither observer state nor trails
+enter checkpoints. A selection made while paused waits for `N` or resume before
+showing its first exact sample.
+
+See [controls and interpretation](README.md), [preview](docs/viewer.png), and
+[verification record](docs/results/viewer-validation.json). Launch with
+`uv run garden run --config configs/v15.toml --view --device cpu --seconds 0`,
+or use `--resume` with a saved checkpoint instead of `--config`.
 
 ## What this iteration adds
 
@@ -46,7 +69,14 @@ The [complete histories](docs/results/v15-assembled-271.json) and
 
 ## Verification
 
-All **205 tests pass**. Ruff lint and formatting checks pass. Mechanical checks
+All **227 tests pass**. Ruff lint and formatting checks pass. The interface's
+22 new cases cover exact controller samples, modular state, scripted controllers,
+trail timing/identity/bounds, selection/resize, and complete trajectory equality.
+A V15 CLI check combined pause/step, 32x playback, and recording for 60 physics
+ticks and matched the complete headless state bit for bit. A separate 30-tick
+native CUDA check on the RTX 5080 also matched with randomized sensing enabled.
+
+The earlier V15 mechanical checks
 passed exact checkpoint replay separately on CPU and the RTX 5080, including
 signed rule variation, births, growth, fresh inherited state, and energy
 accounting. This means replay on each device, not identical trajectories across

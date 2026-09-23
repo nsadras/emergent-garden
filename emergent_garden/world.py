@@ -192,11 +192,18 @@ class World:
         a["inputs"][index] = inputs
         a["contact"][index] = 0
         a["cold"][index] = False
+        observer = getattr(self, "controller_observer", None)
+        if observer is not None:
+            observer.before_controller(self, index, inputs)
         if self.controller == "rest":
             a["motors"][index] = 0
+            if observer is not None:
+                observer.after_controller(self)
             return
         if self.controller == "random":
             a["motors"][index] = self.rand((len(index), 2), "evaluation")
+            if observer is not None:
+                observer.after_controller(self)
             return
         if self.controller == "forager":
             smell = inputs[:, :4]
@@ -209,6 +216,8 @@ class World:
             turn = (2 * turn).clamp(-1, 1)
             motors = torch.stack((0.7 - turn, 0.7 + turn), 1).clamp(0, 1)
             a["motors"][index] = motors
+            if observer is not None:
+                observer.after_controller(self)
             return
         g, h = a["genome"][index], c.hidden_size
         offset = 0
@@ -231,6 +240,8 @@ class World:
         hidden = (1 - alpha) * hidden + alpha * drive.tanh()
         a["h"][index] = hidden
         a["motors"][index] = ((w_out @ hidden[..., None]).squeeze(-1) + out_bias).sigmoid()
+        if observer is not None:
+            observer.after_controller(self)
 
     def project_walls(self):
         a, c = self.agents, self.config

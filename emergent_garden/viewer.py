@@ -11,6 +11,9 @@ import imageio_ffmpeg
 import numpy as np
 import pygame
 
+from .inspector import Inspector
+from .observation import ControllerObserver, TrailHistory, array
+
 
 def lineage_color(identifier):
     return tuple(int(v * 255) for v in colorsys.hsv_to_rgb((identifier * 0.618034) % 1, 0.55, 0.96))
@@ -27,10 +30,60 @@ class Renderer:
         self.zoom = 1.0
         self.center = None
         self.selected = None
+        self.selected_module = 0
         self.show_field = True
         self.show_brain = False
         self.field_index = 0
         self.color_mode = "diet"
+        self.trails = TrailHistory()
+        self.trail_mode = "all"
+        self.trail_seconds = 30
+        self.trail_layer = pygame.Surface((size, size), pygame.SRCALPHA)
+
+    def observe(self, world):
+        self.trails.observe(world)
+
+    def draw_trails(self, world):
+        if self.trail_mode == "off":
+            return
+        self.trail_layer.fill((0, 0, 0, 0))
+        for identifier, track in self.trails.tracks.items():
+            selected = identifier == self.selected
+            if self.trail_mode == "selected" and not selected:
+                continue
+            points = np.asarray(track.points)
+            if len(points) < 2:
+                continue
+            points = points[points[:, 0] >= world.time - self.trail_seconds]
+            if len(points) < 2:
+                continue
+            positions, _ = self.transform(points[:, 1:], world.config.diameter)
+            color = lineage_color(track.lineage)
+            if track.diet is not None and self.color_mode == "diet":
+                d = track.diet
+                color = (int(235 - 130 * d), int(156 + 76 * d), int(89 + 46 * d))
+            if selected:
+                color = (251, 240, 192)
+            # Batch adjacent segments into twelve fade levels instead of one
+            # draw call per physics sample. Gaps are never bridged.
+            levels = np.ceil(
+                self.trails.opacity(points[1:, 0], world.time, self.trail_seconds) * 12
+            )
+            valid = np.diff(points[:, 0]) <= self.trails.period * 1.5
+            breaks = np.flatnonzero((np.diff(levels) != 0) | (np.diff(valid) != 0)) + 1
+            for group in np.split(np.arange(len(levels)), breaks):
+                start, end = group[0], group[-1] + 1
+                if not valid[start]:
+                    continue
+                alpha = round(float(levels[start]) / 12 * (220 if selected else 125))
+                pygame.draw.lines(
+                    self.trail_layer,
+                    (*color, alpha),
+                    False,
+                    positions[start : end + 1],
+                    2 if selected else 1,
+                )
+        self.surface.blit(self.trail_layer, (0, 0))
 
     def transform(self, points, diameter):
         points = np.asarray(points, dtype=np.float64)
@@ -42,6 +95,7 @@ class Renderer:
         self.surface.blit((self.small if small else self.font).render(value, True, color), point)
 
     def draw(self, world, status=""):
+        self.observe(world)
         c, a = world.config, world.agents
         surface = self.surface
         surface.fill((8, 17, 23))
@@ -84,6 +138,7 @@ class Renderer:
                 )
                 surface.blit(resized, top_left + np.array([x0, y0]) * side / n)
         pygame.draw.circle(surface, (74, 133, 137), dish_center.astype(int), radius, 2)
+        self.draw_trails(world)
         if c.ecology_version >= 10:
             centers, _ = self.transform(
                 world.patch_positions[world.shelter_indices].cpu().numpy(), c.diameter
@@ -226,6 +281,11 @@ class Renderer:
                         )
             if int(data["id"][i]) == self.selected:
                 pygame.draw.circle(surface, (251, 240, 192), pos.astype(int), r + 5, 2)
+                if "module_positions" in data:
+                    k = min(self.selected_module, int(data["modules"][i]) - 1)
+                    part = data["module_positions"][i, k]
+                    pygame.draw.circle(surface, (255, 255, 240), part, core_r + 2, 1)
+                    self.text(str(k + 1), part + (core_r + 4, -core_r), small=True)
         header = pygame.Surface((self.size, 74), pygame.SRCALPHA)
         header.fill((8, 17, 23, 232))
         surface.blit(header, (0, 0))
@@ -253,9 +313,9 @@ class Renderer:
             (22, 47),
             small=True,
         )
-        panel = pygame.Surface((self.size, 42), pygame.SRCALPHA)
+        panel = pygame.Surface((self.size, 62), pygame.SRCALPHA)
         panel.fill((8, 17, 23, 232))
-        surface.blit(panel, (0, self.size - 42))
+        surface.blit(panel, (0, self.size - 62))
         description = "Particle scents / inherited recurrent brains / continuous life"
         if c.ecology_version >= 6:
             favorable = "A" if world.landscape.favorable == 0 else "B"
@@ -264,171 +324,16 @@ class Renderer:
             )
         self.text(
             status or description,
-            (20, self.size - 31),
+            (20, self.size - 51),
             small=True,
         )
-        chosen = np.flatnonzero(data["id"] == self.selected) if self.selected is not None else []
-        if len(chosen):
-            i = chosen[0]
-            height = 270 if "modules" in data else 248 if "attack" in data else 222
-            if "module_plastic" in a:
-                height += 48
-            if "neurons" in data:
-                height += 22
-            if c.ecology_version >= 11:
-                height += 42
-            if c.ecology_version >= 12:
-                height += 42
-            if c.ecology_version >= 14:
-                height += 18 * (int(data["modules"][i]) + 1) + 8
-            if c.ecology_version >= 15:
-                height += 48
-            if self.show_brain:
-                height += 150
-                if c.ecology_version >= 12:
-                    height += 74
-            panel = pygame.Surface((285, height), pygame.SRCALPHA)
-            panel.fill((6, 14, 21, 230))
-            surface.blit(panel, (18, 92))
-            self.text(f"Creature {self.selected} / lineage {data['lineage'][i]}", (30, 103))
-            self.text(f"Energy {data['energy'][i]:.1f}   Age {data['age'][i]:.1f}s", (30, 133))
-            self.text(
-                f"Generation {data['generation'][i]}   Children {data['offspring'][i]}", (30, 159)
-            )
-            self.text("Neural activity", (30, 189), small=True)
-            for j, activity in enumerate(data["h"][i]):
-                color = (100, 200, 160) if activity >= 0 else (120, 133, 230)
-                x = 30 + j * min(13, 224 / len(data["h"][i]))
-                pygame.draw.line(surface, color, (x, 239), (x, 239 - float(activity) * 25), 6)
-            if "diet" in data:
-                self.text(
-                    f"Radius {data['radius'][i]:.1f}  Power {data['power'][i]:.2f}",
-                    (30, 264),
-                    small=True,
-                )
-                self.text(f"Fresh-food allocation {data['diet'][i]:.0%}", (30, 285), small=True)
-            if "attack" in data:
-                self.text(
-                    f"Weapon {data['attack'][i]:.0%}  Armor {data['armor'][i]:.0%}",
-                    (30, 306),
-                    small=True,
-                )
-            if "modules" in data:
-                neurons = data["neurons"][i] if "neurons" in data else len(data["h"][i])
-                body = str(data["modules"][i])
-                if "target_modules" in data and data["modules"][i] < data["target_modules"][i]:
-                    body += f"/{data['target_modules'][i]} juvenile"
-                self.text(
-                    f"{body} modules / {neurons} neurons each",
-                    (30, 327),
-                    small=True,
-                )
-            if "module_plastic" in a:
-                count = int(data["modules"][i])
-                connections = (
-                    int(a["recurrent_connections"][i])
-                    if "recurrent_connections" in a
-                    else c.hidden_size**2
-                )
-                magnitude = a["module_plastic"][i, :count].abs().sum().item() / max(
-                    1, count * connections
-                )
-                modulation = 2 * data["module_actions"][i, :count, 4].mean() - 1
-                self.text(f"Synaptic change {magnitude:.4f}", (30, 348), small=True)
-                self.text(f"Plasticity gate {modulation:+.2f}", (30, 369), small=True)
-            if "connections" in data:
-                self.text(f"{data['connections'][i]} connections per module", (30, 390), small=True)
-            if c.ecology_version >= 11:
-                self.text("Raw processing capacity / second", (30, 411), small=True)
-                if world.ablation in ("unlimited_feeding", "unlimited_handling"):
-                    label = "Fresh: unlimited   Detritus: unlimited"
-                else:
-                    tissue = data["modules"][i] * (data["core_radius"][i] / c.body_radius) ** 2
-                    diet = data["diet"][i]
-                    fresh = c.handling_rate * tissue * diet**2
-                    detritus = c.handling_rate * tissue * (1 - diet) ** 2
-                    label = f"Fresh {fresh:.1f}   Detritus {detritus:.1f}"
-                self.text(label, (30, 432), small=True)
-            if c.ecology_version >= 12:
-                from .topology import effective_masks
-
-                motor_mask = effective_masks(c, a["genome"][i : i + 1])[3][:, :2]
-                count = int(data["modules"][i])
-                magnitude = a["module_motor_plastic"][i, :count].abs().sum().item() / (
-                    count * (int(motor_mask.sum()) + 2)
-                )
-                traits = a["genome"][i, c.brain_parameter_count + 11 : c.brain_parameter_count + 13]
-                rate, exploration = traits.sigmoid().tolist()
-                rate *= c.motor_learning_rate
-                exploration = (
-                    c.exploration_min + (c.exploration_max - c.exploration_min) * exploration
-                )
-                self.text(f"Motor offsets {magnitude:.4f}", (30, 453), small=True)
-                self.text(f"Exploration {exploration:.2f}   Rate {rate:.3f}", (30, 474), small=True)
-            if c.ecology_version >= 14:
-                self.text("Internal signals (A / B)", (30, 500), small=True)
-                for k in range(int(data["modules"][i])):
-                    first, second = data["module_internal"][i, k]
-                    self.text(
-                        f"Module {k + 1}   {first:+.3f} / {second:+.3f}",
-                        (30, 518 + 18 * k),
-                        small=True,
-                    )
-            if c.ecology_version >= 15:
-                from .plasticity import rule_coefficients
-
-                rule = rule_coefficients(
-                    c, a["genome"][i : i + 1], evolved=world.ablation != "fixed_rule"
-                )[0].tolist()
-                top = 526 + 18 * int(data["modules"][i])
-                self.text("Learning rule (A / B / C / D)", (30, top), small=True)
-                self.text(" / ".join(f"{v:+.2f}" for v in rule), (30, top + 21), small=True)
-            if self.show_brain:
-                self.draw_brain(world, i, 92 + height - (220 if c.ecology_version >= 12 else 146))
+        self.text(
+            f"Trails: {self.trail_mode} / {self.trail_seconds}s   |   T mode   [ / ] duration"
+            "   |   B inspector   G follow   M module",
+            (20, self.size - 28),
+            small=True,
+        )
         return surface
-
-    def draw_brain(self, world, index, top):
-        from .inheritance import brain_parts
-        from .topology import effective_masks
-
-        c, a = world.config, world.agents
-        genome = a["genome"][index : index + 1]
-        base = brain_parts(c, genome)[1][0].detach().cpu().numpy()
-        mask = (
-            effective_masks(c, genome)[2][0].cpu().numpy()
-            if c.ecology_version >= 8
-            else np.ones_like(base, dtype=bool)
-        )
-        plastic = (
-            a["module_plastic"][index, 0].detach().cpu().numpy()
-            if "module_plastic" in a
-            else np.zeros_like(base)
-        )
-        panels = (
-            (base, 0.5, "Base ±0.5", 30),
-            (plastic, c.plasticity_limit, f"Module 1 ±{c.plasticity_limit:g}", 166),
-        )
-        for matrix, limit, label, x in panels:
-            strength = np.clip(np.abs(matrix) / limit, 0, 1)[..., None]
-            tint = np.where((matrix >= 0)[..., None], (100, 210, 161), (153, 133, 235))
-            rgb = (np.array((20, 35, 38)) + strength * (tint - (20, 35, 38))).astype(np.uint8)
-            rgb[~mask] = (10, 19, 23)
-            layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
-            self.text(label, (x, top), small=True)
-            self.surface.blit(pygame.transform.scale(layer, (112, 112)), (x, top + 20))
-        if c.ecology_version >= 12:
-            matrix = a["module_motor_plastic"][index, 0].detach().cpu().numpy()
-            mask = effective_masks(c, genome)[3][0, :2].cpu().numpy()
-            mask = np.concatenate((mask, np.ones((2, 1), dtype=bool)), 1)
-            strength = np.clip(np.abs(matrix) / c.motor_learning_limit, 0, 1)[..., None]
-            tint = np.where((matrix >= 0)[..., None], (100, 210, 161), (153, 133, 235))
-            rgb = (np.array((20, 35, 38)) + strength * (tint - (20, 35, 38))).astype(np.uint8)
-            rgb[~mask] = (10, 19, 23)
-            layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
-            self.text(
-                f"Motor offsets ±{c.motor_learning_limit:g} (L/R)", (30, top + 140), small=True
-            )
-            self.surface.blit(pygame.transform.scale(layer, (248, 28)), (30, top + 160))
 
     def save(self, world, path):
         Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -437,26 +342,89 @@ class Renderer:
 
 class Viewer(Renderer):
     def __init__(self, size=1024):
-        super().__init__(size)
         pygame.display.init()
-        self.window = pygame.display.set_mode((size, size))
-        pygame.display.set_caption("Emergent Garden")
+        desktop = pygame.display.get_desktop_sizes()[0]
+        # Fit the initial window to the desktop, including the inspector.
+        size = min(size, max(256, desktop[1] - 96), max(256, desktop[0] - Inspector.width - 48))
+        super().__init__(size)
+        self.inspector = Inspector()
+        self.observer = ControllerObserver()
+        self.observed_world = None
+        self.show_brain = True
+        self.window = pygame.display.set_mode((size + Inspector.width, size), pygame.RESIZABLE)
+        pygame.display.set_caption("Emergent Garden / living controllers")
         self.paused = False
         self.speed = 1.0
         self.running = True
         self.drag = None
+        self.following = False
+        self.step_ticks = 0
+
+    def observe(self, world):
+        super().observe(world)
+        if world is not self.observed_world:
+            self.detach()
+            self.observed_world = world
+            world.controller_observer = self.observer
+            self.observer.sample = None
+        self.observer.select(self.selected)
+
+    def detach(self):
+        if self.observed_world is not None:
+            if getattr(self.observed_world, "controller_observer", None) is self.observer:
+                del self.observed_world.controller_observer
+            self.observed_world = None
+
+    def resize(self, width, height):
+        sidebar = Inspector.width if self.show_brain else 0
+        self.size = max(128, min(height, width - sidebar))
+        self.surface = pygame.Surface((self.size, self.size))
+        self.trail_layer = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
+        self.window = pygame.display.set_mode((self.size + sidebar, self.size), pygame.RESIZABLE)
+
+    def cycle_module(self, world):
+        match = (
+            (world.agents["id"] == self.selected).nonzero().flatten()
+            if self.selected is not None
+            else []
+        )
+        if len(match) and "modules" in world.agents:
+            self.inspector.module = (self.inspector.module + 1) % int(
+                world.agents["modules"][match[0]]
+            )
 
     def events(self, world):
+        self.observe(world)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type == pygame.VIDEORESIZE:
+                self.resize(event.w, event.h)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
                 elif event.key == pygame.K_SPACE:
                     self.paused = not self.paused
+                    if not self.paused:
+                        self.step_ticks = 0
+                elif event.key == pygame.K_n and self.paused:
+                    self.step_ticks += world.config.physics_hz // world.config.controller_hz
                 elif event.key == pygame.K_b:
                     self.show_brain = not self.show_brain
+                    self.resize(self.size + (Inspector.width if self.show_brain else 0), self.size)
+                elif event.key == pygame.K_t:
+                    modes = ("all", "selected", "off")
+                    self.trail_mode = modes[(modes.index(self.trail_mode) + 1) % len(modes)]
+                elif event.key in (pygame.K_LEFTBRACKET, pygame.K_RIGHTBRACKET):
+                    durations = (10, 30, 120)
+                    direction = 1 if event.key == pygame.K_RIGHTBRACKET else -1
+                    self.trail_seconds = durations[
+                        (durations.index(self.trail_seconds) + direction) % 3
+                    ]
+                elif event.key == pygame.K_g:
+                    self.following = not self.following
+                elif event.key == pygame.K_m:
+                    self.cycle_module(world)
                 elif event.key in (pygame.K_EQUALS, pygame.K_PLUS, pygame.K_KP_PLUS):
                     self.speed = min(1024, self.speed * 2)
                 elif event.key in (pygame.K_MINUS, pygame.K_KP_MINUS):
@@ -470,23 +438,42 @@ class Viewer(Renderer):
                 elif event.key == pygame.K_c:
                     self.color_mode = "lineage" if self.color_mode == "diet" else "diet"
                 elif event.key == pygame.K_r:
-                    self.zoom, self.center = 1, None
+                    self.zoom, self.center, self.following = 1, None, False
             elif event.type == pygame.MOUSEWHEEL:
-                self.zoom = min(8, max(1, self.zoom * 1.25**event.y))
+                if self.show_brain and pygame.mouse.get_pos()[0] >= self.size:
+                    self.inspector.wheel(event.y, self.size)
+                else:
+                    self.zoom = min(8, max(1, self.zoom * 1.25**event.y))
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1 and world.population:
-                    positions, scale = self.transform(
-                        world.agents["pos"].cpu().numpy(), world.config.diameter
-                    )
-                    distances = np.linalg.norm(positions - event.pos, axis=1)
-                    index = int(distances.argmin())
-                    self.selected = (
-                        int(world.agents["id"][index])
-                        if distances[index] < max(12, world.config.body_radius * scale)
-                        else None
-                    )
+                if self.show_brain and event.pos[0] >= self.size:
+                    if event.button == 1:
+                        self.inspector.click((event.pos[0] - self.size, event.pos[1]))
+                elif event.button == 1:
+                    self.selected = None
+                    if world.population:
+                        positions, scale = self.transform(
+                            world.agents["pos"].cpu().numpy(), world.config.diameter
+                        )
+                        distances = np.linalg.norm(positions - event.pos, axis=1)
+                        radii = world.agents.get("radius")
+                        thresholds = (
+                            np.maximum(12, array(radii) * scale)
+                            if radii is not None
+                            else np.full(
+                                world.population, max(12, world.config.body_radius * scale)
+                            )
+                        )
+                        candidates = np.flatnonzero(distances <= thresholds)
+                        if len(candidates):
+                            index = candidates[np.argmin(distances[candidates])]
+                            self.selected = int(world.agents["id"][index])
+                    if self.selected != self.inspector.identifier:
+                        self.inspector.module, self.inspector.scroll = 0, 0
+                        self.inspector.identifier = self.selected
+                    self.observer.select(self.selected)
                 elif event.button == 3:
                     self.drag = event.pos
+                    self.following = False
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 3:
                 self.drag = None
             elif event.type == pygame.MOUSEMOTION and self.drag is not None:
@@ -497,16 +484,26 @@ class Viewer(Renderer):
         return self.running
 
     def present(self, world):
+        if self.following and self.selected is not None:
+            match = (world.agents["id"] == self.selected).nonzero().flatten()
+            if len(match):
+                self.center = array(world.agents["pos"][match[0]])
+        self.selected_module = self.inspector.module
         state = "PAUSED" if self.paused else f"{self.speed:g}x"
-        self.draw(
-            world,
-            f"{state} | Space pause | +/- speed | Scroll zoom | Right-drag pan | "
-            "F field | Tab channel | C color | R reset",
-        )
+        status = f"{state} | Space pause | N step | +/- speed | Wheel zoom"
+        if self.size >= 800:
+            status += " | Right-drag pan | F field | Tab channel | C color | R reset"
+        self.draw(world, status)
         self.window.blit(self.surface, (0, 0))
+        if self.show_brain:
+            panel = self.inspector.draw(
+                world, self.selected, self.observer, self.size, self.following
+            )
+            self.window.blit(panel, (self.size, 0))
         pygame.display.flip()
 
     def close(self):
+        self.detach()
         pygame.display.quit()
 
 
@@ -530,6 +527,7 @@ class Recorder:
         self.writer.send(None)
 
     def observe(self, world):
+        self.renderer.observe(world)
         if world.time + 1e-9 >= self.next_time:
             surface = self.renderer.draw(world)
             self.writer.send(pygame.image.tobytes(surface, "RGB"))

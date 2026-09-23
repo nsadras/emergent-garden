@@ -165,16 +165,52 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | Control | Action |
 | --- | --- |
 | Space | Pause/resume |
+| `N` while paused | Advance one controller interval using the usual physics ticks |
 | `+` / `-` | Increase/decrease simulation speed |
-| Mouse wheel | Zoom, up to 8x |
+| Mouse wheel | Zoom the dish, up to 8x; scroll when over the inspector |
 | Right-drag | Pan |
-| Left-click | Select a creature and inspect energy, lineage, and neural activity |
+| Left-click | Select a creature; click a hidden neuron in the inspector to inspect its links |
+| `T` | Cycle fading trails: all creatures, selected creature, off |
+| `[` / `]` | Change trail duration: 10, 30, or 120 simulated seconds |
+| `G` | Follow the selected creature |
+| `M` / module buttons | Choose a body module's controller |
 | `F` | Toggle the smell overlay |
 | Tab | Cycle resource, organism, forecast, secretion, patch-identity, and shelter fields |
 | `C` | Switch between inherited diet and lineage colors |
-| `B` | Show recurrent weights and module 1's acquired changes for the selected creature |
-| `R` | Reset the camera |
+| `B` | Hide/show the inspector sidebar |
+| Brain / Body buttons | Switch between live neural activity and morphology/learned weight maps |
+| `R` | Reset the camera and stop following |
 | Escape / close window | Save and exit |
+
+The Pygame viewer opens with trails and an inspector sidebar. The window is
+resizable and initially fits the desktop. Trails follow body centers, are sampled
+at 5 Hz of **simulated time**, and freeze when paused. They also appear in new
+recordings. History starts when the viewer/recorder opens; checkpoints do not
+contain old trails. A dead creature's trail fades normally, and its last inspected
+controller sample remains available until another creature is selected.
+
+The **Brain** tab shows named sensory inputs, active recurrent neurons, and actual
+actuator outputs for one module. Click a hidden neuron to show its incoming input
+and recurrent links, plus its outgoing actuator links. Colors indicate sign;
+activation brightness uses a fixed unit scale. Inactive neural slots are omitted
+from the graph. Links include the learned weights used for that decision; motor
+exploration is listed separately. Inputs are copied at the controller update,
+including consumed feedback and each module's local senses, rather than sampled
+again during rendering. A selection made while paused waits for `N` or resume.
+
+Below the graph, a drive breakdown separates inputs, recurrent state, and bias.
+The field mean/contrast readout splits each field's four sensors into their shared
+mean and directional differences, then reports their weighted drive RMS over
+active neurons. It is a sensitivity diagnostic, not a measure of intelligence or
+proof of why a behavior evolved. The **Body / learning** tab includes the actual
+body turn command, expressed modules, learning-rule coefficients, and inherited,
+acquired, and effective recurrent weight maps. Each module has separate acquired
+state. Scroll inside the sidebar to reach details on smaller displays.
+
+The inspector reads the latest controller update (usually 10 Hz), so slow the
+simulation or use pause/step to examine rapid decisions. Inspection and trail
+sampling do not change physics steps, random streams, or checkpoint formats.
+See [the viewer preview](docs/viewer.png).
 
 ## Headless runs and recordings
 

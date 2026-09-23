@@ -1378,3 +1378,40 @@ The verified recording `runs/v15-video/timelapse.mp4` follows that environment
 from 2,400 to 2,700 seconds. All 901 frames decoded at 1,024×1,024 and 30 FPS;
 the [video audit](docs/results/v15-video.json) retains frame hashes. This is an
 illustrative checkpoint fork, not an additional independent comparison.
+
+## Pygame observation interface — package 0.16.1
+
+On September 23, 2026, the user requested fading paths and a live neural inspector,
+and agreed to retain Pygame. This is a bounded interface iteration; the paused
+ecology development loop has not resumed. Controller equations, mutation,
+ecology parameters, and checkpoint formats are unchanged.
+
+The viewer now samples centroid trails at 5 Hz of simulated time, retains at most
+120 seconds, and offers 10/30/120-second fading windows. Trails preserve organism
+identity across births, deaths, and array compaction; pause freezes fading.
+Recording samples the same history independently of video frame rate. Histories
+start at observation time and are not stored in checkpoints.
+
+Selecting a creature opens exact per-module inputs, recurrent activations, and
+outputs. Selecting a hidden neuron reveals its incoming input/recurrent links
+and outgoing actuator links. Effective weights respect topology masks and both
+learning mechanisms. A controller-boundary observer captures consumed feedback,
+previous hidden state, and pre-update recurrent offsets; post-update motor offsets
+and actual exploration noise complete the sampled decision. Rendering never
+resenses the world or advances a controller. The panel also separates field-mean,
+field-contrast, and recurrent drives, shows morphology/learning maps, and supports
+module selection, follow-camera, and paused controller-interval stepping.
+
+All 227 tests and Ruff checks pass. Twenty-two new tests cover sample
+reconstruction, inspection purity under interventions, scripted controllers,
+trail history, stable selection, and viewer controls. An actual V15 CLI run
+combined three paused steps, 32x playback, and 61 recording frames over 60 physics
+ticks; its complete state matched headless execution exactly. A separate native
+CUDA V15 check also matched with shuffled sensing on the RTX 5080.
+The [verification record](docs/results/viewer-validation.json) retains the scope.
+
+The [interface preview](docs/viewer.png) follows body 577 from the existing V15
+environment-271 checkpoint for 32 additional seconds, to t=2,432 seconds. Its
+two modules have different live sensory values and neural states. This is an
+illustrative fork for interface validation, not a new ecological experiment.
+See the [README controls](README.md) for use and interpretation.

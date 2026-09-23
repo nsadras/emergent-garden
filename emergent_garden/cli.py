@@ -57,6 +57,7 @@ def run(args, stop):
     try:
         if args.view:
             viewer = Viewer(world.config.viewer_size)
+            viewer.observe(world)
         if args.record:
             video_speed = args.video_speed or world.config.video_speed
             if video_speed / world.config.video_fps < world.config.dt:
@@ -92,7 +93,8 @@ def run(args, stop):
                 steps = min(int(accumulator), 120)
                 accumulator -= steps
                 if viewer.paused:
-                    steps = 0
+                    steps = viewer.step_ticks
+                    viewer.step_ticks = 0
             else:
                 steps = world.config.physics_hz
             if target is not None:
@@ -101,6 +103,8 @@ def run(args, stop):
                 if not world.population or stop.requested:
                     break
                 world.step()
+                if viewer:
+                    viewer.observe(world)
                 if recorder:
                     recorder.observe(world)
                 if world.time + 1e-9 >= next_metric:
