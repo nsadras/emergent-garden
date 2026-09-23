@@ -26,9 +26,8 @@ def upgrade_genomes(source, target, genomes):
         raise ValueError("Source genome does not match its configuration")
     out = torch.zeros((len(genomes), target.parameter_count), device=genomes.device)
     old, new = brain_parts(source, genomes), brain_parts(target, out)
-    # Field channels precede energy/touch, which always occupy the final two inputs.
-    new[0][:, :, : source.input_size - 2] = old[0][:, :, :-2]
-    new[0][:, :, -2:] = old[0][:, :, -2:]
+    for index, name in enumerate(source.input_names):
+        new[0][:, :, target.input_names.index(name)] = old[0][:, :, index]
     new[1][:], new[2][:] = old[1], old[2]
     new[3][:, : source.output_size], new[4][:, : source.output_size] = old[3], old[4]
     new[4][:, source.output_size :] = -2.0

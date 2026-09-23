@@ -58,6 +58,8 @@ class Renderer:
                 (0.3, 0.5, 0.8),
                 (0.7, 0.25, 0.7),
                 (0.15, 0.8, 0.9),
+                (0.9, 0.25, 0.3),
+                (0.3, 0.35, 0.95),
             )
             rgb = (
                 np.array([13, 31, 37]) + strength[..., None] * np.array(tints[self.field_index])
@@ -176,7 +178,15 @@ class Renderer:
         surface.blit(header, (0, 0))
         surface.blit(self.title.render("EMERGENT GARDEN", True, (205, 239, 221)), (22, 14))
         if c.ecology_version and self.size >= 640:
-            names = ("fresh food", "detritus", "organisms", "forecast", "secretions")
+            names = (
+                "fresh food",
+                "detritus",
+                "organisms",
+                "forecast",
+                "secretions",
+                "identity A",
+                "identity B",
+            )
             self.text(
                 f"V{c.ecology_version} | {names[self.field_index]} field | {self.color_mode}",
                 (self.size - 320, 22),
@@ -192,8 +202,12 @@ class Renderer:
         panel = pygame.Surface((self.size, 42), pygame.SRCALPHA)
         panel.fill((8, 17, 23, 232))
         surface.blit(panel, (0, self.size - 42))
+        description = "Particle scents / inherited recurrent brains / continuous life"
+        if c.ecology_version >= 6:
+            favorable = "A" if world.landscape.favorable == 0 else "B"
+            description = f"High-quality patches: {favorable} | Tab: field | C: body colors"
         self.text(
-            status or "Particle scents / inherited recurrent brains / continuous life",
+            status or description,
             (20, self.size - 31),
             small=True,
         )

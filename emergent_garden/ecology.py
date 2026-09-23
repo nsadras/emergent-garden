@@ -12,6 +12,7 @@ import torch
 from .brain import advance, initial_brains
 from .config import Config
 from .field import SmellField, TrailField
+from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .spatial import neighbors
 from .world import World, genome_hash
@@ -36,6 +37,8 @@ class EcologyWorld(World):
             "rotated",
             "no_signal",
             "no_emission",
+            "no_identity",
+            "no_feedback",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -43,6 +46,7 @@ class EcologyWorld(World):
             or (ablation == "no_attacks" and config.ecology_version < 2)
             or (ablation == "pooled" and config.ecology_version < 4)
             or (ablation in ("no_signal", "no_emission") and config.ecology_version < 5)
+            or (ablation in ("no_identity", "no_feedback") and config.ecology_version < 6)
         ):
             raise ValueError("Ablation requires a version containing that feature")
         self.rng = {
@@ -82,6 +86,13 @@ class EcologyWorld(World):
             self.fields.append(SmellField(c, self.device))
         if c.ecology_version >= 5:
             self.fields.append(TrailField(c, self.device))
+        if c.ecology_version >= 6:
+            self.fields.extend(SmellField(c, self.device) for _ in range(2))
+            self.rng["quality"] = torch.Generator(device=self.device).manual_seed(seed + 524287)
+            self.landscape = ReversalLandscape(c, self.rng["quality"], self.device)
+            self.totals.update(
+                quality_reversals=0, high_quality_absorbed=0.0, low_quality_absorbed=0.0
+            )
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -133,6 +144,9 @@ class EcologyWorld(World):
         if c.ecology_version >= 4:
             a["module_h"] = torch.zeros((n, MAX_MODULES, c.hidden_size), device=self.device)
             a["module_actions"] = torch.zeros((n, MAX_MODULES, c.output_size), device=self.device)
+        if c.ecology_version >= 6:
+            for key in ("food_feedback", "damage_feedback", "high_acquired", "low_acquired"):
+                a[key] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -246,6 +260,17 @@ class EcologyWorld(World):
                     device=self.device,
                 ),
             )
+        if self.config.ecology_version >= 6:
+            for identity in (0, 1):
+                selected = self.landscape.identities == identity
+                self.fields[5 + identity].rebuild(
+                    self.patch_positions[selected],
+                    torch.full(
+                        (int(selected.sum()),),
+                        self.config.food_energy * self.config.identity_strength,
+                        device=self.device,
+                    ),
+                )
 
     def sensors(self, index):
         if self.config.ecology_version >= 4:
@@ -284,9 +309,17 @@ class EcologyWorld(World):
                 self.ablation == "disabled"
                 or (self.ablation == "no_cue" and channel == 3)
                 or (self.ablation == "no_signal" and channel == 4)
+                or (self.ablation == "no_identity" and channel in (5, 6))
             ):
                 smell.zero_()
             channels.append(smell)
+        if c.ecology_version >= 6:
+            for name in ("food_feedback", "damage_feedback"):
+                value = a[name][index] / (c.feedback_scale * a["area"][index])
+                value = value / (1 + value)
+                if self.ablation == "no_feedback":
+                    value = torch.zeros_like(value)
+                channels.append(value.reshape(len(index), *([1] * len(prefix))).expand(*prefix, 1))
         for values in (a["energy"][index] / (c.max_energy * a["area"][index]), a["contact"][index]):
             channels.append(values.reshape(len(index), *([1] * len(prefix))).expand(*prefix, 1))
         return torch.cat(channels, -1)
@@ -309,6 +342,9 @@ class EcologyWorld(World):
         else:
             inputs = self.sensors(index)
         a["inputs"][index] = inputs
+        if c.ecology_version >= 6:
+            a["food_feedback"][index] = 0
+            a["damage_feedback"][index] = 0
         a["contact"][index] = 0
         a["cold"][index] = False
         if self.ablation == "memory_reset":
@@ -437,6 +473,9 @@ class EcologyWorld(World):
         assimilated = efficiency * (1 - fresh.float() * c.detritus_fraction)
         if c.ecology_version >= 2:
             assimilated *= 1 - 0.55 * a["attack"][i]
+        if c.ecology_version >= 6:
+            quality = self.landscape.quality(self.food_patch[j])
+            assimilated *= torch.where(fresh, quality, 1.0)
         claims = torch.bincount(j, minlength=len(self.food_energy)).clamp_min(1)
         shares = self.food_energy[j] / claims[j]
         requested = torch.zeros_like(a["energy"]).index_add_(0, i, shares * assimilated)
@@ -445,6 +484,12 @@ class EcologyWorld(World):
         received = shares * assimilated
         a["energy"].index_add_(0, i, received)
         a["acquired"].index_add_(0, i, received)
+        if c.ecology_version >= 6:
+            a["food_feedback"].index_add_(0, i, received)
+            favorable = self.landscape.is_favorable(self.food_patch[j])
+            for mask, label in ((fresh & favorable, "high"), (fresh & ~favorable, "low")):
+                a[f"{label}_acquired"].index_add_(0, i[mask], received[mask])
+                self.totals[f"{label}_quality_absorbed"] += received[mask].double().sum().item()
         for kind, label in ((True, "fresh"), (False, "detritus")):
             mask = fresh == kind
             a[f"{label}_acquired"].index_add_(0, i[mask], received[mask])
@@ -498,6 +543,8 @@ class EcologyWorld(World):
         a["acquired"] += received
         a["meat_acquired"] += received
         a["bitten"] += lost
+        if c.ecology_version >= 6:
+            a["damage_feedback"] += lost
         self.totals["predation_absorbed"] += received.double().sum().item()
         self.totals["predation_loss"] += lost.double().sum().item() - received.double().sum().item()
         self.totals["predation_kills"] += int((a["energy"] <= 0).sum())
@@ -512,6 +559,9 @@ class EcologyWorld(World):
         if "memory_tau" in self.agents:
             result["memory_tau"] = self.agents["memory_tau"][index].item()
         for key in ("modules", "body_axis", "core_radius"):
+            if key in self.agents:
+                result[key] = self.agents[key][index].item()
+        for key in ("high_acquired", "low_acquired"):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
         return result
@@ -639,6 +689,16 @@ class EcologyWorld(World):
             if not self.population:
                 return
             c = self.config
+            if c.ecology_version >= 6:
+                for change in self.landscape.update(self.tick, self.rng["quality"]):
+                    self.totals["quality_reversals"] += 1
+                    self.events.append(
+                        dict(
+                            event="quality_reversal",
+                            time=change["tick"] * c.dt,
+                            favorable_identity=change["favorable"],
+                        )
+                    )
             expired = self.food_expiry <= self.tick
             self.totals["food_expired"] += self.food_energy[expired].double().sum().item()
             self.filter_food(~expired)
@@ -705,6 +765,10 @@ class EcologyWorld(World):
             )
             result["mean_secretion"] = a["actions"][:, 3].mean().item() if n else 0
         result["patch_stock"] = self.patch_stock().tolist()
+        if c.ecology_version >= 6:
+            result["favorable_identity"] = self.landscape.favorable
+            result["next_quality_reversal"] = self.landscape.next_tick * c.dt
+            result["patch_identities"] = self.landscape.identities.tolist()
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
         overlap = a["radius"][i] + a["radius"][j] - (a["pos"][i] - a["pos"][j]).norm(dim=1)
@@ -757,6 +821,8 @@ class EcologyWorld(World):
             "founders",
         ):
             result[key] = getattr(self, key).clone()
+        if self.config.ecology_version >= 6:
+            result["landscape"] = self.landscape.state_dict()
         return result
 
     @classmethod
@@ -804,6 +870,8 @@ class EcologyWorld(World):
         for field, grid in zip(self.fields, state["fields"], strict=True):
             field.grid = grid.to(device).clone()
         self.field = self.fields[0]
+        if self.config.ecology_version >= 6:
+            self.landscape = ReversalLandscape.from_state(self.config, state["landscape"], device)
         self.rng = {}
         for name, rng_state in state["rng"].items():
             generator = torch.Generator(device=self.device)

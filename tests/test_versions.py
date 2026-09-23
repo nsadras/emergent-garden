@@ -104,7 +104,7 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-@pytest.mark.parametrize("version", [1, 2, 3, 4, 5])
+@pytest.mark.parametrize("version", [1, 2, 3, 4, 5, 6])
 def test_ecology_checkpoint_full_replay(config, tmp_path, version):
     w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
     w.step(17)

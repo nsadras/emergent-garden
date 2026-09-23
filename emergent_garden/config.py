@@ -34,6 +34,12 @@ class Config:
     signal_half_life: float = 30.0
     signal_scale: float = 1.0
     archive_sim_seconds: float = 0.0
+    quality_period: float = 240.0
+    quality_jitter: float = 0.25
+    low_quality: float = 0.25
+    high_quality: float = 1.0
+    identity_strength: float = 20.0
+    feedback_scale: float = 10.0
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -94,14 +100,14 @@ class Config:
             "max_energy reproduction_threshold reproduction_debit birth_attempts birth_gap "
             "birth_retry hidden_size neural_tau weight_limit physics_hz controller_hz field_hz "
             "metrics_period checkpoint_wall_seconds viewer_size viewer_fps video_fps video_speed "
-            "signal_half_life signal_scale"
+            "signal_half_life signal_scale quality_period feedback_scale identity_strength"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4, 5):
+        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -111,6 +117,10 @@ class Config:
             raise ValueError("Predation efficiency and armor protection must be in [0, 1]")
         if not 0 <= self.resource_floor <= 1:
             raise ValueError("resource_floor must be in [0, 1]")
+        if not 0 <= self.low_quality <= self.high_quality <= 1 or not 0 <= self.quality_jitter < 1:
+            raise ValueError("Require 0 <= low_quality <= high_quality <= 1 and jitter in [0, 1)")
+        if self.ecology_version >= 6 and self.patches < 2:
+            raise ValueError("Reversal ecology requires at least two patches")
         if self.ecology_version >= 3 and (
             self.resource_burst <= 0
             or self.cue_duration <= 0
@@ -150,13 +160,25 @@ class Config:
 
     @property
     def input_size(self):
-        if self.ecology_version >= 5:
-            return 22
-        if self.ecology_version >= 3:
-            return 18
+        return len(self.input_names)
+
+    @property
+    def input_names(self):
+        channels = ["fresh"]
+        if self.ecology_version >= 1:
+            channels.append("detritus")
         if self.ecology_version >= 2:
-            return 14
-        return 10 if self.ecology_version else 6
+            channels.append("organisms")
+        if self.ecology_version >= 3:
+            channels.append("forecast")
+        if self.ecology_version >= 5:
+            channels.append("secretions")
+        if self.ecology_version >= 6:
+            channels.extend(("identity_a", "identity_b"))
+        names = [f"{channel}_{angle}" for channel in channels for angle in (-135, -45, 45, 135)]
+        if self.ecology_version >= 6:
+            names.extend(("food_feedback", "damage_feedback"))
+        return (*names, "energy", "contact")
 
     @property
     def output_size(self):

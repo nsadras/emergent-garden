@@ -1,16 +1,58 @@
 """Atomic checkpoints and append-only experiment records."""
 
 import hashlib
+import io
 import json
 import os
 import platform
 import subprocess
 import time
+import zipfile
 from pathlib import Path
 
 import torch
 
 from .world import World
+
+
+def capture_sources():
+    """Capture once at process import, before repeated experiments can span edits."""
+    package = Path(__file__).resolve().parent
+    sources = {p.name: p.read_bytes() for p in sorted(package.glob("*.py"))}
+    digest = hashlib.sha256()
+    for name, data in sources.items():
+        digest.update(name.encode())
+        digest.update(data)
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as output:
+        for name, data in sources.items():
+            output.writestr(f"emergent_garden/{name}", data)
+        for name in ("pyproject.toml", "uv.lock"):
+            path = package.parent / name
+            if path.exists():
+                output.writestr(name, path.read_bytes())
+    try:
+        revision = (
+            subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=package, capture_output=True, text=True, timeout=5
+            ).stdout.strip()
+            or "uncommitted"
+        )
+        dirty = bool(
+            subprocess.run(
+                ["git", "status", "--porcelain"],
+                cwd=package,
+                capture_output=True,
+                text=True,
+                timeout=5,
+            ).stdout.strip()
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        revision, dirty = "unknown", True
+    return digest.hexdigest(), archive.getvalue(), revision, dirty
+
+
+SOURCE_SHA256, SOURCE_ARCHIVE, SOURCE_REVISION, SOURCE_DIRTY = capture_sources()
 
 
 def atomic_save(data, path):
@@ -34,24 +76,6 @@ def load_checkpoint(path, device="cpu"):
 
 
 def runtime_metadata(world):
-    digest = hashlib.sha256()
-    for source in sorted(Path(__file__).parent.glob("*.py")):
-        digest.update(source.name.encode())
-        digest.update(source.read_bytes())
-    try:
-        revision = (
-            subprocess.run(
-                ["git", "rev-parse", "HEAD"], capture_output=True, text=True, timeout=5
-            ).stdout.strip()
-            or "uncommitted"
-        )
-        dirty = bool(
-            subprocess.run(
-                ["git", "status", "--porcelain"], capture_output=True, text=True, timeout=5
-            ).stdout.strip()
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        revision, dirty = "unknown", True
     info = dict(
         python=platform.python_version(),
         platform=platform.platform(),
@@ -59,9 +83,10 @@ def runtime_metadata(world):
         cuda_build=torch.version.cuda,
         device=str(world.device),
         seed=world.seed,
-        revision=revision,
-        dirty=dirty,
-        source_sha256=digest.hexdigest(),
+        revision=SOURCE_REVISION,
+        dirty=SOURCE_DIRTY,
+        source_sha256=SOURCE_SHA256,
+        source_capture="process_import",
         controller=world.controller,
         ablation=world.ablation,
         seeded_from=getattr(world, "seeded_from", None),
@@ -89,6 +114,7 @@ class RunStore:
         metadata = runtime_metadata(world)
         metadata["resumed_from"] = str(resumed_from) if resumed_from else None
         (self.path / "metadata.json").write_text(json.dumps(metadata, indent=2))
+        (self.path / "source.zip").write_bytes(SOURCE_ARCHIVE)
         atomic_save(dict(version=1, genomes=world.founders.cpu()), self.path / "founders.pt")
         self.metrics_file = (self.path / "metrics.jsonl").open("w")
         self.events_file = (self.path / "events.jsonl").open("w")

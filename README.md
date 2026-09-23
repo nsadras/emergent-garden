@@ -12,6 +12,10 @@ comparisons, is in [EVOLUTION.md](EVOLUTION.md). Persistence and sensory effects
 have been observed; useful forecast memory, communication, and open-ended
 intelligence have not been established.
 
+Continuing experiments on learning and evolving neural architecture are recorded
+in [CONTINUATION.md](CONTINUATION.md). The experimental [V6 preset](configs/v6.toml)
+adds patch identities with changing nutritional value and food/damage feedback.
+
 ## Start watching
 
 Python 3.13 and all Python packages are managed with **uv**:
@@ -79,6 +83,8 @@ versions may produce numerical differences. Forced process kills cannot save.
 Run outputs include:
 
 - `config.toml` and `metadata.json`: resolved settings and runtime details.
+- `source.zip`: package sources and uv project/lock files captured when the
+  process imported the storage module, so ongoing batches retain their provenance.
 - `metrics.jsonl` and `events.jsonl`: population, resources, costs, births, deaths,
   genetic diversity, lineages, and throughput.
 - `latest.pt`: an atomic full-world checkpoint.
@@ -127,6 +133,7 @@ The original starting values are in [configs/v0.toml](configs/v0.toml).
 | [V3](configs/v3.toml) | Forecast cues, pulsed resources, inherited neural timescales |
 | [V4](configs/v4.toml) | A developmental genome that repeats and places sensor/motor modules |
 | [V5](configs/v5.toml) | Costly secretion, diffusion, decay, and historical archives |
+| [V6](configs/v6.toml) | Hidden quality reversals, patch identities, and experienced food/damage inputs |
 
 ```bash
 cp configs/v5.toml configs/my-experiment.toml
@@ -208,6 +215,9 @@ uv run garden assay runs/experiment-1 --output runs/ecology-assay \
 
 uv run garden probe runs/experiment-1 --output runs/cue-probe.json
 
+# V6+: counterbalanced cue/outcome associations and reversal responses.
+uv run garden association runs/your-v6-run --output runs/association-probe.json
+
 # Initialize a new world from living genomes in an earlier experiment.
 uv run garden run --config configs/v5.toml --seed-from runs/earlier-v4-run \
   --device cpu --seconds 3600 --output runs/inherited-v5
@@ -218,7 +228,8 @@ retaining their mean intensity. `no_signal` removes secretion sensing;
 `no_emission` suppresses production while retaining its cost. `memory_reset`
 clears recurrent state before each controller update. Other controls include
 `no_recycling`, `no_attacks`, `no_cue`, `pooled` module observations, and spatially
-`shuffled` readings. Version-specific controls require the corresponding version.
+`shuffled` readings. V6 adds `no_identity` and `no_feedback`. Version-specific
+controls require the corresponding version.
 
 The cue probe compares different past cues followed by identical current inputs.
 It measures intrinsic history dependence, not successful navigation or learning.

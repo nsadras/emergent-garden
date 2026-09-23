@@ -13,7 +13,7 @@ import torch
 from .config import Config
 from .experiments import calibration, community_assay, evaluate
 from .inheritance import seed_population
-from .probes import probe_run
+from .probes import association_run, probe_run
 from .runtime import StopFlag
 from .storage import RunStore, load_checkpoint, runtime_metadata
 from .world import create_world as World
@@ -220,6 +220,12 @@ def parser():
     probe.add_argument("--genomes", type=int, default=64)
     probe.add_argument("--delays", type=float, nargs="+", default=[1.0, 3.0, 6.0])
     probe.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    association = sub.add_parser("association", help="Probe cue/outcome history and reversal")
+    association.add_argument("run", type=Path)
+    association.add_argument("--output", type=Path, required=True)
+    association.add_argument("--genomes", type=int, default=64)
+    association.add_argument("--rounds", type=int, default=3)
+    association.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
     return root
 
 
@@ -290,6 +296,10 @@ def main():
             )
         elif args.command == "probe":
             probe_run(args.run, args.output, args.genomes, args.delays, choose_device(args.device))
+        elif args.command == "association":
+            association_run(
+                args.run, args.output, args.genomes, args.rounds, choose_device(args.device)
+            )
     except (ValueError, OSError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return_code = 1
