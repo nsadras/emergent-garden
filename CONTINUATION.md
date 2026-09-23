@@ -629,10 +629,13 @@ spontaneous speciation, or permanent coexistence. See the
 Maximum absolute energy residual was 0.0272 units. Founder samples and patch
 layouts match across paired treatments, and all food-credit checks passed.
 
-The two limited mixtures retaining both ancestries are continuing to three
-simulated hours under `runs/v11-limited-long-181` and `-182`. These are selected
-continuations of successful mixtures, not independent replicates or an unbiased
-estimate of long-term coexistence frequency.
+The two limited mixtures retaining both ancestries completed three simulated
+hours under `runs/v11-limited-long-181` and `-182`. They ended with ancestry
+populations 53/18 and 14/11, 3,728 and 1,905 total births, and maximum generations
+68 and 51. Energy residuals were -0.00561 and -0.0751 units. All surviving bodies
+had one module. These are selected continuations of successful mixtures, not
+independent replicates or an unbiased estimate of long-term coexistence frequency.
+The [continuation records](docs/results/v11-long.json) retain their histories.
 
 The fresh random-founder pilots were much less viable than the assembled
 communities: seed 171 reached 1,800 seconds with one founding creature and only
@@ -756,7 +759,7 @@ by normalization, as checked independently. All three pilots and matched-founder
 checks are retained in [the pilot records](docs/results/v12-pilots.json) and
 [audit](docs/results/v12-pilot-audit.json).
 
-### Evaluation in progress
+### Completed ecological and lifetime evaluation
 
 Nine 3,600-second community trials use new environments 201/202/203 with bounded
 learning, matched exploration without motor learning, or no exploration. They
@@ -777,10 +780,40 @@ performance in the main 512-unit community. Source genomes, package sources,
 configuration, experiment code, and every completed paired trial are retained.
 Genotypes from one source community are not independent evolutionary replicates.
 
-Useful lifetime adaptation requires improvement in these matched physical
-outcomes across environments; synaptic motion, surviving populations, or the
-constructed cue task alone are insufficient. The lifetime and longer community
-experiments are still running.
+The nine community trials completed with the following final source-ancestry
+populations (grazer/scavenger); ordinary genetic mutation remained active:
+
+| Environment | Learning and exploration | Exploration only | Neither |
+| --- | --- | --- | --- |
+| 201 | 25/20; 882 births | 51/23; 1,045 births | 62/21; 1,280 births |
+| 202 | 35/0; 544 births | 24/0; 474 births | 54/27; 1,139 births |
+| 203 | extinct at 740 s; 84 births | 19/11; 531 births | 39/29; 1,034 births |
+
+Both ancestries persisted for the hour in one, two, and three communities,
+respectively. Three environments are too few to establish general persistence
+probabilities. They do show that the new motor mechanism is not a consistent
+improvement for these starting populations. The [community figure](docs/v12-outcomes-communities.png),
+[all nine records](docs/results/v12.json), and [matched-founder audit](docs/results/v12-audit.json)
+retain the failed trials as well as the survivors.
+
+All 72 fixed-genotype lifetime trials also completed. Averaged across eight
+genotypes and three environments, the original individual acquired 298.0 energy
+with learning, 418.4 with exploration alone, and 438.5 with neither. Mean offspring
+counts were 1.00, 1.50, and 1.83; 15/24, 23/24, and 21/24 individuals survived the
+full 240 seconds. Acquired energy includes all intake, including any meat.
+Compared with exploration alone, learning reduced mean acquired energy for
+seven of eight genotypes after averaging their three environments; one genotype
+improved. The paired mean difference was -120.5 energy and -0.50 offspring.
+These genotypes share one source community, so environmental repeats are not
+independent evolutionary replicates. See the [paired figure](docs/v12-outcomes-lifetimes.png)
+and [all lifetime records](docs/results/v12-lifetime-assay.json).
+
+The constructed cue task establishes that the readout can learn a supplied
+association. The physical assays establish no useful ecological adaptation at
+these settings. Exploration and credit assignment both need further work; the
+next body-development experiment will use zero exploratory motor noise so that
+this measured harm does not confound its comparison. The motor-learning
+mechanism and original presets remain available for later targeted experiments.
 
 The 154-test suite passes, including causal timing of motor credit, inactive-edge
 masking, inherited-rule preservation, newborn resets, energetic feedback,

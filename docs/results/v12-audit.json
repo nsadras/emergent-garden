@@ -1,0 +1,128 @@
+[
+  {
+    "path": "runs/v12-bounded-mixed/seed-201",
+    "time": 3600.0,
+    "populations": [
+      25,
+      20
+    ],
+    "matched_founders_sha256": "aebf79286cd120ea40c51eeb958f15957fcce7926324b1b9c9ec0e03487d36b1",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.02032387807230407,
+    "energy_injected": 1528436.546043396,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 4.0745362639427185e-10
+  },
+  {
+    "path": "runs/v12-bounded-mixed/seed-202",
+    "time": 3600.0,
+    "populations": [
+      35,
+      0
+    ],
+    "matched_founders_sha256": "1f486d8dc75238e1db433a783b49d9da739ad12c16981e7c0e8566c5b683aa10",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.012101294458261691,
+    "energy_injected": 1452535.6153373718,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 4.0745362639427185e-10
+  },
+  {
+    "path": "runs/v12-bounded-mixed/seed-203",
+    "time": 739.7,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "b6b2555d1642fd9921162fcc348622a3f92dff5a23a51c9e41ea868beb86e538",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.0022966837386775296,
+    "energy_injected": 314848.892124176,
+    "maximum_packet_credit_error": 8.673617379884035e-19,
+    "maximum_detritus_balance_error": 2.1827872842550278e-11
+  },
+  {
+    "path": "runs/v12-no-motor-mixed/seed-201",
+    "time": 3600.0,
+    "populations": [
+      51,
+      23
+    ],
+    "matched_founders_sha256": "aebf79286cd120ea40c51eeb958f15957fcce7926324b1b9c9ec0e03487d36b1",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.02377890170828323,
+    "energy_injected": 1572916.546043396,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 1.3969838619232178e-09
+  },
+  {
+    "path": "runs/v12-no-motor-mixed/seed-202",
+    "time": 3600.0,
+    "populations": [
+      24,
+      0
+    ],
+    "matched_founders_sha256": "1f486d8dc75238e1db433a783b49d9da739ad12c16981e7c0e8566c5b683aa10",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.04943742640898563,
+    "energy_injected": 1474255.6153373718,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 3.7834979593753815e-10
+  },
+  {
+    "path": "runs/v12-no-motor-mixed/seed-203",
+    "time": 3600.0,
+    "populations": [
+      19,
+      11
+    ],
+    "matched_founders_sha256": "b6b2555d1642fd9921162fcc348622a3f92dff5a23a51c9e41ea868beb86e538",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.04151966219797032,
+    "energy_injected": 1457048.892124176,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 4.0745362639427185e-10
+  },
+  {
+    "path": "runs/v12-no-exploration/seed-201",
+    "time": 3600.0,
+    "populations": [
+      62,
+      21
+    ],
+    "matched_founders_sha256": "aebf79286cd120ea40c51eeb958f15957fcce7926324b1b9c9ec0e03487d36b1",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.021369112113461597,
+    "energy_injected": 1599476.546043396,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 2.153683453798294e-09
+  },
+  {
+    "path": "runs/v12-no-exploration/seed-202",
+    "time": 3600.0,
+    "populations": [
+      54,
+      27
+    ],
+    "matched_founders_sha256": "1f486d8dc75238e1db433a783b49d9da739ad12c16981e7c0e8566c5b683aa10",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.009446768459383748,
+    "energy_injected": 1567895.6153373718,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 2.3283064365386963e-10
+  },
+  {
+    "path": "runs/v12-no-exploration/seed-203",
+    "time": 3600.0,
+    "populations": [
+      39,
+      29
+    ],
+    "matched_founders_sha256": "b6b2555d1642fd9921162fcc348622a3f92dff5a23a51c9e41ea868beb86e538",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.04135175184455875,
+    "energy_injected": 1572348.892124176,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 7.566995918750763e-10
+  }
+]
