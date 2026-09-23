@@ -831,7 +831,7 @@ All 901 frames decoded at 1,024×1,024 and 30 FPS; the
 [inspector preview](docs/v12-preview.png) displays inherited recurrent weights,
 acquired recurrent changes, and the two acquired motor rows separately.
 
-## Next developmental experiment
+## V13 — juvenile growth and accessible body plans
 
 The persisting V11 communities remain entirely single-module organisms.
 `scripts/audit_development.py` tests whether changing only the encoded module
@@ -844,10 +844,108 @@ includes each parent's bound and the proposed child's debit.
 
 This identifies an accessibility barrier, not proof that larger bodies are
 intrinsically unfit or impossible to evolve: simultaneous changes to core size,
-spacing, or neural construction could alter affordability. The next prototype
-will test juvenile development. Offspring can start with one module, then pay
-for additional genetically specified modules during life before reproducing.
-Growth must respect available energy and physical space, and every new circuit
-must start without acquired state. A comparison with fully constructed offspring
-will isolate the birth-cost barrier. Explicit neighboring module-count mutation
-events will be recorded separately from ordinary continuous trait mutations.
+spacing, or neural construction could alter affordability. V13 tests juvenile
+development using the existing bounded one-to-three-module grammar. It does not
+yet add differentiated cells or arbitrarily shaped bodies.
+
+### Inheritance, construction, and maturation
+
+The genome remains 4,754 values with 13 continuous developmental traits.
+Trait 6 still encodes the final module count. Each founder and newborn initially
+expresses one module; its inherited target is stored separately from its current
+developmental stage. Growth adds one module at a time until the target is met.
+Only mature bodies may reproduce. A one-module plan is mature at birth.
+
+| Parameter | V13 setting |
+| --- | --- |
+| Neighboring module-plan mutation | 3% per attempted offspring |
+| Additional body construction | 20 energy per added area unit |
+| Neural construction | Existing per-neuron and per-connection costs, per added module |
+| Required reserve after growth | 50 energy per unit of the resulting body area |
+| Earliest growth / interval after successful growth | 10 seconds |
+| Retry after insufficient energy or blocked space | 1 second |
+| Exploratory motor noise | Zero in both compared treatments |
+
+An explicit module mutation moves 1→2, 3→2, or 2→1/3 with equal probability.
+It changes only the module-count gene, after ordinary continuous and neural
+structural mutation. The gene is placed at the center of the destination
+interval, subject to the configured gene bound. Attempted module events,
+accepted births carrying those events, and actual parent-to-child body-plan
+changes are counted separately. Continuous trait mutation can still cross a
+module-count threshold without an explicit event.
+
+Birth pays for the currently expressed newborn, including its initial stored
+energy and first circuit. Growth later pays for additional body area and neural
+construction without creating stored energy. The reserve is an eligibility
+condition, not a further charge. Construction is an explicit dissipation term
+in the energy ledger, with a per-creature lifetime counter. The informational
+neural-construction counter includes its component of this cost without charging
+it twice. Like reproduction investment, growth is excluded from motor reward.
+
+A proposed larger circular membrane must fit inside the dish and avoid every
+other membrane. Contending proposals are considered in a random order drawn
+from a separate checkpointed stream. Accepted growth immediately constrains
+later proposals. Failed proposals charge nothing. Existing modules retain
+their own neural states as the linear body layout recenters; newly activated
+modules start with zero activity, plastic weights, eligibility, and motor
+baseline. They first act at the next scheduled controller update. Every growth
+event records its creature, ancestry, module counts, radius, and energy cost.
+
+The `adult_births` control builds the entire encoded child at birth using the
+previous financing rule. Founders are initialized identically in both treatments,
+so the comparison concerns offspring development, not different initial placement
+or endowments. All assembled source founders happen to encode one module.
+Ordinary mutation, neural architecture changes, recurrent plasticity, finite
+feeding, predation, recycling, and shelter remain active in both treatments.
+Motor exploration is set to zero following the V12 outcomes; its maintenance
+cost remains matched, and fresh motor offsets stay zero. This setting is tested
+for exact physical parity with the earlier `no_exploration` intervention.
+
+### Verification and experiments
+
+The 171-test suite includes staged affordability, energy conservation, wall and
+neighbor blocking, competing growth proposals, maturation before reproduction,
+fresh offspring state, neighboring mutation, rendering purity, and exact replay
+through growth and births. All assay paths that disable mutation also disable
+the new body-plan events. The counterfactual affordability audit explicitly
+constructs a fully formed child even when reading a V13 checkpoint.
+
+[CPU](docs/results/v13-cpu-growth.json) and [CUDA](docs/results/v13-cuda-growth.json)
+mechanical exercises passed exact replay through four births with neural
+structural mutation and four/nine growth events, respectively. Energy residuals
+were +0.000402 and -0.000239 units; peak CUDA allocation was about 37 MB.
+The exercise supplies reproduction energy and accelerates growth and mutations,
+so these are correctness checks, not evidence of ecological viability.
+
+All six matched 600-second pilots in environments 211/212/213 completed:
+
+| Environment | Juvenile births: population / births / growth events | Fully formed births: population / births / growth events |
+| --- | --- | --- |
+| 211 | 58 / 165 / 2 | 42 / 142 / 0 |
+| 212 | 44 / 138 / 1 | 44 / 136 / 0 |
+| 213 | 42 / 164 / 12 | 42 / 149 / 0 |
+
+Juvenile trials ended with 2/0/7 two-module bodies, versus none in the controls.
+Two-module parents produced 3/0/26 offspring. The control attempted 2/1/6
+explicit module mutations but accepted none of those offspring. The juvenile
+treatment accepted 2/1/6 such births; descendants could then inherit their body
+plans without a new module event. The [six-run records](docs/results/v13-pilots.json),
+[matched-founder and phenotype audit](docs/results/v13-pilot-audit.json), and
+[reconstructed developmental histories](docs/results/v13-pilot-development.json)
+retain the evidence. The largest absolute energy residual was 0.0105 units.
+
+The first juvenile pilot provides a concrete example of the newly accessible life cycle:
+creature 300, descended from single-module founder 118, was born at 417.63 s
+with a two-module plan, grew at 490.63 s, and produced three offspring by 600 s.
+Its child 348 also grew. The [adult preview](docs/v13-preview.png) and
+[juvenile preview](docs/v13-juvenile.png) show that family at the same checkpoint.
+This establishes access and reproduction, not a general advantage or long-term
+survival of larger bodies. A recording from 600 to 900 seconds is saved at
+`runs/v13-video/timelapse.mp4`; all 901 frames decoded at 1,024×1,024 and 30 FPS
+in the [video verification](docs/results/v13-video.json).
+
+Six fresh 3,600-second trials compare juvenile and fully formed births in
+environments 221/222/223. Three separate random-founder runs use the same seed
+numbers and a 1,800-second horizon to test establishment without transferred
+foraging circuits. These experiments
+are still running; their outcomes will determine the next changes.

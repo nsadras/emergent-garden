@@ -80,6 +80,21 @@ def test_motor_normalization_does_not_change_the_no_learning_control(config):
         assert torch.equal(old.rng[key].get_state(), new.rng[key].get_state())
 
 
+def test_zero_exploration_preset_matches_intervention_without_invalid_scores(config):
+    c = replace(config, ecology_version=12, initial_food=20, food_rate=10.0)
+    intervention = EcologyWorld(c, ablation="no_exploration")
+    preset = EcologyWorld(replace(c, exploration_min=0.0, exploration_max=0.0))
+    for world in (intervention, preset):
+        world.step(120)
+        assert world.agents["module_motor_trace"].count_nonzero() == 0
+        assert world.agents["module_motor_plastic"].count_nonzero() == 0
+    assert intervention.totals == preset.totals
+    for key in intervention.agents:
+        torch.testing.assert_close(intervention.agents[key], preset.agents[key], rtol=0, atol=0)
+    for key in intervention.rng:
+        assert torch.equal(intervention.rng[key].get_state(), preset.rng[key].get_state())
+
+
 def test_motor_rule_can_learn_and_reverse_an_immediate_cue_action_association(config):
     # A controlled mechanism check, not a simulated creature or an evolved brain.
     # Each unchanged genome sees both cues in shuffled order and must relearn

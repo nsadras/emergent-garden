@@ -67,7 +67,9 @@ def motor_policy(config, genomes, hidden, logits, state, noise, reward, elapsed,
     changed[:, :2] += (plastic @ features[..., None]).squeeze(-1) + sigma[:, None] * noise
     actions = changed.sigmoid()
     if learning:
-        score = noise / sigma[:, None]
+        # A preset may explicitly disable exploration. There is then no
+        # likelihood score and no new eligibility, including for the bias.
+        score = torch.where(sigma[:, None] > 0, noise / sigma[:, None].clamp_min(1e-20), 0)
         eligibility = score[:, :, None] * features[:, None, :] * actions[:, 4, None, None]
         trace = state["motor_trace"] * torch.exp(-elapsed / c.motor_trace_tau)[:, None, None]
         trace = (trace + eligibility) * mask

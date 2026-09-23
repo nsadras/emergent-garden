@@ -11,10 +11,19 @@ import torch
 MAX_MODULES = 3
 
 
+def module_count(allocation):
+    """Decode the sigmoid of the inherited module-allocation gene."""
+    return 1 + (allocation * MAX_MODULES).long().clamp_max(MAX_MODULES - 1)
+
+
 def develop_modules(config, agents, traits):
     a = agents
     core = a["radius"].clone()
-    count = 1 + (traits[:, 6] * MAX_MODULES).long().clamp_max(MAX_MODULES - 1)
+    count = module_count(traits[:, 6])
+    if config.ecology_version >= 13:
+        a["target_modules"] = count
+        count = torch.minimum(count, a["development_stage"])
+        a["development_stage"] = count
     slots = torch.arange(MAX_MODULES, device=core.device)[None]
     mask = slots < count[:, None]
     spacing = core * (1 + traits[:, 7])

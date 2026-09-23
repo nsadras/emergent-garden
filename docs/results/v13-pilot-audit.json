@@ -1,0 +1,92 @@
+[
+  {
+    "path": "runs/v13-juvenile-pilots/seed-211",
+    "time": 600.0,
+    "populations": [
+      38,
+      20
+    ],
+    "matched_founders_sha256": "af9654b89e54158d0234577d114ee3963542ef07ea60c8e6924fa8aa120fe2ca",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.010425183423649287,
+    "energy_injected": 282844.2022514343,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.4551915228366852e-11
+  },
+  {
+    "path": "runs/v13-juvenile-pilots/seed-212",
+    "time": 600.0,
+    "populations": [
+      33,
+      11
+    ],
+    "matched_founders_sha256": "c788f6edfd22857165aefb2b9f58d9ede06b4d3e2ce37299cad46de772896d1f",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.001492809195042355,
+    "energy_injected": 276101.8885345459,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 2.546585164964199e-11
+  },
+  {
+    "path": "runs/v13-juvenile-pilots/seed-213",
+    "time": 600.0,
+    "populations": [
+      27,
+      15
+    ],
+    "matched_founders_sha256": "97b75f35e3c8dd0ba8aab83a322d35a0a0a2cf21cea116af9b9328cbb1af9fec",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.00041452375080552883,
+    "energy_injected": 278488.64546203613,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 9.458744898438454e-11
+  },
+  {
+    "path": "runs/v13-adult-pilots/seed-211",
+    "time": 600.0,
+    "populations": [
+      28,
+      14
+    ],
+    "matched_founders_sha256": "af9654b89e54158d0234577d114ee3963542ef07ea60c8e6924fa8aa120fe2ca",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.009157184504147153,
+    "energy_injected": 277844.2022514343,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 6.184563972055912e-11
+  },
+  {
+    "path": "runs/v13-adult-pilots/seed-212",
+    "time": 600.0,
+    "populations": [
+      36,
+      8
+    ],
+    "matched_founders_sha256": "c788f6edfd22857165aefb2b9f58d9ede06b4d3e2ce37299cad46de772896d1f",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.003958279234211659,
+    "energy_injected": 276201.8885345459,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 3.637978807091713e-12
+  },
+  {
+    "path": "runs/v13-adult-pilots/seed-213",
+    "time": 600.0,
+    "populations": [
+      26,
+      16
+    ],
+    "matched_founders_sha256": "97b75f35e3c8dd0ba8aab83a322d35a0a0a2cf21cea116af9b9328cbb1af9fec",
+    "cached_topology_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.002860785587472492,
+    "energy_injected": 276668.64546203613,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 4.001776687800884e-11
+  }
+]

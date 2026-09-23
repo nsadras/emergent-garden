@@ -26,6 +26,11 @@ def main():
         action="store_true",
         help="Give founders reproduction energy and force structural mutation attempts",
     )
+    parser.add_argument(
+        "--exercise-growth",
+        action="store_true",
+        help="Give half the V13 founders a three-module plan and accelerate juvenile growth",
+    )
     args = parser.parse_args()
     torch.set_num_threads(1)
     c = replace(
@@ -44,10 +49,21 @@ def main():
         raise ValueError("This check requires an ecology preset (V1 or later)")
     if args.exercise_births and c.ecology_version >= 8:
         c = replace(c, node_mutation_probability=1.0, edge_mutation_probability=1.0)
+    if args.exercise_growth:
+        if c.ecology_version < 13:
+            raise ValueError("Growth exercise requires V13 or later")
+        c = replace(c, growth_delay=2.1, growth_reserve=10.0, module_mutation_probability=1.0)
     args.output.mkdir(parents=True, exist_ok=False)
     w = create_world(c, seed=7919, device=args.device)
+    if args.exercise_growth:
+        # Some founders mature, others juvenile: exercise births and growth.
+        # These are mechanical fixtures, not ecological evaluation populations.
+        w.agents["genome"][:, c.brain_parameter_count + 6] = -2
+        w.agents["genome"][::2, c.brain_parameter_count + 6] = 2
+        w.develop(w.agents)
+        w.founders = w.agents["genome"].clone()
     w.step(60)
-    if args.exercise_births:
+    if args.exercise_births or args.exercise_growth:
         previous = w.agents["energy"].double().sum().item()
         w.agents["energy"] = c.max_energy * w.agents["area"]
         w.initial_energy += w.agents["energy"].double().sum().item() - previous
@@ -89,8 +105,12 @@ def main():
         assert max(map(abs, metric["trophic_detritus_balance_error"])) < 1e-7
         torch.testing.assert_close(w.food_credit.sum(1), w.food_energy.double())
     if c.ecology_version >= 12:
-        assert metric["mean_motor_plastic_magnitude"] > 0
-        assert metric["motor_learning_changes"] > 0
+        if c.exploration_max:
+            assert metric["mean_motor_plastic_magnitude"] > 0
+            assert metric["motor_learning_changes"] > 0
+        else:
+            assert metric["mean_motor_plastic_magnitude"] == 0
+            assert metric["motor_learning_changes"] == 0
         if c.motor_normalized:
             assert (
                 w.agents["module_motor_plastic"].norm(dim=-1).max() <= c.motor_learning_limit + 1e-6
@@ -99,11 +119,15 @@ def main():
         assert metric["births"] > 0
         if c.ecology_version >= 8:
             assert metric["neural_structural_births"] > 0
+    if args.exercise_growth:
+        assert metric["growths"] > 0
+        assert metric["development_cost"] > 0
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
         metadata=runtime_metadata(w),
         replay_passed=True,
         birth_exercise=args.exercise_births,
+        growth_exercise=args.exercise_growth,
         tensor_absolute_tolerance=tolerance,
         quality_reversals=sum(e["event"] == "quality_reversal" for e in w.events),
         metrics=metric,

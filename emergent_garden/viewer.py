@@ -144,6 +144,7 @@ class Renderer:
             "actions",
             "neurons",
             "connections",
+            "target_modules",
         ):
             if key in a:
                 data[key] = a[key].detach().cpu().numpy()
@@ -298,8 +299,11 @@ class Renderer:
                 )
             if "modules" in data:
                 neurons = data["neurons"][i] if "neurons" in data else len(data["h"][i])
+                body = str(data["modules"][i])
+                if "target_modules" in data and data["modules"][i] < data["target_modules"][i]:
+                    body += f"/{data['target_modules'][i]} juvenile"
                 self.text(
-                    f"{data['modules'][i]} modules / {neurons} neurons each",
+                    f"{body} modules / {neurons} neurons each",
                     (30, 327),
                     small=True,
                 )

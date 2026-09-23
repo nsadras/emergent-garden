@@ -34,6 +34,9 @@ def audit(path):
             child["genome"] = a["genome"][parents].clone()
             p = (target_count - 0.5) / 3
             child["genome"][:, c.brain_parameter_count + 6] = math.log(p / (1 - p))
+            if c.ecology_version >= 13:
+                # This audit asks about a fully formed child, not its juvenile.
+                child["development_stage"].fill_(target_count)
             world.develop(child)
             assert (child["modules"] == target_count).all()
             torch.testing.assert_close(

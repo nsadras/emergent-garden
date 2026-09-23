@@ -58,6 +58,35 @@ def main():
                 ):
                     torch.testing.assert_close(world.agents[name], actual, rtol=0, atol=0)
                 cached_topology_exact = True
+            development_exact = None
+            if world.config.ecology_version >= 13:
+                a = world.agents
+                assert ((a["modules"] >= 1) & (a["modules"] <= a["target_modules"])).all()
+                proposed = world.empty_agents(world.population)
+                proposed["genome"] = a["genome"].clone()
+                proposed["development_stage"] = a["modules"].clone()
+                world.develop(proposed)
+                for key in (
+                    "target_modules",
+                    "module_mask",
+                    "module_offset",
+                    "area",
+                    "radius",
+                    "brain_construction",
+                    "brain_maintenance",
+                ):
+                    torch.testing.assert_close(a[key], proposed[key], rtol=0, atol=0)
+                for key in (
+                    "module_h",
+                    "module_plastic",
+                    "module_trace",
+                    "module_motor_plastic",
+                    "module_motor_trace",
+                    "module_motor_baseline",
+                    "module_actions",
+                ):
+                    assert a[key][~a["module_mask"]].count_nonzero() == 0
+                development_exact = True
             packet_error = credit_error = None
             if world.config.ecology_version >= 9:
                 differences = world.food_credit.sum(1) - world.food_energy.double()
@@ -74,6 +103,7 @@ def main():
                     populations=populations,
                     matched_founders_sha256=hashlib.sha256(founders.numpy().tobytes()).hexdigest(),
                     cached_topology_exact=cached_topology_exact,
+                    development_exact=development_exact,
                     energy_balance_error=error,
                     energy_injected=injected,
                     maximum_packet_credit_error=packet_error,

@@ -50,6 +50,11 @@ class Config:
     min_neurons: int = 4
     node_mutation_probability: float = 0.05
     edge_mutation_probability: float = 0.1
+    module_mutation_probability: float = 0.03
+    growth_cost: float = 20.0
+    growth_reserve: float = 50.0
+    growth_delay: float = 10.0
+    growth_retry: float = 1.0
     neuron_maintenance: float = 0.0005
     synapse_maintenance: float = 0.00001
     neuron_construction: float = 0.05
@@ -132,14 +137,14 @@ class Config:
             "plasticity_limit plasticity_trace_tau "
             "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate "
             "motor_learning_limit motor_trace_tau motor_baseline_tau "
-            "motor_half_life exploration_min"
+            "motor_half_life growth_reserve growth_delay growth_retry"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12):
+        if self.ecology_version not in range(14):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -168,8 +173,15 @@ class Config:
         if (
             not 0 <= self.node_mutation_probability <= 1
             or not 0 <= self.edge_mutation_probability <= 1
+            or not 0 <= self.module_mutation_probability <= 1
         ):
             raise ValueError("Structural mutation probabilities must be in [0, 1]")
+        if (
+            self.ecology_version >= 13
+            and self.module_mutation_probability > 0
+            and self.weight_limit <= math.log(2)
+        ):
+            raise ValueError("Module mutations need weight_limit > log(2) to encode all counts")
         if self.ecology_version >= 3 and (
             self.resource_burst <= 0
             or self.cue_duration <= 0

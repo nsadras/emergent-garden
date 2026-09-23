@@ -70,9 +70,10 @@ def seed_assembly(world, sources, condition):
         founder_sources=origins.tolist(),
         source_ids=torch.tensor(identifiers)[order].tolist(),
         source_generations=torch.tensor(generations)[order].tolist(),
-        interpretation="Equal founder numbers in mixtures; original bodies and energy endowments "
-        "are retained, with zero-age brains and no acquired state. Different morphologies have "
-        "different founder energy. This is deliberate community assembly, "
+        interpretation="Equal founder numbers in mixtures; inherited body plans are retained. "
+        "V13+ expresses those plans as one-module newborns; earlier versions begin fully formed. "
+        "Brains have zero age and no acquired state. Energy follows expressed newborn area. "
+        "This is deliberate community assembly, "
         "not spontaneous speciation.",
     )
     world.rebuild_fields()

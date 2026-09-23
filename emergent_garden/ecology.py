@@ -11,6 +11,7 @@ import torch
 
 from .brain import advance, controller_step, initial_brains
 from .config import Config
+from .development import grow, mutate_module_count
 from .field import ShelterField, SmellField, TrailField
 from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
@@ -51,6 +52,7 @@ class EcologyWorld(World):
             "no_motor_learning",
             "no_motor_reward",
             "no_exploration",
+            "adult_births",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -60,6 +62,7 @@ class EcologyWorld(World):
             or (ablation in ("no_signal", "no_emission") and config.ecology_version < 5)
             or (ablation in ("no_identity", "no_feedback") and config.ecology_version < 6)
             or (ablation == "no_plasticity" and config.ecology_version < 7)
+            or (ablation == "adult_births" and config.ecology_version < 13)
             or (ablation in ("no_shelter", "no_shelter_cue") and config.ecology_version < 10)
             or (
                 ablation in ("unlimited_feeding", "unlimited_handling")
@@ -133,6 +136,22 @@ class EcologyWorld(World):
                 seed + 1048583
             )
             self.totals.update(motor_learning_cost=0.0, motor_learning_changes=0.0)
+        if c.ecology_version >= 13:
+            self.rng["body_structure"] = torch.Generator(device=self.device).manual_seed(
+                seed + 1200119
+            )
+            self.rng["development"] = torch.Generator(device=self.device).manual_seed(
+                seed + 1300021
+            )
+            self.totals.update(
+                growths=0,
+                growth_attempts=0,
+                growth_unaffordable=0,
+                growth_blocked=0,
+                development_cost=0.0,
+                module_mutation_events=0,
+                module_event_births=0,
+            )
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -218,6 +237,15 @@ class EcologyWorld(World):
             a["motor_reward"] = torch.zeros(n, device=self.device)
             a["motor_change"] = torch.zeros(n, device=self.device)
             a["last_motor_tick"] = torch.full((n,), self.tick, dtype=torch.long, device=self.device)
+        if c.ecology_version >= 13:
+            a["development_stage"] = torch.ones(n, dtype=torch.long, device=self.device)
+            a["growth_tick"] = torch.full(
+                (n,),
+                self.tick + math.ceil(c.growth_delay * c.physics_hz),
+                dtype=torch.long,
+                device=self.device,
+            )
+            a["development_spent"] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -786,12 +814,14 @@ class EcologyWorld(World):
             "fresh_processed",
             "detritus_processed",
             "motor_change",
+            "development_spent",
+            "target_modules",
         ):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
         return result
 
-    def mutate(self, genome):
+    def mutate(self, genome, *, body_event=None):
         c = self.config
         genes = genome[: c.brain_parameter_count + c.trait_count]
         mask = self.rand(genes.shape, "mutation") < c.mutation_probability
@@ -804,12 +834,22 @@ class EcologyWorld(World):
         if c.ecology_version >= 8:
             changed = torch.cat((changed, genome[len(genes) :]))
             changed = mutate_structure(c, changed, self.rng["structure"])
+        if c.ecology_version >= 13:
+            changed, event = mutate_module_count(c, changed, self.rng["body_structure"])
+            self.totals["module_mutation_events"] += int(event["module_event"])
+            if body_event is not None:
+                body_event.update(event)
         return changed
 
     def reproduce(self):
         a, c = self.agents, self.config
+        mature = a["modules"] >= a["target_modules"] if c.ecology_version >= 13 else True
         eligible = (
-            ((a["energy"] >= c.reproduction_threshold * a["area"]) & (a["retry_tick"] <= self.tick))
+            (
+                (a["energy"] >= c.reproduction_threshold * a["area"])
+                & (a["retry_tick"] <= self.tick)
+                & mature
+            )
             .nonzero()
             .flatten()
         )
@@ -823,7 +863,14 @@ class EcologyWorld(World):
                 self.totals["blocked_births"] += 1
                 continue
             child = self.empty_agents(1)
-            child["genome"][0] = self.mutate(a["genome"][i])
+            body_event = {}
+            child["genome"][0] = (
+                self.mutate(a["genome"][i], body_event=body_event)
+                if c.ecology_version >= 13
+                else self.mutate(a["genome"][i])
+            )
+            if c.ecology_version >= 13 and self.ablation == "adult_births":
+                child["development_stage"].fill_(MAX_MODULES)
             self.develop(child)
             child["energy"] = c.birth_energy * child["area"]
             overhead = (c.reproduction_debit - c.birth_energy) * child["area"][0]
@@ -860,8 +907,14 @@ class EcologyWorld(World):
             if c.ecology_version >= 4:
                 key = f"module_births_{int(child['modules'][0])}"
                 self.totals[key] = self.totals.get(key, 0) + 1
-                if child["modules"][0] != a["modules"][i]:
+                body_key = "target_modules" if c.ecology_version >= 13 else "modules"
+                if child[body_key][0] != a[body_key][i]:
                     self.totals["structural_births"] = self.totals.get("structural_births", 0) + 1
+            if c.ecology_version >= 13:
+                body_event["target_modules"] = int(child["target_modules"][0])
+                self.totals["module_event_births"] += int(body_event["module_event"])
+                key = f"planned_module_births_{body_event['target_modules']}"
+                self.totals[key] = self.totals.get(key, 0) + 1
             self.totals["reproduction"] += float(overhead)
             neural_event = {}
             if c.ecology_version >= 8:
@@ -887,6 +940,7 @@ class EcologyWorld(World):
                     diet=float(child["diet"][0]),
                     **({"modules": int(child["modules"][0])} if c.ecology_version >= 4 else {}),
                     **neural_event,
+                    **body_event,
                 )
             )
             self.next_id += 1
@@ -1000,6 +1054,8 @@ class EcologyWorld(World):
             if c.ecology_version >= 2:
                 self.hunt()
                 self.remove_dead("predation")
+            if c.ecology_version >= 13:
+                grow(self)
             self.reproduce()
             self.tick += 1
             if c.ecology_version >= 5 and self.tick % (c.physics_hz // c.field_hz) == 0:
@@ -1063,6 +1119,16 @@ class EcologyWorld(World):
             result["neuron_histogram"] = torch.bincount(
                 a["neurons"], minlength=c.hidden_size + 1
             ).tolist()
+        if c.ecology_version >= 13:
+            juvenile = a["modules"] < a["target_modules"]
+            result["juvenile_population"] = int(juvenile.sum())
+            result["adult_population"] = n - int(juvenile.sum())
+            result["adult_module_histogram"] = torch.bincount(a["modules"][~juvenile], minlength=4)[
+                1:
+            ].tolist()
+            result["target_module_histogram"] = torch.bincount(a["target_modules"], minlength=4)[
+                1:
+            ].tolist()
         if c.ecology_version >= 9:
             result.update(self.trophic.metrics(self.food_credit, self.food_kind))
         if c.ecology_version >= 10:
@@ -1114,6 +1180,7 @@ class EcologyWorld(World):
             - result["maintenance"]
             - result["propulsion"]
             - result["reproduction"]
+            - result.get("development_cost", 0.0)
             - result["digestion_loss"]
             - result.get("predation_loss", 0.0)
             - result["death_energy"]

@@ -74,6 +74,7 @@ def trial(config, genome, seed, seconds, device, ablation, stop=None):
         trait_mutation_probability=0.0,
         node_mutation_probability=0.0,
         edge_mutation_probability=0.0,
+        module_mutation_probability=0.0,
     )
     world = World(config, seed, device, ablation=ablation)
     world.agents["genome"][0] = genome.to(device)
@@ -209,6 +210,7 @@ def community_assay(run, output, seeds, seconds, device, modes, stop=None):
         trait_mutation_probability=0.0,
         node_mutation_probability=0.0,
         edge_mutation_probability=0.0,
+        module_mutation_probability=0.0,
     )
     if not c.ecology_version:
         raise ValueError("Use evaluate for V0; community assays require V1 or later")

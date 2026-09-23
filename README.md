@@ -66,10 +66,26 @@ A verified 30-second recording is at `runs/v11-video/timelapse.mp4`.
 The experimental [V12 preset](configs/v12.toml) adds heritable exploration and
 learning rates, with acquired motor readouts that respond to food, costs, and
 damage. [The inspector](docs/v12-preview.png) shows these offsets. The rule can
-[learn and reverse a constructed cue–action task](docs/v12-rule.png), but useful
-learning in the dish is still being tested. The first, less constrained version
+[learn and reverse a constructed cue–action task](docs/v12-rule.png), but
+[physical lifetime assays](docs/v12-outcomes-lifetimes.png) found worse average
+intake and reproduction with the tested learning settings. The
+[community comparisons](docs/v12-outcomes-communities.png) also found no consistent
+benefit. The first, less constrained version
 disrupted inherited foraging; it remains in [v12-wide.toml](configs/v12-wide.toml).
 A verified video is at `runs/v12-video/timelapse.mp4`.
+
+The experimental [V13 preset](configs/v13.toml) expresses inherited body plans
+through juvenile growth. Offspring start with one module, pay to grow additional
+encoded modules when energy and space permit, and mature before reproducing.
+New modules receive fresh neural state. This tests a measured barrier in the
+older birth law: single-module parents often could not finance a larger child
+at once. Its preset disables exploratory motor noise following the V12 results;
+recurrent plasticity and evolving neural architecture remain active.
+In three short matched pilots, two-module parents reproduced in two juvenile
+treatments, while fully formed births produced no larger children. The
+[adult](docs/v13-preview.png) and [juvenile](docs/v13-juvenile.png) previews show
+one parent and its offspring; a verified recording is at
+`runs/v13-video/timelapse.mp4`. Longer persistence tests are underway.
 
 ## Start watching
 
