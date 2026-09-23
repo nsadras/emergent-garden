@@ -31,9 +31,11 @@ when motor updates are enabled, and lowers births in all three disabled-update
 controls. All six neutral runs match V19's complete common physical state and
 recorded measurements exactly. The empty-plane circuit diagnostic confirms
 changed routes but no consistent increase in net displacement. All 336 tests,
-Ruff checks, and CPU/CUDA exact replay exercises pass. Thirty-minute extensions
-and matched-genotype learning transplants are in progress, with explicit
-boundaries in the linked result record.
+Ruff checks, and CPU/CUDA exact replay exercises pass. All six extensions are
+complete: learning populations end at 65/181/295, disabled-update populations
+at 0/33/189, with one extinction. All 24 community transplants are complete:
+own-return learning increases births in three of six comparisons against each
+control. The result does not establish reliable adaptive credit assignment.
 
 ## Research sequence
 

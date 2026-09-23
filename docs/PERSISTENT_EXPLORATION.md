@@ -92,11 +92,52 @@ only the versioned configuration, new history tensors, and noise telemetry diffe
 
 The [audit](results/v21-exploration.json) verifies those matches, all founder
 genomes, checkpoint/measurement agreement, birth/death events, carrying limits,
-neural bounds, and energy/resource ledgers. The first persistent noise-only
-continuation became extinct at 1,397.63 seconds; longer follow-ups are still
-running. Fresh-environment assays with matched descendant genomes compare normal,
-disabled, and shuffled motor-learning signals, and are also in progress. Neither
-unfinished batch is included as a completed result in the pilot audit.
+neural bounds, and energy/resource ledgers. All six continuations are complete:
+
+| Persistent exploration / motor updates | Population at 1,800 s (seeds 1 / 2 / 3) | Births | Maximum living generation |
+|---|---|---|---|
+| Enabled | 65 / 181 / 295 | 621 / 1,604 / 2,145 | 27 / 43 / 37 |
+| Disabled | 0 / 33 / 189 | 11 / 257 / 1,374 | — / 10 / 30 |
+
+The first disabled-update start became extinct at 1,397.63 seconds. Independent
+exploration with learning produced 1,727/994/1,563 births in V19's matching
+30-minute continuations: persistent exploration still helps two starts and
+hurts one. Without motor updates, persistence reduces births in every seed
+relative to V19's independent-noise continuations (2,900/1,188/1,832).
+
+## Same-genotype learning comparisons
+
+All 24 fresh-environment transplants are complete. Each of the three learning
+populations at 600 seconds supplies 192 sampled descendant genotypes to two
+new environments, seeds 801/802. The three conditions use identical initial
+genotypes, placement, and exploration streams; mutation is disabled and acquired
+neural state starts empty. Founder references add six of the 24 trials.
+
+| Source / environment | Births with own returns | Motor updates disabled | Shuffled returns | Fresh-food difference, own minus disabled |
+|---|---|---|---|---|
+| 1 / 801 | 274 | 307 | 231 | −4,677 |
+| 1 / 802 | 299 | 267 | 371 | +4,754 |
+| 2 / 801 | 549 | 534 | 577 | +1,498 |
+| 2 / 802 | 547 | 462 | 494 | +3,600 |
+| 3 / 801 | 448 | 493 | 469 | −2,310 |
+| 3 / 802 | 406 | 419 | 396 | +190 |
+
+![Paired descendant learning tests](v21-learning-assays.png)
+
+Own-return learning increases births in **three of six** comparisons against
+disabled updates and **three of six** against shuffled returns. Fresh-food
+uptake increases in four comparisons against disabled updates and two against
+shuffled returns. Thus the apparent advantage in the evolving persistent-noise
+communities does not establish reliable adaptive credit assignment. Changing
+motor dynamics, selection among starting genotypes, and environmental context
+can all affect these community outcomes.
+
+The [transplant audit](results/v21-learning-assays.json) checks all source pools,
+sampled genotypes, disabled mutation, configured mechanisms, complete event
+counts, and energy/resource ledgers. No unfinished V21 follow-up is included in
+these results. These are community interventions, not independent per-creature
+fitness estimates. A shuffled return can still contain population-wide signals,
+and singleton update batches cannot be shuffled.
 
 ## Movement diagnostic
 
@@ -145,6 +186,8 @@ uv run garden run --config configs/v21.toml --seed 3 --view --device cpu \
 uv run python scripts/audit_exploration.py \
   --long-treatments correlated-learning correlated-noise-only
 uv run python scripts/plot_exploration.py
+uv run python scripts/audit_persistent_learning.py
+uv run python scripts/plot_learning_assays.py --version 21
 
 uv run python scripts/probe_exploration_movement.py \
   --sources runs/v21-correlated-learning-pilot/seed-1 \

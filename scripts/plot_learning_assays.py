@@ -1,5 +1,6 @@
 """Plot matched learning transplants, including shuffled returns when audited."""
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -13,8 +14,11 @@ import numpy as np
 
 
 def main():
-    report = json.loads(Path("docs/results/v19-learning-assays.json").read_text())
-    groups = [(source, environment) for source in (1, 2, 3) for environment in (601, 602)]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--version", type=int, choices=(19, 21), default=19)
+    args = parser.parse_args()
+    report = json.loads(Path(f"docs/results/v{args.version}-learning-assays.json").read_text())
+    groups = sorted({(r["source"], r["environment"]) for r in report["trials"]})
     modes = [
         ("none", "Own returns", "#207b91"),
         ("no_motor_learning", "No motor updates", "#969d9e"),
@@ -50,9 +54,9 @@ def main():
         ax.yaxis.grid(alpha=0.15)
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="outside lower center", ncols=len(modes), frameon=False)
-    fig.suptitle("V19: paired tests of within-lifetime motor learning", fontsize=15)
-    fig.savefig("docs/v19-learning-assays.png", dpi=150)
-    svg = Path("docs/v19-learning-assays.svg")
+    fig.suptitle(f"V{args.version}: paired tests of within-lifetime motor learning", fontsize=15)
+    fig.savefig(f"docs/v{args.version}-learning-assays.png", dpi=150)
+    svg = Path(f"docs/v{args.version}-learning-assays.svg")
     fig.savefig(svg)
     svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
 

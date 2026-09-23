@@ -24,11 +24,16 @@ but finds no consistent net-displacement improvement. All 336 tests, Ruff
 checks, and separate CPU/CUDA exact replay exercises pass. The three inspector
 tabs fit 640–1,024-pixel heights.
 
-Both persistent-noise groups are being continued to 1,800 seconds for every
-seed. The first noise-only start became extinct at 1,397.63 seconds. Matched
-descendant transplants into seeds 801/802 compare own, disabled, and shuffled
-motor-learning signals with mutation disabled. These follow-ups remain in
-progress and are not represented as completed evidence in the pilot audit.
+Both persistent-noise continuation groups are complete: learning produced
+populations 65/181/295 and births 621/1,604/2,145; without motor updates the
+populations were 0/33/189 and births 11/257/1,374. The first noise-only start
+became extinct at 1,397.63 seconds. All 24 matched community transplants into
+seeds 801/802 are complete. Own-return learning produced more births in three
+of six comparisons against disabled motor updates and three of six against
+shuffled returns. Fresh-food uptake improved in four and two comparisons,
+respectively. Mutation was disabled and starting descendant genomes matched.
+Effects remain conditional; reliable adaptive credit assignment is unestablished.
+The V21 record now has no unfinished experimental follow-ups.
 Keep the research loop active and preserve the user's `configs/v16.toml` edits.
 
 ## V20: sensory reach and a learning control

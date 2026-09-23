@@ -23,7 +23,8 @@ increase, while reproduction remains dependent on the start.
 with a matching conditional learning rule. Twelve paired pilots show mixed
 ecological effects; persistent noise alone reduces births in all three starts.
 The movement diagnostic shows changed routes, without a consistent increase in
-net travel. Longer and same-genotype learning comparisons are in progress.
+net travel. All six longer runs and 24 learning transplants are complete;
+matched descendant tests show mixed effects and no reliable learning advantage.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 

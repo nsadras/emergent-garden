@@ -2,8 +2,9 @@
 
 Status: implemented as V21. All 336 tests, CPU/CUDA replay exercises, and 12
 matched 600-second ecological comparisons pass their mechanical/accounting
-checks. Ecological effects are mixed. See [the result record](PERSISTENT_EXPLORATION.md)
-for measurements and the explicit status of longer and same-genotype follow-ups.
+checks. All six continuations and 24 community transplants are complete.
+Ecological and learning effects remain mixed. See
+[the result record](PERSISTENT_EXPLORATION.md) for measurements and limitations.
 
 The present motor rule draws independent noise every controller update (10 Hz
 in the research presets). Much of that variation can cancel before it changes a
