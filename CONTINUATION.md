@@ -1515,3 +1515,34 @@ at window heights 256, 640, 768, 984, and 1024; header font bounds do not overla
 The [preview](docs/energy-threshold.png) uses the V16 seed-1 UI fork at 150.1 seconds,
 creature 72, matching the earlier source preview. This is a display refinement;
 simulation mechanics and the paused research loop are unchanged.
+
+## Sortable living-creature leaderboard
+
+The sidebar now switches between the inspector and a live leaderboard using `L`
+or the panel buttons. Column headers sort lifetime, generation, cumulative food
+energy absorbed, offspring, stored energy, distance traveled, and creature ID.
+Clicking the active header reverses the direction; ties resolve by ID. Food is
+absorbed energy from fresh food, detritus, and prey, excluding initial energy.
+Existing counters also cover activity before a resumed checkpoint. The table
+lists living creatures, so deaths remove rows.
+
+Clicking a row selects its permanent ID, centers the camera, and opens the
+inspector. A stale click on a creature that has died is ignored. Dish selection
+also opens the inspector when the sidebar is visible. The table preserves its
+sort and page while inspecting, clamps pages when the population shrinks, and
+uses Previous/Next, Page Up/Down, or the wheel over the panel for navigation.
+The wheel over the dish still zooms. Layout scales for small windows without a
+scrollbar.
+
+All 80 relevant observation, leaderboard, runtime, field-storage, and resource
+tests pass. Sixteen new cases cover sorting, checkpoint counters, selection
+after population compaction, stale clicks, empty populations, pagination, input
+routing, and scaled controls. Existing complete-trajectory tests now draw the
+leaderboard too, including shuffled sensing and V16 resource replay. Ruff checks
+pass. Manual checks cover all panels at heights 256/640/768/984/1024.
+
+The [preview](docs/leaderboard.png) uses the archived V16 seed-2 native-run
+configuration at 80.1 simulated seconds, with 46 living creatures, seven births,
+and creature 123 selected. It is a UI check, not an ecology comparison. Its
+layout record is at `runs/leaderboard-preview/verification.json`. User edits to
+`configs/v16.toml` are separate from this change. The research loop remains paused.

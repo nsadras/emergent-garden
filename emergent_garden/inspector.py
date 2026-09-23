@@ -58,6 +58,8 @@ class Inspector:
         for rect, action in self.buttons:
             if rect.collidepoint(point):
                 kind, value = action
+                if kind == "view":
+                    return action
                 setattr(self, kind, value)
                 return
         for identifier, pos in self.nodes:
@@ -76,6 +78,7 @@ class Inspector:
         self.buttons, self.nodes = [], []
         pygame.draw.line(self.surface, (45, 74, 84), (0, 0), (0, self.surface.get_height()), 2)
         self.text("CONTROLLER OBSERVATORY", (22, 20), POSITIVE, self.title)
+        self.button("Leaderboard  L", (460, 94, 136, 28), ("view", "leaderboard"))
         if selected is None:
             self.text("Click a creature in the dish to inspect it.", (22, 74), TEXT, self.font)
             lines = (
@@ -86,13 +89,13 @@ class Inspector:
                 "T   trails: all / selected / off         [ / ]   trail duration",
                 "G   follow the selected creature      M   next body module",
                 "Space   pause / resume                  N   advance one controller interval",
-                "B   hide / show this panel               Details   diagnostics and legend",
+                "B   hide / show this panel               L   creature leaderboard",
                 "",
                 "Trails fade in simulated seconds. Pausing freezes them.",
                 "New selections show their first sample on the next controller update.",
             )
             for j, line in enumerate(lines):
-                self.text(line, (22, 118 + 27 * j), MUTED)
+                self.text(line, (22, 136 + 27 * j), MUTED)
             self.content_height = 440
         else:
             self.content_height = self.draw_selected(world, selected, observer, following)

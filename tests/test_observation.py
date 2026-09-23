@@ -192,6 +192,7 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
     from emergent_garden.inspector import Inspector
+    from emergent_garden.leaderboard import Leaderboard
     from emergent_garden.viewer import Renderer
 
     w = create_world(replace(config, ecology_version=version, initial_food=8), ablation=ablation)
@@ -199,6 +200,7 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
     observer = w.controller_observer = ControllerObserver()
     observer.select(0)
     renderer, panel = Renderer(256), Inspector()
+    leaderboard = Leaderboard()
     renderer.selected = 0
     renderer.observe(w)
     for j in range(25):
@@ -207,6 +209,7 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
         renderer.observe(w)
         if j % 5 == 0:
             renderer.draw(w)
+            leaderboard.draw(w, 0, 800)
             for tab in ("brain", "body"):
                 panel.tab = tab
                 panel.draw(w, 0, observer, 800)

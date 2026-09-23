@@ -8,7 +8,8 @@ energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
 The current release is **V16 / package 0.17.0**. Bounded follow-ups add the live
-inspector, an energy bar with a birth-threshold marker, and dynamic food sources.
+inspector, a sortable creature leaderboard, an energy bar with a birth-threshold
+marker, and dynamic food sources.
 The autonomous research loop remains paused after the V15 wrap-up. See
 [HANDOFF.md](HANDOFF.md) for completed findings, interrupted experiments,
 verification, and commands to continue later.
@@ -194,8 +195,9 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | `N` while paused | Advance one controller interval using the usual physics ticks |
 | `+` / `-` | Increase/decrease simulation speed |
 | Mouse wheel over the dish | Zoom, up to 8x |
+| Mouse wheel over the leaderboard / Page Up / Page Down | Change leaderboard page |
 | Right-drag | Pan |
-| Left-click | Select a creature; click a hidden neuron in the inspector to inspect its links |
+| Left-click | Select a creature in the dish or leaderboard; click a hidden neuron in the inspector to inspect its links |
 | `T` | Cycle fading trails: all creatures, selected creature, off |
 | `[` / `]` | Change trail duration: 10, 30, or 120 simulated seconds |
 | `G` | Follow the selected creature |
@@ -204,7 +206,9 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | Tab | Cycle resource, organism, forecast, secretion, patch-identity, shelter, and V16 fertility fields |
 | `P` | Toggle V16 food-source outlines and center marks |
 | `C` | Switch between inherited diet and lineage colors |
-| `B` | Hide/show the inspector sidebar |
+| `B` | Hide/show the sidebar |
+| `L` / Leaderboard or Inspector button | Switch between the leaderboard and creature inspector; `L` opens the leaderboard if the sidebar is hidden |
+| Leaderboard column headers | Sort by that statistic; click again to reverse the order |
 | Brain / Body / Details buttons | Switch between the network, morphology/weight maps, and diagnostics |
 | `R` | Restore the initial close view and stop following |
 | Home | Center and fit the entire circular dish |
@@ -223,6 +227,22 @@ at 5 Hz of **simulated time**, and freeze when paused. They also appear in new
 recordings. History starts when the viewer/recorder opens; checkpoints do not
 contain old trails. A dead creature's trail fades normally, and its last inspected
 controller sample remains available until another creature is selected.
+
+The **Leaderboard** lists living creatures and updates as the simulation runs.
+Sort by lifetime (age in simulated seconds), generation, food energy absorbed,
+children born, current stored energy, distance traveled, or creature ID. **Food**
+is cumulative energy absorbed from fresh food, detritus, and prey over that
+creature's lifetime; it excludes starting energy and measures energy gained,
+rather than the number of particles eaten. **Distance** uses world units. These
+counters come from the simulation and include activity before a checkpoint was
+loaded. Dead creatures leave the table.
+
+Click a row to select that creature, center the camera on it, and open its
+inspector; `G` follows it. Press `L` to return to the table with the same sort and
+page. Click headers to switch between highest and lowest first; ties use creature
+ID. Previous/Next buttons, Page Up/Down, or the mouse wheel over the table change
+pages. The table fits the panel without a scrollbar, including smaller windows.
+Space pauses it along with the simulation. See the [leaderboard preview](docs/leaderboard.png).
 
 Selecting a living creature shows one **Energy** bar beside its name on every
 inspector tab. It fills according to stored energy / capacity, with amber below

@@ -138,6 +138,7 @@ def test_fertility_rejection_creates_no_food_or_energy(config):
 def test_resource_replay_and_rendering_preserve_complete_state(config, tmp_path, monkeypatch):
     monkeypatch.setenv("SDL_VIDEODRIVER", "dummy")
     from emergent_garden.inspector import Inspector
+    from emergent_garden.leaderboard import Leaderboard
     from emergent_garden.observation import ControllerObserver
     from emergent_garden.viewer import Renderer
 
@@ -149,6 +150,7 @@ def test_resource_replay_and_rendering_preserve_complete_state(config, tmp_path,
     observer = w.controller_observer = ControllerObserver()
     observer.select(0)
     renderer, inspector = Renderer(256), Inspector()
+    leaderboard = Leaderboard()
     for tick in range(120):
         w.step()
         replay.step()
@@ -156,6 +158,7 @@ def test_resource_replay_and_rendering_preserve_complete_state(config, tmp_path,
             renderer.field_index = tick // 15 + 1
             renderer.draw(w)
             inspector.draw(w, 0, observer, 640)
+            leaderboard.draw(w, 0, 640)
     assert_same(w.state_dict(), replay.state_dict())
     assert w.resources.fertility_rejected > 0
     assert w.resources.distance > 0 and w.resources.recovered > 0

@@ -12,6 +12,7 @@ import numpy as np
 import pygame
 
 from .inspector import Inspector
+from .leaderboard import Leaderboard
 from .observation import ControllerObserver, TrailHistory, array
 
 
@@ -349,7 +350,8 @@ class Renderer:
                 "Wheel  zoom   |   Right-drag  pan",
                 "Click  select   |   G  follow",
                 f"T  trails: {self.trail_mode}   |   [ / ]  {self.trail_seconds}s",
-                "B  inspector   |   M  module",
+                "B  sidebar   |   L  leaderboard",
+                "M  body module",
                 "F  field   |   Tab  channel",
                 "C  colors   |   R  reset camera",
                 "Home  whole-dish overview",
@@ -379,6 +381,8 @@ class Viewer(Renderer):
         super().__init__(size)
         self.zoom = self.default_zoom
         self.inspector = Inspector()
+        self.leaderboard = Leaderboard()
+        self.sidebar_view = "inspector"
         self.observer = ControllerObserver()
         self.observed_world = None
         self.show_brain = True
@@ -432,6 +436,26 @@ class Viewer(Renderer):
                 world.agents["modules"][match[0]]
             )
 
+    def select_creature(self, world, identifier, center=False):
+        if identifier is not None:
+            match = (world.agents["id"] == identifier).nonzero().flatten()
+            if not len(match):
+                return False
+            if center:
+                self.center = array(world.agents["pos"][match[0]])
+        self.selected = identifier
+        if identifier != self.inspector.identifier:
+            self.inspector.module = 0
+            self.inspector.identifier = identifier
+        self.observer.select(identifier)
+        return True
+
+    def show_sidebar(self, view):
+        self.sidebar_view = view
+        if not self.show_brain:
+            self.show_brain = True
+            self.resize(self.size + Inspector.width, self.size)
+
     def events(self, world):
         self.observe(world)
         for event in pygame.event.get():
@@ -451,6 +475,15 @@ class Viewer(Renderer):
                 elif event.key == pygame.K_b:
                     self.show_brain = not self.show_brain
                     self.resize(self.size + (Inspector.width if self.show_brain else 0), self.size)
+                elif event.key == pygame.K_l:
+                    self.show_sidebar(
+                        "inspector"
+                        if self.show_brain and self.sidebar_view == "leaderboard"
+                        else "leaderboard"
+                    )
+                elif event.key in (pygame.K_PAGEUP, pygame.K_PAGEDOWN):
+                    if self.show_brain and self.sidebar_view == "leaderboard":
+                        self.leaderboard.turn_page(-1 if event.key == pygame.K_PAGEUP else 1)
                 elif event.key == pygame.K_t:
                     modes = ("all", "selected", "off")
                     self.trail_mode = modes[(modes.index(self.trail_mode) + 1) % len(modes)]
@@ -483,12 +516,27 @@ class Viewer(Renderer):
             elif event.type == pygame.MOUSEWHEEL:
                 if not self.show_brain or pygame.mouse.get_pos()[0] < self.size:
                     self.zoom = min(8, max(1, self.zoom * 1.25**event.y))
+                elif self.sidebar_view == "leaderboard":
+                    self.leaderboard.turn_page(-event.y)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.show_brain and event.pos[0] >= self.size:
                     if event.button == 1:
-                        self.inspector.click((event.pos[0] - self.size, event.pos[1]))
+                        panel = (
+                            self.leaderboard
+                            if self.sidebar_view == "leaderboard"
+                            else self.inspector
+                        )
+                        action = panel.click((event.pos[0] - self.size, event.pos[1]))
+                        if action is not None:
+                            kind, value = action
+                            if kind == "view":
+                                self.show_sidebar(value)
+                            elif kind == "select" and self.select_creature(
+                                world, value, center=True
+                            ):
+                                self.show_sidebar("inspector")
                 elif event.button == 1:
-                    self.selected = None
+                    identifier = None
                     if world.population:
                         positions, scale = self.transform(
                             world.agents["pos"].cpu().numpy(), world.config.diameter
@@ -505,11 +553,10 @@ class Viewer(Renderer):
                         candidates = np.flatnonzero(distances <= thresholds)
                         if len(candidates):
                             index = candidates[np.argmin(distances[candidates])]
-                            self.selected = int(world.agents["id"][index])
-                    if self.selected != self.inspector.identifier:
-                        self.inspector.module = 0
-                        self.inspector.identifier = self.selected
-                    self.observer.select(self.selected)
+                            identifier = int(world.agents["id"][index])
+                    self.select_creature(world, identifier)
+                    if identifier is not None and self.show_brain:
+                        self.show_sidebar("inspector")
                 elif event.button == 3:
                     self.drag = event.pos
                     self.following = False
@@ -532,9 +579,12 @@ class Viewer(Renderer):
         self.draw(world, state)
         self.window.blit(self.surface, (0, 0))
         if self.show_brain:
-            panel = self.inspector.draw(
-                world, self.selected, self.observer, self.size, self.following
-            )
+            if self.sidebar_view == "leaderboard":
+                panel = self.leaderboard.draw(world, self.selected, self.size)
+            else:
+                panel = self.inspector.draw(
+                    world, self.selected, self.observer, self.size, self.following
+                )
             self.window.blit(panel, (self.size, 0))
         pygame.display.flip()
 

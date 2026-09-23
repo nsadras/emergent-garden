@@ -53,6 +53,16 @@ birth: child funding and placement are checked after mutation at the real attemp
 The bar fits on every tab without scrolling. See the
 [preview](docs/energy-threshold.png).
 
+The sidebar also has a live **Leaderboard** (`L` or its button). Column headers
+sort living creatures by lifetime, generation, cumulative food energy absorbed,
+offspring, stored energy, distance traveled, or ID. Food includes fresh food,
+detritus, and prey; it excludes birth energy. Existing lifetime counters work
+immediately on checkpoint resume. Dead creatures leave the list. Pages adapt to
+the window, with Previous/Next, Page Up/Down, and wheel navigation over the table.
+Clicking a row centers the creature and opens its inspector; `L` returns to the
+same sort/page. Selection uses the ID displayed in the row and ignores a click
+if that creature has since died. See the [preview](docs/leaderboard.png).
+
 At the user's request, `configs/v15.toml` lowers the parent-area birth threshold
 from 220 to 150 and the child-area base debit from 120 to 110; neural construction
 is still charged, and newborn energy remains 100 per child area. The unchanged
