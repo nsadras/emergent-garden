@@ -91,6 +91,13 @@ class Config:
     patches: int = 8
     patch_radius: float = 48.0
     patch_period: float = 120.0
+    patch_aspect_ratio: float = 1.0
+    patch_irregularity: float = 0.0
+    patch_drift_speed: float = 0.0
+    patch_drift_turn_time: float = 60.0
+    fertility_grid_size: int = 64
+    fertility_capacity_per_area: float = 0.0  # Zero disables depletion.
+    fertility_recovery_time: float = 120.0
     grid_size: int = 512
     smell_sigma: float = 24.0
     smell_cutoff: float = 72.0
@@ -139,15 +146,33 @@ class Config:
             "plasticity_limit plasticity_trace_tau "
             "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate "
             "motor_learning_limit motor_trace_tau motor_baseline_tau "
-            "motor_half_life growth_reserve growth_delay growth_retry internal_tau"
+            "motor_half_life growth_reserve growth_delay growth_retry internal_tau "
+            "patch_aspect_ratio patch_drift_turn_time fertility_recovery_time"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(16):
+        if self.ecology_version not in range(17):
             raise ValueError("Unsupported ecology version")
+        if self.patch_aspect_ratio < 1 or not 0 <= self.patch_irregularity <= 1:
+            raise ValueError("Require patch_aspect_ratio >= 1 and patch_irregularity in [0, 1]")
+        if self.fertility_grid_size < 8:
+            raise ValueError("fertility_grid_size must be at least 8")
+        if self.ecology_version < 16 and (
+            self.patch_aspect_ratio != 1
+            or self.patch_irregularity
+            or self.patch_drift_speed
+            or self.fertility_capacity_per_area
+        ):
+            raise ValueError("Dynamic resource settings require ecology_version >= 16")
+        if self.fertility_capacity_per_area and (
+            self.fertility_capacity_per_area * (self.diameter / self.fertility_grid_size) ** 2
+            <= self.food_energy
+        ):
+            # Exponential recovery approaches full capacity asymptotically.
+            raise ValueError("Each fertility cell must hold more than one food particle's energy")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
         if not 0 <= self.detritus_fraction < 1 or not 0 <= self.trait_mutation_probability <= 1:
@@ -198,7 +223,7 @@ class Config:
             raise ValueError("Largest inherited body must fit in the dish")
         if self.detritus_delay >= self.detritus_lifetime:
             raise ValueError("Detritus must mature before it expires")
-        if self.patch_radius + self.food_radius >= self.diameter / 2:
+        if self.patch_extent + self.food_radius >= self.diameter / 2:
             raise ValueError("Food patches must fit in the dish")
         if self.grid_size < 8 or self.viewer_size < 128 or self.viewer_size % 2:
             raise ValueError("grid_size >= 8; viewer_size must be even and >= 128")
@@ -294,6 +319,11 @@ class Config:
     @property
     def max_body_radius(self):
         return self.body_radius * (3.9 if self.ecology_version >= 4 else 1.3)
+
+    @property
+    def patch_extent(self):
+        # Conservative bound for an area-preserving ellipse plus a sinusoidal shear.
+        return self.patch_radius * (math.sqrt(self.patch_aspect_ratio) + self.patch_irregularity)
 
     @classmethod
     def from_dict(cls, data):

@@ -1454,3 +1454,49 @@ purity tests exercise both bars and still match complete unobserved trajectories
 All tabs fit at 640/768/984/1024 pixels, with no overflowing text. The new
 [preview](docs/reproduction-readiness.png) shows fresh seed 1, creature 13, at
 30.1 seconds; it is a separate UI check, not an additional ecology replicate.
+
+## V16: irregular, drifting sources and local recovery — package 0.17.0
+
+The next bounded user request adds three resource mechanisms and records simple
+producers as a possible later step. The autonomous research loop remains paused.
+The [design guide](docs/DYNAMIC_RESOURCES.md) specifies the rules and tuning values.
+
+Each source uses an area-preserving ellipse and sinusoidal shear, with independently
+sampled orientation and signed bend. Its center moves at 0.5 units/s, with unbiased
+heading diffusion and reflections at an inset that keeps its entire shape inside
+the world. Existing particles stay put; source stock still includes their remaining
+food even after the source moves away. Forecast and identity fields move with the
+sources; shelter and the fertility grid remain fixed in world coordinates.
+
+The 64-by-64 production grid holds two energy units per square world unit, or 128
+per default cell. Only accepted fresh-food particles spend reserve. Deficits recover
+exponentially with a 120-second time constant. Proposals rejected by source caps or
+insufficient fertility create no food and carry no budget into a later batch. The
+production ledger is audited separately from edible and trophic energy. Drift,
+shapes, fertility, counters, and the dedicated resource RNG are checkpointed.
+
+The V16 preset preserves V15's easier reproduction, controller architecture, and
+inheritance. Neutral resource settings match V15's trajectory in a test. A separate
+archived-source check also matched a saved V15 world's complete continuation over
+60 ticks, apart from the newly present inactive configuration defaults.
+
+Fresh 600-second CPU starts at seeds 1/2/3 produced 13/30/12 births, ending with
+6/4/5 creatures and living generations 2/6/4. The previous easier V15 preset gave
+3/19/3 births and populations 3/11/1 at the same seeds. Founder genomes match.
+These are combined-environment startup checks: actual food supply and the source
+placement inset differ, so they do not isolate shape, drift, or depletion effects.
+They establish neither reliable long-term persistence nor improved food tracking.
+See the [audit](docs/results/v16-resources.json) for full scope and measurements.
+
+All 253 tests passed, including 20 resource cases. Validation requires a cell's
+capacity to exceed one particle because exponential recovery approaches its
+maximum asymptotically. Ruff checks pass. CPU and RTX 5080 mechanics checks each passed
+exact replay, including four births and six/ten growth events respectively.
+The 120-second seed-1 recording contains 901 verified frames at 1,024 by 1,024,
+30 FPS, and 4x playback. The source and fertility screenshots follow that run
+to 150.1 seconds and are an illustration, not another ecological replicate.
+
+**Possible later step:** plant-like producers could consume fertility to grow
+edible biomass and spread locally, replacing some automatic spawning. Their
+growth, offspring, and recycling should retain explicit resource costs. Producer
+organisms are documented only and are not implemented in V16.

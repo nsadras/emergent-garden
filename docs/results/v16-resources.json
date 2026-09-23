@@ -1,0 +1,233 @@
+{
+  "date": "2026-09-23",
+  "ecology_version": 16,
+  "package_version": "0.17.0",
+  "preset": "configs/v16.toml",
+  "preset_sha256": "623ad228e231ba5460ab73b5ec02aff94e0afaa95023e3ecfd81d5efba63156e",
+  "command": "uv run garden calibrate --config configs/v16.toml --seeds 1 2 3 --seconds 600 --device cpu --output runs/v16-resources-native",
+  "device": "cpu",
+  "torch_threads": 1,
+  "horizon_seconds": 600,
+  "results": [
+    {
+      "seed": 1,
+      "time": 600.0,
+      "population": 6,
+      "births": 13,
+      "deaths": 199,
+      "growths": 15,
+      "generation_max": 2,
+      "food_spawn_proposals": 15039,
+      "food_spawned": 233520.0,
+      "food_rejected_capacity": 1890,
+      "food_rejected_fertility": 1473,
+      "fertility_mean_fraction": 0.8900213432111641,
+      "fertility_depleted_fraction": 0.007125154894671623,
+      "fertility_spent": 233520.0,
+      "fertility_recovered": 188078.57867336174,
+      "source_travel": 2398.7535328408703,
+      "source_mean_displacement": 131.14060974121094,
+      "energy_balance_error": -0.004001203411462484,
+      "fertility_balance_error": 1.7462298274040222e-10,
+      "path": "runs/v16-resources-native/seed-1",
+      "first_birth_time": 232.03333333333333,
+      "paired_v15_founder_genomes_bitwise_equal": true,
+      "previous_v15": {
+        "population": 3,
+        "births": 3,
+        "food_spawned": 235760.0
+      },
+      "source_sha256": "b6903ffbacf71e6ae897f086b748daa683e1b2c857cdd3b551074987ccaf09b0",
+      "source_revision": "6b6ee67e49e188b6c15c9df4e13c2b3ae3a18128",
+      "source_dirty": true,
+      "proposal_and_fertility_ledgers_reconciled_at_every_metric": true,
+      "max_abs_fertility_balance_error": 4.656612873077393e-10,
+      "max_abs_energy_balance_error": 0.0053844069352635415
+    },
+    {
+      "seed": 2,
+      "time": 600.0,
+      "population": 4,
+      "births": 30,
+      "deaths": 218,
+      "growths": 9,
+      "generation_max": 6,
+      "food_spawn_proposals": 15039,
+      "food_spawned": 238020.0,
+      "food_rejected_capacity": 2284,
+      "food_rejected_fertility": 854,
+      "fertility_mean_fraction": 0.8960164556404945,
+      "fertility_depleted_fraction": 0.0012391573729863693,
+      "fertility_spent": 238020.0,
+      "fertility_recovered": 195055.66320736258,
+      "source_travel": 2399.174088127911,
+      "source_mean_displacement": 160.60130310058594,
+      "energy_balance_error": -0.012095533526007785,
+      "fertility_balance_error": 5.820766091346741e-10,
+      "path": "runs/v16-resources-native/seed-2",
+      "first_birth_time": 5.433333333333334,
+      "paired_v15_founder_genomes_bitwise_equal": true,
+      "previous_v15": {
+        "population": 11,
+        "births": 19,
+        "food_spawned": 252940.0
+      },
+      "source_sha256": "b6903ffbacf71e6ae897f086b748daa683e1b2c857cdd3b551074987ccaf09b0",
+      "source_revision": "6b6ee67e49e188b6c15c9df4e13c2b3ae3a18128",
+      "source_dirty": true,
+      "proposal_and_fertility_ledgers_reconciled_at_every_metric": true,
+      "max_abs_fertility_balance_error": 6.402842700481415e-10,
+      "max_abs_energy_balance_error": 0.012095533526007785
+    },
+    {
+      "seed": 3,
+      "time": 600.0,
+      "population": 5,
+      "births": 12,
+      "deaths": 199,
+      "growths": 11,
+      "generation_max": 4,
+      "food_spawn_proposals": 15039,
+      "food_spawned": 237220.0,
+      "food_rejected_capacity": 2619,
+      "food_rejected_fertility": 559,
+      "fertility_mean_fraction": 0.8974537323327242,
+      "fertility_depleted_fraction": 0.0034076827757125155,
+      "fertility_spent": 237220.0,
+      "fertility_recovered": 194849.52294016382,
+      "source_travel": 2399.0530980341136,
+      "source_mean_displacement": 107.8697280883789,
+      "energy_balance_error": 0.019151868513290538,
+      "fertility_balance_error": -4.656612873077393e-10,
+      "path": "runs/v16-resources-native/seed-3",
+      "first_birth_time": 16.233333333333334,
+      "paired_v15_founder_genomes_bitwise_equal": true,
+      "previous_v15": {
+        "population": 1,
+        "births": 3,
+        "food_spawned": 233300.0
+      },
+      "source_sha256": "b6903ffbacf71e6ae897f086b748daa683e1b2c857cdd3b551074987ccaf09b0",
+      "source_revision": "6b6ee67e49e188b6c15c9df4e13c2b3ae3a18128",
+      "source_dirty": true,
+      "proposal_and_fertility_ledgers_reconciled_at_every_metric": true,
+      "max_abs_fertility_balance_error": 5.820766091346741e-10,
+      "max_abs_energy_balance_error": 0.01979750272948877
+    }
+  ],
+  "interpretation": "Combined-environment startup check only. Founder genomes match the earlier V15 live-preset runs, but source placement inset, shapes, motion, depletion, and actual food supply differ. Small surviving populations do not establish long-term persistence, useful learning, better tracking, or the cause of circling.",
+  "verification": {
+    "full_tests_passed": 253,
+    "resource_test_cases": 20,
+    "ruff_lint_and_format": "passed",
+    "legacy_replay": {
+      "source_archive": "runs/v15-birth-readiness-easier/seed-1/source.zip",
+      "checkpoint": "runs/v15-birth-readiness-easier/seed-1/latest.pt",
+      "physics_ticks": 60,
+      "complete_legacy_state_bitwise_equal": true,
+      "new_inactive_config_defaults": [
+        "fertility_capacity_per_area",
+        "fertility_grid_size",
+        "fertility_recovery_time",
+        "patch_aspect_ratio",
+        "patch_drift_speed",
+        "patch_drift_turn_time",
+        "patch_irregularity"
+      ]
+    },
+    "preview": {
+      "time": 150.1,
+      "selected": 72,
+      "population": 12,
+      "births": 0,
+      "layout": [
+        {
+          "height": 640,
+          "tab": "brain",
+          "content_height": 640
+        },
+        {
+          "height": 640,
+          "tab": "body",
+          "content_height": 640
+        },
+        {
+          "height": 640,
+          "tab": "details",
+          "content_height": 567
+        },
+        {
+          "height": 768,
+          "tab": "brain",
+          "content_height": 768
+        },
+        {
+          "height": 768,
+          "tab": "body",
+          "content_height": 722
+        },
+        {
+          "height": 768,
+          "tab": "details",
+          "content_height": 567
+        },
+        {
+          "height": 984,
+          "tab": "brain",
+          "content_height": 906
+        },
+        {
+          "height": 984,
+          "tab": "body",
+          "content_height": 722
+        },
+        {
+          "height": 984,
+          "tab": "details",
+          "content_height": 567
+        },
+        {
+          "height": 1024,
+          "tab": "brain",
+          "content_height": 906
+        },
+        {
+          "height": 1024,
+          "tab": "body",
+          "content_height": 722
+        },
+        {
+          "height": 1024,
+          "tab": "details",
+          "content_height": 567
+        }
+      ],
+      "video": {
+        "path": "runs/v16-resources-preview/timelapse.mp4",
+        "frames": 901,
+        "size": [
+          1024,
+          1024
+        ],
+        "fps": 30.0,
+        "all_frames_decoded": true,
+        "simulated_seconds": 120,
+        "playback_speed": 4
+      }
+    },
+    "cpu": {
+      "report": "docs/results/v16-cpu-resources.json",
+      "replay_passed": true,
+      "tensor_absolute_tolerance": 0.0,
+      "births": 4,
+      "growths": 6
+    },
+    "cuda": {
+      "report": "docs/results/v16-cuda-resources.json",
+      "replay_passed": true,
+      "tensor_absolute_tolerance": 0.0,
+      "births": 4,
+      "growths": 10
+    }
+  }
+}

@@ -46,6 +46,7 @@ def main():
         initial_food=40,
         patch_radius=12.0,
         grid_size=32,
+        fertility_grid_size=16,  # Keep production cells 8 units wide in the small fixture.
         smell_sigma=8.0,
         smell_cutoff=24.0,
         quality_period=0.2,
@@ -112,8 +113,21 @@ def main():
             )
     if c.ecology_version >= 10:
         torch.testing.assert_close(w.shelter_indices, replay.shelter_indices, rtol=0, atol=0)
+    if c.ecology_version >= 16:
+        torch.testing.assert_close(w.patch_positions, replay.patch_positions, rtol=0, atol=0)
+        for key, original in w.resources.state_dict().items():
+            resumed = replay.resources.state_dict()[key]
+            if isinstance(original, torch.Tensor):
+                torch.testing.assert_close(original, resumed, rtol=0, atol=0)
+            else:
+                assert original == resumed, key
     metric = w.metrics()
     assert abs(metric["energy_balance_error"]) < 0.01
+    if c.ecology_version >= 16:
+        assert abs(metric["fertility_balance_error"]) < 1e-8
+        assert metric["source_travel"] > 0
+        assert metric["fertility_recovered"] > 0
+        assert metric["fertility_spent"] == metric["food_spawned"]
     if c.ecology_version >= 7:
         assert metric["mean_plastic_magnitude"] > 0
     if c.ecology_version >= 9:

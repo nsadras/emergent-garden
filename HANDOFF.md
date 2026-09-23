@@ -1,12 +1,35 @@
-# Development handoff — V15
+# Development handoff — V16
 
 Autonomous ecology development was paused at the user's request on
 **September 22, 2026**, and its experiment processes were stopped. Bounded
-interface and reproduction-preset updates followed on September 23; the
-autonomous research loop remains paused.
-The current code is **V15 / package 0.16.1**. Python and dependencies remain
+interface, reproduction-preset, and dynamic-resource updates followed on
+September 23; the autonomous research loop remains paused.
+The current code is **V16 / package 0.17.0**. Python and dependencies remain
 managed with **uv**. The detailed design and
 experiment history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V16 dynamic resources
+
+`configs/v16.toml` adds equal-area warped ellipses (aspect ratio 2, maximum bend
+0.35), source drift at 0.5 units/s with independent wandering headings, and a
+fixed 64-by-64 fertility grid. Cells hold 128 energy at the default world size,
+spend 20 per accepted fresh-food particle, and recover with a 120-second time
+constant. Existing food and shelter do not move. Forecast and identity fields
+follow source centers. Neither fertility nor source geometry adds neural inputs.
+
+Press `P` for source outlines and use Tab to reach fertility. The
+[design and parameter guide](docs/DYNAMIC_RESOURCES.md) includes previews,
+compatibility, and **simple producers as a possible later step**. Launch with
+`uv run garden run --config configs/v16.toml --seed 2 --view --device cpu --seconds 0`.
+Old presets and resumed checkpoints retain their previous rules.
+
+Three 600-second CPU starts produced 13/30/12 births and final populations 6/4/5
+at seeds 1/2/3. First births were at 232.03/5.43/16.23 seconds. This verifies that
+the combined environment can support reproduction in these starts, not reliable
+persistence, better learning, or a causal explanation of circling. The
+[audit](docs/results/v16-resources.json) retains comparison and accounting data.
+The first 120 seconds of seed 1 are recorded at
+`runs/v16-resources-preview/timelapse.mp4`; all 901 frames decoded correctly.
 
 ## September 23 interface and reproduction update
 
@@ -53,7 +76,7 @@ See [controls and interpretation](README.md), [preview](docs/viewer.png), and
 `uv run garden run --config configs/v15.toml --view --device cpu --seconds 0`,
 or use `--resume` with a saved checkpoint instead of `--config`.
 
-## What this iteration adds
+## What the V15 research iteration added
 
 - Four inherited, signed coefficients let evolution vary the local recurrent
   plasticity rule. Updates stay bounded, and offspring inherit the rule with
@@ -94,8 +117,14 @@ The [complete histories](docs/results/v15-assembled-271.json) and
 
 ## Verification
 
-All **233 tests pass**. Ruff lint and formatting checks pass. The interface's
-22 new cases cover exact controller samples, modular state, scripted controllers,
+All **253 tests pass**, including 20 resource cases. Ruff lint and formatting
+checks pass. V16 covers shape area and boundaries, stationary food and
+shelter, per-cell funding, recovery, rejection accounting, exact replay, observer
+purity, legacy parity, and viewer controls. Separate CPU and RTX 5080 exercises
+passed exact replay through births, growth, and resource changes. A saved V15 run
+also matched its archived code's 60-tick continuation bit for bit.
+
+The interface's 22 cases cover exact controller samples, modular state, scripted controllers,
 trail timing/identity/bounds, selection/resize, and complete trajectory equality.
 Six further cases check birth eligibility across versions, separate storage and
 birth scales, maturity, growth, cooldown, and capacity. The trajectory tests also
@@ -168,10 +197,10 @@ the window closes, Ctrl+C is pressed, or the population becomes extinct.
 For a recording without running a simulation, open
 `runs/v13-native-long-video/timelapse.mp4` or `runs/v15-video/timelapse.mp4`.
 
-## Next development session
+## Earlier V15 comparisons to resume when requested
 
-First complete the existing comparisons before adding another mechanism.
-Rerun V15 environments 272 and 273 into new directories, retaining completed
+To complete the existing comparisons, rerun V15 environments 272 and 273 into new
+directories, retaining completed
 271 as the first matched environment:
 
 ```bash

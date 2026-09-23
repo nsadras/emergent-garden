@@ -32,6 +32,7 @@ class Renderer:
         self.selected = None
         self.selected_module = 0
         self.show_field = True
+        self.show_sources = True
         self.show_brain = False
         self.field_index = 0
         self.color_mode = "diet"
@@ -94,6 +95,25 @@ class Renderer:
     def text(self, value, point, color=(210, 229, 230), small=False):
         self.surface.blit((self.small if small else self.font).render(value, True, color), point)
 
+    @staticmethod
+    def field_count(world):
+        return len(getattr(world, "fields", [world.field])) + int(
+            hasattr(world, "resources") and world.resources.capacity > 0
+        )
+
+    def draw_sources(self, world):
+        if not self.show_sources or not hasattr(world, "resources"):
+            return
+        outlines, _ = self.transform(
+            array(world.resources.boundaries(world.patch_positions)), world.config.diameter
+        )
+        centers, _ = self.transform(array(world.patch_positions), world.config.diameter)
+        for outline, center in zip(outlines, centers, strict=True):
+            pygame.draw.aalines(self.surface, (99, 133, 87), True, outline)
+            x, y = center
+            pygame.draw.line(self.surface, (158, 184, 121), (x - 3, y), (x + 3, y))
+            pygame.draw.line(self.surface, (158, 184, 121), (x, y - 3), (x, y + 3))
+
     def draw(self, world, status=""):
         self.observe(world)
         c, a = world.config, world.agents
@@ -102,11 +122,20 @@ class Renderer:
         dish_center, scale = self.transform(np.array([c.diameter / 2] * 2), c.diameter)
         radius = int(c.diameter / 2 * scale)
         pygame.draw.circle(surface, (13, 31, 37), dish_center.astype(int), radius)
+        self.field_index %= self.field_count(world)
         if self.show_field:
             fields = getattr(world, "fields", [world.field])
-            field = fields[self.field_index % len(fields)].grid.detach().cpu().numpy()
+            fertility = self.field_index == len(fields)
+            if fertility:
+                field = array(world.resources.fertility) / world.resources.capacity
+                mask = array(world.resources.mask)
+            else:
+                field = array(fields[self.field_index].grid)
+                mask = array(world.field.mask)
             norm = c.signal_scale if self.field_index == 4 else c.smell_scale
-            strength = (field if self.field_index == 7 else field / (field + norm)) * 100
+            strength = (
+                field if fertility or self.field_index == 7 else field / (field + norm)
+            ) * 100
             tints = (
                 (0.2, 0.5, 0.25),
                 (0.8, 0.4, 0.05),
@@ -116,15 +145,16 @@ class Renderer:
                 (0.9, 0.25, 0.3),
                 (0.3, 0.35, 0.95),
                 (0.3, 0.65, 0.65),
+                (0.55, 0.75, 0.15),
             )
             rgb = (
                 np.array([13, 31, 37]) + strength[..., None] * np.array(tints[self.field_index])
             ).astype(np.uint8)
-            rgb[~world.field.mask.cpu().numpy()] = (8, 17, 23)
+            rgb[~mask] = (8, 17, 23)
             layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
             side = max(1, int(c.diameter * scale))
             # Rendering zooms above 2x uses a crop to keep temporary surfaces bounded.
-            n = c.grid_size
+            n = field.shape[0]
             top_left, _ = self.transform(np.array([0.0, 0.0]), c.diameter)
             x0 = max(0, int(-top_left[0] / side * n))
             y0 = max(0, int(-top_left[1] / side * n))
@@ -138,11 +168,10 @@ class Renderer:
                 )
                 surface.blit(resized, top_left + np.array([x0, y0]) * side / n)
         pygame.draw.circle(surface, (74, 133, 137), dish_center.astype(int), radius, 2)
+        self.draw_sources(world)
         self.draw_trails(world)
         if c.ecology_version >= 10:
-            centers, _ = self.transform(
-                world.patch_positions[world.shelter_indices].cpu().numpy(), c.diameter
-            )
+            centers, _ = self.transform(world.shelter_positions.cpu().numpy(), c.diameter)
             color = (65, 125, 126) if world.ablation != "no_shelter" else (63, 71, 77)
             for pos in centers:
                 pygame.draw.circle(
@@ -297,6 +326,7 @@ class Renderer:
                 "identity A",
                 "identity B",
                 "shelter",
+                "fertility",
             )
             self.text(
                 f"V{c.ecology_version} | {names[self.field_index]} field | {self.color_mode}",
@@ -325,6 +355,8 @@ class Renderer:
                 "Home  whole-dish overview",
                 "Esc  save and exit",
             ]
+            if hasattr(world, "resources"):
+                lines.insert(-2, "P  food-source outlines")
         if c.ecology_version >= 6:
             favorable = "A" if world.landscape.favorable == 0 else "B"
             lines.insert(1, f"High-quality patches: {favorable}")
@@ -438,10 +470,10 @@ class Viewer(Renderer):
                     self.speed = max(0.125, self.speed / 2)
                 elif event.key == pygame.K_f:
                     self.show_field = not self.show_field
+                elif event.key == pygame.K_p:
+                    self.show_sources = not self.show_sources
                 elif event.key == pygame.K_TAB:
-                    self.field_index = (self.field_index + 1) % len(
-                        getattr(world, "fields", [world.field])
-                    )
+                    self.field_index = (self.field_index + 1) % self.field_count(world)
                 elif event.key == pygame.K_c:
                     self.color_mode = "lineage" if self.color_mode == "diet" else "diet"
                 elif event.key == pygame.K_r:

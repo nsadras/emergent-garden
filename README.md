@@ -7,9 +7,10 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-Development is paused at **V15 / package 0.16.0** following the requested wrap-up.
-See [HANDOFF.md](HANDOFF.md) for completed findings, interrupted experiments,
-verification, and commands to watch or continue later. All simulations are stopped.
+The current release is **V16 / package 0.17.0**. Bounded follow-ups add the live
+inspector, energy/readiness bars, and dynamic food sources. The autonomous research
+loop remains paused after the V15 wrap-up. See [HANDOFF.md](HANDOFF.md) for completed
+findings, interrupted experiments, verification, and commands to continue later.
 
 ![V5 modular creatures and their chemical trails](docs/v5-detail.png)
 
@@ -147,18 +148,26 @@ uv run garden run --config configs/v15.toml --view --device cpu --seconds 0
 
 ## Start watching
 
+The [V16 preset](configs/v16.toml) adds area-preserving irregular patches, slowly
+drifting sources, and local fertility that depletes when food grows and recovers
+over time. Existing food stays put as its source moves. **P** toggles source
+outlines; **Tab** includes a fertility view. See [parameters, results, and the
+possible later producer step](docs/DYNAMIC_RESOURCES.md). All three 600-second
+startup checks produced births, but reliable long-term persistence and improved
+food tracking remain unestablished.
+
 Python 3.13 and all Python packages are managed with **uv**:
 
 ```bash
 uv sync --locked
-uv run garden run --config configs/v13.toml --seed 222 --view --device cpu --seconds 0
+uv run garden run --config configs/v16.toml --seed 2 --view --device cpu --seconds 0
 ```
 
 `--seconds 0` runs until you close the window, press Ctrl+C, or the population
 becomes extinct. A checkpoint and preview are saved on exit. Every run gets its
 own directory under `runs/`; a supplied `--output` directory must not already exist.
 
-V13 starts 192 juvenile creatures in a 512-unit dish, with a capacity of 1,024.
+V13–V16 start 192 juvenile creatures in a 512-unit dish, with a capacity of 1,024.
 Each inherited body plan encodes one to three modules, which grow as food and
 space permit. Modules have local sensors, propulsion, and a shared recurrent
 template with up to 32 neurons, initially 16 active. Each module has its own
@@ -167,7 +176,8 @@ defines collision geometry; the inner
 modules collect food. Zoom in to inspect the body, actuators, and inherited traits.
 Green bodies favor fresh food; amber bodies favor detritus. Red marks show attacks.
 
-V13 seed 222 is a verified starting point: it persisted for three simulated
+For the earlier V13 environment, use `--config configs/v13.toml --seed 222`.
+That starting point persisted for three simulated
 hours, ending with 73 creatures, two dietary groups, and living generation 30.
 Survival is not guaranteed, and there is no automatic reseeding. To watch the
 already evolved population, resume `runs/v13-native-long-222/latest.pt`.
@@ -190,7 +200,8 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | `G` | Follow the selected creature |
 | `M` / module buttons | Choose a body module's controller |
 | `F` | Toggle the smell overlay |
-| Tab | Cycle resource, organism, forecast, secretion, patch-identity, and shelter fields |
+| Tab | Cycle resource, organism, forecast, secretion, patch-identity, shelter, and V16 fertility fields |
+| `P` | Toggle V16 food-source outlines and center marks |
 | `C` | Switch between inherited diet and lineage colors |
 | `B` | Hide/show the inspector sidebar |
 | Brain / Body / Details buttons | Switch between the network, morphology/weight maps, and diagnostics |
@@ -337,6 +348,12 @@ The original starting values are in [configs/v0.toml](configs/v0.toml).
 | [V8](configs/v8.toml) | Evolving neurons and connections with construction and maintenance costs |
 | [V9](configs/v9.toml) | Passive food-flow provenance, predation transfers, and immediate death causes |
 | [V10](configs/v10.toml) | Spatial shelter, local cover sensing, and deterministic CUDA execution |
+| [V11](configs/v11.toml) | Finite local food handling and simultaneous capacity limits |
+| [V12](configs/v12.toml) | Bounded within-lifetime motor learning |
+| [V13](configs/v13.toml) | Juvenile growth and discrete inherited body plans |
+| [V14](configs/v14.toml) | Body-position sensing and internal module signaling |
+| [V15](configs/v15.toml) | Evolving local plasticity rules; easier reproduction in the live preset |
+| [V16](configs/v16.toml) | Irregular drifting food sources and local fertility depletion/recovery |
 
 ```bash
 cp configs/v5.toml configs/my-experiment.toml

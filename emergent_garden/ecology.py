@@ -17,6 +17,7 @@ from .field import ShelterField, SmellField, TrailField
 from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .plasticity import rule_coefficients
+from .resources import ResourceLandscape
 from .runtime import enable_cuda_replay
 from .spatial import neighbors
 from .topology import counts, effective_masks, initial_structure, mutate_structure
@@ -167,16 +168,19 @@ class EcologyWorld(World):
         if c.ecology_version >= 14:
             self.totals["internal_signaling_cost"] = 0.0
         self.field = self.fields[0]
-        self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
+        self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_extent - c.food_radius)
         self.patch_phases = (
             self.rand((c.patches,)) * c.patch_period
             if c.ecology_version >= 3
             else torch.zeros(c.patches, device=self.device)
         )
+        if c.ecology_version >= 16:
+            self.rng["resources"] = torch.Generator(device=self.device).manual_seed(seed + 15485863)
+            self.resources = ResourceLandscape(c, self.patch_positions, self.rng["resources"])
         if c.ecology_version >= 10:
             order = torch.randperm(c.patches, generator=self.rng["shelter"], device=self.device)
             self.shelter_indices = order[: round(c.patches * c.shelter_fraction)].sort().values
-            self.fields[7].rebuild_shelter(self.patch_positions[self.shelter_indices])
+            self.fields[7].rebuild_shelter(self.shelter_positions)
         self.food_pos = torch.empty((0, 2), device=self.device)
         self.food_energy = torch.empty(0, device=self.device)
         self.food_expiry = torch.empty(0, dtype=torch.long, device=self.device)
@@ -312,6 +316,14 @@ class EcologyWorld(World):
         stock.index_add_(0, self.food_patch[assigned], self.food_energy[assigned])
         return stock
 
+    @property
+    def shelter_positions(self):
+        # Food sources drift; the existing habitat cover stays anchored.
+        origins = (
+            self.resources.origins if self.config.ecology_version >= 16 else self.patch_positions
+        )
+        return origins[self.shelter_indices]
+
     def append_food(self, positions, energy, kind, patches=None, credits=None):
         n, c = len(energy), self.config
         if not n:
@@ -362,6 +374,8 @@ class EcologyWorld(World):
                 return
             patch = torch.multinomial(activity, n, replacement=True, generator=self.rng["world"])
         offsets = self.disk(n, c.patch_radius) - c.diameter / 2
+        if c.ecology_version >= 16:
+            offsets = self.resources.offsets(offsets, patch)
         clustered = self.rand((n,)) < c.patch_fraction
         stock = self.patch_stock()
         # Rank proposals within each patch so a batch cannot overfill a vacancy.
@@ -372,6 +386,8 @@ class EcologyWorld(World):
             keep[rows[slots:]] = False
         pos = torch.where(clustered[:, None], self.patch_positions[patch] + offsets, pos)
         patch = torch.where(clustered, patch, -1)
+        if c.ecology_version >= 16:
+            keep = self.resources.fund(pos, keep)
         energy = torch.full((int(keep.sum()),), c.food_energy, device=self.device)
         self.append_food(pos[keep], energy, 0, patch[keep])
         self.totals["food_spawned"] += energy.double().sum().item()
@@ -1056,6 +1072,8 @@ class EcologyWorld(World):
             if not self.population:
                 return
             c = self.config
+            if c.ecology_version >= 16 and self.tick % (c.physics_hz // c.field_hz) == 0:
+                self.resources.advance(self.tick, self.patch_positions, self.rng["resources"])
             if c.ecology_version >= 6:
                 for change in self.landscape.update(self.tick, self.rng["quality"]):
                     self.totals["quality_reversals"] += 1
@@ -1168,6 +1186,8 @@ class EcologyWorld(World):
             )
             result["mean_secretion"] = a["actions"][:, 3].mean().item() if n else 0
         result["patch_stock"] = self.patch_stock().tolist()
+        if c.ecology_version >= 16:
+            result.update(self.resources.metrics(self.patch_positions))
         if c.ecology_version >= 6:
             result["favorable_identity"] = self.landscape.favorable
             result["next_quality_reversal"] = self.landscape.next_tick * c.dt
@@ -1306,6 +1326,8 @@ class EcologyWorld(World):
             result["trophic"] = self.trophic.state_dict()
         if self.config.ecology_version >= 10:
             result["shelter_indices"] = self.shelter_indices.clone()
+        if self.config.ecology_version >= 16:
+            result["resources"] = self.resources.state_dict()
         return result
 
     @classmethod
@@ -1363,6 +1385,10 @@ class EcologyWorld(World):
             self.trophic = TrophicLedger.from_state(state["trophic"], device)
         if self.config.ecology_version >= 10:
             self.shelter_indices = state["shelter_indices"].to(device).clone()
+        if self.config.ecology_version >= 16:
+            self.resources = ResourceLandscape.from_state(
+                self.config, state["resources"], self.device
+            )
         self.rng = {}
         for name, rng_state in state["rng"].items():
             generator = torch.Generator(device=self.device)
