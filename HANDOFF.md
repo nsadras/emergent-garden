@@ -17,7 +17,9 @@ With carrying at rate 300, births were 411/302/113 versus 97/37/32 without carry
 The combined treatment is the next brain-experiment baseline. Carrying at rate
 60 helped initial establishment, but one of its three longer runs became extinct
 at 834.4 seconds; the other two reached 1,800 seconds with populations 94/16.
-Fast-carrying continuations are in progress under `runs/v18-fast-carrying-long-*`.
+All three fast-carrying continuations reached 1,800 seconds with populations
+57/254/219, births 1,521/2,307/1,218, and maximum living generations 48/59/23.
+They are saved under `runs/v18-fast-carrying-long-*` and included in the audit.
 
 All 299 tests and Ruff checks pass. Separate CPU/CUDA carrying checks passed
 exact replay and all ledgers; food

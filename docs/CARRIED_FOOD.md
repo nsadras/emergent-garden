@@ -64,7 +64,10 @@ At the original rate of 60, the three carrying continuations ended with
 populations **94 / 16 / 0** and cumulative births **264 / 42 / 8**. Seeds 1 and 2
 reached 1,800 seconds; seed 3 became extinct at 834.4 seconds. Thus carrying alone
 improved the short starts without reliably preventing later extinction. The
-combined carrying/rate-300 starts are also being extended to 1,800 seconds.
+combined carrying/rate-300 starts all reached 1,800 seconds, ending with
+populations **57 / 254 / 219**, cumulative births **1,521 / 2,307 / 1,218**, and
+maximum living generations **48 / 59 / 23**. Populations fluctuated substantially;
+this does not establish persistence indefinitely or across arbitrary seeds.
 
 The combined treatment has the strongest short-run establishment in this V18
 screen. That supports using it for the next brain comparisons; it does not show
@@ -109,6 +112,6 @@ frozen-learning controls and measure performance rather than equating changing
 paths with intelligence. Simple producer organisms remain a later possibility.
 
 ```bash
-uv run python scripts/audit_carrying.py
+uv run python scripts/audit_carrying.py --include-fast-long
 uv run python scripts/plot_carrying.py
 ```

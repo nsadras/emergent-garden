@@ -1610,3 +1610,8 @@ They do not establish directed food seeking or within-lifetime learning. The
 user reinforced interest in greater neural/mutation variation and learning.
 Prioritize controlled circuit-diversity, mutation, and conservative motor-learning
 experiments in the more viable carrying environment next.
+
+The three fast-carrying continuations subsequently completed 1,800 seconds:
+populations 57/254/219, births 1,521/2,307/1,218, and maximum living generations
+48/59/23. The audit now includes all twelve pilots and six continuations. All
+299 tests and Ruff checks passed at the V18 commit `cd95624`.
