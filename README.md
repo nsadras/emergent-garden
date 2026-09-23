@@ -53,8 +53,12 @@ The experimental [V11 preset](configs/v11.toml) gives creatures finite fresh-foo
 and detritus processing capacities, determined by their inherited bodies and diet.
 This closes the route by which poor fresh-food assimilators could rapidly turn
 unlimited fresh food into their own preferred detritus. The
-[inspector](docs/v11-preview.png) shows those capacities. Matched food-web tests
-are in progress; random-founder pilots have not established reliable populations.
+[inspector](docs/v11-preview.png) shows those capacities. In
+[matched food-web tests](docs/v11-handling.png), the tested scavengers became
+dependent on recycled food produced largely by grazers. Both ancestries persisted
+for an hour in two of three mixtures under each processing treatment, so an
+improvement in coexistence frequency is unestablished. Random-founder pilots
+have not established reliable populations.
 A verified 30-second recording is at `runs/v11-video/timelapse.mp4`.
 
 ## Start watching

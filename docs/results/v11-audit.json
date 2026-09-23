@@ -1,0 +1,254 @@
+[
+  {
+    "path": "runs/v11-limited-mixed/seed-181",
+    "time": 3600.0,
+    "populations": [
+      46,
+      27
+    ],
+    "matched_founders_sha256": "82c7f92dc79546bac814d0b1c7f5d4bcb104c9935125b6750df4d6b68abf2cba",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.027115140579553554,
+    "energy_injected": 1605007.2896995544,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 2.6193447411060333e-10
+  },
+  {
+    "path": "runs/v11-limited-mixed/seed-182",
+    "time": 3600.0,
+    "populations": [
+      26,
+      15
+    ],
+    "matched_founders_sha256": "ec6395016b7b321018a47d979e1f96e931653070d229e50a5fe69a4bc26e47f8",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.0004618209713953547,
+    "energy_injected": 1476092.7814483643,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 1.8917489796876907e-10
+  },
+  {
+    "path": "runs/v11-limited-mixed/seed-183",
+    "time": 3600.0,
+    "populations": [
+      14,
+      0
+    ],
+    "matched_founders_sha256": "638590d98854f98222d4937245e92b5e8334cb366feefbf7ff0d32bcbcfaec56",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.018792492352076806,
+    "energy_injected": 1464686.5168876648,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 1.4551915228366852e-10
+  },
+  {
+    "path": "runs/v11-unlimited-mixed/seed-181",
+    "time": 3600.0,
+    "populations": [
+      32,
+      18
+    ],
+    "matched_founders_sha256": "82c7f92dc79546bac814d0b1c7f5d4bcb104c9935125b6750df4d6b68abf2cba",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.019092282687779516,
+    "energy_injected": 1742007.2896995544,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-unlimited-mixed/seed-182",
+    "time": 3600.0,
+    "populations": [
+      0,
+      50
+    ],
+    "matched_founders_sha256": "ec6395016b7b321018a47d979e1f96e931653070d229e50a5fe69a4bc26e47f8",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.016188404559215996,
+    "energy_injected": 1736952.7814483643,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-unlimited-mixed/seed-183",
+    "time": 3600.0,
+    "populations": [
+      34,
+      26
+    ],
+    "matched_founders_sha256": "638590d98854f98222d4937245e92b5e8334cb366feefbf7ff0d32bcbcfaec56",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.017208515317179263,
+    "energy_injected": 1734966.5168876648,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-limited-grazer/seed-181",
+    "time": 3600.0,
+    "populations": [
+      29,
+      0
+    ],
+    "matched_founders_sha256": "11d66d89f70b70d34de34c8b6c0db3c29ea8510a4751eac1fa75d7b1fc408a5a",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.01774709838355193,
+    "energy_injected": 1596341.5942459106,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 4.0745362639427185e-10
+  },
+  {
+    "path": "runs/v11-limited-grazer/seed-182",
+    "time": 3600.0,
+    "populations": [
+      37,
+      0
+    ],
+    "matched_founders_sha256": "2648891627e1f74769913a896b6067becc4a8522afb104e55cd248e02b086769",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.01809493919427041,
+    "energy_injected": 1497723.8764305115,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 3.2014213502407074e-10
+  },
+  {
+    "path": "runs/v11-limited-grazer/seed-183",
+    "time": 3600.0,
+    "populations": [
+      25,
+      0
+    ],
+    "matched_founders_sha256": "09fa0b8688c7c3062b3c5f6094cb4dc785336de77aa805fd311beea78153afe2",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.011834004209958948,
+    "energy_injected": 1564862.4890136719,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 5.820766091346741e-11
+  },
+  {
+    "path": "runs/v11-limited-scavenger/seed-181",
+    "time": 136.33333333333334,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "6566c11b8134f345eebaa8ecb3530fb3274ca4ef0a91d02e436c3312939a019f",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.0007142928025132278,
+    "energy_injected": 71574.2364578247,
+    "maximum_packet_credit_error": 1.3877787807814457e-17,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-limited-scavenger/seed-182",
+    "time": 130.8,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "f83c73a3264d75a2f665545494193dedcb7249358fa051ed3fa02ef8594c36e8",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.00011193883619853295,
+    "energy_injected": 67845.21306610107,
+    "maximum_packet_credit_error": 3.469446951953614e-18,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-limited-scavenger/seed-183",
+    "time": 133.1,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "71fe9dd080d97ae4c9c8ee3fbf185356452671828f74fccd72d6f348cba68cdd",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.0007928275263111573,
+    "energy_injected": 66820.64321136475,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-unlimited-scavenger/seed-181",
+    "time": 3600.0,
+    "populations": [
+      0,
+      48
+    ],
+    "matched_founders_sha256": "6566c11b8134f345eebaa8ecb3530fb3274ca4ef0a91d02e436c3312939a019f",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.00016793730901554227,
+    "energy_injected": 1748934.2364578247,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-unlimited-scavenger/seed-182",
+    "time": 3600.0,
+    "populations": [
+      0,
+      53
+    ],
+    "matched_founders_sha256": "f83c73a3264d75a2f665545494193dedcb7249358fa051ed3fa02ef8594c36e8",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.016521481644304004,
+    "energy_injected": 1735385.213066101,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-unlimited-scavenger/seed-183",
+    "time": 3600.0,
+    "populations": [
+      0,
+      44
+    ],
+    "matched_founders_sha256": "71fe9dd080d97ae4c9c8ee3fbf185356452671828f74fccd72d6f348cba68cdd",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.0007648925966350362,
+    "energy_injected": 1737720.6432113647,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-no-recycling/seed-181",
+    "time": 3600.0,
+    "populations": [
+      42,
+      0
+    ],
+    "matched_founders_sha256": "82c7f92dc79546bac814d0b1c7f5d4bcb104c9935125b6750df4d6b68abf2cba",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.0056504399253753945,
+    "energy_injected": 1613747.2896995544,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-no-recycling/seed-182",
+    "time": 3600.0,
+    "populations": [
+      45,
+      0
+    ],
+    "matched_founders_sha256": "ec6395016b7b321018a47d979e1f96e931653070d229e50a5fe69a4bc26e47f8",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.008982120045402553,
+    "energy_injected": 1564132.7814483643,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-no-recycling/seed-183",
+    "time": 3600.0,
+    "populations": [
+      59,
+      0
+    ],
+    "matched_founders_sha256": "638590d98854f98222d4937245e92b5e8334cb366feefbf7ff0d32bcbcfaec56",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.005724780312448274,
+    "energy_injected": 1601106.5168876648,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  }
+]

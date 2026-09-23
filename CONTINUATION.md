@@ -595,9 +595,45 @@ limited grazers alone, limited/unlimited scavengers alone, and mixtures with
 recycling disabled. The recycling intervention preserves fresh-food assimilation
 and dissipates the fraction that would otherwise become detritus.
 
-Limited scavengers alone became extinct at approximately 136/131/133 seconds,
-without births. Longer mixtures and matched controls are still running; their
-outcomes will be recorded before concluding that the food web is more stable.
+All 18 trials completed. Endpoints show grazer/scavenger source ancestry:
+
+| Treatment | Environment 181 | 182 | 183 |
+| --- | --- | --- | --- |
+| Limited mixed community | 46/27 | 26/15 | 14/0 |
+| Unlimited mixed community | 32/18 | 0/50 | 34/26 |
+| Limited grazers alone | 29/0 | 37/0 | 25/0 |
+| Limited scavengers alone | 0/0 | 0/0 | 0/0 |
+| Unlimited scavengers alone | 0/48 | 0/53 | 0/44 |
+| Limited mixture, recycling off | 42/0 | 45/0 | 59/0 |
+
+Both ancestries reproduced and persisted for the hour in two of three mixtures
+under each capacity treatment, in different environments. Limited processing
+lost scavenger ancestry at 855 seconds in environment 183; unlimited processing
+lost grazer ancestry at 1,310 seconds in environment 182. This does not establish
+a higher frequency of coexistence. It does change the measured dependency:
+limited scavengers alone died at 136.33/130.8/133.1 seconds without births,
+whereas unlimited scavengers alone produced 491/560/531 offspring. Removing
+recycling eliminated scavenger ancestry from limited mixtures at 113/98/100
+seconds, again without births, while grazer ancestry persisted and reproduced.
+
+The grazer guild produced 98.89%/98.68%/98.57% of detritus energy absorbed by
+scavengers in the limited mixtures, versus 15.21%/3.60%/7.43% with unlimited
+handling. These are full-hour cumulative fractions; the third limited mixture
+contains an early scavenger extinction. Guild labels describe diet when energy
+was transferred, and differ conceptually from source ancestry. The combined
+provenance and intervention evidence supports a grazer-to-scavenger food
+dependency in these tested communities. It does not establish cooperation,
+spontaneous speciation, or permanent coexistence. See the
+[population figure](docs/v11-handling.png), [food-flow figure](docs/v11-trophic.png),
+[complete records](docs/results/v11.json), and [18-run audit](docs/results/v11-audit.json).
+Maximum absolute energy residual was 0.0272 units. Founder samples and patch
+layouts match across paired treatments, and all food-credit checks passed.
+
+The two limited mixtures retaining both ancestries are continuing to three
+simulated hours under `runs/v11-limited-long-181` and `-182`. These are selected
+continuations of successful mixtures, not independent replicates or an unbiased
+estimate of long-term coexistence frequency.
+
 The fresh random-founder pilots were much less viable than the assembled
 communities: seed 171 reached 1,800 seconds with one founding creature and only
 two births across the run; seed 172 became extinct at 480.3 seconds after two

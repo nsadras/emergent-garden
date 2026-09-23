@@ -1,4 +1,4 @@
-"""Plot mean food-transfer rates from completed, committed V9 trial records."""
+"""Plot mean food-transfer rates from completed, committed trial records."""
 
 import argparse
 import json
@@ -15,17 +15,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--conditions", nargs=2, default=["v9-traced-mixed", "v9-traced-no-attacks"])
+    parser.add_argument("--labels", nargs=2, default=["Attacks active", "Attacks disabled"])
+    parser.add_argument(
+        "--title", default="Most scavenger detritus uptake comes from the scavenger guild"
+    )
     args = parser.parse_args()
     records = json.loads(args.input.read_text())
-    conditions = (
-        ("v9-traced-mixed", "Attacks active"),
-        ("v9-traced-no-attacks", "Attacks disabled"),
-    )
+    conditions = list(zip(args.conditions, args.labels, strict=True))
     matrices = []
+    environments = None
     for condition, _ in conditions:
         rows = [r for r in records if Path(r["path"]).parent.name == condition]
         if len(rows) != 3 or any(r["final"]["time"] != 3600 for r in rows):
             raise ValueError("Expected three completed 3,600-second trials per condition")
+        seeds = sorted(r["metadata"]["seed"] for r in rows)
+        if len(set(seeds)) != 3 or (environments is not None and environments != seeds):
+            raise ValueError("Treatments must use the same three distinct environment seeds")
+        environments = seeds
         matrices.append(
             [
                 np.array([r["final"][key][:3] for r in rows]) / 3600
@@ -61,8 +68,8 @@ def main():
                 ax.set_title("Detritus uptake" if column == 0 else "Predation uptake")
     fig.colorbar(layer, ax=axes, shrink=0.75, label="Energy absorbed per simulated second")
     fig.suptitle(
-        "Most scavenger detritus uptake comes from the scavenger guild\n"
-        "Cell labels: mean (range) across environments 151–153",
+        f"{args.title}\nCell labels: mean (range) across environments "
+        + ", ".join(map(str, environments)),
         fontsize=13,
     )
     fig.supxlabel(
