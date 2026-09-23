@@ -109,9 +109,11 @@ def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
     assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
-@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15])
+@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17])
 def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, monkeypatch):
-    c = replace(config, ecology_version=version, initial_food=8)
+    c = replace(
+        config, ecology_version=version, sensory_contrast=int(version == 17), initial_food=8
+    )
     w = create_world(c)
     a = w.agents
     if version >= 4:
@@ -188,6 +190,9 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         (15, "memory_reset"),
         (15, "no_plasticity"),
         (15, "no_exploration"),
+        (17, "shuffled"),
+        (17, "no_direction"),
+        (17, "rotated"),
     ],
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
@@ -195,7 +200,12 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
     from emergent_garden.leaderboard import Leaderboard
     from emergent_garden.viewer import Renderer
 
-    w = create_world(replace(config, ecology_version=version, initial_food=8), ablation=ablation)
+    w = create_world(
+        replace(
+            config, ecology_version=version, sensory_contrast=int(version == 17), initial_food=8
+        ),
+        ablation=ablation,
+    )
     plain = World.from_state(w.state_dict())
     observer = w.controller_observer = ControllerObserver()
     observer.select(0)
@@ -218,10 +228,13 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
     assert_same(w.state_dict(), plain.state_dict())
 
 
-@pytest.mark.parametrize("version", [0, 15])
+@pytest.mark.parametrize("version", [0, 15, 17])
 @pytest.mark.parametrize("controller", ["rest", "random", "forager"])
 def test_scripted_controller_samples_do_not_claim_neural_activity(config, version, controller):
-    w = create_world(replace(config, ecology_version=version), controller=controller)
+    w = create_world(
+        replace(config, ecology_version=version, sensory_contrast=int(version == 17)),
+        controller=controller,
+    )
     observer = w.controller_observer = ControllerObserver()
     observer.select(0)
     w.step()

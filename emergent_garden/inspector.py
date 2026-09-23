@@ -368,7 +368,13 @@ class Inspector:
                 (22, top + 126),
                 MUTED,
             )
-        self.text("Sensor angles are relative to the body's heading.", (22, top + 168), MUTED)
+        self.text(
+            "Field inputs: mean, right-left, front-back, diagonal; body-relative."
+            if c.sensory_contrast
+            else "Sensor angles are relative to the body's heading.",
+            (22, top + 168),
+            MUTED,
+        )
         self.text(
             "The selected neuron's links enter from inputs and previous recurrent state;",
             (22, top + 189),

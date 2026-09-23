@@ -130,12 +130,13 @@ class BrainSample:
 
     def sensory_drives(self, module):
         """Split each four-sensor field into its mean and directional differences."""
-        count = sum(
-            name.rsplit("_", 1)[-1] in ("-135", "-45", "45", "135")
-            for name in self.config.input_names
-        )
+        count = 4 * len(self.config.field_names)
         senses = self.inputs[module, :count]
-        common = np.repeat(senses.reshape(-1, 4).mean(1), 4)
+        if self.config.sensory_contrast:
+            common = np.zeros_like(senses)
+            common[::4] = senses[::4]
+        else:
+            common = np.repeat(senses.reshape(-1, 4).mean(1), 4)
         wi = self.matrices(module)[0][:, :count]
         return wi @ common, wi @ (senses - common)
 

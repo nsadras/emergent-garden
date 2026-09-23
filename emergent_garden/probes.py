@@ -9,6 +9,7 @@ import torch
 
 from .brain import controller_step, initial_state
 from .config import Config
+from .senses import probe_features
 from .world import genome_hash
 
 
@@ -29,8 +30,8 @@ def cue_probe(config, genomes, delay, reset=False):
     for _ in range(2 * config.controller_hz):
         state, _ = controller_step(config, g, neutral, state, tau)
     cue = neutral.clone()
-    cue[0::2, 12:16] = torch.tensor([0.2, 0.8, 0.0, 0.0], device=g.device)
-    cue[1::2, 12:16] = torch.tensor([0.0, 0.0, 0.8, 0.2], device=g.device)
+    cue[0::2, 12:16] = probe_features(config, torch.tensor([0.2, 0.8, 0.0, 0.0], device=g.device))
+    cue[1::2, 12:16] = probe_features(config, torch.tensor([0.0, 0.0, 0.8, 0.2], device=g.device))
     for _ in range(config.controller_hz):
         state, _ = controller_step(config, g, cue, state, tau)
     steps = math.ceil(delay * config.controller_hz)
@@ -109,7 +110,7 @@ def association_probe(config, genomes, rounds=3, mode="none"):
     state = initial_state(config, g)
     neutral = torch.zeros((len(g), config.input_size), device=device)
     neutral[:, config.input_names.index("energy")] = 0.5
-    cue_indices = [config.input_names.index(f"identity_{label}_-135") for label in ("a", "b")]
+    cue_indices = [4 * config.field_names.index(f"identity_{label}") for label in ("a", "b")]
     feedback = config.input_names.index("food_feedback")
 
     def step(inputs, current):
@@ -130,7 +131,9 @@ def association_probe(config, genomes, rounds=3, mode="none"):
                 identity = (order + presentation) % 2
                 inputs = neutral.clone()
                 for label, index in enumerate(cue_indices):
-                    inputs[identity == label, index : index + 4] = 0.6
+                    inputs[identity == label, index : index + 4] = probe_features(
+                        config, torch.full((4,), 0.6, device=device)
+                    )
                 for tick in range(2 * config.controller_hz):
                     if tick == 2 * config.controller_hz - 1 and mode != "no_feedback":
                         inputs[:, feedback] = torch.where(identity == good, 0.5, 0.2)
@@ -150,7 +153,7 @@ def association_probe(config, genomes, rounds=3, mode="none"):
             right = torch.tensor([0.0, 0.0, 0.8, 0.2], device=device)
             left = right.flip(0)
             for index, side in zip(cue_indices, (a_on_right, not a_on_right), strict=True):
-                inputs[:, index : index + 4] = right if side else left
+                inputs[:, index : index + 4] = probe_features(config, right if side else left)
             branch = {key: value.clone() for key, value in delayed.items()}
             for _ in range(config.controller_hz):
                 branch, actions = step(inputs, branch)

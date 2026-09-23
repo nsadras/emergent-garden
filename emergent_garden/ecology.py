@@ -19,6 +19,7 @@ from .morphology import MAX_MODULES, develop_modules, module_centers, module_tur
 from .plasticity import rule_coefficients
 from .resources import ResourceLandscape
 from .runtime import enable_cuda_replay
+from .senses import encode_field, receptor_values
 from .spatial import neighbors
 from .topology import counts, effective_masks, initial_structure, mutate_structure
 from .trophic import TrophicLedger, guilds
@@ -61,6 +62,7 @@ class EcologyWorld(World):
             "no_coordination",
             "self_internal",
             "fixed_rule",
+            "no_direction",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -72,6 +74,7 @@ class EcologyWorld(World):
             or (ablation == "no_plasticity" and config.ecology_version < 7)
             or (ablation == "adult_births" and config.ecology_version < 13)
             or (ablation == "fixed_rule" and config.ecology_version < 15)
+            or (ablation == "no_direction" and config.ecology_version < 17)
             or (
                 ablation in ("no_internal", "no_body_sense", "no_coordination", "self_internal")
                 and config.ecology_version < 14
@@ -479,10 +482,17 @@ class EcologyWorld(World):
         for channel, field in enumerate(self.fields):
             smell = field.sample(pos)
             scale = c.signal_scale if channel == 4 else c.smell_scale
-            if channel != 7:
-                smell = smell / (smell + scale)
+            smell = encode_field(c, smell, None if channel == 7 else scale)
             if self.ablation == "rotated":
-                smell = smell.roll(2, dims=-1)
+                if c.sensory_contrast:
+                    smell[..., 1:3] *= -1
+                else:
+                    smell = smell.roll(2, dims=-1)
+            if self.ablation == "no_direction":
+                if c.sensory_contrast:
+                    smell[..., 1:] = 0
+                else:
+                    smell = smell.mean(-1, keepdim=True).expand_as(smell).clone()
             if (
                 self.ablation == "disabled"
                 or (self.ablation == "no_cue" and channel == 3)
@@ -622,6 +632,8 @@ class EcologyWorld(World):
         else:
             diet = a["diet"][index, None]
             smell = inputs[:, :4] * diet + inputs[:, 4:8] * (1 - diet)
+            if c.sensory_contrast:
+                smell = receptor_values(smell)
             dx = (smell * self.sensor_angles.cos()).sum(1)
             dy = (smell * self.sensor_angles.sin()).sum(1)
             a["h"][index, 0] += 1 / c.controller_hz

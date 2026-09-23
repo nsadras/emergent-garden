@@ -7,12 +7,12 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-The current release is **V16 / package 0.17.0**. Bounded follow-ups add the live
-inspector, a sortable creature leaderboard, an energy bar with a birth-threshold
-marker, and dynamic food sources.
-The autonomous research loop remains paused after the V15 wrap-up. See
-[HANDOFF.md](HANDOFF.md) for completed findings, interrupted experiments,
-verification, and commands to continue later.
+The current experimental release is **V17 / package 0.18.0**. Research resumed
+on September 23, focusing on scarce, valuable food and affordable exploration.
+The [foraging experiments](docs/FORAGING.md) found that faster food processing
+supported all three tested populations for 30 minutes; a new optional spatial
+sensory encoding had mixed results. The live inspector, leaderboard, and energy
+bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 
 ![V5 modular creatures and their chemical trails](docs/v5-detail.png)
 
@@ -169,7 +169,8 @@ uv run garden run --config configs/v16.toml --seed 2 --view --device cpu --secon
 becomes extinct. A checkpoint and preview are saved on exit. Every run gets its
 own directory under `runs/`; a supplied `--output` directory must not already exist.
 
-V13–V16 start 192 juvenile creatures in a 512-unit dish, with a capacity of 1,024.
+These presets start 192 juvenile creatures, with a capacity of 1,024. The original
+V13–V16 presets use a 512-unit dish; the new sparse-food experiments use 1,024.
 Each inherited body plan encodes one to three modules, which grow as food and
 space permit. Modules have local sensors, propulsion, and a shared recurrent
 template with up to 32 neurons, initially 16 active. Each module has its own
@@ -376,6 +377,7 @@ The original starting values are in [configs/v0.toml](configs/v0.toml).
 | [V14](configs/v14.toml) | Body-position sensing and internal module signaling |
 | [V15](configs/v15.toml) | Evolving local plasticity rules; easier reproduction in the live preset |
 | [V16](configs/v16.toml) | Irregular drifting food sources and local fertility depletion/recovery |
+| [V17](configs/v17-contrast.toml) | Experimental mean/contrast sensory encoding; [paired results](docs/FORAGING.md) |
 
 ```bash
 cp configs/v5.toml configs/my-experiment.toml

@@ -1,12 +1,38 @@
-# Development handoff — V16
+# Development handoff — V17
 
-Autonomous ecology development was paused at the user's request on
-**September 22, 2026**, and its experiment processes were stopped. Bounded
-interface, reproduction-preset, and dynamic-resource updates followed on
-September 23; the autonomous research loop remains paused.
-The current code is **V16 / package 0.17.0**. Python and dependencies remain
-managed with **uv**. The detailed design and
-experiment history is in [CONTINUATION.md](CONTINUATION.md).
+Autonomous ecology research **resumed at the user's request on September 23,
+2026**, after the earlier V15 pause and subsequent interface/resource updates.
+The current code is **V17 / package 0.18.0**. Python and dependencies remain
+managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## Current foraging iteration
+
+The user clarified that their V16 edits aim for rare, valuable meals and cheap
+exploration. Their working `configs/v16.toml` is preserved; an explicit baseline
+snapshot and separate experiment presets are added. See the
+[design, results, commands, and limitations](docs/FORAGING.md).
+
+Twenty-four 600-second pilots show an intake bottleneck: larger food particles
+still require sustained physical contact for digestion. Increasing handling rate
+from 60 to 300 in the user's large habitat produced 236/59/17 births. Continuing
+all three starts to 1,800 seconds yielded populations 97/122/15 and cumulative
+births 809/799/44. Seed 3 recovered from a one-creature bottleneck. This supports
+the treatment's viability in those starts, not reliable general establishment.
+Matched sensory interventions are the next behavioral check.
+
+V17 adds an optional mean/contrast encoding without changing the 40-input,
+seven-output recurrent architecture or hand-tuning neural weights. Its three
+paired tests were mixed; it is not promoted as a proven improvement. Disabled
+encoding preserves legacy trajectories exactly. All 281 tests and Ruff checks
+pass; separate CPU/CUDA mechanical exercises passed exact checkpoint replay.
+Committed evidence is in [foraging-pilots.json](docs/results/foraging-pilots.json).
+
+Next mechanic under investigation: a finite carried-food inventory, allowing
+collection and later digestion while moving. Retain energy/provenance accounting,
+legacy behavior, and matched controls. Simple producers remain a later option.
+
+The remainder records earlier completed work and the V15 interruption; its
+historical partial batches have not silently been completed by this restart.
 
 ## V16 dynamic resources
 

@@ -102,6 +102,7 @@ class Config:
     smell_sigma: float = 24.0
     smell_cutoff: float = 72.0
     smell_scale: float = 8.0
+    sensory_contrast: int = 0
     birth_energy: float = 100.0
     max_energy: float = 250.0
     basal_cost: float = 1.0
@@ -154,8 +155,12 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(17):
+        if self.ecology_version not in range(18):
             raise ValueError("Unsupported ecology version")
+        if self.sensory_contrast not in (0, 1):
+            raise ValueError("sensory_contrast must be 0 or 1")
+        if self.sensory_contrast and self.ecology_version < 17:
+            raise ValueError("Contrast sensing requires ecology_version >= 17")
         if self.patch_aspect_ratio < 1 or not 0 <= self.patch_irregularity <= 1:
             raise ValueError("Require patch_aspect_ratio >= 1 and patch_irregularity in [0, 1]")
         if self.fertility_grid_size < 8:
@@ -262,7 +267,7 @@ class Config:
         return len(self.input_names)
 
     @property
-    def input_names(self):
+    def field_names(self):
         channels = ["fresh"]
         if self.ecology_version >= 1:
             channels.append("detritus")
@@ -276,7 +281,14 @@ class Config:
             channels.extend(("identity_a", "identity_b"))
         if self.ecology_version >= 10:
             channels.append("shelter")
-        names = [f"{channel}_{angle}" for channel in channels for angle in (-135, -45, 45, 135)]
+        return tuple(channels)
+
+    @property
+    def input_names(self):
+        labels = (
+            ("mean", "side", "front", "diagonal") if self.sensory_contrast else (-135, -45, 45, 135)
+        )
+        names = [f"{channel}_{label}" for channel in self.field_names for label in labels]
         if self.ecology_version >= 14:
             from .coordination import BODY_INPUTS
 

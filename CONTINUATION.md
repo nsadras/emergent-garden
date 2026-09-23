@@ -1,9 +1,10 @@
 # Continuing evolution experiments
 
-Development is **paused at the user's request on September 22, 2026**. The current
-iteration is V15 (package 0.16.0), and all simulations have stopped. Completed
-evidence, interrupted work, viewing commands, and restart instructions are in
-[HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
+Development **resumed at the user's request on September 23, 2026**, after the
+V15 pause and subsequent interface/resource work. The current iteration is V17
+(package 0.18.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
+meals and affordable exploration. Current evidence, historical interrupted work,
+and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
 
 ## Research sequence
@@ -1546,3 +1547,32 @@ configuration at 80.1 simulated seconds, with 46 living creatures, seven births,
 and creature 123 selected. It is a UI check, not an ecology comparison. Its
 layout record is at `runs/leaderboard-preview/verification.json`. User edits to
 `configs/v16.toml` are separate from this change. The research loop remains paused.
+
+## Research resumed: sparse meals and V17 spatial sensing — package 0.18.0
+
+The user authorized renewed experiments and clarified that the large V16 habitat,
+valuable particles, and inexpensive movement were intended to reward food seeking.
+Those uncommitted settings remain untouched. A separate baseline snapshot and
+seven treatments cover 24 fresh starts with exactly matched inherited founders.
+The [full record](docs/FORAGING.md) includes results, comparison confounds,
+mechanical checks, source provenance, and reproducible plots.
+
+The baseline went extinct in all three seeds. Raising raw food handling from 60
+to 300 while retaining the sparse habitat produced 236/59/17 births by 600 seconds.
+All three continuations reached 1,800 seconds, with populations 97/122/15 and
+births 809/799/44. Seed 3 passed through a single-creature bottleneck before
+recovering. Larger particles take longer to process under the old finite-contact
+feeding rule; they do not automatically deliver a larger meal to a passing body.
+
+V17 optionally replaces each four-receptor field group with a mean and three
+spatial contrasts, with shared local normalization. No inherited weights or
+movement policy are prescribed. Architecture and genotype size remain unchanged.
+Three paired compact-habitat starts showed mixed effects: populations 55/7/4
+versus 23/19/20 with absolute encoding. Retain this as an experiment, not a proven
+improvement. Neutral V17 matched every recorded physical measurement of the V16
+compact control. All 281 tests passed and CPU/CUDA replay exercises passed with
+births, growth, variable plasticity rules, and resource changes.
+
+Current next steps are matched sensory interventions on evolved fast-feeding
+communities and bounded carried food, separating collection from digestion while
+retaining finite processing budgets and producer/consumer energy accounting.

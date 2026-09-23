@@ -30,6 +30,11 @@ def upgrade_genomes(source, target, genomes):
         )
     if genomes.shape[1] != source.parameter_count:
         raise ValueError("Source genome does not match its configuration")
+    if source.sensory_contrast != target.sensory_contrast:
+        raise ValueError(
+            "Genome transfer requires matching sensory_contrast settings; "
+            "the input meanings differ between the two encodings"
+        )
     out = torch.zeros((len(genomes), target.parameter_count), device=genomes.device)
     old, new = brain_parts(source, genomes), brain_parts(target, out)
     h = source.hidden_size
