@@ -27,7 +27,7 @@ def initial_brains(config, count, device, generator):
     return torch.cat(pieces, 1).clamp(-config.weight_limit, config.weight_limit)
 
 
-def advance(config, genome, inputs, hidden, tau=None, plastic=None):
+def advance(config, genome, inputs, hidden, tau=None, plastic=None, return_logits=False):
     h, ni, no = config.hidden_size, config.input_size, config.output_size
     offset = 0
 
@@ -55,7 +55,8 @@ def advance(config, genome, inputs, hidden, tau=None, plastic=None):
     hidden = (1 - alpha) * hidden + alpha * drive.tanh()
     if config.ecology_version >= 8:
         hidden = hidden * nodes
-    return hidden, ((wo @ hidden[..., None]).squeeze(-1) + bo).sigmoid()
+    logits = (wo @ hidden[..., None]).squeeze(-1) + bo
+    return hidden, logits if return_logits else logits.sigmoid()
 
 
 def initial_state(config, genomes):
@@ -63,19 +64,57 @@ def initial_state(config, genomes):
     state = dict(hidden=genomes.new_zeros((n, h)))
     if config.ecology_version >= 7:
         state.update(plastic=genomes.new_zeros((n, h, h)), trace=genomes.new_zeros((n, h, h)))
+    if config.ecology_version >= 12:
+        from .learning import motor_state
+
+        state.update(motor_state(config, genomes))
     return state
 
 
-def controller_step(config, genome, inputs, state, tau=None, plasticity=True):
+def controller_step(
+    config,
+    genome,
+    inputs,
+    state,
+    tau=None,
+    plasticity=True,
+    *,
+    motor_learning=True,
+    noise=None,
+    reward=None,
+    elapsed=None,
+):
     """One circuit update; acquired synaptic offsets never modify the genome.
 
     A signed fifth output modulates a low-pass trace of post/pre activity.
     The update and decay follow simulated time. Frozen controls retain the
     controller's outputs while suppressing acquired offsets and traces.
+    V12 also adapts motor readouts using supplied energetic returns and
+    exploration samples. Callers without those supplies test only the older
+    recurrent mechanism; this function never draws random numbers itself.
     """
     plastic = state.get("plastic") if plasticity else None
-    hidden, actions = advance(config, genome, inputs, state["hidden"], tau, plastic)
+    hidden, actions = advance(
+        config, genome, inputs, state["hidden"], tau, plastic, config.ecology_version >= 12
+    )
     result = dict(hidden=hidden)
+    if config.ecology_version >= 12:
+        from .learning import motor_policy
+
+        acquired, actions = motor_policy(
+            config,
+            genome,
+            hidden,
+            actions,
+            state,
+            inputs.new_zeros((len(genome), 2)) if noise is None else noise,
+            inputs.new_zeros(len(genome)) if reward is None else reward,
+            inputs.new_full((len(genome),), 1 / config.controller_hz)
+            if elapsed is None
+            else elapsed,
+            learning=plasticity and motor_learning,
+        )
+        result.update(acquired)
     if config.ecology_version < 7:
         return result, actions
     if not plasticity:

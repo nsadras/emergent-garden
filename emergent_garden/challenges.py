@@ -28,6 +28,9 @@ def fork_challenge(source, mode, reverse, target_tick):
     if mode in ("erase_plastic", "no_plasticity"):
         w.agents["module_plastic"].zero_()
         w.agents["module_trace"].zero_()
+        if w.config.ecology_version >= 12:
+            for key in ("module_motor_plastic", "module_motor_trace", "module_motor_baseline"):
+                w.agents[key].zero_()
     if mode == "erase_activity":
         w.agents["module_h"].zero_()
         w.agents["h"].zero_()

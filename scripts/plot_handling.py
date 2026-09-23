@@ -52,7 +52,11 @@ def main():
                 ax.set_xlabel("Simulated minutes")
     for ax, title in zip(
         axes[0],
-        ("Mixed / limited processing", "Mixed / unlimited processing", "Scavenger ancestry controls"),
+        (
+            "Mixed / limited processing",
+            "Mixed / unlimited processing",
+            "Scavenger ancestry controls",
+        ),
         strict=True,
     ):
         ax.set_title(title, fontsize=11)
@@ -62,8 +66,10 @@ def main():
     fig.text(
         0.5,
         0.025,
-        "Mixtures start with 96 founders from each evolved source; alone treatments start with 192.\n"
-        "Recycling-off mixtures retain the same fresh-food assimilation. All treatments feed at 5 Hz.\n"
+        "Mixtures start with 96 founders from each evolved source; "
+        "alone treatments start with 192.\n"
+        "Recycling-off mixtures retain fresh-food assimilation. "
+        "All treatments feed at 5 Hz.\n"
         "Curves track source ancestry, not current diet or species; extinct trials end early.",
         ha="center",
         fontsize=9,

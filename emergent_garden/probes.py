@@ -197,6 +197,12 @@ def association_run(run, output, count=64, rounds=3, device="cpu"):
         "experienced high-value identity. This isolated-circuit assay does not establish "
         "successful navigation, learning benefits, or ecological fitness.",
     )
+    if config.ecology_version >= 12:
+        report["motor_learning_tested"] = False
+        report["interpretation"] += (
+            " This cue-only assay supplies no motor exploration or energetic consequences; "
+            "it tests the recurrent mechanism, not V12 motor learning."
+        )
     for label, pool in (("founders", founders), ("descendants", descendants)):
         if not len(pool):
             raise ValueError(f"No genomes for {label}")

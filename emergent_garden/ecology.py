@@ -16,7 +16,7 @@ from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .runtime import enable_cuda_replay
 from .spatial import neighbors
-from .topology import counts, initial_structure, mutate_structure
+from .topology import counts, effective_masks, initial_structure, mutate_structure
 from .trophic import TrophicLedger, guilds
 from .world import World, genome_hash
 
@@ -48,6 +48,9 @@ class EcologyWorld(World):
             "no_shelter_cue",
             "unlimited_feeding",
             "unlimited_handling",
+            "no_motor_learning",
+            "no_motor_reward",
+            "no_exploration",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -61,6 +64,10 @@ class EcologyWorld(World):
             or (
                 ablation in ("unlimited_feeding", "unlimited_handling")
                 and config.ecology_version < 11
+            )
+            or (
+                ablation in ("no_motor_learning", "no_motor_reward", "no_exploration")
+                and config.ecology_version < 12
             )
         ):
             raise ValueError("Ablation requires a version containing that feature")
@@ -121,6 +128,11 @@ class EcologyWorld(World):
             self.totals.update(shelter_agent_seconds=0.0, shelter_obstructed_demand=0.0)
         if c.ecology_version >= 11:
             self.totals.update(fresh_processed=0.0, detritus_processed=0.0)
+        if c.ecology_version >= 12:
+            self.rng["exploration"] = torch.Generator(device=self.device).manual_seed(
+                seed + 1048583
+            )
+            self.totals.update(motor_learning_cost=0.0, motor_learning_changes=0.0)
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -197,6 +209,15 @@ class EcologyWorld(World):
         if c.ecology_version >= 11:
             for key in ("fresh_processed", "detritus_processed"):
                 a[key] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 12:
+            for key in ("motor_plastic", "motor_trace"):
+                a[f"module_{key}"] = torch.zeros(
+                    (n, MAX_MODULES, 2, c.hidden_size + 1), device=self.device
+                )
+            a["module_motor_baseline"] = torch.zeros((n, MAX_MODULES), device=self.device)
+            a["motor_reward"] = torch.zeros(n, device=self.device)
+            a["motor_change"] = torch.zeros(n, device=self.device)
+            a["last_motor_tick"] = torch.full((n,), self.tick, dtype=torch.long, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -438,6 +459,28 @@ class EcologyWorld(World):
                         state[key] = a[f"module_{key}"][index].reshape(
                             -1, c.hidden_size, c.hidden_size
                         )
+                motor_arguments = {}
+                if c.ecology_version >= 12:
+                    for key in ("motor_plastic", "motor_trace"):
+                        state[key] = a[f"module_{key}"][index].reshape(-1, 2, c.hidden_size + 1)
+                    state["motor_baseline"] = a["module_motor_baseline"][index].reshape(-1)
+                    noise = torch.randn(
+                        (count, MAX_MODULES, 2),
+                        device=self.device,
+                        generator=self.rng["exploration"],
+                    )
+                    if self.ablation == "no_exploration":
+                        noise.zero_()
+                    reward = a["motor_reward"][index] / (c.feedback_scale * a["area"][index])
+                    if self.ablation in ("no_motor_reward", "no_feedback"):
+                        reward.zero_()
+                    elapsed = (self.tick - a["last_motor_tick"][index]) * c.dt
+                    motor_arguments = dict(
+                        motor_learning=self.ablation != "no_motor_learning",
+                        noise=noise.reshape(-1, 2),
+                        reward=reward[:, None].expand(-1, MAX_MODULES).reshape(-1),
+                        elapsed=elapsed[:, None].expand(-1, MAX_MODULES).reshape(-1),
+                    )
                 updated, actions = controller_step(
                     c,
                     genomes.reshape(-1, c.parameter_count),
@@ -445,6 +488,7 @@ class EcologyWorld(World):
                     state,
                     times,
                     plasticity=self.ablation != "no_plasticity",
+                    **motor_arguments,
                 )
                 hidden = (
                     updated["hidden"].reshape(count, MAX_MODULES, c.hidden_size) * mask[..., None]
@@ -460,6 +504,18 @@ class EcologyWorld(World):
                                 (values - a["module_plastic"][index]).abs().double().sum().item()
                             )
                         a[f"module_{key}"][index] = values
+                if c.ecology_version >= 12:
+                    for key in ("motor_plastic", "motor_trace"):
+                        values = updated[key].reshape(count, MAX_MODULES, 2, c.hidden_size + 1)
+                        values *= mask[..., None, None]
+                        if key == "motor_plastic":
+                            change = (values - a[f"module_{key}"][index]).abs().sum((1, 2, 3))
+                            a["motor_change"][index] += change
+                            self.totals["motor_learning_changes"] += change.double().sum().item()
+                        a[f"module_{key}"][index] = values
+                    a["module_motor_baseline"][index] = (
+                        updated["motor_baseline"].reshape(count, MAX_MODULES) * mask
+                    )
                 actions = actions.reshape(count, MAX_MODULES, c.output_size) * mask[..., None]
                 a["module_h"][index], a["module_actions"][index] = hidden, actions
                 a["h"][index] = hidden.sum(1) / mask.sum(1)[:, None]
@@ -482,6 +538,9 @@ class EcologyWorld(World):
             turn = (2 * turn).clamp(-1, 1)
             a["actions"][index, :2] = torch.stack((0.7 - turn, 0.7 + turn), 1).clamp(0, 1)
         a["motors"][index] = a["actions"][index, :2]
+        if c.ecology_version >= 12:
+            a["motor_reward"][index] = 0
+            a["last_motor_tick"][index] = self.tick
         if c.ecology_version >= 4 and self.controller != "neural":
             a["module_actions"][index] = (
                 a["actions"][index, None] * a["module_mask"][index, :, None]
@@ -607,6 +666,8 @@ class EcologyWorld(World):
         received = shares * assimilated
         accumulate("energy", i, received)
         accumulate("acquired", i, received)
+        if c.ecology_version >= 12:
+            accumulate("motor_reward", i, received)
         if c.ecology_version >= 6:
             accumulate("food_feedback", i, received)
             favorable = self.landscape.is_favorable(self.food_patch[j])
@@ -695,6 +756,8 @@ class EcologyWorld(World):
         a["acquired"] += received
         a["meat_acquired"] += received
         a["bitten"] += lost
+        if c.ecology_version >= 12:
+            a["motor_reward"] += received - lost
         if c.ecology_version >= 6:
             a["damage_feedback"] += lost
         self.totals["predation_absorbed"] += received.double().sum().item()
@@ -722,6 +785,7 @@ class EcologyWorld(World):
             "shelter_time",
             "fresh_processed",
             "detritus_processed",
+            "motor_change",
         ):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
@@ -856,6 +920,8 @@ class EcologyWorld(World):
             maintenance += c.plasticity_cost * copies * c.dt
         if c.ecology_version >= 8:
             maintenance += a["brain_maintenance"] * c.dt
+        if c.ecology_version >= 12:
+            maintenance += c.motor_learning_cost * copies * c.dt
         return maintenance, propulsion
 
     def emit(self, paid_fraction):
@@ -910,6 +976,11 @@ class EcologyWorld(World):
             cost = maintenance + propulsion
             a["energy"] = (a["energy"] - cost).clamp_min(0)
             a["spent"] += cost
+            if c.ecology_version >= 12:
+                a["motor_reward"] -= cost
+                self.totals["motor_learning_cost"] += (
+                    (c.motor_learning_cost * a["modules"] * c.dt * scale).double().sum().item()
+                )
             a["age"] += c.dt
             self.totals["maintenance"] += maintenance.double().sum().item()
             self.totals["propulsion"] += propulsion.double().sum().item()
@@ -944,6 +1015,15 @@ class EcologyWorld(World):
         result["grazers"] = int((a["diet"] > 0.65).sum())
         result["scavengers"] = int((a["diet"] < 0.35).sum())
         result["generalists"] = n - result["grazers"] - result["scavengers"]
+        provenance = getattr(self, "seeded_from", None)
+        if provenance and provenance.get("mode") == "community_assembly":
+            labels = torch.tensor(provenance["founder_sources"], device=self.device)[a["lineage"]]
+            groups = range(len(provenance["sources"]))
+            result["source_populations"] = [int((labels == group).sum()) for group in groups]
+            result["source_mean_diet"] = [
+                a["diet"][labels == group].mean().item() if (labels == group).any() else None
+                for group in groups
+            ]
         if c.ecology_version >= 2:
             result["mean_attack"] = a["attack"].mean().item() if n else 0
             result["mean_armor"] = a["armor"].mean().item() if n else 0
@@ -994,6 +1074,31 @@ class EcologyWorld(World):
                 mean_shelter=cover.mean().item() if n else 0.0,
                 sheltered_population=int(sheltered.sum()),
                 sheltered_guilds=torch.bincount(groups[sheltered], minlength=3).tolist(),
+            )
+        if c.ecology_version >= 12:
+            connections = effective_masks(c, a["genome"])[3][:, :2].sum((1, 2)) + 2
+            count = max(1, int((connections * a["modules"]).sum()))
+            result["mean_motor_plastic_magnitude"] = (
+                a["module_motor_plastic"].abs().double().sum().item() / count
+            )
+            result["motor_saturated_fraction"] = (
+                a["module_motor_plastic"].abs() >= 0.999 * c.motor_learning_limit
+            ).sum().item() / count
+            row_norms = a["module_motor_plastic"].norm(dim=-1)
+            result["motor_rows_saturated_fraction"] = (
+                row_norms >= 0.999 * c.motor_learning_limit
+            ).sum().item() / max(1, 2 * int(a["modules"].sum()))
+            traits = a["genome"][:, c.brain_parameter_count + 11 : c.brain_parameter_count + 13]
+            traits = traits.sigmoid()
+            result["mean_motor_learning_rate"] = (
+                (c.motor_learning_rate * traits[:, 0]).mean().item() if n else 0.0
+            )
+            result["mean_exploration_sigma"] = (
+                (c.exploration_min + (c.exploration_max - c.exploration_min) * traits[:, 1])
+                .mean()
+                .item()
+                if n
+                else 0.0
             )
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()

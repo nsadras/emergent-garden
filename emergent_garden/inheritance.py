@@ -53,6 +53,9 @@ def upgrade_genomes(source, target, genomes):
             traits[:, 6] = -0.75  # One module, near a viable duplication mutation.
         if target.ecology_version >= 7 and source.ecology_version < 7:
             traits[:, 9] = -2.0  # Modest learning rate; decay starts at its midpoint.
+        if target.ecology_version >= 12 and source.ecology_version < 12:
+            traits[:, 11] = -2.0  # Modest initial motor-learning rate.
+            traits[:, 12] = -1.0  # Small, nonzero motor exploration.
         traits[:, : source.trait_count] = genomes[
             :, source.brain_parameter_count : source.brain_parameter_count + source.trait_count
         ]

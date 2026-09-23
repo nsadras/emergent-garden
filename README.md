@@ -2,8 +2,10 @@
 
 A continuous 2D artificial-life world with evolving neural controllers, resource
 cycling, predation, inherited bodies, and persistent chemical trails. Creatures
-spend energy, reproduce, and mutate. There is no behavioral reward or global
-parent ranking. V0 and every subsequent experimental preset remain available.
+spend energy, reproduce, and mutate. Reproduction uses locally acquired energy;
+there is no global parent ranking. V12 additionally uses each creature's net
+energy flow for within-lifetime motor reinforcement. V0 and every subsequent
+experimental preset remain available.
 
 ![V5 modular creatures and their chemical trails](docs/v5-detail.png)
 
@@ -60,6 +62,14 @@ for an hour in two of three mixtures under each processing treatment, so an
 improvement in coexistence frequency is unestablished. Random-founder pilots
 have not established reliable populations.
 A verified 30-second recording is at `runs/v11-video/timelapse.mp4`.
+
+The experimental [V12 preset](configs/v12.toml) adds heritable exploration and
+learning rates, with acquired motor readouts that respond to food, costs, and
+damage. [The inspector](docs/v12-preview.png) shows these offsets. The rule can
+[learn and reverse a constructed cue–action task](docs/v12-rule.png), but useful
+learning in the dish is still being tested. The first, less constrained version
+disrupted inherited foraging; it remains in [v12-wide.toml](configs/v12-wide.toml).
+A verified video is at `runs/v12-video/timelapse.mp4`.
 
 ## Start watching
 

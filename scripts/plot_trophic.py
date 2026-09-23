@@ -15,7 +15,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--conditions", nargs=2, default=["v9-traced-mixed", "v9-traced-no-attacks"])
+    parser.add_argument(
+        "--conditions", nargs=2, default=["v9-traced-mixed", "v9-traced-no-attacks"]
+    )
     parser.add_argument("--labels", nargs=2, default=["Attacks active", "Attacks disabled"])
     parser.add_argument(
         "--title", default="Most scavenger detritus uptake comes from the scavenger guild"

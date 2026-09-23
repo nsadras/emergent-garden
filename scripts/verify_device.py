@@ -88,6 +88,13 @@ def main():
     if c.ecology_version >= 9:
         assert max(map(abs, metric["trophic_detritus_balance_error"])) < 1e-7
         torch.testing.assert_close(w.food_credit.sum(1), w.food_energy.double())
+    if c.ecology_version >= 12:
+        assert metric["mean_motor_plastic_magnitude"] > 0
+        assert metric["motor_learning_changes"] > 0
+        if c.motor_normalized:
+            assert (
+                w.agents["module_motor_plastic"].norm(dim=-1).max() <= c.motor_learning_limit + 1e-6
+            )
     if args.exercise_births:
         assert metric["births"] > 0
         if c.ecology_version >= 8:

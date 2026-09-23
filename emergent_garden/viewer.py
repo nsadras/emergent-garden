@@ -264,8 +264,12 @@ class Renderer:
                 height += 22
             if c.ecology_version >= 11:
                 height += 42
+            if c.ecology_version >= 12:
+                height += 42
             if self.show_brain:
                 height += 150
+                if c.ecology_version >= 12:
+                    height += 74
             panel = pygame.Surface((285, height), pygame.SRCALPHA)
             panel.fill((6, 14, 21, 230))
             surface.blit(panel, (18, 92))
@@ -325,8 +329,24 @@ class Renderer:
                     detritus = c.handling_rate * tissue * (1 - diet) ** 2
                     label = f"Fresh {fresh:.1f}   Detritus {detritus:.1f}"
                 self.text(label, (30, 432), small=True)
+            if c.ecology_version >= 12:
+                from .topology import effective_masks
+
+                motor_mask = effective_masks(c, a["genome"][i : i + 1])[3][:, :2]
+                count = int(data["modules"][i])
+                magnitude = a["module_motor_plastic"][i, :count].abs().sum().item() / (
+                    count * (int(motor_mask.sum()) + 2)
+                )
+                traits = a["genome"][i, c.brain_parameter_count + 11 : c.brain_parameter_count + 13]
+                rate, exploration = traits.sigmoid().tolist()
+                rate *= c.motor_learning_rate
+                exploration = (
+                    c.exploration_min + (c.exploration_max - c.exploration_min) * exploration
+                )
+                self.text(f"Motor offsets {magnitude:.4f}", (30, 453), small=True)
+                self.text(f"Exploration {exploration:.2f}   Rate {rate:.3f}", (30, 474), small=True)
             if self.show_brain:
-                self.draw_brain(world, i, 92 + height - 146)
+                self.draw_brain(world, i, 92 + height - (220 if c.ecology_version >= 12 else 146))
         return surface
 
     def draw_brain(self, world, index, top):
@@ -358,6 +378,19 @@ class Renderer:
             layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
             self.text(label, (x, top), small=True)
             self.surface.blit(pygame.transform.scale(layer, (112, 112)), (x, top + 20))
+        if c.ecology_version >= 12:
+            matrix = a["module_motor_plastic"][index, 0].detach().cpu().numpy()
+            mask = effective_masks(c, genome)[3][0, :2].cpu().numpy()
+            mask = np.concatenate((mask, np.ones((2, 1), dtype=bool)), 1)
+            strength = np.clip(np.abs(matrix) / c.motor_learning_limit, 0, 1)[..., None]
+            tint = np.where((matrix >= 0)[..., None], (100, 210, 161), (153, 133, 235))
+            rgb = (np.array((20, 35, 38)) + strength * (tint - (20, 35, 38))).astype(np.uint8)
+            rgb[~mask] = (10, 19, 23)
+            layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
+            self.text(
+                f"Motor offsets ±{c.motor_learning_limit:g} (L/R)", (30, top + 140), small=True
+            )
+            self.surface.blit(pygame.transform.scale(layer, (248, 28)), (30, top + 160))
 
     def save(self, world, path):
         Path(path).parent.mkdir(parents=True, exist_ok=True)

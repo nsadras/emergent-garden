@@ -650,3 +650,171 @@ replay through eight births and eight structurally mutated offspring each.
 Their energy residuals were +0.000778 and -0.000329; the GPU exercise used about
 38 MB of peak allocated tensor memory. These are correctness checks, not full
 population performance measurements.
+
+## V12 — energetic feedback for acquired motor readouts
+
+The earlier recurrent plasticity rule changed synapses but did not establish
+useful learning in measured populations. V12 adds a more direct credit path:
+small exploratory motor changes leave an eligibility trace, and subsequent
+energetic outcomes modify the motor readout. The inherited recurrent circuit,
+its plasticity rule, body development, ecology, and reproduction remain active.
+This is a designed learning mechanism whose rates can evolve, not a claim that
+evolution discovered the algorithm.
+
+The update uses the likelihood score of Gaussian motor exploration, following
+the stochastic-unit approach in [Williams (1992)](https://doi.org/10.1007/BF00992696).
+Short eligibility traces and modulatory feedback also draw on the approach
+discussed by [Miconi (2017)](https://elifesciences.org/articles/20899). Our implementation
+adapts motor readouts from continuous physical energy flow; it does not reproduce
+that paper's recurrent-network tasks or delayed trial rewards. Bounds, forgetting,
+and finite traces make this an online approximation, without an optimality guarantee.
+
+### Inherited rules and acquired state
+
+There are still 36 sensory inputs and five controller outputs per module, with
+up to 32 recurrent neurons and inherited connectivity. The genome gains two
+continuous traits, bringing its length to 4,754 values: one sets the motor-learning
+rate and the other sets exploratory noise. Existing V11 transfers preserve every
+old neural and body gene; added traits start at -2 and -1 respectively. They
+mutate and inherit like the other developmental traits.
+
+Each module adds a transient `2 × (hidden_size + 1)` motor-offset matrix and an
+eligibility trace of the same shape. The extra column is a bias feature. A
+running energetic baseline is also acquired. Offspring start all these states
+at zero; none is copied into their genome or inherited from the parent's life.
+Offset connections follow the inherited motor-output masks, with two always
+available bias offsets. Inactive body modules remain zeroed.
+
+At each controller update, the preceding interval's physical return is credited
+before the next action is chosen. Return is actual food and meat absorbed minus
+maintenance, propulsion, secretion and attack costs, and energy lost to bites,
+divided by `feedback_scale × body_area`. Reproduction transfers are excluded.
+The feedback uses no hidden patch-quality label, target trajectory, or externally
+assigned behavioral score. A body shares its return across its active modules.
+
+The energetic baseline tracks a rate, so a newborn's shorter first control
+interval does not imply a different expected rate. The integrated difference
+between received return and that baseline is clipped to [-1, 1]. It scales the
+previous eligibility trace and the inherited learning rate. The fifth neural
+output gates new motor eligibility through its nonnegative sigmoid value;
+the older recurrent rule continues to use that output's signed transform.
+
+| Parameter | Initial setting |
+| --- | --- |
+| Maximum motor-learning rate | 0.2, multiplied by sigmoid of trait 11 |
+| Exploration standard deviation | 0.05 + 0.45 × sigmoid of trait 12 |
+| Transferred initial rate / noise | approximately 0.0238 / 0.171 |
+| Eligibility decay time | 2 seconds |
+| Energetic baseline time | 10 seconds |
+| Motor-offset forgetting half-life | 120 seconds |
+| Total acquired motor-logit correction bound | 0.5 per motor, before exploration |
+| Added maintenance | 0.02 energy per active module per second |
+
+The [current preset](configs/v12.toml) normalizes `(hidden_state, 1)` to unit
+length and constrains each offset row's length to at most 0.5. Their dot product
+therefore cannot exceed 0.5 in magnitude, regardless of hidden-layer width.
+This bounds each decision's correction, not divergence of whole trajectories.
+Exploration uses a separate checkpointed random stream. The original
+[per-weight-bound preset](configs/v12-wide.toml) retains `motor_normalized = 0`;
+older prototype checkpoints without this field load with that original setting.
+
+`no_motor_learning` removes motor offsets and their eligibility while retaining
+exploration, the energetic baseline, and maintenance costs. `no_exploration`
+uses zero perturbations while still advancing the exploration random stream;
+freshly initialized motor offsets then stay zero. `no_motor_reward` withholds
+only this new reinforcement signal. `no_plasticity` disables both acquired
+weight mechanisms while retaining exploration and costs. Acquired-state
+challenges erase the motor matrices and baseline when erasing plastic state.
+The older cue-only association assay explicitly reports that it does not test
+the new motor mechanism.
+
+### Mechanism check and pilot correction
+
+`scripts/probe_motor_learning.py` constructs 64 identical circuits with a supplied
+binary cue feature and a motor-error penalty. Genomes remain unchanged, each
+circuit encounters both cues, and the desired association reverses after 120
+assay seconds. Three random streams, 201/202/203, each receive matched exploration
+with learning enabled or disabled. These circuits are never seeded into the dish.
+
+With bounded corrections, the late initial mean squared error was approximately
+0.184–0.185, versus 0.254–0.255 with learning disabled. It worsened to
+0.319–0.321 after reversal, then returned to 0.192–0.193. The original per-weight
+rule reached about 0.153–0.156, with a larger reversal error. The
+[figure](docs/v12-rule.png), [original rule records](docs/results/v12-motor-rule.json),
+and [bounded rule records](docs/results/v12-bounded-rule.json) establish that the
+readout can learn this supplied task. They do not demonstrate evolved feature
+learning, ecological usefulness, or intelligent navigation.
+
+The first physical mixed-community pilot, environment 191 for 300 seconds,
+showed why a behavioral bound was needed. Per-weight motor limits left 13
+creatures and 24 births, versus 69 and 96 with motor learning disabled. Many
+small weight changes could combine into a large motor correction. Bounding
+the total correction left 76 creatures and 94 births in the same pilot.
+This is recovery from a harmful rule setting, not consistent evidence of a
+learning benefit. The disabled-learning control's physics is exactly unchanged
+by normalization, as checked independently. All three pilots and matched-founder
+checks are retained in [the pilot records](docs/results/v12-pilots.json) and
+[audit](docs/results/v12-pilot-audit.json).
+
+### Evaluation in progress
+
+Nine 3,600-second community trials use new environments 201/202/203 with bounded
+learning, matched exploration without motor learning, or no exploration. They
+start from the same evolved V7 source pools, with ordinary mutation active.
+Their results can measure the combined consequences of lifetime adaptation and
+subsequent genetic selection, and must not be described as a pure learning effect.
+
+`scripts/assay_motor_lifetimes.py` separately samples eight grazer genotypes from
+the V11 limited mixture in environment 181. Each is tested in environments
+10021/10022/10023 under all three interventions for 240 seconds, with every
+mutation probability zero. Outcomes track the founding individual through
+survival or its death record: energy acquired/spent, offspring, age, and distance.
+Each world starts with one creature; its genetically identical offspring may
+share the dish. The assay uses a 128-unit dish, four 12-unit patches, 160 initial
+food particles, 12 new particles per second, capacity 16, and 60-second nutritional
+reversals. This is a deliberately richer evaluation habitat, not a claim about
+performance in the main 512-unit community. Source genomes, package sources,
+configuration, experiment code, and every completed paired trial are retained.
+Genotypes from one source community are not independent evolutionary replicates.
+
+Useful lifetime adaptation requires improvement in these matched physical
+outcomes across environments; synaptic motion, surviving populations, or the
+constructed cue task alone are insufficient. The lifetime and longer community
+experiments are still running.
+
+The 154-test suite passes, including causal timing of motor credit, inactive-edge
+masking, inherited-rule preservation, newborn resets, energetic feedback,
+normalization independent of circuit width, control parity, and exact checkpoint
+and observer behavior. Both [CPU](docs/results/v12-bounded-cpu-births.json) and
+[CUDA](docs/results/v12-bounded-cuda-births.json) exercises passed exact replay
+through eight births and structural mutations, with active motor learning and
+the readout bound checked. Their energy residuals were -0.000248 and -0.000330.
+The GPU exercise used about 38 MB of peak allocated tensor memory. The earlier
+per-weight-bound checks are retained separately.
+
+`runs/v12-video/timelapse.mp4` continues the bounded pilot from 300 to 600 seconds.
+All 901 frames decoded at 1,024×1,024 and 30 FPS; the
+[verification record](docs/results/v12-video.json) retains frame hashes. The
+[inspector preview](docs/v12-preview.png) displays inherited recurrent weights,
+acquired recurrent changes, and the two acquired motor rows separately.
+
+## Next developmental experiment
+
+The persisting V11 communities remain entirely single-module organisms.
+`scripts/audit_development.py` tests whether changing only the encoded module
+count is affordable under the existing birth law. Among all 73 and 41 living
+parents at the two one-hour mixed-community checkpoints, **none could afford a
+two-module offspring even at maximum stored energy**. Median required debits
+were 106.32% and 105.57% of the parents' maximum stores. A three-module offspring
+cost still more. [The counterfactual audit](docs/results/development-affordability.json)
+includes each parent's bound and the proposed child's debit.
+
+This identifies an accessibility barrier, not proof that larger bodies are
+intrinsically unfit or impossible to evolve: simultaneous changes to core size,
+spacing, or neural construction could alter affordability. The next prototype
+will test juvenile development. Offspring can start with one module, then pay
+for additional genetically specified modules during life before reproducing.
+Growth must respect available energy and physical space, and every new circuit
+must start without acquired state. A comparison with fully constructed offspring
+will isolate the birth-cost barrier. Explicit neighboring module-count mutation
+events will be recorded separately from ordinary continuous trait mutations.

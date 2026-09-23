@@ -59,6 +59,15 @@ class Config:
     shelter_protection: float = 0.95
     handling_rate: float = 60.0
     feeding_hz: int = 0  # Zero uses the physics frequency.
+    motor_learning_rate: float = 0.2
+    motor_learning_limit: float = 0.5
+    motor_trace_tau: float = 2.0
+    motor_baseline_tau: float = 10.0
+    motor_half_life: float = 120.0
+    exploration_min: float = 0.05
+    exploration_max: float = 0.5
+    motor_learning_cost: float = 0.02
+    motor_normalized: int = 0  # Preserve the first V12 prototype's per-weight bound.
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -121,14 +130,16 @@ class Config:
             "metrics_period checkpoint_wall_seconds viewer_size viewer_fps video_fps video_speed "
             "signal_half_life signal_scale quality_period feedback_scale identity_strength "
             "plasticity_limit plasticity_trace_tau "
-            "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate"
+            "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate "
+            "motor_learning_limit motor_trace_tau motor_baseline_tau "
+            "motor_half_life exploration_min"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11):
+        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -146,6 +157,10 @@ class Config:
             raise ValueError("Reversal ecology requires at least two patches")
         if self.plasticity_half_life_max < self.plasticity_half_life_min:
             raise ValueError("Plasticity half-life bounds must be ordered")
+        if self.exploration_max < self.exploration_min:
+            raise ValueError("Exploration noise bounds must be ordered")
+        if self.motor_normalized not in (0, 1):
+            raise ValueError("motor_normalized must be 0 or 1")
         if self.ecology_version >= 8 and not (
             1 <= self.min_neurons <= self.initial_neurons <= self.hidden_size
         ):
@@ -237,6 +252,8 @@ class Config:
 
     @property
     def trait_count(self):
+        if self.ecology_version >= 12:
+            return 13
         if self.ecology_version >= 7:
             return 11
         if self.ecology_version >= 4:
