@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import torch
 
-from emergent_garden.observation import ControllerObserver, TrailHistory
+from emergent_garden.observation import ControllerObserver, TrailHistory, reproduction_readiness
 from emergent_garden.world import World, create_world
 
 
@@ -21,6 +21,92 @@ def assert_same(left, right):
             assert_same(x, y)
     else:
         assert left == right
+
+
+@pytest.mark.parametrize("version", [0, 1, 8, 12, 15])
+def test_readiness_matches_birth_energy_boundary(config, version):
+    c = replace(
+        config,
+        ecology_version=version,
+        initial_population=1,
+        reproduction_threshold=150,
+        reproduction_debit=110,
+        mutation_probability=0,
+        trait_mutation_probability=0,
+        node_mutation_probability=0,
+        edge_mutation_probability=0,
+        module_mutation_probability=0,
+    )
+    w = create_world(c)
+    a = w.agents
+    a["pos"][:] = c.diameter / 2
+    if version >= 4:
+        a["genome"][:, c.brain_parameter_count + 6] = -3  # Mature one-module body.
+        w.develop(a)
+    threshold = c.reproduction_threshold * (a["area"][0] if version else 1)
+    a["energy"][0] = threshold - 1
+    readiness = reproduction_readiness(w, 0)
+    assert 0 < readiness.energy_fraction < 1
+    assert not readiness.energy_ready and not readiness.ready_to_try
+    assert readiness.status == "Needs energy"
+    w.reproduce()
+    assert w.totals["births"] == 0
+
+    a["energy"][0] = threshold
+    readiness = reproduction_readiness(w, 0)
+    assert readiness.threshold == float(threshold)
+    assert readiness.energy_fraction == 1 and readiness.ready_to_try
+    assert readiness.storage_fraction == pytest.approx(c.reproduction_threshold / c.max_energy)
+    assert readiness.status == "Ready to try"
+    w.reproduce()
+    assert w.totals["births"] == 1
+    assert reproduction_readiness(w, 0).energy_fraction < 1
+
+
+def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
+    c = replace(config, ecology_version=15, initial_population=1, capacity=2)
+    w = create_world(c)
+    a = w.agents
+    a["pos"][:] = c.diameter / 2
+    a["genome"][:, c.brain_parameter_count + 6] = 3
+    w.develop(a)
+    a["energy"] = c.max_energy * a["area"]
+    readiness = reproduction_readiness(w, 0)
+    assert readiness.energy_fraction == 1
+    assert readiness.storage_fraction == 1
+    assert not readiness.mature and not readiness.ready_to_try
+    assert readiness.status == "Growing 1/3 modules"
+    w.reproduce()
+    assert w.totals["births"] == 0
+
+    a["development_stage"].fill_(3)
+    w.develop(a)
+    readiness = reproduction_readiness(w, 0)
+    assert readiness.mature
+    # The same energy buys a smaller fraction of the larger body's threshold.
+    assert readiness.energy_fraction < 1
+    assert readiness.storage_fraction < 1
+    a["energy"] = c.reproduction_threshold * a["area"]
+    a["retry_tick"].fill_(c.physics_hz // 2)
+    readiness = reproduction_readiness(w, 0)
+    assert readiness.energy_ready and readiness.mature and not readiness.ready_to_try
+    assert readiness.retry_seconds == 0.5
+    assert readiness.status == "Retry in 0.5s"
+    w.reproduce()
+    assert w.totals["births"] == 0
+    w.tick = c.physics_hz // 2
+    assert reproduction_readiness(w, 0).ready_to_try
+    w.reproduce()
+    assert w.totals["births"] == 1
+
+    w.agents["energy"][0] = c.max_energy * w.agents["area"][0]
+    w.tick = int(w.agents["retry_tick"][0])
+    readiness = reproduction_readiness(w, 0)
+    assert readiness.energy_ready and readiness.mature and readiness.retry_seconds == 0
+    assert readiness.population_full and not readiness.ready_to_try
+    assert readiness.status == "Population full"
+    w.reproduce()
+    assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
 @pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15])

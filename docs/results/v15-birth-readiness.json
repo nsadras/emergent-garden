@@ -1,0 +1,267 @@
+{
+  "date": "2026-09-23",
+  "ecology_version": 15,
+  "device": "cpu",
+  "torch_threads": 1,
+  "controller": "neural",
+  "ablation": "none",
+  "horizon_seconds": 600,
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "initial_population": 192,
+  "preset_changes": {
+    "reproduction_threshold": {
+      "before": 220.0,
+      "after": 150.0
+    },
+    "reproduction_debit": {
+      "before": 120.0,
+      "after": 110.0
+    }
+  },
+  "birth_energy_unchanged": true,
+  "original_preset_preserved_verbatim": true,
+  "commands": [
+    "uv run garden calibrate --config configs/v15-research.toml --seeds 1 2 3 --seconds 600 --device cpu --output runs/v15-birth-readiness-baseline",
+    "uv run garden calibrate --config configs/v15.toml --seeds 1 2 3 --seconds 600 --device cpu --output runs/v15-birth-readiness-easier"
+  ],
+  "conditions": {
+    "baseline": {
+      "config": "configs/v15-research.toml",
+      "config_sha256": "cbff2506f28babe3024a3175ff6277863b608536fc33673f6d443c8d50044e2e",
+      "results": [
+        {
+          "seed": 1,
+          "time": 371.1,
+          "population": 0,
+          "births": 0,
+          "deaths": 192,
+          "blocked_births": 0,
+          "growths": 9,
+          "growth_unaffordable": 7924,
+          "generation_max": 0,
+          "energy_balance_error": 0.002812802813423332,
+          "run": "runs/v15-birth-readiness-baseline/seed-1",
+          "stop_reason": "extinction",
+          "first_birth_time": null,
+          "peak_living_generation": 0,
+          "max_abs_energy_balance_error": 0.0030118558497633785,
+          "checkpoint_config_and_counts_match": true,
+          "source_sha256": "7ce87c056cc6af5101ab29bc43a97d4cb2ea02c5a5657f881c4f8ceca453bc14",
+          "source_revision": "35713445f1cc9ae8e3d08e26c6a6e7d6a1cc2229",
+          "source_dirty": true
+        },
+        {
+          "seed": 2,
+          "time": 600.0,
+          "population": 20,
+          "births": 22,
+          "deaths": 194,
+          "blocked_births": 0,
+          "growths": 18,
+          "growth_unaffordable": 6755,
+          "generation_max": 3,
+          "energy_balance_error": 0.00566253423676244,
+          "run": "runs/v15-birth-readiness-baseline/seed-2",
+          "stop_reason": "duration",
+          "first_birth_time": 195.43333333333334,
+          "peak_living_generation": 3,
+          "max_abs_energy_balance_error": 0.007007279524259502,
+          "checkpoint_config_and_counts_match": true,
+          "source_sha256": "7ce87c056cc6af5101ab29bc43a97d4cb2ea02c5a5657f881c4f8ceca453bc14",
+          "source_revision": "35713445f1cc9ae8e3d08e26c6a6e7d6a1cc2229",
+          "source_dirty": true
+        },
+        {
+          "seed": 3,
+          "time": 401.53333333333336,
+          "population": 0,
+          "births": 0,
+          "deaths": 192,
+          "blocked_births": 0,
+          "growths": 14,
+          "growth_unaffordable": 6690,
+          "generation_max": 0,
+          "energy_balance_error": -0.002280152439197991,
+          "run": "runs/v15-birth-readiness-baseline/seed-3",
+          "stop_reason": "extinction",
+          "first_birth_time": null,
+          "peak_living_generation": 0,
+          "max_abs_energy_balance_error": 0.003200831462891074,
+          "checkpoint_config_and_counts_match": true,
+          "source_sha256": "7ce87c056cc6af5101ab29bc43a97d4cb2ea02c5a5657f881c4f8ceca453bc14",
+          "source_revision": "35713445f1cc9ae8e3d08e26c6a6e7d6a1cc2229",
+          "source_dirty": true
+        }
+      ]
+    },
+    "easier": {
+      "config": "configs/v15.toml",
+      "config_sha256": "7b8fa11e2904880aa86ea0b86edee2690377795d8319de2ecbc0531c576a8eac",
+      "results": [
+        {
+          "seed": 1,
+          "time": 600.0,
+          "population": 3,
+          "births": 3,
+          "deaths": 192,
+          "blocked_births": 0,
+          "growths": 10,
+          "growth_unaffordable": 7999,
+          "generation_max": 1,
+          "energy_balance_error": 0.002137478586519137,
+          "run": "runs/v15-birth-readiness-easier/seed-1",
+          "stop_reason": "duration",
+          "first_birth_time": 15.433333333333334,
+          "peak_living_generation": 1,
+          "max_abs_energy_balance_error": 0.003321586082165595,
+          "checkpoint_config_and_counts_match": true,
+          "source_sha256": "7ce87c056cc6af5101ab29bc43a97d4cb2ea02c5a5657f881c4f8ceca453bc14",
+          "source_revision": "35713445f1cc9ae8e3d08e26c6a6e7d6a1cc2229",
+          "source_dirty": true
+        },
+        {
+          "seed": 2,
+          "time": 600.0,
+          "population": 11,
+          "births": 19,
+          "deaths": 200,
+          "blocked_births": 0,
+          "growths": 16,
+          "growth_unaffordable": 7386,
+          "generation_max": 7,
+          "energy_balance_error": 0.01077374150918331,
+          "run": "runs/v15-birth-readiness-easier/seed-2",
+          "stop_reason": "duration",
+          "first_birth_time": 5.433333333333334,
+          "peak_living_generation": 7,
+          "max_abs_energy_balance_error": 0.011900495825102553,
+          "checkpoint_config_and_counts_match": true,
+          "source_sha256": "7ce87c056cc6af5101ab29bc43a97d4cb2ea02c5a5657f881c4f8ceca453bc14",
+          "source_revision": "35713445f1cc9ae8e3d08e26c6a6e7d6a1cc2229",
+          "source_dirty": true
+        },
+        {
+          "seed": 3,
+          "time": 600.0,
+          "population": 1,
+          "births": 3,
+          "deaths": 194,
+          "blocked_births": 0,
+          "growths": 14,
+          "growth_unaffordable": 6747,
+          "generation_max": 0,
+          "energy_balance_error": 0.011363025792888948,
+          "run": "runs/v15-birth-readiness-easier/seed-3",
+          "stop_reason": "duration",
+          "first_birth_time": 15.933333333333334,
+          "peak_living_generation": 1,
+          "max_abs_energy_balance_error": 0.011365936525180587,
+          "checkpoint_config_and_counts_match": true,
+          "source_sha256": "7ce87c056cc6af5101ab29bc43a97d4cb2ea02c5a5657f881c4f8ceca453bc14",
+          "source_revision": "35713445f1cc9ae8e3d08e26c6a6e7d6a1cc2229",
+          "source_dirty": true
+        }
+      ]
+    }
+  },
+  "paired_founder_genomes_bitwise_equal": true,
+  "interpretation": "The lower gate permits earlier reproduction in these three fresh starts. Seeds 1 and 3 now reproduce and reach the horizon, but only 3 and 1 creatures remain. Seed 2 has fewer births and survivors than the baseline despite its earlier first birth. This small startup comparison does not establish reliable long-term persistence.",
+  "verification": {
+    "tests_passed": 233,
+    "new_readiness_cases": 6,
+    "ruff_lint_and_format": "passed",
+    "scope": "CPU; existing complete-trajectory equality tests exercise both bars. No new CUDA experiment.",
+    "layout": {
+      "creature": 13,
+      "time": 30.1,
+      "readiness": {
+        "energy": 184.74208068847656,
+        "threshold": 217.97573852539062,
+        "capacity": 363.29290771484375,
+        "modules": 1,
+        "target_modules": 1,
+        "retry_seconds": 0.0,
+        "population_full": false
+      },
+      "checks": [
+        {
+          "height": 640,
+          "tab": "brain",
+          "content_height": 640
+        },
+        {
+          "height": 640,
+          "tab": "body",
+          "content_height": 640
+        },
+        {
+          "height": 640,
+          "tab": "details",
+          "content_height": 567
+        },
+        {
+          "height": 768,
+          "tab": "brain",
+          "content_height": 768
+        },
+        {
+          "height": 768,
+          "tab": "body",
+          "content_height": 722
+        },
+        {
+          "height": 768,
+          "tab": "details",
+          "content_height": 567
+        },
+        {
+          "height": 984,
+          "tab": "brain",
+          "content_height": 906
+        },
+        {
+          "height": 984,
+          "tab": "body",
+          "content_height": 722
+        },
+        {
+          "height": 984,
+          "tab": "details",
+          "content_height": 567
+        },
+        {
+          "height": 1024,
+          "tab": "brain",
+          "content_height": 906
+        },
+        {
+          "height": 1024,
+          "tab": "body",
+          "content_height": 722
+        },
+        {
+          "height": 1024,
+          "tab": "details",
+          "content_height": 567
+        }
+      ],
+      "overflowing_text": [],
+      "growing_creature": 92,
+      "growing_time": 30.2,
+      "growing_readiness": {
+        "energy": 172.7796173095703,
+        "threshold": 208.2379150390625,
+        "capacity": 347.06317138671875,
+        "modules": 2,
+        "target_modules": 3,
+        "retry_seconds": 0.0,
+        "population_full": false
+      }
+    },
+    "preview": "docs/reproduction-readiness.png"
+  }
+}

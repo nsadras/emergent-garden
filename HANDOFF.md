@@ -1,13 +1,14 @@
 # Development handoff — V15
 
 Autonomous ecology development was paused at the user's request on
-**September 22, 2026**, and its experiment processes were stopped. A bounded
-interface update followed on September 23; the research loop remains paused.
+**September 22, 2026**, and its experiment processes were stopped. Bounded
+interface and reproduction-preset updates followed on September 23; the
+autonomous research loop remains paused.
 The current code is **V15 / package 0.16.1**. Python and dependencies remain
 managed with **uv**. The detailed design and
 experiment history is in [CONTINUATION.md](CONTINUATION.md).
 
-## September 23 interface update
+## September 23 interface and reproduction update
 
 Pygame now provides fading centroid trails, a resizable window with an inspector sidebar,
 module selection, live input/hidden/output values, focused connection graphs,
@@ -20,6 +21,24 @@ filling the screen with habitat. `R` restores this view and Home fits the whole
 dish. The physical circular world and recording framing are unchanged.
 Trails sample simulation time at 5 Hz, retain up to 120 seconds, and also appear
 in new recordings. The default visible duration is 30 seconds.
+
+The selected creature now has an HP-style energy/capacity bar with its numeric
+values, and a separate birth-energy progress bar with growth, cooldown, or
+population-cap status. Both use actual body size and saved world settings. A
+full birth bar is not a guaranteed birth: child funding and placement are checked
+after mutation at the real attempt. Both bars fit on every tab without scrolling.
+See the [preview](docs/reproduction-readiness.png).
+
+At the user's request, `configs/v15.toml` lowers the parent-area birth threshold
+from 220 to 150 and the child-area base debit from 120 to 110; neural construction
+is still charged, and newborn energy remains 100 per child area. The unchanged
+original preset is `configs/v15-research.toml`; use it for continuing earlier
+comparisons. Saved checkpoints retain their original settings when resumed.
+Three paired 600-second fresh CPU starts (seeds 1/2/3) produced 3/19/3 births and
+ended with 3/11/1 creatures, compared with 0/22/0 births and 0/20/0 creatures under
+the original settings. This is a small startup check, not evidence of reliable
+long-term persistence. The [record](docs/results/v15-birth-readiness.json)
+retains commands, first-birth times, and source hashes.
 
 Controller inputs are captured at the actual update boundary. Recurrent weights
 include acquired offsets **before** their update; motor readouts include learned
@@ -75,10 +94,13 @@ The [complete histories](docs/results/v15-assembled-271.json) and
 
 ## Verification
 
-All **227 tests pass**. Ruff lint and formatting checks pass. The interface's
+All **233 tests pass**. Ruff lint and formatting checks pass. The interface's
 22 new cases cover exact controller samples, modular state, scripted controllers,
 trail timing/identity/bounds, selection/resize, and complete trajectory equality.
-A V15 CLI check combined pause/step, 32x playback, and recording for 60 physics
+Six further cases check birth eligibility across versions, separate storage and
+birth scales, maturity, growth, cooldown, and capacity. The trajectory tests also
+exercise the new bars. All three tabs fit at 640/768/984/1024-pixel heights.
+The earlier V15 CLI check combined pause/step, 32x playback, and recording for 60 physics
 ticks and matched the complete headless state bit for bit. A separate 30-tick
 native CUDA check on the RTX 5080 also matched with randomized sensing enabled.
 
@@ -155,7 +177,7 @@ Rerun V15 environments 272 and 273 into new directories, retaining completed
 ```bash
 for mode in none fixed_rule no_plasticity; do
   uv run python scripts/assemble_communities.py \
-    --config configs/v15.toml \
+    --config configs/v15-research.toml \
     --sources runs/v13-native-foodweb-source-222/grazers \
               runs/v13-native-foodweb-source-222/scavengers \
     --condition mixed --seeds 272 273 --seconds 3600 --device cpu \

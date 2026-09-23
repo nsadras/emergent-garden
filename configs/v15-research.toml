@@ -87,9 +87,8 @@ birth_energy = 100.0
 max_energy = 250.0
 basal_cost = 1.0
 propulsion_cost = 0.5
-# Easier reproduction for fresh starts; v15-research.toml preserves the original preset.
-reproduction_threshold = 150.0
-reproduction_debit = 110.0
+reproduction_threshold = 220.0
+reproduction_debit = 120.0
 birth_attempts = 16
 birth_gap = 0.1
 birth_retry = 1.0

@@ -16,6 +16,78 @@ def array(tensor):
     return tensor.detach().cpu().numpy().copy()
 
 
+@dataclass(frozen=True)
+class ReproductionReadiness:
+    energy: float
+    threshold: float
+    capacity: float
+    modules: int
+    target_modules: int
+    retry_seconds: float
+    population_full: bool
+
+    @property
+    def energy_fraction(self):
+        return min(1.0, max(0.0, self.energy / self.threshold))
+
+    @property
+    def storage_fraction(self):
+        return min(1.0, max(0.0, self.energy / self.capacity))
+
+    @property
+    def energy_ready(self):
+        return self.energy >= self.threshold
+
+    @property
+    def mature(self):
+        return self.modules >= self.target_modules
+
+    @property
+    def ready_to_try(self):
+        return (
+            self.energy_ready
+            and self.mature
+            and not self.retry_seconds
+            and not self.population_full
+        )
+
+    @property
+    def status(self):
+        if not self.mature:
+            return f"Growing {self.modules}/{self.target_modules} modules"
+        if self.population_full:
+            return "Population full"
+        if self.retry_seconds:
+            return f"Retry in {math.ceil(self.retry_seconds * 10) / 10:.1f}s"
+        return "Ready to try" if self.energy_ready else "Needs energy"
+
+
+def reproduction_readiness(world, index):
+    """Read known birth gates without mutating a child or sampling placement.
+
+    A full energy bar is not a promise of birth: development, retry timing, and
+    capacity also matter. Actual child cost and free space are checked by the
+    simulation after mutation, and cannot be predicted exactly by an observer.
+    """
+    a, c = world.agents, world.config
+    threshold, capacity = c.reproduction_threshold, c.max_energy
+    if c.ecology_version:
+        # Match the simulation's tensor precision at the eligibility boundary.
+        threshold = float(threshold * a["area"][index])
+        capacity = float(capacity * a["area"][index])
+    modules = int(a["modules"][index]) if "modules" in a else 1
+    target = int(a["target_modules"][index]) if c.ecology_version >= 13 else modules
+    return ReproductionReadiness(
+        energy=float(a["energy"][index]),
+        threshold=threshold,
+        capacity=capacity,
+        modules=modules,
+        target_modules=target,
+        retry_seconds=max(0, int(a["retry_tick"][index]) - world.tick) / c.physics_hz,
+        population_full=world.population >= c.capacity,
+    )
+
+
 @dataclass
 class BrainSample:
     identifier: int

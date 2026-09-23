@@ -1415,3 +1415,42 @@ environment-271 checkpoint for 32 additional seconds, to t=2,432 seconds. Its
 two modules have different live sensory values and neural states. This is an
 illustrative fork for interface validation, not a new ecological experiment.
 See the [README controls](README.md) for use and interpretation.
+
+## Energy bars and an easier V15 reproduction preset
+
+On September 23, the user requested a reproduction progress indicator, lower
+reproduction thresholds/costs, and an HP-style energy bar. These are bounded
+follow-ups; the autonomous development loop remains paused.
+
+Every inspector tab now shows current / maximum stored energy and a separate
+energy / birth-threshold bar. The storage bar turns amber below 50% and red below
+25%. The birth status identifies unfinished development, cooldown, or a full
+population. Its threshold scales with the current parent's area and can increase
+on growth. "Ready to try" does not predict offspring mutations or available
+placement: the simulation checks those at the real attempt. All values are read
+from the current world without advancing physics or random streams.
+
+Only two numeric settings in `configs/v15.toml` changed: the parent-area threshold
+220 -> 150 and child-area debit 120 -> 110. Birth energy stays 100 per child area,
+and neural construction is still charged in addition to the debit. Body development,
+food, controller initialization, and inheritance are unchanged. The original file
+was copied verbatim to `configs/v15-research.toml` for historical comparisons.
+Existing checkpoints retain their saved settings; they are not migrated.
+
+Six fresh CPU runs compared the presets at the same seeds, with a 600-second
+horizon and early stopping at extinction. Founder genomes matched within each
+pair. The original preset had 0/22/0 births and final populations 0/20/0 at seeds
+1/2/3; the revised preset had 3/19/3 births and populations 3/11/1. First births
+under the new settings occurred at 15.43/5.43/15.93 seconds. Seed 2 had fewer total
+births despite its earlier first birth. This improves access to reproduction in
+these starts, but the small, fragile populations do not establish long-term
+viability. Full logs and checkpoints are under `runs/v15-birth-readiness-*`;
+the [compact audit](docs/results/v15-birth-readiness.json) records the comparison.
+
+All 233 tests and Ruff checks pass. Six new cases compare the readout with actual
+birth gates across V0/V1/V8/V12/V15, distinguish storage capacity from the birth
+threshold, and check growth, retry, and population blockers. Existing rendering
+purity tests exercise both bars and still match complete unobserved trajectories.
+All tabs fit at 640/768/984/1024 pixels, with no overflowing text. The new
+[preview](docs/reproduction-readiness.png) shows fresh seed 1, creature 13, at
+30.1 seconds; it is a separate UI check, not an additional ecology replicate.

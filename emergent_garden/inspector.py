@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pygame
 
-from .observation import array
+from .observation import array, reproduction_readiness
 
 BG = (11, 23, 31)
 TEXT = (215, 232, 235)
@@ -127,7 +127,7 @@ class Inspector:
             self.text(
                 f"Lineage {int(a['lineage'][i])}    Generation {int(a['generation'][i])}    "
                 f"Children {int(a['offspring'][i])}    "
-                f"Energy {float(a['energy'][i]):.1f}    Age {float(a['age'][i]):.1f}s",
+                f"Age {float(a['age'][i]):.1f}s",
                 (22, 78),
                 MUTED,
             )
@@ -137,12 +137,13 @@ class Inspector:
                 (22, 78),
                 MUTED,
             )
-        self.button("Brain", (22, 102, 86, 28), ("tab", "brain"), self.tab == "brain")
-        self.button("Body / learning", (116, 102, 130, 28), ("tab", "body"), self.tab == "body")
-        self.button("Details", (254, 102, 86, 28), ("tab", "details"), self.tab == "details")
-        self.text("Module", (366, 110), MUTED)
+        self.draw_reproduction(world, i)
+        self.button("Brain", (22, 142, 86, 28), ("tab", "brain"), self.tab == "brain")
+        self.button("Body / learning", (116, 142, 130, 28), ("tab", "body"), self.tab == "body")
+        self.button("Details", (254, 142, 86, 28), ("tab", "details"), self.tab == "details")
+        self.text("Module", (366, 150), MUTED)
         for k in range(count):
-            self.button(str(k + 1), (430 + 48 * k, 102, 40, 28), ("module", k), k == self.module)
+            self.button(str(k + 1), (430 + 48 * k, 142, 40, 28), ("module", k), k == self.module)
         if self.tab == "body":
             return self.draw_body(world, i, sample)
         if sample is None or self.module >= len(sample.inputs):
@@ -157,7 +158,7 @@ class Inspector:
             return 282
         self.text(
             f"Sample t={sample.time:,.3f}s  /  tick {sample.tick}  /  {c.controller_hz} Hz",
-            (22, 142),
+            (22, 182),
             MUTED,
         )
         if sample.controller != "neural":
@@ -173,6 +174,45 @@ class Inspector:
             return self.draw_details(sample)
         return self.draw_brain(sample)
 
+    def draw_reproduction(self, world, index):
+        if index is None:
+            self.text("Reproduction unavailable: creature died.", (22, 100), MUTED)
+            return
+        readiness = reproduction_readiness(world, index)
+        # HP-style storage bar: its scale is capacity, not the birth threshold.
+        energy_color = (
+            (243, 123, 123)
+            if readiness.storage_fraction < 0.25
+            else GOLD
+            if readiness.storage_fraction < 0.5
+            else POSITIVE
+        )
+        rect = pygame.Rect(364, 50, 232, 22)
+        pygame.draw.rect(self.surface, (29, 47, 57), rect, border_radius=4)
+        fill = rect.copy()
+        fill.width = round(rect.width * readiness.storage_fraction)
+        if fill.width:
+            pygame.draw.rect(
+                self.surface, tuple(round(v * 0.4) for v in energy_color), fill, border_radius=4
+            )
+        pygame.draw.rect(self.surface, energy_color, rect, width=1, border_radius=4)
+        label = f"Energy  {readiness.energy:.1f} / {readiness.capacity:.1f}"
+        self.text(label, (rect.centerx - self.small.size(label)[0] // 2, rect.y + 5))
+        color = POSITIVE if readiness.ready_to_try else GOLD
+        self.text(
+            f"Birth energy  {readiness.energy:.1f} / {readiness.threshold:.1f}"
+            f"  ({readiness.energy_fraction:.0%})",
+            (22, 100),
+        )
+        status = readiness.status
+        self.text(status, (596 - self.small.size(status)[0], 100), color)
+        rect = pygame.Rect(22, 121, 574, 8)
+        pygame.draw.rect(self.surface, (29, 47, 57), rect, border_radius=4)
+        fill = rect.copy()
+        fill.width = round(rect.width * readiness.energy_fraction)
+        if fill.width:
+            pygame.draw.rect(self.surface, color, fill, border_radius=4)
+
     def draw_brain(self, sample):
         k = self.module
         active = np.flatnonzero(sample.nodes)
@@ -181,13 +221,13 @@ class Inspector:
         focus = self.neuron
         c = sample.config
         rows = max(c.input_size, len(active))
-        extent = min(max(310, (rows - 1) * 16), self.layout_height - 242)
+        extent = min(max(310, (rows - 1) * 16), self.layout_height - 282)
         spacing = extent / max(1, rows - 1)
         graph_font = next(
             (font for font in self.graph_fonts if font.get_height() < spacing),
             self.graph_fonts[-1],
         )
-        y0 = 186
+        y0 = 226
         input_pos = np.column_stack(
             (np.full(c.input_size, 222), np.linspace(y0, y0 + extent, c.input_size))
         )
@@ -206,9 +246,9 @@ class Inspector:
             (np.full(c.output_size, 474), np.linspace(y0 + 10, y0 + extent - 10, c.output_size))
         )
         wi, wr, _, wo, _ = sample.matrices(k)
-        self.text("INPUTS", (22, 165), POSITIVE)
-        self.text(f"RECURRENT  {len(active)}/{c.hidden_size}", (290, 165), POSITIVE)
-        self.text("OUTPUTS", (485, 165), POSITIVE)
+        self.text("INPUTS", (22, 205), POSITIVE)
+        self.text(f"RECURRENT  {len(active)}/{c.hidden_size}", (290, 205), POSITIVE)
+        self.text("OUTPUTS", (485, 205), POSITIVE)
 
         def link(start, end, weight, bend=False):
             if abs(weight) < 1e-6:
@@ -284,7 +324,7 @@ class Inspector:
             self.neuron = int(active[0]) if len(active) else 0
         focus = self.neuron
         c = sample.config
-        top = 190
+        top = 230
         incoming, recurrent, bias = sample.drives(k)
         self.text(
             f"h{focus:02d}: {sample.previous[k, focus]:+.3f} -> {sample.hidden[k, focus]:+.3f}",
@@ -341,12 +381,22 @@ class Inspector:
             (22, top + 210),
             MUTED,
         )
-        self.text("Choose Brain to return to the live graph.", (22, top + 252), POSITIVE)
-        return top + 282
+        self.text(
+            "Birth bar = energy / threshold for the body's current size. Growth can raise it.",
+            (22, top + 244),
+            MUTED,
+        )
+        self.text(
+            "Full bar still needs maturity, retry time, capacity, child funding, and free space.",
+            (22, top + 265),
+            MUTED,
+        )
+        self.text("Choose Brain to return to the live graph.", (22, top + 307), POSITIVE)
+        return top + 337
 
     def draw_body(self, world, i, sample):
         a, c = world.agents, world.config
-        top = 148
+        top = 188
         if i is not None:
             rows = []
             if "radius" in a:

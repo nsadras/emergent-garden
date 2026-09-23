@@ -130,6 +130,21 @@ established food-web genomes; the remaining environments are unfinished.
 A learning benefit has not been established. A verified 30-second recording
 is at `runs/v15-video/timelapse.mp4`.
 
+The V15 live preset now makes reproduction easier: `reproduction_threshold`
+is **150** (previously 220) per unit of parent body area, and
+`reproduction_debit` is **110** (previously 120) per unit of child body area,
+plus the child's neural construction cost. Newborn energy remains **100** per
+unit of child area. Three fresh CPU starts produced births in 600-second checks,
+but two ended with only one or three creatures; sustained establishment is
+still unresolved. See the [comparison](docs/results/v15-birth-readiness.json).
+The original settings used for the earlier V15 research are preserved in
+[v15-research.toml](configs/v15-research.toml). Resuming a checkpoint keeps its
+saved settings; start a fresh run to use the revised preset:
+
+```bash
+uv run garden run --config configs/v15.toml --view --device cpu --seconds 0
+```
+
 ## Start watching
 
 Python 3.13 and all Python packages are managed with **uv**:
@@ -196,6 +211,17 @@ at 5 Hz of **simulated time**, and freeze when paused. They also appear in new
 recordings. History starts when the viewer/recorder opens; checkpoints do not
 contain old trails. A dead creature's trail fades normally, and its last inspected
 controller sample remains available until another creature is selected.
+
+Selecting a living creature also shows two bars on every inspector tab. The
+**Energy** bar beside its name shows current / maximum stored energy, with amber
+below 50% and red below 25%. The **Birth energy** bar shows energy / reproduction
+threshold for its current body size, alongside growth, retry, or population-limit
+status. Growth can raise that threshold. A full birth bar still requires a mature
+body, an expired retry timer, population capacity, enough energy to fund the
+mutated child, and an unoccupied birth location. **Ready to try** means the known
+gates are satisfied; child cost and placement are checked at the actual attempt.
+Both bars read current state without changing the simulation. See the
+[energy and reproduction preview](docs/reproduction-readiness.png).
 
 The **Brain** tab shows named sensory inputs, active recurrent neurons, and actual
 actuator outputs for one module. Click a hidden neuron to show its incoming input
