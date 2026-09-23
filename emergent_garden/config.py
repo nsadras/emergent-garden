@@ -106,6 +106,7 @@ class Config:
     smell_cutoff: float = 72.0
     smell_scale: float = 8.0
     sensory_contrast: int = 0
+    sensor_radius_scale: float = 1.0
     birth_energy: float = 100.0
     max_energy: float = 250.0
     basal_cost: float = 1.0
@@ -151,19 +152,21 @@ class Config:
             "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate "
             "motor_learning_limit motor_trace_tau motor_baseline_tau "
             "motor_half_life growth_reserve growth_delay growth_retry internal_tau "
-            "patch_aspect_ratio patch_drift_turn_time fertility_recovery_time"
+            "patch_aspect_ratio patch_drift_turn_time fertility_recovery_time sensor_radius_scale"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(20):
+        if self.ecology_version not in range(21):
             raise ValueError("Unsupported ecology version")
         if self.sensory_contrast not in (0, 1):
             raise ValueError("sensory_contrast must be 0 or 1")
         if self.sensory_contrast and self.ecology_version < 17:
             raise ValueError("Contrast sensing requires ecology_version >= 17")
+        if self.sensor_radius_scale != 1 and self.ecology_version < 20:
+            raise ValueError("Variable sensor radius requires ecology_version >= 20")
         if self.gut_capacity and self.ecology_version < 18:
             raise ValueError("Carried food requires ecology_version >= 18")
         if self.initial_recurrent_density > 1:

@@ -1,0 +1,70 @@
+{
+  "source": "runs/v20-pilot/seed-2/latest.pt",
+  "time": 630.1,
+  "selected": 29,
+  "population": 29,
+  "sensor_radius_scale": 4,
+  "layouts": [
+    {
+      "height": 640,
+      "tab": "brain",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "body",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "details",
+      "content_height": 567
+    },
+    {
+      "height": 768,
+      "tab": "brain",
+      "content_height": 768
+    },
+    {
+      "height": 768,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 768,
+      "tab": "details",
+      "content_height": 567
+    },
+    {
+      "height": 900,
+      "tab": "brain",
+      "content_height": 900
+    },
+    {
+      "height": 900,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 900,
+      "tab": "details",
+      "content_height": 567
+    },
+    {
+      "height": 1024,
+      "tab": "brain",
+      "content_height": 938
+    },
+    {
+      "height": 1024,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 1024,
+      "tab": "details",
+      "content_height": 567
+    }
+  ],
+  "meaning": "An illustrative 30-second fork; not an independent experiment."
+}

@@ -368,6 +368,12 @@ class Inspector:
                 (22, top + 126),
                 MUTED,
             )
+        if c.ecology_version >= 20:
+            self.text(
+                f"Receptors sample at {c.sensor_radius_scale:g} x each module's radius.",
+                (22, top + 147),
+                MUTED,
+            )
         self.text(
             "Field inputs: mean, right-left, front-back, diagonal; body-relative."
             if c.sensory_contrast

@@ -109,16 +109,17 @@ def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
     assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
-@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19])
+@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20])
 def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, monkeypatch):
     c = replace(
         config,
         ecology_version=version,
         sensory_contrast=int(version >= 17),
         initial_food=8,
-        hidden_size=32 if version == 19 else config.hidden_size,
-        initial_neuron_spread=8 if version == 19 else 0,
-        initial_recurrent_density=0.5 if version == 19 else 1.0,
+        hidden_size=32 if version >= 19 else config.hidden_size,
+        initial_neuron_spread=8 if version >= 19 else 0,
+        initial_recurrent_density=0.5 if version >= 19 else 1.0,
+        sensor_radius_scale=4 if version >= 20 else 1,
     )
     w = create_world(c)
     a = w.agents
@@ -201,6 +202,8 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         (17, "rotated"),
         (18, "shuffled"),
         (19, "shuffled"),
+        (20, "shuffled"),
+        (20, "shuffled_motor_reward"),
     ],
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
@@ -215,9 +218,10 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
             sensory_contrast=int(version >= 17),
             initial_food=8,
             gut_capacity=200.0 if version >= 18 else 0.0,
-            hidden_size=32 if version == 19 else config.hidden_size,
-            initial_neuron_spread=8 if version == 19 else 0,
-            initial_recurrent_density=0.5 if version == 19 else 1.0,
+            hidden_size=32 if version >= 19 else config.hidden_size,
+            initial_neuron_spread=8 if version >= 19 else 0,
+            initial_recurrent_density=0.5 if version >= 19 else 1.0,
+            sensor_radius_scale=4 if version >= 20 else 1,
         ),
         ablation=ablation,
     )

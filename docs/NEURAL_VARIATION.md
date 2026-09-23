@@ -83,14 +83,58 @@ All three varied-founder starts were continued to 1,800 seconds. Populations
 were **251 / 34 / 327**, births **2,413 / 237 / 2,198**, and maximum living
 generations **40 / 25 / 41**. Seed 2 recovered from its early four-creature
 bottleneck. These are continuations, not three additional independent starts.
-The mutation and paired learning continuations, and fresh-environment learning
-assays, are running separately; their incomplete results are not included here.
+The stronger-mutation continuations ended with populations **162 / 0 / 363**
+and births **1,681 / 116 / 2,593**. Seed 2 became extinct at 771.13 seconds.
+Stronger mutation therefore did not provide a reliable improvement.
+
+The learning and noise-only populations also all reached 1,800 seconds:
+
+| Treatment | Living creatures (seeds 1 / 2 / 3) | Births | Maximum living generation |
+|---|---|---|---|
+| Gentle learning | 235 / 125 / 274 | 1,727 / 994 / 1,563 | 42 / 33 / 38 |
+| Same noise, motor updates disabled | 393 / 117 / 270 | 2,900 / 1,188 / 1,832 | 66 / 33 / 38 |
+
+Learning had fewer cumulative births in all three of these evolutionary runs.
+The descendant populations differ genetically, so these endpoints do not isolate
+an individual's learning response. The same-genotype tests below address that.
 
 The [audit](results/v19-circuits.json) verifies the checkpoint against recorded
 measurements, birth/death events, carrying constraints, and energy/resource
 ledgers. With neutral settings, **all recorded physical measurements and the
 complete final physical state match V18 exactly** for all three 600-second runs.
 Only the versioned configuration and unused founder-structure RNG differ.
+
+## Same-genotype learning transplants
+
+All three learning populations saved at 600 seconds were sampled into two fresh
+environments (seeds 601/602). Each pair starts with the same 192 descendant
+genotypes, placement, food, inherited capacities, and exploration settings.
+Mutation is disabled and acquired neural state starts empty. Recurrent
+plasticity remains active when motor learning is disabled.
+
+| Source / environment | Births with learning | Births without motor updates | Difference in fresh-food energy absorbed |
+|---|---|---|---|
+| 1 / 601 | 355 | 320 | +1,990 |
+| 1 / 602 | 427 | 369 | +6,958 |
+| 2 / 601 | 405 | 379 | −961 |
+| 2 / 602 | 547 | 449 | +6,647 |
+| 3 / 601 | 396 | 390 | −218 |
+| 3 / 602 | 362 | 371 | −424 |
+
+![Paired learning outcomes](v19-learning-assays.png)
+
+Births increase in five of six comparisons, while fresh-food intake increases in
+three. Effects depend on source and environment, and some differences are small.
+This supports a conditional ecological effect from motor updates, not a general
+learning advantage or proof of adaptive credit assignment. The
+[18-transplant audit](results/v19-learning-assays.json) includes the six founder
+reference runs; these are community outcomes, not independent per-agent fitness.
+
+A stronger follow-up assigns each learner another creature's normalized return
+rate while preserving its actual food and energy. These shuffled-return runs
+are still in progress. They test whether the relationship between a creature's
+own actions and outcomes matters; shared environmental information can remain
+useful even when returns are shuffled. See [the control's mechanics](SENSOR_RADIUS.md).
 
 ## A diagnostic for circling
 
@@ -119,6 +163,38 @@ are not independent evolutionary replicates. Raw responses at three intensities
 for fresh food and detritus, founder comparisons, genotype hashes, and source
 provenance are retained in [the diagnostic record](results/v19-food-response.json).
 
+## Delayed-credit diagnostic
+
+A separate constructed cue/action test supplies one feature, receives an
+squared-error return after a controlled delay, and reverses the required mapping
+halfway through. Each condition has 64 circuits, 200 choices per mapping, and
+three random seeds. Intervening inputs and exploration are zero. With learning
+disabled, the deterministic squared error is .25.
+
+| Outcome delay | Eligibility time constant | Late error before reversal | Late error after reversal |
+|---|---|---|---|
+| .1 s | 2 s | .24380 | .24593 |
+| .1 s | 10 s | .24881 | .24624 |
+| 5.1 s | 2 s | .24982 | .24979 |
+| 5.1 s | 10 s | .24918 | .24914 |
+| 20.1 s | 2 s | .25000 | .24999 |
+| 20.1 s | 10 s | .24994 | .24992 |
+
+Adaptation is small with these deliberately bounded motor changes, and very
+weak at longer delays. A longer eligibility trace alone does not solve this
+constructed problem. Reward timing, the moving baseline, readout decay, and
+noise all contribute; this does not isolate the cause of an ecological failure.
+The [36 trial records](results/v19-delayed-credit.json) retain both noisy and
+deterministic readouts and exact sources. Run with:
+
+```bash
+uv run python scripts/probe_delayed_credit.py --output runs/my-delayed-credit
+```
+
+The [live-controller preview](v19-learning-brain.png) follows the first learning
+population for 30 additional seconds after its 1,800-second checkpoint. Trails
+show both loops and wider excursions. It is illustrative, not a new replicate.
+
 ## Verification and use
 
 All 310 tests pass, including variable founder graphs, weight scaling,
@@ -138,7 +214,7 @@ uv run garden calibrate --config configs/v19-learning.toml --seeds 1 2 3 \
 uv run garden calibrate --config configs/v19-learning.toml --seeds 1 2 3 \
   --ablation no_motor_learning --seconds 600 --device cpu --output runs/my-noise-control
 
-uv run python scripts/audit_circuits.py --long-treatments varied
+uv run python scripts/audit_circuits.py --long-treatments varied mutation learning noise-only
 uv run python scripts/plot_circuits.py
 uv run python scripts/probe_food_response.py runs/v19-varied-long-1 \
   --genomes 64 --output runs/my-food-response
@@ -147,9 +223,9 @@ uv run python scripts/probe_food_response.py runs/v19-varied-long-1 \
 ## Next questions
 
 The priority is to distinguish exploration, inherited searching, and useful
-within-lifetime adaptation. Fresh-environment transplants compare identical
-descendant genomes with and without motor updates, with genetic mutation
-disabled. Longer runs test whether the early population differences persist.
+within-lifetime adaptation. The completed fresh-environment transplants and longer runs distinguish
+within-lifetime effects from divergent evolutionary histories. Shuffled returns
+provide the next control for the conditional benefits observed so far.
 
 One possible limitation is delayed credit: food search can take longer than the
 current two-second eligibility trace. Another is a weak spatial signal compared

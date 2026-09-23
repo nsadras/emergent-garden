@@ -56,6 +56,7 @@ class EcologyWorld(World):
             "unlimited_handling",
             "no_motor_learning",
             "no_motor_reward",
+            "shuffled_motor_reward",
             "no_exploration",
             "adult_births",
             "no_internal",
@@ -88,7 +89,13 @@ class EcologyWorld(World):
                 and config.ecology_version < 11
             )
             or (
-                ablation in ("no_motor_learning", "no_motor_reward", "no_exploration")
+                ablation
+                in (
+                    "no_motor_learning",
+                    "no_motor_reward",
+                    "no_exploration",
+                    "shuffled_motor_reward",
+                )
                 and config.ecology_version < 12
             )
         ):
@@ -155,6 +162,10 @@ class EcologyWorld(World):
                 seed + 1048583
             )
             self.totals.update(motor_learning_cost=0.0, motor_learning_changes=0.0)
+            if self.ablation == "shuffled_motor_reward":
+                self.rng["reward_shuffle"] = torch.Generator(device=self.device).manual_seed(
+                    seed + 49979687
+                )
         if c.ecology_version >= 13:
             self.rng["body_structure"] = torch.Generator(device=self.device).manual_seed(
                 seed + 1200119
@@ -481,6 +492,8 @@ class EcologyWorld(World):
         centers = module_centers(a, index)
         angle = a["heading"][index, None] + self.sensor_angles
         around = a["core_radius"][index, None, None] * torch.stack((angle.cos(), angle.sin()), -1)
+        if self.config.sensor_radius_scale != 1:
+            around = around * self.config.sensor_radius_scale
         values = self.sense_positions(index, centers[:, :, None] + around[:, None])
         if self.config.ecology_version >= 14:
             extra = body_inputs(a, index)
@@ -608,6 +621,10 @@ class EcologyWorld(World):
                     if self.ablation in ("no_motor_reward", "no_feedback"):
                         reward.zero_()
                     elapsed = (self.tick - a["last_motor_tick"][index]) * c.dt
+                    if self.ablation == "shuffled_motor_reward":
+                        from .learning import shuffled_returns
+
+                        reward = shuffled_returns(reward, elapsed, self.rng["reward_shuffle"])
                     motor_arguments = dict(
                         motor_learning=self.ablation != "no_motor_learning",
                         noise=noise.reshape(-1, 2),

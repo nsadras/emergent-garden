@@ -7,7 +7,7 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-The current experimental release is **V19 / package 0.20.0**. Research resumed
+The current experimental release is **V20 / package 0.21.0**. Research resumed
 on September 23, focusing on scarce, valuable food and affordable exploration.
 The [foraging experiments](docs/FORAGING.md) found that faster food processing
 supported all three tested populations for 30 minutes; a new optional spatial
@@ -15,7 +15,10 @@ sensory encoding had mixed results. [V18](docs/CARRIED_FOOD.md) adds finite food
 carrying and two fullness inputs so creatures can digest while moving. All three
 fast-carrying starts reached 30 minutes. [V19](docs/NEURAL_VARIATION.md) adds
 varied founder circuits and compares stronger mutation and gentle motor
-learning. Initial outcomes are mixed; useful learning remains unestablished.
+learning. Initial outcomes are mixed. Paired descendant tests show conditional
+benefits from motor updates, with stronger credit-assignment controls in progress.
+[V20](docs/SENSOR_RADIUS.md) tests a wider sensory footprint: directional signals
+increase, while reproduction remains dependent on the start.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 

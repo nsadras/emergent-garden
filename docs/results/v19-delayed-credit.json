@@ -1,0 +1,1924 @@
+{
+  "interpretation": "Isolate delayed motor credit in a constructed, counterbalanced cue task.\n\nAn externally supplied feature encodes a random left/right cue. One noisy motor\nchoice receives a squared-error return after a delay. Intervening features,\nnoise, and rewards are zero. The required cue/action mapping reverses halfway.\nThese circuits are diagnostic fixtures, never introduced into the ecology.\n A supplied representation and isolated choices make this a mechanism check, not evidence of evolved navigation. Temporal reward baselines, readout decay, and noisy credit can affect results in addition to trace decay.",
+  "reports": [
+    {
+      "config": {
+        "schema_version": 1,
+        "ecology_version": 19,
+        "patch_capacity": 2400.0,
+        "detritus_fraction": 0.35,
+        "detritus_lifetime": 240.0,
+        "detritus_delay": 3.0,
+        "trait_mutation_probability": 0.15,
+        "trait_mutation_sigma": 0.15,
+        "bite_rate": 60.0,
+        "attack_reach": 3.0,
+        "predation_efficiency": 0.65,
+        "armor_protection": 0.8,
+        "attack_cost": 0.25,
+        "resource_burst": 10.0,
+        "resource_floor": 0.15,
+        "cue_lead": 3.0,
+        "cue_duration": 2.0,
+        "cue_strength": 20.0,
+        "signal_rate": 200.0,
+        "signal_cost": 0.12,
+        "signal_diffusion": 12.0,
+        "signal_half_life": 30.0,
+        "signal_scale": 1.0,
+        "archive_sim_seconds": 600.0,
+        "quality_period": 240.0,
+        "quality_jitter": 0.25,
+        "low_quality": 0.25,
+        "high_quality": 1.0,
+        "identity_strength": 20.0,
+        "feedback_scale": 10.0,
+        "plasticity_rate": 0.02,
+        "plasticity_limit": 0.1,
+        "plasticity_trace_tau": 2.0,
+        "plasticity_half_life_min": 30.0,
+        "plasticity_half_life_max": 600.0,
+        "plasticity_cost": 0.02,
+        "initial_neurons": 16,
+        "initial_neuron_spread": 8,
+        "initial_recurrent_density": 0.5,
+        "min_neurons": 4,
+        "node_mutation_probability": 0.05,
+        "edge_mutation_probability": 0.1,
+        "module_mutation_probability": 0.03,
+        "growth_cost": 20.0,
+        "growth_reserve": 50.0,
+        "growth_delay": 10.0,
+        "growth_retry": 1.0,
+        "internal_tau": 0.3,
+        "internal_cost": 0.01,
+        "neuron_maintenance": 0.0005,
+        "synapse_maintenance": 1e-05,
+        "neuron_construction": 0.05,
+        "synapse_construction": 0.001,
+        "shelter_fraction": 0.5,
+        "shelter_radius": 36.0,
+        "shelter_protection": 0.95,
+        "handling_rate": 300.0,
+        "feeding_hz": 5,
+        "gut_capacity": 200.0,
+        "motor_learning_rate": 0.01,
+        "motor_learning_limit": 0.15,
+        "motor_trace_tau": 2.0,
+        "motor_baseline_tau": 10.0,
+        "motor_half_life": 120.0,
+        "exploration_min": 0.05,
+        "exploration_max": 0.15,
+        "motor_learning_cost": 0.02,
+        "motor_normalized": 1,
+        "diameter": 1024.0,
+        "body_radius": 4.0,
+        "initial_population": 192,
+        "capacity": 1024,
+        "max_speed": 40.0,
+        "max_turn_degrees": 90.0,
+        "collision_iterations": 4,
+        "initial_food": 1000,
+        "food_radius": 1.0,
+        "food_energy": 100.0,
+        "food_rate": 20.0,
+        "food_lifetime": 40.0,
+        "patch_fraction": 0.95,
+        "patches": 10,
+        "patch_radius": 40.0,
+        "patch_period": 60.0,
+        "patch_aspect_ratio": 2.0,
+        "patch_irregularity": 0.35,
+        "patch_drift_speed": 2,
+        "patch_drift_turn_time": 60.0,
+        "fertility_grid_size": 64,
+        "fertility_capacity_per_area": 2.0,
+        "fertility_recovery_time": 120.0,
+        "grid_size": 128,
+        "smell_sigma": 40.0,
+        "smell_cutoff": 150.0,
+        "smell_scale": 8.0,
+        "sensory_contrast": 0,
+        "birth_energy": 100.0,
+        "max_energy": 250.0,
+        "basal_cost": 0.5,
+        "propulsion_cost": 0.2,
+        "reproduction_threshold": 150.0,
+        "reproduction_debit": 110.0,
+        "birth_attempts": 16,
+        "birth_gap": 0.1,
+        "birth_retry": 1.0,
+        "hidden_size": 32,
+        "neural_tau": 0.5,
+        "mutation_probability": 0.02,
+        "mutation_sigma": 0.05,
+        "weight_limit": 3.0,
+        "physics_hz": 30,
+        "controller_hz": 10,
+        "field_hz": 5,
+        "metrics_period": 5.0,
+        "checkpoint_wall_seconds": 300.0,
+        "viewer_size": 1024,
+        "viewer_fps": 60,
+        "video_fps": 30,
+        "video_speed": 100.0
+      },
+      "source_sha256": "3b6e4e741782297b766d84402abd3340657f8183a29ab871105ab1fce4ab8f1d",
+      "experiment_sha256": "2b1a6cfdc5cfb6e462829ac6895ef6492373df67f5cc51658e130d35968f93fa",
+      "circuits": 64,
+      "episodes_per_contingency": 200,
+      "interpretation": "Isolate delayed motor credit in a constructed, counterbalanced cue task.\n\nAn externally supplied feature encodes a random left/right cue. One noisy motor\nchoice receives a squared-error return after a delay. Intervening features,\nnoise, and rewards are zero. The required cue/action mapping reverses halfway.\nThese circuits are diagnostic fixtures, never introduced into the ecology.\n A supplied representation and isolated choices make this a mechanism check, not evidence of evolved navigation. Temporal reward baselines, readout decay, and noisy credit can affect results in addition to trace decay.",
+      "completed": true,
+      "trials": [
+        {
+          "seed": 701,
+          "learning": true,
+          "delay": 0.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.24313088536262512,
+          "reversed_early_loss": 0.2570267391204834,
+          "reversed_late_loss": 0.24796689599752425,
+          "first_late_deterministic_loss": 0.24265842825174333,
+          "reversed_late_deterministic_loss": 0.24708322942256927,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.24958016782999037
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2461809778213501
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2438914504647255
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.24313088536262512
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2570267391204834
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2547043761610985
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25092883467674254
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.24796689599752425
+            }
+          ],
+          "maximum_readout_norm": 0.14780914783477783
+        },
+        {
+          "seed": 701,
+          "learning": false,
+          "delay": 0.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.250456340610981,
+          "reversed_early_loss": 0.25008682936429977,
+          "reversed_late_loss": 0.2508991253376007,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2512062707543373
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25111757069826124
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25023243337869644
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.250456340610981
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25008682936429977
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511548998951912
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507912668585777
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2508991253376007
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 701,
+          "learning": true,
+          "delay": 0.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.24876060247421264,
+          "reversed_early_loss": 0.2519962015748024,
+          "reversed_late_loss": 0.24792331337928772,
+          "first_late_deterministic_loss": 0.24831936210393907,
+          "reversed_late_deterministic_loss": 0.24705010831356047,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.24990933269262314
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.24810473889112472
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.24728308320045472
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.24876060247421264
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2519962015748024
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25098811119794845
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.24917238146066667
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.24792331337928772
+            }
+          ],
+          "maximum_readout_norm": 0.14874930679798126
+        },
+        {
+          "seed": 701,
+          "learning": false,
+          "delay": 0.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.250456340610981,
+          "reversed_early_loss": 0.25008682936429977,
+          "reversed_late_loss": 0.2508991253376007,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2512062707543373
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25111757069826124
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25023243337869644
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.250456340610981
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25008682936429977
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511548998951912
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507912668585777
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2508991253376007
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 701,
+          "learning": true,
+          "delay": 5.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2501533904671669,
+          "reversed_early_loss": 0.2500088518857956,
+          "reversed_late_loss": 0.2507149770855904,
+          "first_late_deterministic_loss": 0.24969547033309936,
+          "reversed_late_deterministic_loss": 0.24981561601161956,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2511806607246399
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25114059388637544
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2501358938217163
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2501533904671669
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2500088518857956
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2510658144950867
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507066348195076
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2507149770855904
+            }
+          ],
+          "maximum_readout_norm": 0.020899221301078796
+        },
+        {
+          "seed": 701,
+          "learning": false,
+          "delay": 5.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.250456340610981,
+          "reversed_early_loss": 0.25008682936429977,
+          "reversed_late_loss": 0.2508991253376007,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2512062707543373
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25111757069826124
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25023243337869644
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.250456340610981
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25008682936429977
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511548998951912
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507912668585777
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2508991253376007
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 701,
+          "learning": true,
+          "delay": 5.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.24947451293468476,
+          "reversed_early_loss": 0.24998752593994142,
+          "reversed_late_loss": 0.25004914075136186,
+          "first_late_deterministic_loss": 0.24901485472917556,
+          "reversed_late_deterministic_loss": 0.2491479280591011,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2508671009540558
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25063433855772016
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.24956345349550246
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.24947451293468476
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.24998752593994142
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25057416290044787
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25011166125535966
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.25004914075136186
+            }
+          ],
+          "maximum_readout_norm": 0.02437240444123745
+        },
+        {
+          "seed": 701,
+          "learning": false,
+          "delay": 5.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.250456340610981,
+          "reversed_early_loss": 0.25008682936429977,
+          "reversed_late_loss": 0.2508991253376007,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2512062707543373
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25111757069826124
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25023243337869644
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.250456340610981
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25008682936429977
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511548998951912
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507912668585777
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2508991253376007
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 701,
+          "learning": true,
+          "delay": 20.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.25043622821569445,
+          "reversed_early_loss": 0.2500487926602364,
+          "reversed_late_loss": 0.25090391099452974,
+          "first_late_deterministic_loss": 0.24997950941324235,
+          "reversed_late_deterministic_loss": 0.2500050112605095,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2512236568331718
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2511491820216179
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25022002547979355
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.25043622821569445
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2500487926602364
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511791455745697
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507983496785164
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.25090391099452974
+            }
+          ],
+          "maximum_readout_norm": 0.00710378959774971
+        },
+        {
+          "seed": 701,
+          "learning": false,
+          "delay": 20.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.250456340610981,
+          "reversed_early_loss": 0.25008682936429977,
+          "reversed_late_loss": 0.2508991253376007,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2512062707543373
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25111757069826124
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25023243337869644
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.250456340610981
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25008682936429977
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511548998951912
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507912668585777
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2508991253376007
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 701,
+          "learning": true,
+          "delay": 20.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2503542473912239,
+          "reversed_early_loss": 0.24995796382427216,
+          "reversed_late_loss": 0.2508552950620651,
+          "first_late_deterministic_loss": 0.2498968404531479,
+          "reversed_late_deterministic_loss": 0.24995653688907624,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25120596557855607
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2511459618806839
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2501507836580277
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2503542473912239
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.24995796382427216
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511656504869461
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507561191916466
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2508552950620651
+            }
+          ],
+          "maximum_readout_norm": 0.017355436459183693
+        },
+        {
+          "seed": 701,
+          "learning": false,
+          "delay": 20.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.250456340610981,
+          "reversed_early_loss": 0.25008682936429977,
+          "reversed_late_loss": 0.2508991253376007,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2512062707543373
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25111757069826124
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25023243337869644
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.250456340610981
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25008682936429977
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2511548998951912
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2507912668585777
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2508991253376007
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        }
+      ]
+    },
+    {
+      "config": {
+        "schema_version": 1,
+        "ecology_version": 19,
+        "patch_capacity": 2400.0,
+        "detritus_fraction": 0.35,
+        "detritus_lifetime": 240.0,
+        "detritus_delay": 3.0,
+        "trait_mutation_probability": 0.15,
+        "trait_mutation_sigma": 0.15,
+        "bite_rate": 60.0,
+        "attack_reach": 3.0,
+        "predation_efficiency": 0.65,
+        "armor_protection": 0.8,
+        "attack_cost": 0.25,
+        "resource_burst": 10.0,
+        "resource_floor": 0.15,
+        "cue_lead": 3.0,
+        "cue_duration": 2.0,
+        "cue_strength": 20.0,
+        "signal_rate": 200.0,
+        "signal_cost": 0.12,
+        "signal_diffusion": 12.0,
+        "signal_half_life": 30.0,
+        "signal_scale": 1.0,
+        "archive_sim_seconds": 600.0,
+        "quality_period": 240.0,
+        "quality_jitter": 0.25,
+        "low_quality": 0.25,
+        "high_quality": 1.0,
+        "identity_strength": 20.0,
+        "feedback_scale": 10.0,
+        "plasticity_rate": 0.02,
+        "plasticity_limit": 0.1,
+        "plasticity_trace_tau": 2.0,
+        "plasticity_half_life_min": 30.0,
+        "plasticity_half_life_max": 600.0,
+        "plasticity_cost": 0.02,
+        "initial_neurons": 16,
+        "initial_neuron_spread": 8,
+        "initial_recurrent_density": 0.5,
+        "min_neurons": 4,
+        "node_mutation_probability": 0.05,
+        "edge_mutation_probability": 0.1,
+        "module_mutation_probability": 0.03,
+        "growth_cost": 20.0,
+        "growth_reserve": 50.0,
+        "growth_delay": 10.0,
+        "growth_retry": 1.0,
+        "internal_tau": 0.3,
+        "internal_cost": 0.01,
+        "neuron_maintenance": 0.0005,
+        "synapse_maintenance": 1e-05,
+        "neuron_construction": 0.05,
+        "synapse_construction": 0.001,
+        "shelter_fraction": 0.5,
+        "shelter_radius": 36.0,
+        "shelter_protection": 0.95,
+        "handling_rate": 300.0,
+        "feeding_hz": 5,
+        "gut_capacity": 200.0,
+        "motor_learning_rate": 0.01,
+        "motor_learning_limit": 0.15,
+        "motor_trace_tau": 2.0,
+        "motor_baseline_tau": 10.0,
+        "motor_half_life": 120.0,
+        "exploration_min": 0.05,
+        "exploration_max": 0.15,
+        "motor_learning_cost": 0.02,
+        "motor_normalized": 1,
+        "diameter": 1024.0,
+        "body_radius": 4.0,
+        "initial_population": 192,
+        "capacity": 1024,
+        "max_speed": 40.0,
+        "max_turn_degrees": 90.0,
+        "collision_iterations": 4,
+        "initial_food": 1000,
+        "food_radius": 1.0,
+        "food_energy": 100.0,
+        "food_rate": 20.0,
+        "food_lifetime": 40.0,
+        "patch_fraction": 0.95,
+        "patches": 10,
+        "patch_radius": 40.0,
+        "patch_period": 60.0,
+        "patch_aspect_ratio": 2.0,
+        "patch_irregularity": 0.35,
+        "patch_drift_speed": 2,
+        "patch_drift_turn_time": 60.0,
+        "fertility_grid_size": 64,
+        "fertility_capacity_per_area": 2.0,
+        "fertility_recovery_time": 120.0,
+        "grid_size": 128,
+        "smell_sigma": 40.0,
+        "smell_cutoff": 150.0,
+        "smell_scale": 8.0,
+        "sensory_contrast": 0,
+        "sensor_radius_scale": 1.0,
+        "birth_energy": 100.0,
+        "max_energy": 250.0,
+        "basal_cost": 0.5,
+        "propulsion_cost": 0.2,
+        "reproduction_threshold": 150.0,
+        "reproduction_debit": 110.0,
+        "birth_attempts": 16,
+        "birth_gap": 0.1,
+        "birth_retry": 1.0,
+        "hidden_size": 32,
+        "neural_tau": 0.5,
+        "mutation_probability": 0.02,
+        "mutation_sigma": 0.05,
+        "weight_limit": 3.0,
+        "physics_hz": 30,
+        "controller_hz": 10,
+        "field_hz": 5,
+        "metrics_period": 5.0,
+        "checkpoint_wall_seconds": 300.0,
+        "viewer_size": 1024,
+        "viewer_fps": 60,
+        "video_fps": 30,
+        "video_speed": 100.0
+      },
+      "source_sha256": "3cb15cb9148bcbd781e1c92bd5e0781f3d3c282ac85760bd227e3d1cd85350c5",
+      "experiment_sha256": "2b1a6cfdc5cfb6e462829ac6895ef6492373df67f5cc51658e130d35968f93fa",
+      "circuits": 64,
+      "episodes_per_contingency": 200,
+      "interpretation": "Isolate delayed motor credit in a constructed, counterbalanced cue task.\n\nAn externally supplied feature encodes a random left/right cue. One noisy motor\nchoice receives a squared-error return after a delay. Intervening features,\nnoise, and rewards are zero. The required cue/action mapping reverses halfway.\nThese circuits are diagnostic fixtures, never introduced into the ecology.\n A supplied representation and isolated choices make this a mechanism check, not evidence of evolved navigation. Temporal reward baselines, readout decay, and noisy credit can affect results in addition to trace decay.",
+      "completed": true,
+      "trials": [
+        {
+          "seed": 702,
+          "learning": true,
+          "delay": 0.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.24530722260475157,
+          "reversed_early_loss": 0.25455925315618516,
+          "reversed_late_loss": 0.24473743945360182,
+          "first_late_deterministic_loss": 0.24498888462781906,
+          "reversed_late_deterministic_loss": 0.24457785308361055,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.24995382457971574
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.24790078192949294
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.24722334027290344
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.24530722260475157
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25455925315618516
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25121871918439864
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.24806710332632065
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.24473743945360182
+            }
+          ],
+          "maximum_readout_norm": 0.15000000596046448
+        },
+        {
+          "seed": 702,
+          "learning": false,
+          "delay": 0.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2503076550364494,
+          "reversed_early_loss": 0.25070302933454514,
+          "reversed_late_loss": 0.2501618447899818,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.250854999423027
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25018118143081663
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25060135275125506
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2503076550364494
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25070302933454514
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25086376547813416
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2510850876569748
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2501618447899818
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 702,
+          "learning": true,
+          "delay": 0.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.24995980620384217,
+          "reversed_early_loss": 0.25016299217939375,
+          "reversed_late_loss": 0.24505764067173005,
+          "first_late_deterministic_loss": 0.24965671300888062,
+          "reversed_late_deterministic_loss": 0.2448960307240486,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25028071433305743
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.24927208691835404
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.24981249034404754
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.24995980620384217
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25016299217939375
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.24813023179769517
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2470436629652977
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.24505764067173005
+            }
+          ],
+          "maximum_readout_norm": 0.14928841590881348
+        },
+        {
+          "seed": 702,
+          "learning": false,
+          "delay": 0.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2503076550364494,
+          "reversed_early_loss": 0.25070302933454514,
+          "reversed_late_loss": 0.2501618447899818,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.250854999423027
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25018118143081663
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25060135275125506
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2503076550364494
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25070302933454514
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25086376547813416
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2510850876569748
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2501618447899818
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 702,
+          "learning": true,
+          "delay": 5.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2501163393259048,
+          "reversed_early_loss": 0.2507947987318039,
+          "reversed_late_loss": 0.2500219878554344,
+          "first_late_deterministic_loss": 0.24980867087841033,
+          "reversed_late_deterministic_loss": 0.2498592585325241,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2507657593488693
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25003487944602965
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2503537407517433
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2501163393259048
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2507947987318039
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25081522792577743
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25106479912996293
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2500219878554344
+            }
+          ],
+          "maximum_readout_norm": 0.02019639126956463
+        },
+        {
+          "seed": 702,
+          "learning": false,
+          "delay": 5.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2503076550364494,
+          "reversed_early_loss": 0.25070302933454514,
+          "reversed_late_loss": 0.2501618447899818,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.250854999423027
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25018118143081663
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25060135275125506
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2503076550364494
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25070302933454514
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25086376547813416
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2510850876569748
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2501618447899818
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 702,
+          "learning": true,
+          "delay": 5.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2494847622513771,
+          "reversed_early_loss": 0.2508226704597473,
+          "reversed_late_loss": 0.24941677927970887,
+          "first_late_deterministic_loss": 0.2491745150089264,
+          "reversed_late_deterministic_loss": 0.2492517539858818,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25044915348291397
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.249464008808136
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2497176480293274
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2494847622513771
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2508226704597473
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25034698724746707
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2504932337999344
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.24941677927970887
+            }
+          ],
+          "maximum_readout_norm": 0.025015216320753098
+        },
+        {
+          "seed": 702,
+          "learning": false,
+          "delay": 5.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2503076550364494,
+          "reversed_early_loss": 0.25070302933454514,
+          "reversed_late_loss": 0.2501618447899818,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.250854999423027
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25018118143081663
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25060135275125506
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2503076550364494
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25070302933454514
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25086376547813416
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2510850876569748
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2501618447899818
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 702,
+          "learning": true,
+          "delay": 20.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.25030390471220015,
+          "reversed_early_loss": 0.2507137659192085,
+          "reversed_late_loss": 0.2501504847407341,
+          "first_late_deterministic_loss": 0.24999668091535568,
+          "reversed_late_deterministic_loss": 0.249988674223423,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2508537641167641
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2501821595430374
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2505883723497391
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.25030390471220015
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2507137659192085
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2508758905529976
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25110856145620347
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2501504847407341
+            }
+          ],
+          "maximum_readout_norm": 0.0066266912035644054
+        },
+        {
+          "seed": 702,
+          "learning": false,
+          "delay": 20.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2503076550364494,
+          "reversed_early_loss": 0.25070302933454514,
+          "reversed_late_loss": 0.2501618447899818,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.250854999423027
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25018118143081663
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25060135275125506
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2503076550364494
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25070302933454514
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25086376547813416
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2510850876569748
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2501618447899818
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 702,
+          "learning": true,
+          "delay": 20.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.250244956612587,
+          "reversed_early_loss": 0.2506966999173164,
+          "reversed_late_loss": 0.2500820681452751,
+          "first_late_deterministic_loss": 0.24993808329105377,
+          "reversed_late_deterministic_loss": 0.24992015361785888,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25080756962299344
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2501333644986153
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2505189296603203
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.250244956612587
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2506966999173164
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25084358364343645
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25109238654375077
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2500820681452751
+            }
+          ],
+          "maximum_readout_norm": 0.016575317829847336
+        },
+        {
+          "seed": 702,
+          "learning": false,
+          "delay": 20.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2503076550364494,
+          "reversed_early_loss": 0.25070302933454514,
+          "reversed_late_loss": 0.2501618447899818,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.250854999423027
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25018118143081663
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25060135275125506
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2503076550364494
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25070302933454514
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25086376547813416
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2510850876569748
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2501618447899818
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 703,
+          "learning": true,
+          "delay": 0.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.24498725026845933,
+          "reversed_early_loss": 0.2571193850040436,
+          "reversed_late_loss": 0.24649012148380278,
+          "first_late_deterministic_loss": 0.24375149071216584,
+          "reversed_late_deterministic_loss": 0.24613621205091477,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2510914722084999
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25074302166700363
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.24744180649518965
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.24498725026845933
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2571193850040436
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2516121372580528
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.2485949131846428
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.24649012148380278
+            }
+          ],
+          "maximum_readout_norm": 0.14999999105930328
+        },
+        {
+          "seed": 703,
+          "learning": false,
+          "delay": 0.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2512238523364067,
+          "reversed_early_loss": 0.25148101300001147,
+          "reversed_late_loss": 0.2503585407137871,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25036622673273085
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2509326404333115
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2510335022211075
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2512238523364067
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25148101300001147
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25046289682388306
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25024921268224715
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2503585407137871
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 703,
+          "learning": true,
+          "delay": 0.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.24964698731899262,
+          "reversed_early_loss": 0.2530474278330803,
+          "reversed_late_loss": 0.24713868409395218,
+          "first_late_deterministic_loss": 0.24843915939331054,
+          "reversed_late_deterministic_loss": 0.24676798194646835,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25169354408979416
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2521644052863121
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2505814501643181
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.24964698731899262
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2530474278330803
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.24978345155715942
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.24804245322942733
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.24713868409395218
+            }
+          ],
+          "maximum_readout_norm": 0.15000000596046448
+        },
+        {
+          "seed": 703,
+          "learning": false,
+          "delay": 0.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2512238523364067,
+          "reversed_early_loss": 0.25148101300001147,
+          "reversed_late_loss": 0.2503585407137871,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25036622673273085
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2509326404333115
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2510335022211075
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2512238523364067
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25148101300001147
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25046289682388306
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25024921268224715
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2503585407137871
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 703,
+          "learning": true,
+          "delay": 5.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2511944058537483,
+          "reversed_early_loss": 0.251559756398201,
+          "reversed_late_loss": 0.2500551390647888,
+          "first_late_deterministic_loss": 0.2499700090289116,
+          "reversed_late_deterministic_loss": 0.24969504177570342,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.2502251881361008
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2507318928837776
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2509576216340065
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2511944058537483
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.251559756398201
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25038116306066516
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25002427875995636
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2500551390647888
+            }
+          ],
+          "maximum_readout_norm": 0.02105463109910488
+        },
+        {
+          "seed": 703,
+          "learning": false,
+          "delay": 5.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2512238523364067,
+          "reversed_early_loss": 0.25148101300001147,
+          "reversed_late_loss": 0.2503585407137871,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25036622673273085
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2509326404333115
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2510335022211075
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2512238523364067
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25148101300001147
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25046289682388306
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25024921268224715
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2503585407137871
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 703,
+          "learning": true,
+          "delay": 5.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2505715650320053,
+          "reversed_early_loss": 0.2515507858991623,
+          "reversed_late_loss": 0.2493899330496788,
+          "first_late_deterministic_loss": 0.2493459352850914,
+          "reversed_late_deterministic_loss": 0.24902671426534653,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.24987981855869293
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2501209634542465
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25035626113414766
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2505715650320053
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.2515507858991623
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.24990879863500595
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.24940246909856797
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2493899330496788
+            }
+          ],
+          "maximum_readout_norm": 0.029962925240397453
+        },
+        {
+          "seed": 703,
+          "learning": false,
+          "delay": 5.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2512238523364067,
+          "reversed_early_loss": 0.25148101300001147,
+          "reversed_late_loss": 0.2503585407137871,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25036622673273085
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2509326404333115
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2510335022211075
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2512238523364067
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25148101300001147
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25046289682388306
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25024921268224715
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2503585407137871
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 703,
+          "learning": true,
+          "delay": 20.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.25124366998672487,
+          "reversed_early_loss": 0.251514932513237,
+          "reversed_late_loss": 0.25033316254615784,
+          "first_late_deterministic_loss": 0.25001982659101485,
+          "reversed_late_deterministic_loss": 0.24997467964887618,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25036063343286513
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25093955218791963
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.25104430824518204
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.25124366998672487
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.251514932513237
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25045913964509964
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.250233294069767
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.25033316254615784
+            }
+          ],
+          "maximum_readout_norm": 0.006239465903490782
+        },
+        {
+          "seed": 703,
+          "learning": false,
+          "delay": 20.1,
+          "trace_tau": 2,
+          "first_late_loss": 0.2512238523364067,
+          "reversed_early_loss": 0.25148101300001147,
+          "reversed_late_loss": 0.2503585407137871,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25036622673273085
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2509326404333115
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2510335022211075
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2512238523364067
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25148101300001147
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25046289682388306
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25024921268224715
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2503585407137871
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        },
+        {
+          "seed": 703,
+          "learning": true,
+          "delay": 20.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2512174710631371,
+          "reversed_early_loss": 0.25152890622615814,
+          "reversed_late_loss": 0.25024402916431426,
+          "first_late_deterministic_loss": 0.24999355375766755,
+          "reversed_late_deterministic_loss": 0.24988539457321168,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.250311975479126
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.25089634239673614
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2510080435872078
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2512174710631371
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25152890622615814
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.2504018884897232
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25015672385692594
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.25024402916431426
+            }
+          ],
+          "maximum_readout_norm": 0.016115890815854073
+        },
+        {
+          "seed": 703,
+          "learning": false,
+          "delay": 20.1,
+          "trace_tau": 10,
+          "first_late_loss": 0.2512238523364067,
+          "reversed_early_loss": 0.25148101300001147,
+          "reversed_late_loss": 0.2503585407137871,
+          "first_late_deterministic_loss": 0.25,
+          "reversed_late_deterministic_loss": 0.25,
+          "curve": [
+            {
+              "episodes": 50,
+              "mean_loss": 0.25036622673273085
+            },
+            {
+              "episodes": 100,
+              "mean_loss": 0.2509326404333115
+            },
+            {
+              "episodes": 150,
+              "mean_loss": 0.2510335022211075
+            },
+            {
+              "episodes": 200,
+              "mean_loss": 0.2512238523364067
+            },
+            {
+              "episodes": 250,
+              "mean_loss": 0.25148101300001147
+            },
+            {
+              "episodes": 300,
+              "mean_loss": 0.25046289682388306
+            },
+            {
+              "episodes": 350,
+              "mean_loss": 0.25024921268224715
+            },
+            {
+              "episodes": 400,
+              "mean_loss": 0.2503585407137871
+            }
+          ],
+          "maximum_readout_norm": 0.0
+        }
+      ]
+    }
+  ]
+}

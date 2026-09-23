@@ -1,9 +1,26 @@
-# Development handoff — V19
+# Development handoff — V20
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V19 / package 0.20.0**. Python and dependencies remain
+The current code is **V20 / package 0.21.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V20: sensory reach and a learning control
+
+[V20](docs/SENSOR_RADIUS.md) adds optional receptor distances of 1, 2, or 4 body
+module radii. Nine matched 600-second starts are complete. Four-radius births
+were 266/111/201 versus 455/26/195 at radius 1: mixed effects. All four-radius
+starts are being continued to 1,800 seconds. Frozen-world samples confirm an
+approximately fourfold directional-signal increase, with little change in mean
+intensity. Radius 1 matches V19's full final physical state and recorded metrics
+in all three 600-second starts. No genomes, body shapes, or energy costs change.
+
+The new `shuffled_motor_reward` control gives each learner another creature's
+normalized energetic return rate, with its own checkpointed random stream.
+Physical energy and sensory feedback are untouched. Its V19 follow-ups remain
+in progress. All 322 tests and Ruff checks pass, plus CPU/CUDA mechanical replay
+and a separate native CUDA shuffled-return replay. See the V20 guide for exact
+settings, caveats, and commands. Research remains authorized and active.
 
 ## V19: neural diversity
 
@@ -19,18 +36,24 @@ Fifteen 600-second pilots compare baseline, varied founders, stronger mutation,
 gentle motor learning, and identical noise with motor updates disabled. Results
 are mixed; learning produced 288/265/156 births versus the control's 367/264/310.
 All three varied-founder continuations reached 1,800 seconds: populations
-251/34/327 and births 2,413/237/2,198. Mutation and paired learning continuations,
-plus two-environment learning transplants from all three 600-second learning
-populations, are in progress. Do not confuse incomplete follow-ups with audited
-results. The [audit](docs/results/v19-circuits.json) includes 15 pilots and the
-three completed varied-founder continuations.
+251/34/327 and births 2,413/237/2,198. Stronger mutation ended at populations
+162/0/363; seed 2 became extinct at 771.13 seconds. Learning and noise-only
+continuations all reached 1,800 seconds; learning had fewer births in all three
+starts. The [audit](docs/results/v19-circuits.json) includes 15 pilots and all
+12 continuations. The 18 paired learning transplants are complete: births
+improved in five of six descendant pairs, food intake in three. These
+conditional effects do not establish adaptive credit assignment; shuffled-return
+follow-ups remain in progress. Do not confuse them with completed results.
 
 A new synthetic food-response probe separates inherited turning bias from
 directional sensitivity. Selected populations differ considerably; its outputs
 do not establish whole-body searching or useful learning. Raw paired stimuli,
 responses, and provenance are retained. All 310 tests and Ruff checks pass;
 separate CPU/CUDA exercises passed exact replay through variable graphs,
-growth, births, evolving rules, and motor learning.
+growth, births, evolving rules, and motor learning. A 36-trial delayed-credit
+fixture found only small cue adaptation, especially with delayed outcomes;
+longer eligibility alone did not solve it. An illustrative learning-population
+preview is at `docs/v19-learning-brain.png`.
 
 Keep the user's `configs/v16.toml` edits intact. The research loop remains
 authorized and active. Continue with measured sensory/credit-assignment

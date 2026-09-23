@@ -17,6 +17,22 @@ import torch
 from .topology import effective_masks
 
 
+def shuffled_returns(reward, elapsed, generator):
+    """Assign another body's normalized energetic return rate to each learner.
+
+    A random nonzero cyclic shift is a derangement: every body receives a
+    different body's rate, with the batch's rate distribution preserved. Scale
+    by the recipient's elapsed time so off-phase newborns keep valid units.
+    This intervention changes learning signals, never physical energy transfers.
+    A batch containing only one body cannot be shuffled.
+    """
+    if len(reward) < 2:
+        return reward
+    shift = torch.randint(1, len(reward), (), generator=generator, device=reward.device)
+    indices = (torch.arange(len(reward), device=reward.device) + shift) % len(reward)
+    return (reward / elapsed.clamp_min(1e-9))[indices] * elapsed
+
+
 def motor_state(config, genomes):
     n, h = len(genomes), config.hidden_size
     return dict(
