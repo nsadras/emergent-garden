@@ -1,0 +1,23 @@
+{
+  "path": "runs/v18-carrying-video/timelapse.mp4",
+  "metadata": {
+    "ffmpeg_version": "7.0.2-static https://johnvansickle.com/ffmpeg/ built with gcc 8 (Debian 8.3.0-6)",
+    "codec": "h264",
+    "pix_fmt": "yuv420p(progressive)",
+    "fps": 30.0,
+    "source_size": [
+      1024,
+      1024
+    ],
+    "size": [
+      1024,
+      1024
+    ],
+    "rotate": 0,
+    "duration": 30.03
+  },
+  "decoded_frames": 901,
+  "declared_frames": 901,
+  "first_frame_sha256": "d3fc0071d9acfb11745be184c4264eeaa8907fe21a8be8b3e8983ae87160b880",
+  "last_frame_sha256": "57e8d48a18565944961620cc8f1086987097b1fe2b8e652dcce75714fde0724c"
+}

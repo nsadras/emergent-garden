@@ -443,6 +443,11 @@ class Inspector:
                         f"detritus {c.handling_rate * tissue * (1 - diet) ** 2:.1f}"
                     )
                 )
+            if c.ecology_version >= 18:
+                from .digestion import loads
+
+                stored = loads(world)[i].tolist()
+                rows.append(f"Carried raw food: fresh {stored[0]:.1f} / detritus {stored[1]:.1f}")
             if "module_internal" in a:
                 signal = a["module_internal"][i, self.module]
                 rows.append(

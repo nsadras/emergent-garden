@@ -1,6 +1,6 @@
 [project]
 name = "emergent-garden"
-version = "0.18.0"
+version = "0.19.0"
 description = "A continuous artificial-life dish with evolving recurrent neural controllers"
 readme = "README.md"
 requires-python = ">=3.13"

@@ -1,11 +1,38 @@
-# Development handoff — V17
+# Development handoff — V18
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V17 / package 0.18.0**. Python and dependencies remain
+The current code is **V18 / package 0.19.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
 
-## Current foraging iteration
+## V18: carried meals
+
+[V18](docs/CARRIED_FOOD.md) adds bounded fresh/detritus compartments, 42 neural
+inputs including fullness, and 5,272 inherited values. Food can be collected and
+digested while moving; old expiry, processing, and source/provenance rules remain.
+Carried meals drop on death and are not inherited. The live inspector shows them.
+
+Twelve matched 600-second starts cross carrying (0/200) and processing (60/300).
+With carrying at rate 300, births were 411/302/113 versus 97/37/32 without carrying.
+The combined treatment is the next brain-experiment baseline. Carrying at rate
+60 helped initial establishment, but one of its three longer runs became extinct
+at 834.4 seconds; the other two reached 1,800 seconds with populations 94/16.
+Fast-carrying continuations are in progress under `runs/v18-fast-carrying-long-*`.
+
+All 299 tests and Ruff checks pass. Separate CPU/CUDA carrying checks passed
+exact replay and all ledgers; food
+transactions now use float64 in V18. Existing versions retain their old layout
+and arithmetic. History auditing permits explicit neutral defaults on resume.
+The [viewer previews](docs/v18-body.png) fit the window without scrolling, and
+`runs/v18-carrying-video/timelapse.mp4` is a 4× recording with trails.
+
+The user reinforced interest in neural/mutation diversity and within-lifetime
+learning. Prioritize controlled founder-architecture, mutation, and motor-learning
+comparisons next. Keep neural weights unprescribed and preserve the user's V16
+working settings. The completed [sensory assays](docs/FORAGING.md#follow-up-sensory-interventions)
+show some environmental dependence but weak/mixed directional dependence.
+
+## V17 foraging record
 
 The user clarified that their V16 edits aim for rare, valuable meals and cheap
 exploration. Their working `configs/v16.toml` is preserved; an explicit baseline
@@ -18,7 +45,7 @@ from 60 to 300 in the user's large habitat produced 236/59/17 births. Continuing
 all three starts to 1,800 seconds yielded populations 97/122/15 and cumulative
 births 809/799/44. Seed 3 recovered from a one-creature bottleneck. This supports
 the treatment's viability in those starts, not reliable general establishment.
-Matched sensory interventions are the next behavioral check.
+Completed sensory interventions found weak/mixed directional dependence.
 
 V17 adds an optional mean/contrast encoding without changing the 40-input,
 seven-output recurrent architecture or hand-tuning neural weights. Its three
@@ -27,9 +54,8 @@ encoding preserves legacy trajectories exactly. All 281 tests and Ruff checks
 pass; separate CPU/CUDA mechanical exercises passed exact checkpoint replay.
 Committed evidence is in [foraging-pilots.json](docs/results/foraging-pilots.json).
 
-Next mechanic under investigation: a finite carried-food inventory, allowing
-collection and later digestion while moving. Retain energy/provenance accounting,
-legacy behavior, and matched controls. Simple producers remain a later option.
+The subsequent V18 carried-food implementation is described above. Simple
+producers remain a later option.
 
 The remainder records earlier completed work and the V15 interruption; its
 historical partial batches have not silently been completed by this restart.

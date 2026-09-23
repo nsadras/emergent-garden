@@ -7,11 +7,14 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-The current experimental release is **V17 / package 0.18.0**. Research resumed
+The current experimental release is **V18 / package 0.19.0**. Research resumed
 on September 23, focusing on scarce, valuable food and affordable exploration.
 The [foraging experiments](docs/FORAGING.md) found that faster food processing
 supported all three tested populations for 30 minutes; a new optional spatial
-sensory encoding had mixed results. The live inspector, leaderboard, and energy
+sensory encoding had mixed results. [V18](docs/CARRIED_FOOD.md) adds finite food
+carrying and two fullness inputs so creatures can digest while moving. Matched
+short starts improved, with long-term persistence still under investigation.
+The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 
 ![V5 modular creatures and their chemical trails](docs/v5-detail.png)
@@ -378,6 +381,7 @@ The original starting values are in [configs/v0.toml](configs/v0.toml).
 | [V15](configs/v15.toml) | Evolving local plasticity rules; easier reproduction in the live preset |
 | [V16](configs/v16.toml) | Irregular drifting food sources and local fertility depletion/recovery |
 | [V17](configs/v17-contrast.toml) | Experimental mean/contrast sensory encoding; [paired results](docs/FORAGING.md) |
+| [V18](configs/v18-fast-feeding.toml) | Bounded carried food, digestion while traveling, and fullness inputs; [results](docs/CARRIED_FOOD.md) |
 
 ```bash
 cp configs/v5.toml configs/my-experiment.toml

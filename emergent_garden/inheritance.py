@@ -93,6 +93,11 @@ def upgrade_genomes(source, target, genomes):
             for name in BODY_INPUTS:
                 mi[:, :, target.input_names.index(name)] = nodes
             mo[:, 5:7] = nodes[:, None]
+        if target.ecology_version >= 18 and source.ecology_version < 18:
+            from .digestion import GUT_INPUTS
+
+            for name in GUT_INPUTS:
+                mi[:, :, target.input_names.index(name)] = nodes
         if ((nodes > 0.5).sum(1) < target.min_neurons).any():
             raise ValueError("Source has fewer active neurons than the destination minimum")
     continuous = out[:, : target.brain_parameter_count + target.trait_count]

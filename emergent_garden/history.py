@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+from .config import Config
+
 PERFORMANCE_KEYS = {
     "wall_seconds",
     "speed",
@@ -47,9 +49,11 @@ def read_history(path, follow_resumes=False):
         for key in ("seed", "controller", "ablation", "seeded_from"):
             if parent["metadata"].get(key) != child["metadata"].get(key):
                 raise ValueError(f"Resume changed {key}: {child['path']}")
-        if (parent["path"] / "config.toml").read_bytes() != (
+        # A later release may save newly introduced, neutral default settings.
+        # Compare the laws the current loader actually resumes, not TOML formatting.
+        if Config.load(parent["path"] / "config.toml") != Config.load(
             child["path"] / "config.toml"
-        ).read_bytes():
+        ):
             raise ValueError(f"Resume changed configuration: {child['path']}")
     metrics, events = [], []
     for segment in segments:

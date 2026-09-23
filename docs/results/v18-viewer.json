@@ -1,0 +1,83 @@
+{
+  "source": "runs/v18-carrying-long-1/latest.pt",
+  "preview_time": 1830.1,
+  "selected": 218,
+  "carried_food": [
+    158.82444190979004,
+    112.30801987648009
+  ],
+  "layouts": [
+    {
+      "height": 640,
+      "tab": "brain",
+      "content_height": 640,
+      "layout_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "body",
+      "content_height": 640,
+      "layout_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "details",
+      "content_height": 567,
+      "layout_height": 640
+    },
+    {
+      "height": 768,
+      "tab": "brain",
+      "content_height": 768,
+      "layout_height": 768
+    },
+    {
+      "height": 768,
+      "tab": "body",
+      "content_height": 744,
+      "layout_height": 768
+    },
+    {
+      "height": 768,
+      "tab": "details",
+      "content_height": 567,
+      "layout_height": 768
+    },
+    {
+      "height": 900,
+      "tab": "brain",
+      "content_height": 900,
+      "layout_height": 900
+    },
+    {
+      "height": 900,
+      "tab": "body",
+      "content_height": 744,
+      "layout_height": 900
+    },
+    {
+      "height": 900,
+      "tab": "details",
+      "content_height": 567,
+      "layout_height": 900
+    },
+    {
+      "height": 1024,
+      "tab": "brain",
+      "content_height": 938,
+      "layout_height": 1024
+    },
+    {
+      "height": 1024,
+      "tab": "body",
+      "content_height": 744,
+      "layout_height": 1024
+    },
+    {
+      "height": 1024,
+      "tab": "details",
+      "content_height": 567,
+      "layout_height": 1024
+    }
+  ]
+}

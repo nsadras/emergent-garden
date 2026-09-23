@@ -187,6 +187,8 @@ class Renderer:
             # Partial meals leave many overlapping crumbs. Display their summed
             # local energy instead of drawing each one as a full food particle.
             keep = (food >= -food_radius).all(1) & (food < self.size + food_radius).all(1)
+            if c.ecology_version >= 18:
+                keep &= world.food_owner.cpu().numpy() < 0
             pixels, inverse = np.unique(food[keep].astype(int), axis=0, return_inverse=True)
             amounts = world.food_energy.detach().cpu().numpy()[keep]
             fresh = np.bincount(inverse, weights=amounts * (kinds[keep] == 0))
@@ -335,9 +337,10 @@ class Renderer:
                 small=True,
             )
         generation = int(data["generation"].max()) if world.population else 0
+        food_count = int((world.food_owner < 0).sum()) if c.ecology_version >= 18 else len(food)
         self.text(
             f"{world.time:,.1f}s   |   {world.population} creatures   |   "
-            f"{len(food)} food   |   generation {generation}",
+            f"{food_count} food   |   generation {generation}",
             (22, 47),
             small=True,
         )

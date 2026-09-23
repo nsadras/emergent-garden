@@ -90,6 +90,8 @@ def main():
     )
     fig.savefig("docs/foraging-pilots.png", dpi=150)
     fig.savefig("docs/foraging-pilots.svg")
+    svg = Path("docs/foraging-pilots.svg")
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
 
 
 if __name__ == "__main__":

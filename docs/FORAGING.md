@@ -124,8 +124,29 @@ uv run python scripts/audit_foraging.py
 uv run python scripts/plot_foraging.py
 ```
 
-Next investigations: matched sensory interventions on evolved fast-feeding
-communities, and a bounded carried-food inventory that separates collection from
-digestion. The latter would let a creature digest while moving, while retaining
-finite handling capacity and energy accounting. Simple producers remain a later
-option from the V16 design record.
+## Follow-up sensory interventions
+
+Two evolved fast-feeding communities were transplanted into environments 501 and
+502, with 360-second trials and mutation disabled. Descendant genomes are exactly
+matched across normal, disabled-field, and rotated-field treatments. The
+[16-trial audit](results/foraging-sensory-assays.json) also retains the founder
+comparisons and energy accounting.
+
+| Source / environment | Births: normal | Fields removed | Fields rotated |
+| --- | --- | --- | --- |
+| 1 / 501 | 160 | 87 | 148 |
+| 1 / 502 | 210 | 69 | 197 |
+| 2 / 501 | 302 | 318 | 265 |
+| 2 / 502 | 356 | 269 | 332 |
+
+Source 1 depends on environmental signals, but its small response to rotation
+offers limited evidence for directional use. Source 2's response to removing
+fields is mixed. Removing fields also removes intensity and non-food signals;
+these tests do not specifically prove gradient following or learned navigation.
+Descendant communities outperform founder transplants in these environments, but
+their body traits and initial energy investment also differ. Neither comparison
+establishes within-lifetime learning.
+
+Continue with [V18 carried food](CARRIED_FOOD.md), separating collection from
+digestion while retaining finite processing, food expiry, and energy accounting.
+Simple producers remain a later option from the V16 design record.

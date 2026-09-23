@@ -109,7 +109,7 @@ def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
     assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
-@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17])
+@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18])
 def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, monkeypatch):
     c = replace(
         config, ecology_version=version, sensory_contrast=int(version == 17), initial_food=8
@@ -193,6 +193,7 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         (17, "shuffled"),
         (17, "no_direction"),
         (17, "rotated"),
+        (18, "shuffled"),
     ],
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
@@ -202,7 +203,11 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
 
     w = create_world(
         replace(
-            config, ecology_version=version, sensory_contrast=int(version == 17), initial_food=8
+            config,
+            ecology_version=version,
+            sensory_contrast=int(version >= 17),
+            initial_food=8,
+            gut_capacity=200.0 if version >= 18 else 0.0,
         ),
         ablation=ablation,
     )

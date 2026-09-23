@@ -6,7 +6,7 @@ benchmark or an ecology trial. It accelerates quality reversals when available.
 
 import argparse
 import json
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import torch
@@ -121,6 +121,13 @@ def main():
                 torch.testing.assert_close(original, resumed, rtol=0, atol=0)
             else:
                 assert original == resumed, key
+    if c.ecology_version >= 18:
+        torch.testing.assert_close(w.food_owner, replay.food_owner, rtol=0, atol=0)
+        from emergent_garden.digestion import capacity, loads
+
+        assert (loads(w) <= capacity(w).double() + 1e-8).all()
+        if c.gut_capacity:
+            assert w.totals["food_collected"] > 0
     metric = w.metrics()
     assert abs(metric["energy_balance_error"]) < 0.01
     if c.ecology_version >= 16:
@@ -165,6 +172,7 @@ def main():
             assert metric["mean_noncorrelation_rule_weight"] > 0
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
+        config=asdict(w.config),
         metadata=runtime_metadata(w),
         replay_passed=True,
         birth_exercise=args.exercise_births,

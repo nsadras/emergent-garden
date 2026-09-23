@@ -1,8 +1,8 @@
 # Continuing evolution experiments
 
 Development **resumed at the user's request on September 23, 2026**, after the
-V15 pause and subsequent interface/resource work. The current iteration is V17
-(package 0.18.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
+V15 pause and subsequent interface/resource work. The current iteration is V18
+(package 0.19.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
 meals and affordable exploration. Current evidence, historical interrupted work,
 and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
@@ -1576,3 +1576,37 @@ births, growth, variable plasticity rules, and resource changes.
 Current next steps are matched sensory interventions on evolved fast-feeding
 communities and bounded carried food, separating collection from digestion while
 retaining finite processing budgets and producer/consumer energy accounting.
+
+## V18: carried food and internal fullness — package 0.19.0
+
+V18 separates collection from digestion with two bounded compartments. Food
+retains its expiry, source stock, and producer credits; on death it drops at the
+carrier's current position. Carried food produces no external scent. Processing
+retains the existing finite budgets and energy storage limits, and recycled
+material is deposited during travel. Two fullness inputs raise the interface
+to 42 inputs and the genome to 5,272 values; no movement policy is supplied.
+
+Twelve matched starts cross capacity 0/200 with raw processing rate 60/300. At
+rate 60, carrying yielded 27/16/8 births and populations 16/6/2 at 600 seconds;
+the contact controls all went extinct with 0/1/0 births. At rate 300, carrying
+yielded 411/302/113 births and populations 82/108/79, versus 97/37/32 births and
+47/1/15 creatures with contact feeding. All four treatments have exactly matched
+founder genomes within seeds. These V18 founders differ from V16/V17 because
+of the two additional inputs. Detailed accounting and limitations are in
+[CARRIED_FOOD.md](docs/CARRIED_FOOD.md).
+
+The rate-60 carrying extensions reached populations 94/16 at 1,800 seconds for
+seeds 1/2; seed 3 became extinct at 834.4 seconds. Fast-carrying extensions were
+started for all three seeds. A short video fork is recorded at 4× with trails;
+the selected creature inspector shows the inventory and both new neural inputs.
+CPU and RTX 5080 exercises pass exact replay through collection, digestion,
+births, growth, and changing plasticity rules. The three inspector tabs fit
+640–1,024-pixel heights. Parsed-config comparison now accepts newly explicit
+neutral defaults in resumed histories while rejecting changed world settings.
+
+Sixteen completed transplants of two V16 fast-feeding communities show some
+dependence on environmental signals but weak/mixed effects from rotating them.
+They do not establish directed food seeking or within-lifetime learning. The
+user reinforced interest in greater neural/mutation variation and learning.
+Prioritize controlled circuit-diversity, mutation, and conservative motor-learning
+experiments in the more viable carrying environment next.

@@ -66,6 +66,7 @@ class Config:
     shelter_protection: float = 0.95
     handling_rate: float = 60.0
     feeding_hz: int = 0  # Zero uses the physics frequency.
+    gut_capacity: float = 0.0  # V18: raw food carried per unit of digestive tissue.
     motor_learning_rate: float = 0.2
     motor_learning_limit: float = 0.5
     motor_trace_tau: float = 2.0
@@ -155,12 +156,14 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(18):
+        if self.ecology_version not in range(19):
             raise ValueError("Unsupported ecology version")
         if self.sensory_contrast not in (0, 1):
             raise ValueError("sensory_contrast must be 0 or 1")
         if self.sensory_contrast and self.ecology_version < 17:
             raise ValueError("Contrast sensing requires ecology_version >= 17")
+        if self.gut_capacity and self.ecology_version < 18:
+            raise ValueError("Carried food requires ecology_version >= 18")
         if self.patch_aspect_ratio < 1 or not 0 <= self.patch_irregularity <= 1:
             raise ValueError("Require patch_aspect_ratio >= 1 and patch_irregularity in [0, 1]")
         if self.fertility_grid_size < 8:
@@ -293,6 +296,10 @@ class Config:
             from .coordination import BODY_INPUTS
 
             names.extend(BODY_INPUTS)
+        if self.ecology_version >= 18:
+            from .digestion import GUT_INPUTS
+
+            names.extend(GUT_INPUTS)
         if self.ecology_version >= 6:
             names.extend(("food_feedback", "damage_feedback"))
         return (*names, "energy", "contact")

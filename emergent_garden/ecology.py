@@ -9,6 +9,7 @@ from dataclasses import asdict
 
 import torch
 
+from . import digestion
 from .brain import advance, controller_step, initial_brains
 from .config import Config
 from .coordination import BODY_INPUTS, body_inputs, signal_cost, update_signals
@@ -63,6 +64,7 @@ class EcologyWorld(World):
             "self_internal",
             "fixed_rule",
             "no_direction",
+            "no_gut",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -75,6 +77,7 @@ class EcologyWorld(World):
             or (ablation == "adult_births" and config.ecology_version < 13)
             or (ablation == "fixed_rule" and config.ecology_version < 15)
             or (ablation == "no_direction" and config.ecology_version < 17)
+            or (ablation == "no_gut" and config.ecology_version < 18)
             or (
                 ablation in ("no_internal", "no_body_sense", "no_coordination", "self_internal")
                 and config.ecology_version < 14
@@ -170,6 +173,8 @@ class EcologyWorld(World):
             )
         if c.ecology_version >= 14:
             self.totals["internal_signaling_cost"] = 0.0
+        if c.ecology_version >= 18:
+            self.totals["food_collected"] = 0.0
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_extent - c.food_radius)
         self.patch_phases = (
@@ -186,6 +191,10 @@ class EcologyWorld(World):
             self.fields[7].rebuild_shelter(self.shelter_positions)
         self.food_pos = torch.empty((0, 2), device=self.device)
         self.food_energy = torch.empty(0, device=self.device)
+        if c.ecology_version >= 18:
+            # Splitting carried meals must conserve energy and producer credits.
+            self.food_energy = self.food_energy.double()
+            self.food_owner = torch.empty(0, dtype=torch.long, device=self.device)
         self.food_expiry = torch.empty(0, dtype=torch.long, device=self.device)
         self.food_ready = torch.empty(0, dtype=torch.long, device=self.device)
         self.food_kind = torch.empty(0, dtype=torch.long, device=self.device)
@@ -314,7 +323,7 @@ class EcologyWorld(World):
             ) * a["modules"]
 
     def patch_stock(self):
-        stock = torch.zeros(self.config.patches, device=self.device)
+        stock = torch.zeros(self.config.patches, dtype=self.food_energy.dtype, device=self.device)
         assigned = self.food_patch >= 0
         stock.index_add_(0, self.food_patch[assigned], self.food_energy[assigned])
         return stock
@@ -333,6 +342,10 @@ class EcologyWorld(World):
             return
         self.food_pos = torch.cat((self.food_pos, positions))
         self.food_energy = torch.cat((self.food_energy, energy))
+        if c.ecology_version >= 18:
+            self.food_owner = torch.cat(
+                (self.food_owner, torch.full((n,), -1, dtype=torch.long, device=self.device))
+            )
         self.food_kind = torch.cat((self.food_kind, torch.full((n,), kind, device=self.device)))
         if patches is None:
             patches = torch.full((n,), -1, device=self.device)
@@ -364,6 +377,8 @@ class EcologyWorld(World):
             setattr(self, key, getattr(self, key)[keep])
         if self.config.ecology_version >= 9:
             self.food_credit = self.food_credit[keep]
+        if self.config.ecology_version >= 18:
+            self.food_owner = self.food_owner[keep]
 
     def spawn_food(self, n):
         if not n:
@@ -410,7 +425,9 @@ class EcologyWorld(World):
     def rebuild_fields(self):
         for kind, field in enumerate(self.fields[:2]):
             mask = (self.food_kind == kind) & (self.food_ready <= self.tick)
-            field.rebuild(self.food_pos[mask], self.food_energy[mask])
+            if self.config.ecology_version >= 18:
+                mask &= self.food_owner < 0
+            field.rebuild(self.food_pos[mask], self.food_energy[mask].float())
         if self.config.ecology_version >= 2:
             self.fields[2].rebuild(
                 self.agents["pos"], self.config.food_energy * self.agents["area"]
@@ -504,6 +521,11 @@ class EcologyWorld(World):
             channels.append(smell)
         if c.ecology_version >= 14:
             channels.append(torch.zeros((*prefix, len(BODY_INPUTS)), device=self.device))
+        if c.ecology_version >= 18:
+            values = digestion.fullness(self)[index]
+            channels.append(
+                values.reshape(len(index), *([1] * (len(prefix) - 1)), 2).expand(*prefix, 2)
+            )
         if c.ecology_version >= 6:
             for name in ("food_feedback", "damage_feedback"):
                 value = a[name][index] / (c.feedback_scale * a["area"][index])
@@ -729,8 +751,11 @@ class EcologyWorld(World):
                 combined.index_add_(0, indices, amounts.double())
                 a[key] += combined.to(a[key].dtype)
             else:
-                a[key].index_add_(0, indices, amounts)
+                a[key].index_add_(0, indices, amounts.to(a[key].dtype))
 
+        if c.ecology_version >= 18 and not digestion.enabled(self):
+            # An explicit intervention on a checkpoint drops existing inventory.
+            self.food_owner.fill_(-1)
         i, j = neighbors(a["pos"], self.food_pos, c.max_body_radius + c.food_radius, c.diameter)
         hit = (a["pos"][i] - self.food_pos[j]).norm(dim=1) <= a["radius"][i] + c.food_radius
         if c.ecology_version >= 4:
@@ -741,6 +766,9 @@ class EcologyWorld(World):
             ).any(1)
         hit &= self.food_ready[j] <= self.tick
         i, j = i[hit], j[hit]
+        if digestion.enabled(self):
+            digestion.capture(self, i, j)
+            i, j = digestion.owned_food(self)
         if not len(i):
             return
         fresh = self.food_kind[j] == 0
@@ -823,6 +851,8 @@ class EcologyWorld(World):
     def remove_dead(self, cause="unspecified"):
         # Base death recording includes genome hashes and individual life histories.
         start = len(self.events)
+        if self.config.ecology_version >= 18:
+            digestion.release_dead(self)
         super().remove_dead()
         if self.config.ecology_version >= 9:
             for event in self.events[start:]:
@@ -1112,6 +1142,8 @@ class EcologyWorld(World):
                 self.rebuild_fields()
             self.update_controllers()
             self.move()
+            if c.ecology_version >= 18:
+                digestion.follow(self)
             a = self.agents
             if c.ecology_version >= 10:
                 shelter_time = self.fields[7].sample(a["pos"]) * c.dt
@@ -1279,6 +1311,15 @@ class EcologyWorld(World):
                 else 0.0
             )
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
+        if c.ecology_version >= 18:
+            carried = self.food_owner >= 0
+            result.update(
+                carried_food_energy=self.food_energy[carried].sum().item(),
+                carried_food_count=int(carried.sum()),
+                free_food_count=int((~carried).sum()),
+                free_food_energy=self.food_energy[~carried].sum().item(),
+                mean_gut_fullness=digestion.fullness(self).mean(0).tolist() if n else [0.0, 0.0],
+            )
         i, j = self.overlap_pairs()
         overlap = a["radius"][i] + a["radius"][j] - (a["pos"][i] - a["pos"][j]).norm(dim=1)
         result["overlaps"] = int((overlap > 0.01).sum())
@@ -1340,6 +1381,8 @@ class EcologyWorld(World):
             result["shelter_indices"] = self.shelter_indices.clone()
         if self.config.ecology_version >= 16:
             result["resources"] = self.resources.state_dict()
+        if self.config.ecology_version >= 18:
+            result["food_owner"] = self.food_owner.clone()
         return result
 
     @classmethod
@@ -1401,6 +1444,8 @@ class EcologyWorld(World):
             self.resources = ResourceLandscape.from_state(
                 self.config, state["resources"], self.device
             )
+        if self.config.ecology_version >= 18:
+            self.food_owner = state["food_owner"].to(device).clone()
         self.rng = {}
         for name, rng_state in state["rng"].items():
             generator = torch.Generator(device=self.device)

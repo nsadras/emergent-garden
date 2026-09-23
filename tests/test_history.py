@@ -2,6 +2,7 @@ import json
 
 import pytest
 
+from emergent_garden.config import Config
 from emergent_garden.history import read_history
 
 
@@ -29,6 +30,20 @@ def test_complete_resumed_history_keeps_events_once_and_checks_physical_boundary
     assert rows[0]["tick"] == 0 and rows[-1]["tick"] == 60
     assert [e["time"] for e in events] == [30, 60]
     assert len(read_history(second)[0]) == 1
+
+
+def test_resumed_history_accepts_explicit_neutral_defaults_from_newer_releases(tmp_path):
+    first, second = tmp_path / "first", tmp_path / "second"
+    segment(first, [0, 30])
+    segment(second, [30, 60], parent=first / "latest.pt")
+    c = Config.load(second / "config.toml")
+    c.save(second / "config.toml")
+    assert (first / "config.toml").read_bytes() != (second / "config.toml").read_bytes()
+    assert len(read_history(second, follow_resumes=True)[0]) == 2
+    c.handling_rate *= 2
+    c.save(second / "config.toml")
+    with pytest.raises(ValueError, match="changed configuration"):
+        read_history(second, follow_resumes=True)
 
 
 @pytest.mark.parametrize("problem", ["population", "configuration", "seed", "time"])
