@@ -69,6 +69,29 @@ class SmellField:
         return sampled.reshape(shape)
 
 
+class ShelterField(SmellField):
+    """Static, permeable cover; the outer fifth of each radius tapers to zero.
+
+    Overlaps take the maximum cover, not a sum. Physics and sensors sample the
+    same bounded grid. Shelter hides either end of a bite and creates no energy.
+    """
+
+    def rebuild_shelter(self, positions):
+        n, c = self.config.grid_size, self.config
+        if not len(positions):
+            self.grid.zero_()
+            return
+        centers = (torch.arange(n, device=self.device) + 0.5) * self.cell
+        y, x = torch.meshgrid(centers, centers, indexing="ij")
+        points = torch.stack((x, y), -1)
+        distance = (points[:, :, None] - positions).norm(dim=-1)
+        cover = ((c.shelter_radius - distance) / (0.2 * c.shelter_radius)).clamp(0, 1)
+        self.grid = cover.amax(-1) * self.mask
+
+    def sample(self, positions):
+        return super().sample(positions).clamp(0, 1)
+
+
 class TrailField(SmellField):
     """Persistent concentration with conservative diffusion in an impermeable dish.
 

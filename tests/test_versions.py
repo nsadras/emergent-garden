@@ -104,7 +104,7 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-@pytest.mark.parametrize("version", [1, 2, 3, 4, 5, 6, 7, 8, 9])
+@pytest.mark.parametrize("version", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 def test_ecology_checkpoint_full_replay(config, tmp_path, version):
     w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
     w.step(17)
@@ -127,6 +127,8 @@ def test_ecology_checkpoint_full_replay(config, tmp_path, version):
         for key, value in w.trophic.state_dict().items():
             torch.testing.assert_close(value, other.trophic.state_dict()[key], rtol=0, atol=0)
         assert max(map(abs, w.metrics()["trophic_detritus_balance_error"])) < 1e-9
+    if version >= 10:
+        torch.testing.assert_close(w.shelter_indices, other.shelter_indices, rtol=0, atol=0)
     assert abs(w.metrics()["energy_balance_error"]) < 0.01
 
 
@@ -391,7 +393,7 @@ def test_developmental_birth_inherits_structure_and_resets_each_circuit(config):
     assert w.agents["module_h"][0].count_nonzero() > 0
 
 
-@pytest.mark.parametrize("version", [4, 7, 8, 9])
+@pytest.mark.parametrize("version", [4, 7, 8, 9, 10])
 def test_modular_rendering_is_read_only(config, version):
     from emergent_garden.viewer import Renderer
 

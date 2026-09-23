@@ -11,9 +11,10 @@ import torch
 
 from .brain import advance, controller_step, initial_brains
 from .config import Config
-from .field import SmellField, TrailField
+from .field import ShelterField, SmellField, TrailField
 from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
+from .runtime import enable_cuda_replay
 from .spatial import neighbors
 from .topology import counts, initial_structure, mutate_structure
 from .trophic import TrophicLedger, guilds
@@ -24,6 +25,7 @@ class EcologyWorld(World):
     def __init__(self, config, seed=1, device="cpu", controller="neural", ablation="none"):
         self.config = config.validate()
         self.device = torch.device(device)
+        enable_cuda_replay(self.device, self.config.ecology_version)
         self.seed, self.controller, self.ablation = seed, controller, ablation
         if controller not in ("neural", "forager", "rest", "random"):
             raise ValueError(f"Unknown controller: {controller}")
@@ -42,6 +44,8 @@ class EcologyWorld(World):
             "no_identity",
             "no_feedback",
             "no_plasticity",
+            "no_shelter",
+            "no_shelter_cue",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -51,6 +55,7 @@ class EcologyWorld(World):
             or (ablation in ("no_signal", "no_emission") and config.ecology_version < 5)
             or (ablation in ("no_identity", "no_feedback") and config.ecology_version < 6)
             or (ablation == "no_plasticity" and config.ecology_version < 7)
+            or (ablation in ("no_shelter", "no_shelter_cue") and config.ecology_version < 10)
         ):
             raise ValueError("Ablation requires a version containing that feature")
         self.rng = {
@@ -104,6 +109,10 @@ class EcologyWorld(World):
             self.totals.update(
                 neural_maintenance=0.0, neural_construction=0.0, neural_structural_births=0
             )
+        if c.ecology_version >= 10:
+            self.fields.append(ShelterField(c, self.device))
+            self.rng["shelter"] = torch.Generator(device=self.device).manual_seed(seed + 860281)
+            self.totals.update(shelter_agent_seconds=0.0, shelter_obstructed_demand=0.0)
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -111,6 +120,10 @@ class EcologyWorld(World):
             if c.ecology_version >= 3
             else torch.zeros(c.patches, device=self.device)
         )
+        if c.ecology_version >= 10:
+            order = torch.randperm(c.patches, generator=self.rng["shelter"], device=self.device)
+            self.shelter_indices = order[: round(c.patches * c.shelter_fraction)].sort().values
+            self.fields[7].rebuild_shelter(self.patch_positions[self.shelter_indices])
         self.food_pos = torch.empty((0, 2), device=self.device)
         self.food_energy = torch.empty(0, device=self.device)
         self.food_expiry = torch.empty(0, dtype=torch.long, device=self.device)
@@ -171,6 +184,8 @@ class EcologyWorld(World):
                 a[key] = torch.zeros(n, device=self.device, dtype=torch.long)
             for key in ("brain_maintenance", "brain_construction"):
                 a[key] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 10:
+            a["shelter_time"] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -349,7 +364,8 @@ class EcologyWorld(World):
         for channel, field in enumerate(self.fields):
             smell = field.sample(pos)
             scale = c.signal_scale if channel == 4 else c.smell_scale
-            smell = smell / (smell + scale)
+            if channel != 7:
+                smell = smell / (smell + scale)
             if self.ablation == "rotated":
                 smell = smell.roll(2, dims=-1)
             if (
@@ -357,6 +373,7 @@ class EcologyWorld(World):
                 or (self.ablation == "no_cue" and channel == 3)
                 or (self.ablation == "no_signal" and channel == 4)
                 or (self.ablation == "no_identity" and channel in (5, 6))
+                or (self.ablation == "no_shelter_cue" and channel == 7)
             ):
                 smell.zero_()
             channels.append(smell)
@@ -617,6 +634,12 @@ class EcologyWorld(World):
         if c.ecology_version >= 4:
             bites *= a["modules"][i]
         bites *= 1 - c.armor_protection * a["armor"][j]
+        if c.ecology_version >= 10 and self.ablation != "no_shelter":
+            cover = self.fields[7].sample(a["pos"])
+            obstructed = bites * c.shelter_protection * torch.maximum(cover[i], cover[j])
+            # Potential demand before prey-energy/storage caps, not saved energy.
+            self.totals["shelter_obstructed_demand"] += obstructed.double().sum().item()
+            bites = bites - obstructed
         demanded = torch.zeros_like(a["energy"]).index_add_(0, j, bites)
         bites *= (a["energy"] / demanded.clamp_min(1e-20)).clamp_max(1)[j]
         lost = torch.zeros_like(a["energy"]).index_add_(0, j, bites)
@@ -651,7 +674,7 @@ class EcologyWorld(World):
         for key in ("modules", "body_axis", "core_radius", "neurons", "connections"):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
-        for key in ("high_acquired", "low_acquired"):
+        for key in ("high_acquired", "low_acquired", "shelter_time"):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
         return result
@@ -829,6 +852,10 @@ class EcologyWorld(World):
             self.update_controllers()
             self.move()
             a = self.agents
+            if c.ecology_version >= 10:
+                shelter_time = self.fields[7].sample(a["pos"]) * c.dt
+                a["shelter_time"] += shelter_time
+                self.totals["shelter_agent_seconds"] += shelter_time.double().sum().item()
             maintenance, propulsion = self.costs()
             scale = (a["energy"] / (maintenance + propulsion).clamp_min(1e-20)).clamp_max(1)
             maintenance, propulsion = maintenance * scale, propulsion * scale
@@ -910,6 +937,16 @@ class EcologyWorld(World):
             ).tolist()
         if c.ecology_version >= 9:
             result.update(self.trophic.metrics(self.food_credit, self.food_kind))
+        if c.ecology_version >= 10:
+            cover = self.fields[7].sample(a["pos"])
+            sheltered = cover > 0.5
+            groups = guilds(a["diet"])
+            result.update(
+                shelter_patches=self.shelter_indices.tolist(),
+                mean_shelter=cover.mean().item() if n else 0.0,
+                sheltered_population=int(sheltered.sum()),
+                sheltered_guilds=torch.bincount(groups[sheltered], minlength=3).tolist(),
+            )
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
         overlap = a["radius"][i] + a["radius"][j] - (a["pos"][i] - a["pos"][j]).norm(dim=1)
@@ -967,6 +1004,8 @@ class EcologyWorld(World):
         if self.config.ecology_version >= 9:
             result["food_credit"] = self.food_credit.clone()
             result["trophic"] = self.trophic.state_dict()
+        if self.config.ecology_version >= 10:
+            result["shelter_indices"] = self.shelter_indices.clone()
         return result
 
     @classmethod
@@ -975,6 +1014,7 @@ class EcologyWorld(World):
             raise ValueError("Unsupported ecology checkpoint version")
         self = cls.__new__(cls)
         self.config, self.device = Config.from_dict(state["config"]), torch.device(device)
+        enable_cuda_replay(self.device, self.config.ecology_version)
         for key in (
             "seed",
             "controller",
@@ -1008,7 +1048,9 @@ class EcologyWorld(World):
             setattr(self, key, value.to(device).clone())
         self.sensor_angles = torch.tensor([-135, -45, 45, 135], device=self.device) * math.pi / 180
         self.fields = [
-            (TrailField if i == 4 else SmellField)(self.config, self.device)
+            (TrailField if i == 4 else ShelterField if i == 7 else SmellField)(
+                self.config, self.device
+            )
             for i in range(len(state["fields"]))
         ]
         for field, grid in zip(self.fields, state["fields"], strict=True):
@@ -1019,6 +1061,8 @@ class EcologyWorld(World):
         if self.config.ecology_version >= 9:
             self.food_credit = state["food_credit"].to(device).clone()
             self.trophic = TrophicLedger.from_state(state["trophic"], device)
+        if self.config.ecology_version >= 10:
+            self.shelter_indices = state["shelter_indices"].to(device).clone()
         self.rng = {}
         for name, rng_state in state["rng"].items():
             generator = torch.Generator(device=self.device)

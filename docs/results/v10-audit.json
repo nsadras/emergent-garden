@@ -1,0 +1,227 @@
+[
+  {
+    "path": "runs/v10-shelter/seed-161",
+    "matched_founders_sha256": "5af2abc284f1ecff4b75a62eacc1ac0be1aaa72ace0d754a2b8bdd7a2636b33c",
+    "time": 3600.0,
+    "populations": [
+      0,
+      47
+    ],
+    "births_by_source": [
+      77,
+      490
+    ],
+    "first_absent": [
+      1531.0,
+      null
+    ],
+    "energy_balance_error": 0.022850820074381772,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-no-shelter/seed-161",
+    "matched_founders_sha256": "5af2abc284f1ecff4b75a62eacc1ac0be1aaa72ace0d754a2b8bdd7a2636b33c",
+    "time": 3600.0,
+    "populations": [
+      12,
+      35
+    ],
+    "births_by_source": [
+      427,
+      411
+    ],
+    "first_absent": [
+      null,
+      null
+    ],
+    "energy_balance_error": 0.016360608889954165,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-no-shelter-cue/seed-161",
+    "matched_founders_sha256": "5af2abc284f1ecff4b75a62eacc1ac0be1aaa72ace0d754a2b8bdd7a2636b33c",
+    "time": 3600.0,
+    "populations": [
+      0,
+      48
+    ],
+    "births_by_source": [
+      190,
+      436
+    ],
+    "first_absent": [
+      2303.0,
+      null
+    ],
+    "energy_balance_error": -0.016586252648266964,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-shelter/seed-162",
+    "matched_founders_sha256": "f3aed83ce9950d661994ccdae4a28afdafeced5224de245f81ceb27874521fae",
+    "time": 3600.0,
+    "populations": [
+      0,
+      46
+    ],
+    "births_by_source": [
+      129,
+      545
+    ],
+    "first_absent": [
+      1945.0,
+      null
+    ],
+    "energy_balance_error": 0.03434736208873801,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-no-shelter/seed-162",
+    "matched_founders_sha256": "f3aed83ce9950d661994ccdae4a28afdafeced5224de245f81ceb27874521fae",
+    "time": 3600.0,
+    "populations": [
+      0,
+      43
+    ],
+    "births_by_source": [
+      13,
+      665
+    ],
+    "first_absent": [
+      613.0,
+      null
+    ],
+    "energy_balance_error": -0.014490277244476601,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-no-shelter-cue/seed-162",
+    "matched_founders_sha256": "f3aed83ce9950d661994ccdae4a28afdafeced5224de245f81ceb27874521fae",
+    "time": 3600.0,
+    "populations": [
+      0,
+      48
+    ],
+    "births_by_source": [
+      56,
+      553
+    ],
+    "first_absent": [
+      860.0,
+      null
+    ],
+    "energy_balance_error": 0.04853789560002042,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-shelter/seed-163",
+    "matched_founders_sha256": "ea6fcc04b4a6577ae18db8686750f3ea4804d87acc07d06a675f319c94645abe",
+    "time": 3600.0,
+    "populations": [
+      0,
+      50
+    ],
+    "births_by_source": [
+      26,
+      507
+    ],
+    "first_absent": [
+      1392.0,
+      null
+    ],
+    "energy_balance_error": -0.012320539855863899,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-no-shelter/seed-163",
+    "matched_founders_sha256": "ea6fcc04b4a6577ae18db8686750f3ea4804d87acc07d06a675f319c94645abe",
+    "time": 3600.0,
+    "populations": [
+      0,
+      41
+    ],
+    "births_by_source": [
+      90,
+      570
+    ],
+    "first_absent": [
+      2223.0,
+      null
+    ],
+    "energy_balance_error": 0.004682542436057702,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  },
+  {
+    "path": "runs/v10-no-shelter-cue/seed-163",
+    "matched_founders_sha256": "ea6fcc04b4a6577ae18db8686750f3ea4804d87acc07d06a675f319c94645abe",
+    "time": 3600.0,
+    "populations": [
+      0,
+      52
+    ],
+    "births_by_source": [
+      41,
+      514
+    ],
+    "first_absent": [
+      687.0,
+      null
+    ],
+    "energy_balance_error": 0.022022009907232132,
+    "detritus_balance_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cached_topology_exact": true
+  }
+]

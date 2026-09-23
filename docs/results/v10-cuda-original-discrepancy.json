@@ -1,0 +1,128 @@
+{
+  "differences": {
+    "agent/heading": {
+      "shape": [
+        7
+      ],
+      "max_difference": 1.9073486328125e-06,
+      "changed": 1
+    },
+    "agent/spent": {
+      "shape": [
+        7
+      ],
+      "max_difference": 7.62939453125e-06,
+      "changed": 1
+    },
+    "agent/distance": {
+      "shape": [
+        7
+      ],
+      "max_difference": 7.62939453125e-06,
+      "changed": 1
+    },
+    "agent/pos": {
+      "shape": [
+        7,
+        2
+      ],
+      "max_difference": 1.52587890625e-05,
+      "changed": 2
+    },
+    "agent/h": {
+      "shape": [
+        7,
+        32
+      ],
+      "max_difference": 2.980232238769531e-07,
+      "changed": 51
+    },
+    "agent/motors": {
+      "shape": [
+        7,
+        2
+      ],
+      "max_difference": 5.960464477539063e-08,
+      "changed": 1
+    },
+    "agent/inputs": {
+      "shape": [
+        7,
+        36
+      ],
+      "max_difference": 5.513429641723633e-07,
+      "changed": 76
+    },
+    "agent/actions": {
+      "shape": [
+        7,
+        5
+      ],
+      "max_difference": 5.960464477539063e-08,
+      "changed": 5
+    },
+    "agent/module_h": {
+      "shape": [
+        7,
+        3,
+        32
+      ],
+      "max_difference": 4.917383193969727e-07,
+      "changed": 94
+    },
+    "agent/module_actions": {
+      "shape": [
+        7,
+        3,
+        5
+      ],
+      "max_difference": 1.1920928955078125e-07,
+      "changed": 6
+    },
+    "agent/module_plastic": {
+      "shape": [
+        7,
+        3,
+        32,
+        32
+      ],
+      "max_difference": 3.4924596548080444e-10,
+      "changed": 1930
+    },
+    "agent/module_trace": {
+      "shape": [
+        7,
+        3,
+        32,
+        32
+      ],
+      "max_difference": 3.8743019104003906e-07,
+      "changed": 1768
+    },
+    "trophic/predation_uptake": {
+      "shape": [
+        3,
+        3
+      ],
+      "max_difference": 1.7881393432617188e-07,
+      "changed": 1
+    },
+    "field/0": {
+      "max_difference": 7.62939453125e-06
+    },
+    "field/1": {
+      "max_difference": 1.9073486328125e-06
+    },
+    "field/2": {
+      "max_difference": 2.0265579223632812e-06
+    },
+    "field/4": {
+      "max_difference": 6.407499313354492e-07
+    }
+  },
+  "rng_equal": true,
+  "energy_residuals": [
+    -0.00028818752616643906,
+    -0.00028830766677856445
+  ]
+}

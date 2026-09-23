@@ -54,6 +54,9 @@ class Config:
     synapse_maintenance: float = 0.00001
     neuron_construction: float = 0.05
     synapse_construction: float = 0.001
+    shelter_fraction: float = 0.5
+    shelter_radius: float = 36.0
+    shelter_protection: float = 0.95
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -116,14 +119,14 @@ class Config:
             "metrics_period checkpoint_wall_seconds viewer_size viewer_fps video_fps video_speed "
             "signal_half_life signal_scale quality_period feedback_scale identity_strength "
             "plasticity_limit plasticity_trace_tau "
-            "plasticity_half_life_min plasticity_half_life_max"
+            "plasticity_half_life_min plasticity_half_life_max shelter_radius"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9):
+        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -133,6 +136,8 @@ class Config:
             raise ValueError("Predation efficiency and armor protection must be in [0, 1]")
         if not 0 <= self.resource_floor <= 1:
             raise ValueError("resource_floor must be in [0, 1]")
+        if not 0 <= self.shelter_fraction <= 1 or not 0 <= self.shelter_protection <= 1:
+            raise ValueError("Shelter fraction and protection must be in [0, 1]")
         if not 0 <= self.low_quality <= self.high_quality <= 1 or not 0 <= self.quality_jitter < 1:
             raise ValueError("Require 0 <= low_quality <= high_quality <= 1 and jitter in [0, 1)")
         if self.ecology_version >= 6 and self.patches < 2:
@@ -211,6 +216,8 @@ class Config:
             channels.append("secretions")
         if self.ecology_version >= 6:
             channels.extend(("identity_a", "identity_b"))
+        if self.ecology_version >= 10:
+            channels.append("shelter")
         names = [f"{channel}_{angle}" for channel in channels for angle in (-135, -45, 45, 135)]
         if self.ecology_version >= 6:
             names.extend(("food_feedback", "damage_feedback"))

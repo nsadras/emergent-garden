@@ -1,0 +1,746 @@
+[
+  {
+    "reference": "runs/v8-assembly-mixed/seed-151",
+    "traced": "runs/v9-traced-mixed/seed-151",
+    "physical_replay_exact": true,
+    "event_history_exact_except_cause": true,
+    "time": 3600.0,
+    "death_causes_by_source": [
+      {
+        "predation": 153,
+        "maintenance": 81
+      },
+      {
+        "maintenance": 329,
+        "predation": 352
+      }
+    ],
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0,
+    "uptake_roundoff_differences": {
+      "fresh_absorbed": 0.0,
+      "detritus_absorbed": 0.0,
+      "predation_absorbed": -5.157315172255039e-06
+    },
+    "metrics": {
+      "time": 3600.0,
+      "tick": 108000,
+      "population": 43,
+      "food_count": 693,
+      "food_energy": 8894.0,
+      "living_energy": 3601.186291694641,
+      "mean_age": 169.24107360839844,
+      "generation_max": 25,
+      "generation_mean": 16.813953399658203,
+      "lineages": 3,
+      "genome_variance": 0.01118246279656887,
+      "contacts": 4,
+      "overlaps": 0,
+      "max_overlap": 0,
+      "births": 766,
+      "deaths": 915,
+      "blocked_births": 7,
+      "food_spawned": 1717020.0,
+      "food_expired": 164552.0,
+      "food_absorbed": 316242.74708276615,
+      "maintenance": 172771.4428400702,
+      "propulsion": 58140.78152852346,
+      "reproduction": 12479.804738044739,
+      "death_energy": 0.0,
+      "organism_steps": 5006291,
+      "distance": 2115487.351292009,
+      "digestion_loss": 1227331.2540762015,
+      "detritus_created": 541617.9999995828,
+      "fresh_absorbed": 63023.42754393071,
+      "detritus_absorbed": 253219.31953883544,
+      "predation_absorbed": 154446.24193930818,
+      "predation_loss": 83163.36980582956,
+      "predation_kills": 505,
+      "signaling_cost": 3483.1921361122722,
+      "signal_emitted": 5805320.3555177925,
+      "signal_decayed": 5740081.558529739,
+      "quality_reversals": 14,
+      "high_quality_absorbed": 51413.80386263132,
+      "low_quality_absorbed": 11609.623681299388,
+      "plasticity_cost": 3337.3128527116814,
+      "plasticity_changes": 4187.725436889907,
+      "neural_maintenance": 2797.0800752952664,
+      "neural_construction": 1282.2920339107513,
+      "neural_structural_births": 88,
+      "module_births_1": 766,
+      "energy_balance_error": -0.01787686064199079,
+      "ecology_version": 9,
+      "mean_radius": 3.4255526065826416,
+      "std_radius": 0.11938991397619247,
+      "mean_power": 1.1260689496994019,
+      "std_power": 0.04096662998199463,
+      "mean_diet": 0.06777381151914597,
+      "std_diet": 0.014360717497766018,
+      "grazers": 0,
+      "scavengers": 43,
+      "generalists": 0,
+      "mean_attack": 0.6593243479728699,
+      "mean_armor": 0.41954660415649414,
+      "meat_eaters": 32,
+      "mean_memory_tau": 1.2849116325378418,
+      "cue_patches": 0,
+      "module_histogram": [
+        43,
+        0,
+        0
+      ],
+      "mean_modules": 1.0,
+      "signal_mass": 65238.81400232017,
+      "signal_balance_error": -0.017014266923069954,
+      "mean_secretion": 0.47193261981010437,
+      "patch_stock": [
+        1060.0,
+        660.0,
+        740.0,
+        740.0,
+        1060.0,
+        0.0,
+        160.0,
+        860.0
+      ],
+      "favorable_identity": 0,
+      "next_quality_reversal": 3763.3333333333335,
+      "patch_identities": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "mean_plastic_magnitude": 0.014050273538490074,
+      "mean_modulation": 0.011373979039490223,
+      "mean_neurons": 16.0930233001709,
+      "mean_connections": 854.6046752929688,
+      "neuron_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        13,
+        13,
+        17,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "trophic_fresh_uptake": [
+        31751.37830245495,
+        0.0,
+        31272.04924147576
+      ],
+      "trophic_detritus_introduced": [
+        52458.0,
+        0.0,
+        489159.99999958277,
+        0.0
+      ],
+      "trophic_detritus_uptake": [
+        [
+          1909.8184480518103,
+          0.0,
+          10455.450838208199
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1092.8500722497702,
+          0.0,
+          239761.20018032566
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "trophic_detritus_dissipated": [
+        39945.73071373999,
+        0.0,
+        244546.94974700734,
+        0.0
+      ],
+      "trophic_detritus_expired": [
+        147.0,
+        0.0,
+        1085.0,
+        0.0
+      ],
+      "trophic_predation_uptake": [
+        [
+          12286.715637743939,
+          0.0,
+          11545.880850526784
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10789.835237728432,
+          0.0,
+          119823.81020815171
+        ]
+      ],
+      "trophic_predation_kills": [
+        153.0,
+        0.0,
+        352.0
+      ],
+      "trophic_guilds": [
+        "grazer",
+        "generalist",
+        "scavenger"
+      ],
+      "trophic_producers": [
+        "grazer",
+        "generalist",
+        "scavenger",
+        "unattributed"
+      ],
+      "trophic_detritus_stock": [
+        0.0,
+        0.0,
+        2674.0,
+        0.0
+      ],
+      "trophic_detritus_balance_error": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "detritus_energy": 2674.0
+    }
+  },
+  {
+    "reference": "runs/v8-assembly-mixed/seed-152",
+    "traced": "runs/v9-traced-mixed/seed-152",
+    "physical_replay_exact": true,
+    "event_history_exact_except_cause": true,
+    "time": 3600.0,
+    "death_causes_by_source": [
+      {
+        "predation": 92,
+        "maintenance": 67
+      },
+      {
+        "predation": 394,
+        "maintenance": 243
+      }
+    ],
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0,
+    "uptake_roundoff_differences": {
+      "fresh_absorbed": 0.0,
+      "detritus_absorbed": 0.0,
+      "predation_absorbed": 1.3479439076036215e-06
+    },
+    "metrics": {
+      "time": 3600.0,
+      "tick": 108000,
+      "population": 41,
+      "food_count": 521,
+      "food_energy": 7391.0,
+      "living_energy": 3748.389744758606,
+      "mean_age": 216.82867431640625,
+      "generation_max": 16,
+      "generation_mean": 11.634146690368652,
+      "lineages": 4,
+      "genome_variance": 0.0008176823030225933,
+      "contacts": 6,
+      "overlaps": 0,
+      "max_overlap": 1.430511474609375e-06,
+      "births": 645,
+      "deaths": 796,
+      "blocked_births": 0,
+      "food_spawned": 1732000.0,
+      "food_expired": 142577.0,
+      "food_absorbed": 312831.1665652022,
+      "maintenance": 168333.24073088434,
+      "propulsion": 65157.54190067326,
+      "reproduction": 11255.958365440369,
+      "death_energy": 0.0,
+      "organism_steps": 4784354,
+      "distance": 2154751.50716439,
+      "digestion_loss": 1269200.8298063278,
+      "detritus_created": 554603.0,
+      "fresh_absorbed": 49915.84620862454,
+      "detritus_absorbed": 262915.32035657763,
+      "predation_absorbed": 145298.83011328298,
+      "predation_loss": 78237.83986764861,
+      "predation_kills": 486,
+      "signaling_cost": 2610.33374974998,
+      "signal_emitted": 4350556.346201134,
+      "signal_decayed": 4306078.536068485,
+      "quality_reversals": 15,
+      "high_quality_absorbed": 40808.07653015852,
+      "low_quality_absorbed": 9107.769678466022,
+      "plasticity_cost": 3189.4268775265346,
+      "plasticity_changes": 3388.2950370567155,
+      "neural_maintenance": 2635.083311478507,
+      "neural_construction": 1067.3650188446045,
+      "neural_structural_births": 65,
+      "module_births_1": 645,
+      "energy_balance_error": 0.023883125802967697,
+      "ecology_version": 9,
+      "mean_radius": 3.5807838439941406,
+      "std_radius": 0.09930922836065292,
+      "mean_power": 1.202770709991455,
+      "std_power": 0.03708944842219353,
+      "mean_diet": 0.0887015238404274,
+      "std_diet": 0.010302106849849224,
+      "grazers": 0,
+      "scavengers": 41,
+      "generalists": 0,
+      "mean_attack": 0.6606757044792175,
+      "mean_armor": 0.3806317150592804,
+      "meat_eaters": 32,
+      "mean_memory_tau": 1.3374497890472412,
+      "cue_patches": 0,
+      "module_histogram": [
+        41,
+        0,
+        0
+      ],
+      "mean_modules": 1.0,
+      "signal_mass": 44477.826452661306,
+      "signal_balance_error": -0.016320012509822845,
+      "mean_secretion": 0.37974998354911804,
+      "patch_stock": [
+        200.0,
+        600.0,
+        1260.0,
+        480.0,
+        360.0,
+        340.0,
+        700.0,
+        880.0
+      ],
+      "favorable_identity": 1,
+      "next_quality_reversal": 3770.7,
+      "patch_identities": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "mean_plastic_magnitude": 0.006149805564255575,
+      "mean_modulation": -0.02113894373178482,
+      "mean_neurons": 16.024391174316406,
+      "mean_connections": 849.1707153320312,
+      "neuron_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        40,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "trophic_fresh_uptake": [
+        16125.115903437138,
+        0.0,
+        33790.730305187404
+      ],
+      "trophic_detritus_introduced": [
+        26026.0,
+        0.0,
+        528577.0,
+        0.0
+      ],
+      "trophic_detritus_uptake": [
+        [
+          880.1561142504215,
+          0.0,
+          5393.185657143593
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          583.329209625721,
+          0.0,
+          256058.6493755579
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "trophic_detritus_dissipated": [
+        19689.658228605986,
+        0.0,
+        269450.0214148164,
+        0.0
+      ],
+      "trophic_detritus_expired": [
+        63.0,
+        0.0,
+        854.0,
+        0.0
+      ],
+      "trophic_predation_uptake": [
+        [
+          7659.541371765081,
+          0.0,
+          6646.468276432715
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          7049.2859507313115,
+          0.0,
+          123943.53451570182
+        ]
+      ],
+      "trophic_predation_kills": [
+        92.0,
+        0.0,
+        394.0
+      ],
+      "trophic_guilds": [
+        "grazer",
+        "generalist",
+        "scavenger"
+      ],
+      "trophic_producers": [
+        "grazer",
+        "generalist",
+        "scavenger",
+        "unattributed"
+      ],
+      "trophic_detritus_stock": [
+        0.0,
+        0.0,
+        1631.0,
+        0.0
+      ],
+      "trophic_detritus_balance_error": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "detritus_energy": 1631.0
+    }
+  },
+  {
+    "reference": "runs/v8-assembly-mixed/seed-153",
+    "traced": "runs/v9-traced-mixed/seed-153",
+    "physical_replay_exact": true,
+    "event_history_exact_except_cause": true,
+    "time": 3600.0,
+    "death_causes_by_source": [
+      {
+        "predation": 115,
+        "maintenance": 83
+      },
+      {
+        "predation": 329,
+        "maintenance": 216
+      }
+    ],
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0,
+    "uptake_roundoff_differences": {
+      "fresh_absorbed": 0.0,
+      "detritus_absorbed": 0.0,
+      "predation_absorbed": 1.0512303560972214e-06
+    },
+    "metrics": {
+      "time": 3600.0,
+      "tick": 108000,
+      "population": 44,
+      "food_count": 626,
+      "food_energy": 7905.0,
+      "living_energy": 4016.2273845672607,
+      "mean_age": 282.798095703125,
+      "generation_max": 20,
+      "generation_mean": 12.454545021057129,
+      "lineages": 2,
+      "genome_variance": 0.003287475323304534,
+      "contacts": 4,
+      "overlaps": 0,
+      "max_overlap": 9.059906005859375e-06,
+      "births": 595,
+      "deaths": 743,
+      "blocked_births": 4,
+      "food_spawned": 1715800.0,
+      "food_expired": 149857.0,
+      "food_absorbed": 305654.7601535693,
+      "maintenance": 171650.8511701097,
+      "propulsion": 60140.538649090755,
+      "reproduction": 10553.194416046143,
+      "death_energy": 0.0,
+      "organism_steps": 4776558,
+      "distance": 2035509.7596076264,
+      "digestion_loss": 1252383.2351180315,
+      "detritus_created": 546455.0,
+      "fresh_absorbed": 58303.25922880322,
+      "detritus_absorbed": 247351.50092476606,
+      "predation_absorbed": 135814.63599715123,
+      "predation_loss": 73130.96555441224,
+      "predation_kills": 444,
+      "signaling_cost": 2763.3873773215855,
+      "signal_emitted": 4605645.731006317,
+      "signal_decayed": 4557238.017391377,
+      "quality_reversals": 14,
+      "high_quality_absorbed": 47647.45495021343,
+      "low_quality_absorbed": 10655.804278589785,
+      "plasticity_cost": 3184.2330497679636,
+      "plasticity_changes": 3058.797339772844,
+      "neural_maintenance": 2643.9119184837878,
+      "neural_construction": 988.8400157690048,
+      "neural_structural_births": 53,
+      "module_births_1": 595,
+      "energy_balance_error": 0.019987710737041198,
+      "ecology_version": 9,
+      "mean_radius": 3.687474012374878,
+      "std_radius": 0.06961303949356079,
+      "mean_power": 1.1797995567321777,
+      "std_power": 0.05609174072742462,
+      "mean_diet": 0.0707334578037262,
+      "std_diet": 0.014707916416227818,
+      "grazers": 0,
+      "scavengers": 44,
+      "generalists": 0,
+      "mean_attack": 0.7197317481040955,
+      "mean_armor": 0.4342002868652344,
+      "meat_eaters": 34,
+      "mean_memory_tau": 1.249359130859375,
+      "cue_patches": 0,
+      "module_histogram": [
+        44,
+        0,
+        0
+      ],
+      "mean_modules": 1.0,
+      "signal_mass": 48407.7410559617,
+      "signal_balance_error": -0.027441021986305714,
+      "mean_secretion": 0.3724316656589508,
+      "patch_stock": [
+        900.0,
+        80.0,
+        40.0,
+        1320.0,
+        180.0,
+        120.0,
+        1260.0,
+        560.0
+      ],
+      "favorable_identity": 0,
+      "next_quality_reversal": 3686.233333333333,
+      "patch_identities": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "mean_plastic_magnitude": 0.006237406014874155,
+      "mean_modulation": -0.003511882619932294,
+      "mean_neurons": 16.227272033691406,
+      "mean_connections": 863.272705078125,
+      "neuron_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        34,
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "trophic_fresh_uptake": [
+        27498.972483456135,
+        0.0,
+        30804.286745347083
+      ],
+      "trophic_detritus_introduced": [
+        45034.5,
+        0.0,
+        501420.5,
+        0.0
+      ],
+      "trophic_detritus_uptake": [
+        [
+          1720.8583458960056,
+          0.0,
+          8461.315185546875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          931.1523293554783,
+          0.0,
+          236238.1750639677
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "trophic_detritus_dissipated": [
+        34747.32646855712,
+        0.0,
+        261094.17260667682,
+        0.0
+      ],
+      "trophic_detritus_expired": [
+        105.0,
+        0.0,
+        672.0,
+        0.0
+      ],
+      "trophic_predation_uptake": [
+        [
+          11524.205373865576,
+          0.0,
+          8682.86486225912
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          8003.200560201425,
+          0.0,
+          107604.36520187632
+        ]
+      ],
+      "trophic_predation_kills": [
+        115.0,
+        0.0,
+        329.0
+      ],
+      "trophic_guilds": [
+        "grazer",
+        "generalist",
+        "scavenger"
+      ],
+      "trophic_producers": [
+        "grazer",
+        "generalist",
+        "scavenger",
+        "unattributed"
+      ],
+      "trophic_detritus_stock": [
+        0.0,
+        0.0,
+        2485.0,
+        0.0
+      ],
+      "trophic_detritus_balance_error": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "detritus_energy": 2485.0
+    }
+  }
+]

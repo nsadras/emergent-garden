@@ -406,11 +406,22 @@ checked as an observer. CPU and RTX 5080 replay checks pass; the latter reports
 an energy residual of 0.000382 and zero detritus-credit residual in its small
 eight-second test. This is a correctness check, not a performance benchmark.
 
-Traced repeats of the three mixed communities, with and without attacks, are
-running under `runs/v9-traced-mixed` and `runs/v9-traced-no-attacks`. Their sources
-are archived at process import. Results will distinguish recycling within a
-feeding guild from transfers between guilds, and will be checked against the
-corresponding V8 physical endpoints.
+All six traced repeats completed. Their final agents, food, fields, random
+streams, totals, and complete birth/death histories match the corresponding V8
+runs exactly; only the new death-cause annotations differ. The largest
+detritus-credit balance residual was 2.91e-11. The [audits](docs/results/v9-audit-mixed.json)
+and [no-attack audits](docs/results/v9-audit-no-attacks.json) are reproducible with
+`scripts/audit_trophic.py`; exact checkpoints remain under `runs/v9-traced-*`.
+
+The [food-flow figure](docs/v9-trophic.png) shows that 95.8–97.9% of detritus uptake
+by scavenger-allocated creatures came from their own guild with attacks active.
+Even with attacks disabled and grazers present, that share was 90.7–92.3%.
+Scavenger-to-scavenger predation also dominated their meat uptake. Transfers
+between guilds exist, but this is mostly recycling within a guild, rather than
+an obligate grazer-to-scavenger food chain. The current law allows every body
+to process fresh particles instantly and recycle a fixed fraction, regardless
+of its own assimilation efficiency. That is a candidate mechanism to revisit
+with finite, specialization-dependent handling rates.
 
 The next environmental hypothesis is spatial shelter that locally obstructs
 attacks for any organism. It will be tested against an otherwise matched world
@@ -420,3 +431,116 @@ their modeled predator–prey systems, while [an empirical study of intraguild
 predation](https://pubmed.ncbi.nlm.nih.gov/23004014/) found that habitat complexity
 weakened predation without promoting coexistence. Our mixed omnivores differ
 from both systems and need their own controls.
+
+## V10 — spatial shelter
+
+The first shelter preset selects four of eight resource patches with its own
+random stream. Each has a radius-36 cover region: full cover within 80% of the
+radius, then a linear taper to zero. Overlapping regions take the maximum, and
+the field is clipped to the dish. It is permeable terrain, not a solid obstacle.
+Physical attacks and sensors sample the same bilinear field.
+
+Cover obstructs a bite by `protection * max(attacker_cover, prey_cover)`, with
+protection initially 0.95. Thus a sheltered body cannot attack outward at full
+strength. The rule uses positions, not feeding guild or ancestry. Food supply,
+digestion, movement, armor, attack costs, and birth investment retain their
+existing laws. Spatially limited cover is the hypothesis under test, not a
+guarantee of coexistence.
+
+Each module gains four shelter readings, bringing its controller to 36 inputs
+and five outputs. They are bounded local coverage values, rather than food-like
+concentrations. The 32-slot genome now has 4,752 values; a new dense 16-unit
+circuit expresses 912 connections. Transfers preserve old sensory names and
+put new sensory weights at zero. Existing V8/V9 masks retain added edges dormant;
+transfers from earlier dense networks expose the added inputs with zero weights.
+The three matched assembly treatments all use the same transferred genomes and
+the same resulting brain costs.
+
+The viewer outlines covered patches and provides a shelter overlay with Tab;
+[the preview](docs/v10-preview.png) shows environment 161 at 1,200 seconds. Logs
+record current shelter occupancy by diet guild and each creature's cumulative
+cover exposure, including its final life record. The obstruction counter reports
+potential bite demand removed before target-energy and storage caps; it is not
+energy created or a measurement of actual energy saved.
+
+The `no_shelter` control removes physical protection while retaining the cue.
+The `no_shelter_cue` control removes that sensory channel while retaining
+protection. Three new environments, 161/162/163, each run all three treatments
+for one simulated hour from the same two source pools used in V8. Both acquired
+state and age start at zero; ordinary mutation remains active. The criterion is
+persistence and reproduction of both source ancestries relative to the matched
+control, followed by longer tests if warranted.
+
+All nine initial trials completed. Endpoints show grazer/scavenger ancestry:
+
+| Treatment | Environment 161 | 162 | 163 |
+| --- | --- | --- | --- |
+| Cover and sensing | 0/47 | 0/46 | 0/50 |
+| Protection disabled | 12/35 | 0/43 | 0/41 |
+| Cover sensing disabled | 0/48 | 0/48 | 0/52 |
+
+With protection and sensing, grazer ancestry disappeared at 1,531/1,945/1,392
+seconds. Removing protection retained it for the hour in environment 161, but
+lost it at 613/2,223 seconds in the others. Removing the cue lost it at
+2,303/860/687 seconds. Shelter can change the timing of exclusion, and sensing
+can change outcomes, but this preset did not sustain coexistence or establish
+a consistent sensory advantage. The [figure](docs/v10-shelter.png),
+[records](docs/results/v10.json), and [matched-genome audit](docs/results/v10-audit.json)
+include every treatment. Maximum absolute energy residual was 0.0486; detritus
+credits balanced exactly at all nine endpoints.
+
+The video at `runs/v10-video/timelapse.mp4` continues protected environment 163
+from 600 to 900 simulated seconds. All 901 frames decoded at 1,024×1,024 and
+30 FPS. `scripts/verify_video.py` checks the decoded count against the run record.
+
+An exploratory parameter adjustment, [v10-covered.toml](configs/v10-covered.toml),
+places cover around all eight patches. Its 161/162/163 batch is running under
+`runs/v10-full-shelter`. It changes the fraction of patches covered, not the
+protection law; the initial half-covered preset and all its failed outcomes
+remain available.
+
+### CUDA replay correction
+
+The first V10 CUDA smoke check found a reproducibility problem: paired copies
+of one checkpoint differed in position by 0.0000153 after six simulated seconds.
+Random-generator states agreed. This is a numerical execution issue, not an
+ecological or shelter-learning effect. Enabling deterministic PyTorch algorithms
+removed the discrepancy in the diagnostic repeat.
+
+V10+ CUDA construction and resume now enable deterministic kernels for the
+process, disable cuDNN benchmarking, and set a cuBLAS workspace if one was not
+already configured. Older versions do not switch these settings off. Runtime
+metadata records the mode. This follows [PyTorch's reproducibility guidance](https://docs.pytorch.org/docs/2.11/notes/randomness.html)
+and its [deterministic-operations API](https://docs.pytorch.org/docs/2.11/generated/torch.use_deterministic_algorithms.html).
+It does not promise identical results across devices, package versions, or
+hardware. CPU trials already use exact replay and are unaffected.
+
+The corrected small GPU check passes with zero tensor tolerance, identical
+events/totals, 37 quality reversals, and an energy residual of -0.000464. Peak
+allocated memory was about 36 MB in this deliberately small world. A separate
+exercise raises founder energy and forces structural mutation attempts to test
+replay through births; those settings are mechanical test inputs, not an ecology
+trial. Both CPU and CUDA birth exercises passed exact replay with eight births
+and eight structurally mutated offspring; the GPU energy residual was 0.00117.
+The test suite has 128 passing cases. Both the original discrepancy and the
+correction are retained in `docs/results/v10-cuda-*.json`.
+
+## Next feeding-rate experiment
+
+V9's provenance identifies a route around specialization: a body can process
+all contacted fresh food in one tick, recycle 35%, and later eat those remains,
+even when its own fresh-food assimilation is poor. The next prototype will cap
+raw processing per second, scaled by digestive tissue and the square of the
+existing allocation to each food type. Separate fresh/detritus budgets avoid
+unwanted fresh particles blocking a scavenger from eating nearby detritus.
+Their combined capacity cannot exceed the body's processing ceiling. All
+existing assimilation, recycling, and energy-loss accounting will still apply.
+
+The initial ceiling will be 60 raw energy units per unit digestive tissue per
+second. Tests will cover timestep scaling, simultaneous food competition,
+storage limits, source-credit conservation, and a control restoring unlimited
+processing. Pilot runs will check particle counts and throughput: partial
+processing can create more small detritus particles. This is an experimental
+capacity constraint, inspired by the importance of handling time in
+[Holling's predation analysis](https://hahana.soest.hawaii.edu/cmoreserver/summercourse/2010/documents/Holling_1959b.pdf),
+not a reproduction of that model or a guarantee of a stable food chain.

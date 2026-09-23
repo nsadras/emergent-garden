@@ -95,3 +95,22 @@ def test_unknown_config_key_has_a_clear_error():
 
     with pytest.raises(ValueError, match="food_rtae"):
         Config.from_dict({"food_rtae": 20})
+
+
+def test_v10_cuda_replay_settings_preserve_cpu_and_older_execution(monkeypatch):
+    from emergent_garden.runtime import enable_cuda_replay
+
+    calls = []
+    monkeypatch.delenv("CUBLAS_WORKSPACE_CONFIG", raising=False)
+    monkeypatch.setattr(torch, "use_deterministic_algorithms", calls.append)
+    monkeypatch.setattr(torch.backends.cudnn, "benchmark", False)
+    enable_cuda_replay("cpu", 10)
+    enable_cuda_replay("cuda", 9)
+    assert calls == []
+    assert "CUBLAS_WORKSPACE_CONFIG" not in os.environ
+    enable_cuda_replay("cuda", 10)
+    assert calls == [True]
+    assert os.environ["CUBLAS_WORKSPACE_CONFIG"] == ":4096:8"
+    monkeypatch.setenv("CUBLAS_WORKSPACE_CONFIG", ":16:8")
+    enable_cuda_replay("cuda", 10)
+    assert os.environ["CUBLAS_WORKSPACE_CONFIG"] == ":16:8"

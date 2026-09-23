@@ -1,0 +1,8 @@
+{
+  "deterministic_algorithms": true,
+  "agent_differences": {},
+  "totals_equal": true,
+  "credits_equal": true,
+  "fields_equal": true,
+  "rng_equal": true
+}

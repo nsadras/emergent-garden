@@ -52,7 +52,7 @@ class Renderer:
             fields = getattr(world, "fields", [world.field])
             field = fields[self.field_index % len(fields)].grid.detach().cpu().numpy()
             norm = c.signal_scale if self.field_index == 4 else c.smell_scale
-            strength = field / (field + norm) * 100
+            strength = (field if self.field_index == 7 else field / (field + norm)) * 100
             tints = (
                 (0.2, 0.5, 0.25),
                 (0.8, 0.4, 0.05),
@@ -61,6 +61,7 @@ class Renderer:
                 (0.15, 0.8, 0.9),
                 (0.9, 0.25, 0.3),
                 (0.3, 0.35, 0.95),
+                (0.3, 0.65, 0.65),
             )
             rgb = (
                 np.array([13, 31, 37]) + strength[..., None] * np.array(tints[self.field_index])
@@ -83,6 +84,15 @@ class Renderer:
                 )
                 surface.blit(resized, top_left + np.array([x0, y0]) * side / n)
         pygame.draw.circle(surface, (74, 133, 137), dish_center.astype(int), radius, 2)
+        if c.ecology_version >= 10:
+            centers, _ = self.transform(
+                world.patch_positions[world.shelter_indices].cpu().numpy(), c.diameter
+            )
+            color = (65, 125, 126) if world.ablation != "no_shelter" else (63, 71, 77)
+            for pos in centers:
+                pygame.draw.circle(
+                    surface, color, pos.astype(int), round(c.shelter_radius * scale), 1
+                )
         food, _ = self.transform(world.food_pos.detach().cpu().numpy(), c.diameter)
         food_radius = max(1, round(c.food_radius * scale))
         kinds = (
@@ -196,6 +206,7 @@ class Renderer:
                 "secretions",
                 "identity A",
                 "identity B",
+                "shelter",
             )
             self.text(
                 f"V{c.ecology_version} | {names[self.field_index]} field | {self.color_mode}",

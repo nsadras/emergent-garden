@@ -81,6 +81,8 @@ def runtime_metadata(world):
         platform=platform.platform(),
         torch=str(torch.__version__),
         cuda_build=torch.version.cuda,
+        deterministic_algorithms=torch.are_deterministic_algorithms_enabled(),
+        cublas_workspace_config=os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
         device=str(world.device),
         seed=world.seed,
         revision=SOURCE_REVISION,

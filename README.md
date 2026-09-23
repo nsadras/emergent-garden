@@ -41,6 +41,13 @@ found that two evolved lineages persisted together when attacks were disabled;
 with attacks active, grazer ancestry disappeared in all three tested mixtures.
 The accounting will guide experiments on sustaining richer food webs.
 
+The [V10 preset](configs/v10.toml) adds local shelter: covered patches reduce
+attacks into and out of cover, and creatures gain four directional shelter
+readings. [The overlay](docs/v10-preview.png) shows this terrain. Controlled
+[trials](docs/v10-shelter.png) found mixed effects on extinction timing and no
+sustained coexistence with the initial shelter settings. A verified recording
+is at `runs/v10-video/timelapse.mp4`; broader coverage is being tested.
+
 ## Start watching
 
 Python 3.13 and all Python packages are managed with **uv**:
@@ -77,7 +84,7 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | Right-drag | Pan |
 | Left-click | Select a creature and inspect energy, lineage, and neural activity |
 | `F` | Toggle the smell overlay |
-| Tab | Cycle resource, organism, forecast, secretion, and patch-identity fields |
+| Tab | Cycle resource, organism, forecast, secretion, patch-identity, and shelter fields |
 | `C` | Switch between inherited diet and lineage colors |
 | `B` | Show recurrent weights and module 1's acquired changes for the selected creature |
 | `R` | Reset the camera |
@@ -145,6 +152,13 @@ The later V5 long runs achieved about 11–13x on CPU while running concurrently
 V5 also passed an RTX 5080 checkpoint-continuation smoke test; this is not a
 full-size GPU performance benchmark.
 
+V10+ CUDA runs and resumes enable deterministic PyTorch operations for more
+reliable checkpoint replay; this affects the whole process and may cost speed.
+The mode is recorded in runtime metadata. Reproduction and ecology comparisons
+still require the same software and hardware environment; CPU and CUDA runs
+with the same seed are not identical. Earlier GPU checks used a small numerical
+tolerance and did not establish exact replay.
+
 CPU execution defaults to one PyTorch thread because these operations are small.
 To experiment with another setting, use `uv run garden --threads 2 run ...`.
 A live window needs a working desktop/display; headless simulation and recording
@@ -165,6 +179,7 @@ The original starting values are in [configs/v0.toml](configs/v0.toml).
 | [V7](configs/v7.toml) | Inherited rules for within-lifetime synaptic change |
 | [V8](configs/v8.toml) | Evolving neurons and connections with construction and maintenance costs |
 | [V9](configs/v9.toml) | Passive food-flow provenance, predation transfers, and immediate death causes |
+| [V10](configs/v10.toml) | Spatial shelter, local cover sensing, and deterministic CUDA execution |
 
 ```bash
 cp configs/v5.toml configs/my-experiment.toml
