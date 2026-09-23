@@ -43,8 +43,12 @@ configuration remains untouched.
 The four-radius treatment improved births in the weakest start and slightly in
 the third, but reduced them in the strongest start. It exceeded the two-radius
 treatment's birth counts in these three starts. This is screening evidence, not
-a generally optimal footprint. All three four-radius starts are being continued
-to 1,800 seconds; those incomplete extensions are not part of the pilot table.
+a generally optimal footprint. All three four-radius starts reached 1,800 seconds, with populations
+**253 / 13 / 277**, births **1,527 / 193 / 2,039**, and maximum living generations
+**35 / 10 / 36**. Their cumulative births were lower in all three starts than
+in the matching V19 radius-1 continuations (2,413 / 237 / 2,198). The experiment
+therefore supports stronger sensory information, not a reproductive improvement.
+These extensions are continuations, not additional independent replicates.
 
 The frozen-world diagnostic resamples the same bodies and fields in each of the
 three 1,800-second V19 populations. Increasing the radius from 1 to 4 raises the
@@ -79,7 +83,9 @@ A batch with only one creature cannot be shuffled. Shared environmental changes
 may remain informative across creatures, so this is a control for credit
 assignment rather than a guarantee that every useful signal is eliminated.
 It is available for V12+ assays; it does not require changing the source habitat
-to V20. The matched V19 shuffled-return follow-ups are in progress.
+to V20. All six matched V19 shuffled-return follow-ups are complete. Own-return learning
+produced more births in four comparisons; effects remain conditional. Six
+repeated founder runs also matched their original complete physical states exactly.
 
 ## Verification and use
 
@@ -97,7 +103,7 @@ with shuffled returns and active motor learning. The inspector was checked at
 uv run garden run --config configs/v20.toml --seed 1 --view --device cpu --seconds 0
 uv run garden run --config configs/v20-baseline.toml --seed 1 --view --device cpu --seconds 0
 
-uv run python scripts/audit_sensor_radius.py
+uv run python scripts/audit_sensor_radius.py --include-long
 uv run python scripts/plot_sensor_radius.py
 
 uv run garden assay runs/v19-learning-pilot/seed-1 --seeds 601 602 \

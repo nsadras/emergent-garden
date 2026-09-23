@@ -127,14 +127,27 @@ Births increase in five of six comparisons, while fresh-food intake increases in
 three. Effects depend on source and environment, and some differences are small.
 This supports a conditional ecological effect from motor updates, not a general
 learning advantage or proof of adaptive credit assignment. The
-[18-transplant audit](results/v19-learning-assays.json) includes the six founder
+[transplant audit](results/v19-learning-assays.json) includes the six founder
 reference runs; these are community outcomes, not independent per-agent fitness.
 
-A stronger follow-up assigns each learner another creature's normalized return
-rate while preserving its actual food and energy. These shuffled-return runs
-are still in progress. They test whether the relationship between a creature's
-own actions and outcomes matters; shared environmental information can remain
-useful even when returns are shuffled. See [the control's mechanics](SENSOR_RADIUS.md).
+The completed stronger follow-up assigns each learner another creature's
+normalized return rate while preserving its actual food and energy:
+
+| Source / environment | Own-return learning births | Shuffled-return learning births |
+|---|---|---|
+| 1 / 601 | 355 | 324 |
+| 1 / 602 | 427 | 419 |
+| 2 / 601 | 405 | 427 |
+| 2 / 602 | 547 | 443 |
+| 3 / 601 | 396 | 418 |
+| 3 / 602 | 362 | 349 |
+
+Correctly assigned returns improve births in four of six comparisons, with
+source-dependent effects. This does not establish reliable adaptive credit
+assignment. Shared environmental information can remain useful when returns
+are shuffled, and the control also perturbs ordinary motor dynamics. The audit
+now includes all **24 unique transplants** plus six exact repeated-founder
+checks. See [the control's mechanics](SENSOR_RADIUS.md).
 
 ## A diagnostic for circling
 
@@ -224,8 +237,9 @@ uv run python scripts/probe_food_response.py runs/v19-varied-long-1 \
 
 The priority is to distinguish exploration, inherited searching, and useful
 within-lifetime adaptation. The completed fresh-environment transplants and longer runs distinguish
-within-lifetime effects from divergent evolutionary histories. Shuffled returns
-provide the next control for the conditional benefits observed so far.
+within-lifetime effects from divergent evolutionary histories. The completed shuffled-return controls still leave general adaptive credit
+assignment unestablished. Persistent exploration is the next proposed neural
+comparison; it requires changing the likelihood score as well as the noise.
 
 One possible limitation is delayed credit: food search can take longer than the
 current two-second eligibility trace. Another is a weak spatial signal compared

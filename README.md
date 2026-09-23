@@ -16,7 +16,7 @@ carrying and two fullness inputs so creatures can digest while moving. All three
 fast-carrying starts reached 30 minutes. [V19](docs/NEURAL_VARIATION.md) adds
 varied founder circuits and compares stronger mutation and gentle motor
 learning. Initial outcomes are mixed. Paired descendant tests show conditional
-benefits from motor updates, with stronger credit-assignment controls in progress.
+benefits from motor updates; shuffled-return controls remain mixed.
 [V20](docs/SENSOR_RADIUS.md) tests a wider sensory footprint: directional signals
 increase, while reproduction remains dependent on the start.
 The live inspector, leaderboard, and energy

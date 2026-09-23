@@ -11,17 +11,17 @@ The [V19 neural experiments](docs/NEURAL_VARIATION.md) introduce varied founder
 graphs and compare architecture, mutation, and gentle motor learning across
 three seeds. All 15 pilots, 12 continuations, and 18 paired learning transplants are
 complete. Learning improved births in five of six same-genotype descendant pairs,
-but not in the three evolutionary continuations. Shuffled-return controls remain
-in progress. Stronger mutation lost one start to extinction; the delayed-credit
+but not in the three evolutionary continuations. Completed shuffled-return controls favored own returns in four of six
+comparisons, leaving general adaptive credit assignment unestablished. Stronger mutation lost one start to extinction; the delayed-credit
 diagnostic remained weak despite extending the eligibility trace.
 All 310 tests and separate CPU/CUDA replay exercises pass. The user's V16 working
 configuration is preserved.
 
 [V20](docs/SENSOR_RADIUS.md) tests larger sensory footprints with matched
 genomes and unchanged energy laws. Nine pilots show stronger spatial signals
-but mixed reproduction. All three four-radius starts are being continued.
-A shuffled-return control now tests the credit assignment behind V19's
-conditional learning benefits. All 322 tests pass; CPU/CUDA mechanics and replay
+but mixed reproduction. All three four-radius starts reached 1,800 seconds, but had fewer births than
+the radius-1 controls. The shuffled-return control has also completed; the
+evidence still supports conditional effects rather than a general learning advantage. All 322 tests pass; CPU/CUDA mechanics and replay
 checks pass. The active research loop continues.
 
 ## Research sequence

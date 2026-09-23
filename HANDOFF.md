@@ -10,15 +10,16 @@ managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
 [V20](docs/SENSOR_RADIUS.md) adds optional receptor distances of 1, 2, or 4 body
 module radii. Nine matched 600-second starts are complete. Four-radius births
 were 266/111/201 versus 455/26/195 at radius 1: mixed effects. All four-radius
-starts are being continued to 1,800 seconds. Frozen-world samples confirm an
+starts reached 1,800 seconds with populations 253/13/277 and births
+1,527/193/2,039, fewer births than the matching radius-1 run in every seed. Frozen-world samples confirm an
 approximately fourfold directional-signal increase, with little change in mean
 intensity. Radius 1 matches V19's full final physical state and recorded metrics
 in all three 600-second starts. No genomes, body shapes, or energy costs change.
 
 The new `shuffled_motor_reward` control gives each learner another creature's
 normalized energetic return rate, with its own checkpointed random stream.
-Physical energy and sensory feedback are untouched. Its V19 follow-ups remain
-in progress. All 322 tests and Ruff checks pass, plus CPU/CUDA mechanical replay
+Physical energy and sensory feedback are untouched. Its six V19 follow-ups are complete; own-return learning produced more births
+in four comparisons, with no general advantage established. All 322 tests and Ruff checks pass, plus CPU/CUDA mechanical replay
 and a separate native CUDA shuffled-return replay. See the V20 guide for exact
 settings, caveats, and commands. Research remains authorized and active.
 
@@ -42,8 +43,8 @@ continuations all reached 1,800 seconds; learning had fewer births in all three
 starts. The [audit](docs/results/v19-circuits.json) includes 15 pilots and all
 12 continuations. The 18 paired learning transplants are complete: births
 improved in five of six descendant pairs, food intake in three. These
-conditional effects do not establish adaptive credit assignment; shuffled-return
-follow-ups remain in progress. Do not confuse them with completed results.
+conditional effects do not establish adaptive credit assignment. Shuffled-return
+follow-ups are complete: four of six favor own-return learning for births. Do not confuse them with completed results.
 
 A new synthetic food-response probe separates inherited turning bias from
 directional sensitivity. Selected populations differ considerably; its outputs

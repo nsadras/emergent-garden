@@ -1,5 +1,6 @@
 """Audit V20's paired receptor-footprint experiments and snapshot diagnostics."""
 
+import argparse
 import json
 from dataclasses import asdict, replace
 from pathlib import Path
@@ -42,6 +43,9 @@ def snapshot_sensitivity(path):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--include-long", action="store_true")
+    args = parser.parse_args()
     torch.set_num_threads(1)
     treatments = (("v20-baseline", 1), ("v20-radius2", 2), ("v20", 4))
     trials, parity = [], []
@@ -80,6 +84,11 @@ def main():
         configurations=configs,
         trials=trials,
         neutral_v19_parity=parity,
+        continuations=[
+            circuit_run(Path(f"runs/v20-radius4-long-{seed}"), 1800, True) for seed in (1, 2, 3)
+        ]
+        if args.include_long
+        else [],
         snapshot_sensitivity=[
             snapshot_sensitivity(Path(f"runs/v19-varied-long-{seed}")) for seed in (1, 2, 3)
         ],
