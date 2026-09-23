@@ -494,10 +494,14 @@ from 600 to 900 simulated seconds. All 901 frames decoded at 1,024×1,024 and
 30 FPS. `scripts/verify_video.py` checks the decoded count against the run record.
 
 An exploratory parameter adjustment, [v10-covered.toml](configs/v10-covered.toml),
-places cover around all eight patches. Its 161/162/163 batch is running under
-`runs/v10-full-shelter`. It changes the fraction of patches covered, not the
-protection law; the initial half-covered preset and all its failed outcomes
-remain available.
+places cover around all eight patches. The completed 161/162/163 batch is under
+`runs/v10-full-shelter`:
+endpoints were 0/53, 0/56, and 0/55; grazer ancestry disappeared at
+2,614/2,596/1,155 seconds. Broader coverage did not preserve both ancestries.
+The [full-coverage records](docs/results/v10-full-shelter.json) and
+[12-run audit](docs/results/v10-complete-audit.json) retain this failed parameter
+adjustment alongside the original half-covered preset. Founder genomes and
+patch layouts match across all four treatments in each environment.
 
 ### CUDA replay correction
 
@@ -525,22 +529,88 @@ and eight structurally mutated offspring; the GPU energy residual was 0.00117.
 The test suite has 128 passing cases. Both the original discrepancy and the
 correction are retained in `docs/results/v10-cuda-*.json`.
 
-## Next feeding-rate experiment
+## V11 — finite processing capacity
 
 V9's provenance identifies a route around specialization: a body can process
 all contacted fresh food in one tick, recycle 35%, and later eat those remains,
-even when its own fresh-food assimilation is poor. The next prototype will cap
+even when its own fresh-food assimilation is poor. The V11 prototype caps
 raw processing per second, scaled by digestive tissue and the square of the
 existing allocation to each food type. Separate fresh/detritus budgets avoid
 unwanted fresh particles blocking a scavenger from eating nearby detritus.
 Their combined capacity cannot exceed the body's processing ceiling. All
-existing assimilation, recycling, and energy-loss accounting will still apply.
+existing assimilation, recycling, and energy-loss accounting still apply.
 
-The initial ceiling will be 60 raw energy units per unit digestive tissue per
-second. Tests will cover timestep scaling, simultaneous food competition,
-storage limits, source-credit conservation, and a control restoring unlimited
-processing. Pilot runs will check particle counts and throughput: partial
-processing can create more small detritus particles. This is an experimental
+For tissue `T = modules × (core_radius / base_radius)²` and fresh-food allocation
+`d`, capacities are `60 × T × d²` for fresh food and `60 × T × (1-d)²` for
+detritus, in raw energy units per second. Membrane area adds no digestive
+capacity. Unused capacity in one pathway cannot be borrowed by the other.
+Contested particles still split their available energy equally among touching
+creatures before capacity and body-storage limits apply. Unprocessed food
+remains in place. This is an experimental
 capacity constraint, inspired by the importance of handling time in
 [Holling's predation analysis](https://hahana.soest.hawaii.edu/cmoreserver/summercourse/2010/documents/Holling_1959b.pdf),
 not a reproduction of that model or a guarantee of a stable food chain.
+
+### Fragmentation pilot and correction
+
+Processing on all 30 physics steps per second created a new remnant from each
+partially handled fresh particle on every feeding step. The 300-second mixed
+pilot reached 35,295 food particles, ran at 2.42x simulated/wall time, and had
+an energy residual of +1.636. Repeated float32 additions of tiny meals to much
+larger body-energy stores amplified rounding error.
+
+The [V11 preset](configs/v11.toml) instead feeds at 5 Hz, budgeting 1/5 second's
+capacity at each feeding step. Physics remains at 30 Hz. Intake is summed in
+float64 per creature before one update to each float32 body store or lifetime
+counter. This keeps the physical residual visible rather than adding a balancing
+term to the ledger. The same mixed pilot then peaked at 7,318 particles, ran
+at 7.96x, and had an energy residual of +0.00147. These are observed concurrent
+run speeds, not isolated benchmarks. The updated per-tick alternative remains
+in [v11-per-tick.toml](configs/v11-per-tick.toml); original prototype runs require
+their archived sources to reproduce their earlier arithmetic exactly.
+
+The viewer aggregates overlapping crumbs by screen pixel and colors them by
+summed fresh/detritus energy. Small remnants are smaller and dimmer than full
+particles. This only changes rendering. The [inspector](docs/v11-preview.png)
+shows each creature's two processing capacities; life histories and total
+metrics record raw fresh and detritus amounts processed.
+The recording at `runs/v11-video/timelapse.mp4` follows the mixed pilot from
+300 to 600 seconds at 10x speed. All 901 frames decoded at 1,024×1,024 and
+30 FPS; [the verification record](docs/results/v11-video.json) stores its hashes.
+
+`unlimited_handling` removes the capacity limit while preserving 5 Hz feeding
+and the revised accumulation arithmetic. It is the main comparison for the
+capacity hypothesis. `unlimited_feeding` restores V10's original feeding cadence
+and arithmetic; an exact parity test covers reproduction, deaths, and quality
+reversals. The treatments have distinct purposes and are not interchangeable.
+
+### Ecology protocol and current evidence
+
+The same evolved V7 grazer and scavenger source pools initialize fresh bodies
+and neural states in environments 181/182/183. Mixed communities start 96 of
+each ancestry; single-source controls start 192 from that source. All use the
+V11 half-covered landscape, ordinary mutation, and a 3,600-second horizon unless
+the community becomes extinct. Comparisons include limited/unlimited mixtures,
+limited grazers alone, limited/unlimited scavengers alone, and mixtures with
+recycling disabled. The recycling intervention preserves fresh-food assimilation
+and dissipates the fraction that would otherwise become detritus.
+
+Limited scavengers alone became extinct at approximately 136/131/133 seconds,
+without births. Longer mixtures and matched controls are still running; their
+outcomes will be recorded before concluding that the food web is more stable.
+The fresh random-founder pilots were much less viable than the assembled
+communities: seed 171 reached 1,800 seconds with one founding creature and only
+two births across the run; seed 172 became extinct at 480.3 seconds after two
+births. Neither establishes a reproducing population from a new random origin.
+[All pilot records](docs/results/v11-pilots.json) include the failed initial
+fragmentation runs.
+
+The 139-test suite covers time scaling at 30/60 Hz, the 5 Hz control cadence,
+simultaneous competition, storage caps, many tiny meals, food-credit conservation,
+birth-state reset, exact old-law parity, and checkpoint and observer behavior.
+Small [CPU](docs/results/v11-cpu-births.json) and
+[RTX 5080](docs/results/v11-cuda-births.json) exercises passed exact checkpoint
+replay through eight births and eight structurally mutated offspring each.
+Their energy residuals were +0.000778 and -0.000329; the GPU exercise used about
+38 MB of peak allocated tensor memory. These are correctness checks, not full
+population performance measurements.

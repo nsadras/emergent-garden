@@ -98,10 +98,30 @@ class Renderer:
         kinds = (
             world.food_kind.cpu().numpy() if hasattr(world, "food_kind") else np.zeros(len(food))
         )
-        for pos, kind in zip(food, kinds, strict=True):
-            if (pos >= -food_radius).all() and (pos < self.size + food_radius).all():
-                color = (131, 192, 104) if kind == 0 else (221, 158, 83)
-                pygame.draw.circle(surface, color, pos.astype(int), food_radius)
+        if c.ecology_version >= 11:
+            # Partial meals leave many overlapping crumbs. Display their summed
+            # local energy instead of drawing each one as a full food particle.
+            keep = (food >= -food_radius).all(1) & (food < self.size + food_radius).all(1)
+            pixels, inverse = np.unique(food[keep].astype(int), axis=0, return_inverse=True)
+            amounts = world.food_energy.detach().cpu().numpy()[keep]
+            fresh = np.bincount(inverse, weights=amounts * (kinds[keep] == 0))
+            detritus = np.bincount(inverse, weights=amounts * (kinds[keep] == 1))
+            total = fresh + detritus
+            strength = np.sqrt(np.minimum(total / c.food_energy, 1))
+            colors = (
+                fresh[:, None] * np.array((131, 192, 104))
+                + detritus[:, None] * np.array((221, 158, 83))
+            ) / total.clip(1e-300)[:, None]
+            colors *= (0.25 + 0.75 * strength)[:, None]
+            for pos, color, fraction in zip(pixels, colors, strength, strict=True):
+                pygame.draw.circle(
+                    surface, tuple(color.astype(int)), pos, max(1, round(food_radius * fraction))
+                )
+        else:
+            for pos, kind in zip(food, kinds, strict=True):
+                if (pos >= -food_radius).all() and (pos < self.size + food_radius).all():
+                    color = (131, 192, 104) if kind == 0 else (221, 158, 83)
+                    pygame.draw.circle(surface, color, pos.astype(int), food_radius)
         visible = (
             "pos",
             "id",
@@ -242,6 +262,8 @@ class Renderer:
                 height += 48
             if "neurons" in data:
                 height += 22
+            if c.ecology_version >= 11:
+                height += 42
             if self.show_brain:
                 height += 150
             panel = pygame.Surface((285, height), pygame.SRCALPHA)
@@ -289,9 +311,20 @@ class Renderer:
                 )
                 modulation = 2 * data["module_actions"][i, :count, 4].mean() - 1
                 self.text(f"Synaptic change {magnitude:.4f}", (30, 348), small=True)
-                self.text(f"Learning gate {modulation:+.2f}", (30, 369), small=True)
+                self.text(f"Plasticity gate {modulation:+.2f}", (30, 369), small=True)
             if "connections" in data:
                 self.text(f"{data['connections'][i]} connections per module", (30, 390), small=True)
+            if c.ecology_version >= 11:
+                self.text("Raw processing capacity / second", (30, 411), small=True)
+                if world.ablation in ("unlimited_feeding", "unlimited_handling"):
+                    label = "Fresh: unlimited   Detritus: unlimited"
+                else:
+                    tissue = data["modules"][i] * (data["core_radius"][i] / c.body_radius) ** 2
+                    diet = data["diet"][i]
+                    fresh = c.handling_rate * tissue * diet**2
+                    detritus = c.handling_rate * tissue * (1 - diet) ** 2
+                    label = f"Fresh {fresh:.1f}   Detritus {detritus:.1f}"
+                self.text(label, (30, 432), small=True)
             if self.show_brain:
                 self.draw_brain(world, i, 92 + height - 146)
         return surface

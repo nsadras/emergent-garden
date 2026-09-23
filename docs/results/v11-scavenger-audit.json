@@ -1,0 +1,44 @@
+[
+  {
+    "path": "runs/v11-limited-scavenger/seed-181",
+    "time": 136.33333333333334,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "6566c11b8134f345eebaa8ecb3530fb3274ca4ef0a91d02e436c3312939a019f",
+    "cached_topology_exact": true,
+    "energy_balance_error": -0.0007142928025132278,
+    "energy_injected": 71574.2364578247,
+    "maximum_packet_credit_error": 1.3877787807814457e-17,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-limited-scavenger/seed-182",
+    "time": 130.8,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "f83c73a3264d75a2f665545494193dedcb7249358fa051ed3fa02ef8594c36e8",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.00011193883619853295,
+    "energy_injected": 67845.21306610107,
+    "maximum_packet_credit_error": 3.469446951953614e-18,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v11-limited-scavenger/seed-183",
+    "time": 133.1,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "71fe9dd080d97ae4c9c8ee3fbf185356452671828f74fccd72d6f348cba68cdd",
+    "cached_topology_exact": true,
+    "energy_balance_error": 0.0007928275263111573,
+    "energy_injected": 66820.64321136475,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  }
+]

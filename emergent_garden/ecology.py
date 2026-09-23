@@ -46,6 +46,8 @@ class EcologyWorld(World):
             "no_plasticity",
             "no_shelter",
             "no_shelter_cue",
+            "unlimited_feeding",
+            "unlimited_handling",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -56,6 +58,10 @@ class EcologyWorld(World):
             or (ablation in ("no_identity", "no_feedback") and config.ecology_version < 6)
             or (ablation == "no_plasticity" and config.ecology_version < 7)
             or (ablation in ("no_shelter", "no_shelter_cue") and config.ecology_version < 10)
+            or (
+                ablation in ("unlimited_feeding", "unlimited_handling")
+                and config.ecology_version < 11
+            )
         ):
             raise ValueError("Ablation requires a version containing that feature")
         self.rng = {
@@ -113,6 +119,8 @@ class EcologyWorld(World):
             self.fields.append(ShelterField(c, self.device))
             self.rng["shelter"] = torch.Generator(device=self.device).manual_seed(seed + 860281)
             self.totals.update(shelter_agent_seconds=0.0, shelter_obstructed_demand=0.0)
+        if c.ecology_version >= 11:
+            self.totals.update(fresh_processed=0.0, detritus_processed=0.0)
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -186,6 +194,9 @@ class EcologyWorld(World):
                 a[key] = torch.zeros(n, device=self.device)
         if c.ecology_version >= 10:
             a["shelter_time"] = torch.zeros(n, device=self.device)
+        if c.ecology_version >= 11:
+            for key in ("fresh_processed", "detritus_processed"):
+                a[key] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -536,6 +547,21 @@ class EcologyWorld(World):
 
     def feed(self):
         a, c = self.agents, self.config
+        finite_feeding = c.ecology_version >= 11 and self.ablation != "unlimited_feeding"
+        feeding_hz = c.feeding_hz or c.physics_hz
+        if finite_feeding and self.tick % (c.physics_hz // feeding_hz):
+            return
+
+        def accumulate(key, indices, amounts):
+            if finite_feeding:
+                # Tiny partial meals must not each round against the body's
+                # much larger float32 energy store or life-history counters.
+                combined = torch.zeros_like(a[key], dtype=torch.float64)
+                combined.index_add_(0, indices, amounts.double())
+                a[key] += combined.to(a[key].dtype)
+            else:
+                a[key].index_add_(0, indices, amounts)
+
         i, j = neighbors(a["pos"], self.food_pos, c.max_body_radius + c.food_radius, c.diameter)
         hit = (a["pos"][i] - self.food_pos[j]).norm(dim=1) <= a["radius"][i] + c.food_radius
         if c.ecology_version >= 4:
@@ -562,22 +588,38 @@ class EcologyWorld(World):
             assimilated *= torch.where(fresh, quality, 1.0)
         claims = torch.bincount(j, minlength=len(self.food_energy)).clamp_min(1)
         shares = self.food_energy[j] / claims[j]
-        requested = torch.zeros_like(a["energy"]).index_add_(0, i, shares * assimilated)
+        if finite_feeding and self.ablation != "unlimited_handling":
+            # Two digestive allocations share a bounded construction budget.
+            # Separate capacities prevent unwanted fresh food from clogging the
+            # detritus pathway. Empty capacity cannot be borrowed by the other.
+            tissue = a["modules"] * (a["core_radius"] / c.body_radius).square()
+            allocation = torch.stack((a["diet"], 1 - a["diet"]), 1)
+            budget = c.handling_rate / feeding_hz * tissue[:, None] * allocation.square()
+            requested_raw = torch.zeros_like(budget, dtype=torch.float64).flatten()
+            slot = 2 * i + self.food_kind[j]
+            requested_raw.index_add_(0, slot, shares.double())
+            scale = (budget.flatten() / requested_raw.clamp_min(1e-20)).clamp_max(1)
+            shares *= scale[slot]
+        requested = torch.zeros_like(a["energy"], dtype=torch.float64 if finite_feeding else None)
+        requested.index_add_(0, i, (shares * assimilated).to(requested.dtype))
         room = (c.max_energy * a["area"] - a["energy"]).clamp_min(0)
         shares *= (room / requested.clamp_min(1e-20)).clamp_max(1)[i]
         received = shares * assimilated
-        a["energy"].index_add_(0, i, received)
-        a["acquired"].index_add_(0, i, received)
+        accumulate("energy", i, received)
+        accumulate("acquired", i, received)
         if c.ecology_version >= 6:
-            a["food_feedback"].index_add_(0, i, received)
+            accumulate("food_feedback", i, received)
             favorable = self.landscape.is_favorable(self.food_patch[j])
             for mask, label in ((fresh & favorable, "high"), (fresh & ~favorable, "low")):
-                a[f"{label}_acquired"].index_add_(0, i[mask], received[mask])
+                accumulate(f"{label}_acquired", i[mask], received[mask])
                 self.totals[f"{label}_quality_absorbed"] += received[mask].double().sum().item()
         for kind, label in ((True, "fresh"), (False, "detritus")):
             mask = fresh == kind
-            a[f"{label}_acquired"].index_add_(0, i[mask], received[mask])
+            accumulate(f"{label}_acquired", i[mask], received[mask])
             self.totals[f"{label}_absorbed"] += received[mask].double().sum().item()
+            if c.ecology_version >= 11:
+                accumulate(f"{label}_processed", i[mask], shares[mask])
+                self.totals[f"{label}_processed"] += shares[mask].double().sum().item()
         consumed = torch.zeros_like(self.food_energy).index_add_(0, j, shares)
         remains = torch.zeros_like(self.food_energy).index_add_(0, j, shares * recycled)
         recycle_mask = remains > 0
@@ -674,7 +716,13 @@ class EcologyWorld(World):
         for key in ("modules", "body_axis", "core_radius", "neurons", "connections"):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
-        for key in ("high_acquired", "low_acquired", "shelter_time"):
+        for key in (
+            "high_acquired",
+            "low_acquired",
+            "shelter_time",
+            "fresh_processed",
+            "detritus_processed",
+        ):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
         return result

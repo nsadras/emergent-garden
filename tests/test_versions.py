@@ -104,9 +104,15 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-@pytest.mark.parametrize("version", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+@pytest.mark.parametrize("version", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
 def test_ecology_checkpoint_full_replay(config, tmp_path, version):
-    w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
+    w = eco(
+        config,
+        ecology_version=version,
+        initial_food=50,
+        food_rate=10.0,
+        feeding_hz=5 if version >= 11 else 0,
+    )
     w.step(17)
     save_checkpoint(w, tmp_path / "state.pt")
     other = load_checkpoint(tmp_path / "state.pt")
@@ -393,7 +399,7 @@ def test_developmental_birth_inherits_structure_and_resets_each_circuit(config):
     assert w.agents["module_h"][0].count_nonzero() > 0
 
 
-@pytest.mark.parametrize("version", [4, 7, 8, 9, 10])
+@pytest.mark.parametrize("version", [4, 7, 8, 9, 10, 11])
 def test_modular_rendering_is_read_only(config, version):
     from emergent_garden.viewer import Renderer
 

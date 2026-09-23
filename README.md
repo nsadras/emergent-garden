@@ -46,7 +46,16 @@ attacks into and out of cover, and creatures gain four directional shelter
 readings. [The overlay](docs/v10-preview.png) shows this terrain. Controlled
 [trials](docs/v10-shelter.png) found mixed effects on extinction timing and no
 sustained coexistence with the initial shelter settings. A verified recording
-is at `runs/v10-video/timelapse.mp4`; broader coverage is being tested.
+is at `runs/v10-video/timelapse.mp4`. Covering every patch also failed to preserve
+both ancestries in three follow-up environments.
+
+The experimental [V11 preset](configs/v11.toml) gives creatures finite fresh-food
+and detritus processing capacities, determined by their inherited bodies and diet.
+This closes the route by which poor fresh-food assimilators could rapidly turn
+unlimited fresh food into their own preferred detritus. The
+[inspector](docs/v11-preview.png) shows those capacities. Matched food-web tests
+are in progress; random-founder pilots have not established reliable populations.
+A verified 30-second recording is at `runs/v11-video/timelapse.mp4`.
 
 ## Start watching
 

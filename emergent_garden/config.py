@@ -57,6 +57,8 @@ class Config:
     shelter_fraction: float = 0.5
     shelter_radius: float = 36.0
     shelter_protection: float = 0.95
+    handling_rate: float = 60.0
+    feeding_hz: int = 0  # Zero uses the physics frequency.
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -119,14 +121,14 @@ class Config:
             "metrics_period checkpoint_wall_seconds viewer_size viewer_fps video_fps video_speed "
             "signal_half_life signal_scale quality_period feedback_scale identity_strength "
             "plasticity_limit plasticity_trace_tau "
-            "plasticity_half_life_min plasticity_half_life_max shelter_radius"
+            "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate"
         )
         for key in positive.split():
             if getattr(self, key) <= 0:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10):
+        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -180,6 +182,8 @@ class Config:
         for hz in (self.controller_hz, self.field_hz):
             if self.physics_hz % hz:
                 raise ValueError("Controller and field rates must divide physics_hz")
+        if self.ecology_version >= 11 and self.feeding_hz and self.physics_hz % self.feeding_hz:
+            raise ValueError("feeding_hz must be zero or divide physics_hz")
         return self
 
     @property
