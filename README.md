@@ -8,9 +8,10 @@ energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
 The current release is **V16 / package 0.17.0**. Bounded follow-ups add the live
-inspector, energy/readiness bars, and dynamic food sources. The autonomous research
-loop remains paused after the V15 wrap-up. See [HANDOFF.md](HANDOFF.md) for completed
-findings, interrupted experiments, verification, and commands to continue later.
+inspector, an energy bar with a birth-threshold marker, and dynamic food sources.
+The autonomous research loop remains paused after the V15 wrap-up. See
+[HANDOFF.md](HANDOFF.md) for completed findings, interrupted experiments,
+verification, and commands to continue later.
 
 ![V5 modular creatures and their chemical trails](docs/v5-detail.png)
 
@@ -223,16 +224,17 @@ recordings. History starts when the viewer/recorder opens; checkpoints do not
 contain old trails. A dead creature's trail fades normally, and its last inspected
 controller sample remains available until another creature is selected.
 
-Selecting a living creature also shows two bars on every inspector tab. The
-**Energy** bar beside its name shows current / maximum stored energy, with amber
-below 50% and red below 25%. The **Birth energy** bar shows energy / reproduction
-threshold for its current body size, alongside growth, retry, or population-limit
-status. Growth can raise that threshold. A full birth bar still requires a mature
-body, an expired retry timer, population capacity, enough energy to fund the
-mutated child, and an unoccupied birth location. **Ready to try** means the known
-gates are satisfied; child cost and placement are checked at the actual attempt.
-Both bars read current state without changing the simulation. See the
-[energy and reproduction preview](docs/reproduction-readiness.png).
+Selecting a living creature shows one **Energy** bar beside its name on every
+inspector tab. It fills according to stored energy / capacity, with amber below
+50% and red below 25%. A gold vertical line marks the **birth threshold** on the
+same scale; current / maximum energy and the birth threshold are printed above
+the bar. Growth, retry, or population-limit status appears below. Values use the
+creature's current body size; growth can raise the threshold. Reaching the marker
+still requires a mature body, an expired retry timer, population capacity, enough
+energy to fund the mutated child, and an unoccupied birth location. **Ready to
+try** means the known gates are satisfied; child cost and placement are checked
+at the actual attempt. The display reads current state without changing the
+simulation. See the [energy and birth threshold preview](docs/energy-threshold.png).
 
 The **Brain** tab shows named sensory inputs, active recurrent neurons, and actual
 actuator outputs for one module. Click a hidden neuron to show its incoming input

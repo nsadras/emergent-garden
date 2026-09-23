@@ -179,7 +179,7 @@ class Inspector:
             self.text("Reproduction unavailable: creature died.", (22, 100), MUTED)
             return
         readiness = reproduction_readiness(world, index)
-        # HP-style storage bar: its scale is capacity, not the birth threshold.
+        # Stored energy and the birth threshold share the body's capacity scale.
         energy_color = (
             (243, 123, 123)
             if readiness.storage_fraction < 0.25
@@ -197,21 +197,16 @@ class Inspector:
             )
         pygame.draw.rect(self.surface, energy_color, rect, width=1, border_radius=4)
         label = f"Energy  {readiness.energy:.1f} / {readiness.capacity:.1f}"
-        self.text(label, (rect.centerx - self.small.size(label)[0] // 2, rect.y + 5))
-        color = POSITIVE if readiness.ready_to_try else GOLD
-        self.text(
-            f"Birth energy  {readiness.energy:.1f} / {readiness.threshold:.1f}"
-            f"  ({readiness.energy_fraction:.0%})",
-            (22, 100),
+        self.text(label, (rect.x, rect.y - 19))
+        label = f"Birth {readiness.threshold:.1f}"
+        self.text(label, (rect.right - self.small.size(label)[0], rect.y - 19), GOLD)
+        threshold_fraction = min(1, max(0, readiness.threshold / readiness.capacity))
+        marker_x = rect.x + round((rect.width - 1) * threshold_fraction)
+        pygame.draw.line(
+            self.surface, GOLD, (marker_x, rect.top - 3), (marker_x, rect.bottom + 2), 2
         )
-        status = readiness.status
-        self.text(status, (596 - self.small.size(status)[0], 100), color)
-        rect = pygame.Rect(22, 121, 574, 8)
-        pygame.draw.rect(self.surface, (29, 47, 57), rect, border_radius=4)
-        fill = rect.copy()
-        fill.width = round(rect.width * readiness.energy_fraction)
-        if fill.width:
-            pygame.draw.rect(self.surface, color, fill, border_radius=4)
+        color = POSITIVE if readiness.ready_to_try else GOLD
+        self.text(f"Birth: {readiness.status}", (22, 100), color)
 
     def draw_brain(self, sample):
         k = self.module
@@ -382,12 +377,12 @@ class Inspector:
             MUTED,
         )
         self.text(
-            "Birth bar = energy / threshold for the body's current size. Growth can raise it.",
+            "Energy bar = stored energy / capacity; gold marker = birth threshold.",
             (22, top + 244),
             MUTED,
         )
         self.text(
-            "Full bar still needs maturity, retry time, capacity, child funding, and free space.",
+            "Reaching it still needs maturity, retry time, capacity, child funding, and space.",
             (22, top + 265),
             MUTED,
         )

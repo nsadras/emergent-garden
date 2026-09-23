@@ -45,12 +45,13 @@ dish. The physical circular world and recording framing are unchanged.
 Trails sample simulation time at 5 Hz, retain up to 120 seconds, and also appear
 in new recordings. The default visible duration is 30 seconds.
 
-The selected creature now has an HP-style energy/capacity bar with its numeric
-values, and a separate birth-energy progress bar with growth, cooldown, or
-population-cap status. Both use actual body size and saved world settings. A
-full birth bar is not a guaranteed birth: child funding and placement are checked
-after mutation at the real attempt. Both bars fit on every tab without scrolling.
-See the [preview](docs/reproduction-readiness.png).
+The selected creature has one HP-style energy/capacity bar with a gold vertical
+birth-threshold marker. Current / maximum energy and the threshold value appear
+above it; growth, cooldown, or population-cap status remains below. These use
+actual body size and saved world settings. Reaching the marker is not a guaranteed
+birth: child funding and placement are checked after mutation at the real attempt.
+The bar fits on every tab without scrolling. See the
+[preview](docs/energy-threshold.png).
 
 At the user's request, `configs/v15.toml` lowers the parent-area birth threshold
 from 220 to 150 and the child-area base debit from 120 to 110; neural construction

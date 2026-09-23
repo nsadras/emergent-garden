@@ -1500,3 +1500,18 @@ to 150.1 seconds and are an illustration, not another ecological replicate.
 edible biomass and spread locally, replacing some automatic spawning. Their
 growth, offspring, and recycling should retain explicit resource costs. Producer
 organisms are documented only and are not implemented in V16.
+
+## Single energy bar with a birth-threshold marker
+
+The inspector now combines stored energy and birth readiness into one bar. Fill
+still represents energy / capacity; a gold vertical line marks the body's birth
+threshold on that same scale. Current / maximum energy and the threshold value
+appear above the bar, while growth, retry, and population-limit status remains
+below. The Details legend and current viewer documentation describe the marker.
+
+All 64 existing observation, runtime, field-storage, and resource tests pass,
+including complete-trajectory rendering checks. Ruff checks pass. Every tab fits
+at window heights 256, 640, 768, 984, and 1024; header font bounds do not overlap.
+The [preview](docs/energy-threshold.png) uses the V16 seed-1 UI fork at 150.1 seconds,
+creature 72, matching the earlier source preview. This is a display refinement;
+simulation mechanics and the paused research loop are unchanged.
