@@ -175,6 +175,10 @@ class EcologyWorld(World):
             self.totals["internal_signaling_cost"] = 0.0
         if c.ecology_version >= 18:
             self.totals["food_collected"] = 0.0
+        if c.ecology_version >= 19:
+            self.rng["founder_structure"] = torch.Generator(device=self.device).manual_seed(
+                seed + 32452843
+            )
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_extent - c.food_radius)
         self.patch_phases = (
@@ -282,7 +286,13 @@ class EcologyWorld(World):
         return a
 
     def initial_genomes(self, n):
-        brain = initial_brains(self.config, n, self.device, self.rng["initial"])
+        c = self.config
+        structure, active = None, None
+        if c.ecology_version >= 8:
+            structure = initial_structure(c, n, self.device, self.rng.get("founder_structure"))
+            if c.initial_neuron_spread or c.initial_recurrent_density != 1:
+                active = structure[:, : c.hidden_size].sum(1)
+        brain = initial_brains(c, n, self.device, self.rng["initial"], active_counts=active)
         trait_count = 13 if self.config.ecology_version >= 15 else self.config.trait_count
         traits = (self.rand((n, trait_count), "initial") * 4 - 2).clamp(
             -self.config.weight_limit, self.config.weight_limit
@@ -295,7 +305,7 @@ class EcologyWorld(World):
             traits = torch.cat((traits, rules), 1)
         pieces = [brain, traits]
         if self.config.ecology_version >= 8:
-            pieces.append(initial_structure(self.config, n, self.device))
+            pieces.append(structure)
         return torch.cat(pieces, 1)
 
     def develop(self, a):

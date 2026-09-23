@@ -1,9 +1,41 @@
-# Development handoff — V18
+# Development handoff — V19
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V18 / package 0.19.0**. Python and dependencies remain
+The current code is **V19 / package 0.20.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V19: neural diversity
+
+[V19](docs/NEURAL_VARIATION.md) initializes inherited circuits with 8–24 active
+neurons and half the recurrent edges, using independent randomness and fan-in
+weight scaling. Neutral settings match V18's complete final physical states and
+all recorded physical measurements in three 600-second runs. The 42-input,
+seven-output, 32-slot recurrent template and 5,272-value genome are unchanged.
+Children inherit circuit masks/weights without founder rescaling and start with
+empty learned state.
+
+Fifteen 600-second pilots compare baseline, varied founders, stronger mutation,
+gentle motor learning, and identical noise with motor updates disabled. Results
+are mixed; learning produced 288/265/156 births versus the control's 367/264/310.
+All three varied-founder continuations reached 1,800 seconds: populations
+251/34/327 and births 2,413/237/2,198. Mutation and paired learning continuations,
+plus two-environment learning transplants from all three 600-second learning
+populations, are in progress. Do not confuse incomplete follow-ups with audited
+results. The [audit](docs/results/v19-circuits.json) includes 15 pilots and the
+three completed varied-founder continuations.
+
+A new synthetic food-response probe separates inherited turning bias from
+directional sensitivity. Selected populations differ considerably; its outputs
+do not establish whole-body searching or useful learning. Raw paired stimuli,
+responses, and provenance are retained. All 310 tests and Ruff checks pass;
+separate CPU/CUDA exercises passed exact replay through variable graphs,
+growth, births, evolving rules, and motor learning.
+
+Keep the user's `configs/v16.toml` edits intact. The research loop remains
+authorized and active. Continue with measured sensory/credit-assignment
+limitations and paired learning comparisons, not assumptions that larger
+networks are automatically more capable.
 
 ## V18: carried meals
 

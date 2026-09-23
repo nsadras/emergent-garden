@@ -14,6 +14,49 @@ from .world import genome_hash
 
 
 @torch.no_grad()
+def food_response_probe(config, genomes, field="fresh", mean=0.4, contrast=0.02):
+    """Compare uniform, left-rich, and right-rich bounded food observations.
+
+    Each inherited template starts with empty neural state. Energy is held at
+    half capacity and all other inputs at zero; plasticity and motor noise are
+    disabled. Readouts average seconds 20–25 to reduce settling transients.
+    This isolates circuit sensitivity, not a physical navigation strategy.
+    """
+    c = config
+    if c.ecology_version < 3 or field not in ("fresh", "detritus"):
+        raise ValueError("Food response probes require V3+ and a supported food field")
+    if not (0 < contrast <= min(mean, 1 - mean)):
+        raise ValueError("Food probe intensities must remain in [0, 1]")
+    g = genomes.repeat_interleave(3, dim=0)
+    x = g.new_zeros((len(g), c.input_size))
+    x[:, c.input_names.index("energy")] = 0.5
+    patterns = g.new_tensor([[0, 0, 0, 0], [1, 1, -1, -1], [-1, -1, 1, 1]])
+    patterns = mean + contrast * patterns
+    start = 4 * c.field_names.index(field)
+    x[:, start : start + 4] = probe_features(c, patterns).repeat(len(genomes), 1)
+    tau = 0.2 + 4.8 * g[:, c.brain_parameter_count + 5].sigmoid()
+    state = initial_state(c, g)
+    readout = g.new_zeros((len(g), 2))
+    for step in range(25 * c.controller_hz):
+        state, actions = controller_step(c, g, x, state, tau, plasticity=False)
+        if step >= 20 * c.controller_hz:
+            readout += actions[:, :2]
+    readout /= 5 * c.controller_hz
+    readout = readout.reshape(len(genomes), 3, 2)
+    turns = readout[..., 1] - readout[..., 0]
+    return dict(
+        field=field,
+        mean=mean,
+        contrast=contrast,
+        uniform_turn=turns[:, 0].tolist(),
+        left_turn=turns[:, 1].tolist(),
+        right_turn=turns[:, 2].tolist(),
+        aligned_response=((turns[:, 2] - turns[:, 1]) / 2).tolist(),
+        uniform_propulsion=readout[:, 0].mean(-1).tolist(),
+    )
+
+
+@torch.no_grad()
 def cue_probe(config, genomes, delay, reset=False):
     """Paired left/right histories followed by exactly identical observations.
 

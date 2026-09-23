@@ -47,6 +47,8 @@ class Config:
     plasticity_half_life_max: float = 600.0
     plasticity_cost: float = 0.02
     initial_neurons: int = 16
+    initial_neuron_spread: int = 0
+    initial_recurrent_density: float = 1.0
     min_neurons: int = 4
     node_mutation_probability: float = 0.05
     edge_mutation_probability: float = 0.1
@@ -156,7 +158,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(19):
+        if self.ecology_version not in range(20):
             raise ValueError("Unsupported ecology version")
         if self.sensory_contrast not in (0, 1):
             raise ValueError("sensory_contrast must be 0 or 1")
@@ -164,6 +166,17 @@ class Config:
             raise ValueError("Contrast sensing requires ecology_version >= 17")
         if self.gut_capacity and self.ecology_version < 18:
             raise ValueError("Carried food requires ecology_version >= 18")
+        if self.initial_recurrent_density > 1:
+            raise ValueError("initial_recurrent_density must be in [0, 1]")
+        if self.ecology_version < 19 and (
+            self.initial_neuron_spread or self.initial_recurrent_density != 1
+        ):
+            raise ValueError("Variable founder circuits require ecology_version >= 19")
+        if self.ecology_version >= 19 and not (
+            self.min_neurons <= self.initial_neurons - self.initial_neuron_spread
+            and self.initial_neurons + self.initial_neuron_spread <= self.hidden_size
+        ):
+            raise ValueError("Founder neuron range must fit min_neurons and hidden_size")
         if self.patch_aspect_ratio < 1 or not 0 <= self.patch_irregularity <= 1:
             raise ValueError("Require patch_aspect_ratio >= 1 and patch_irregularity in [0, 1]")
         if self.fertility_grid_size < 8:

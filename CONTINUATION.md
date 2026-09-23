@@ -1,11 +1,18 @@
 # Continuing evolution experiments
 
 Development **resumed at the user's request on September 23, 2026**, after the
-V15 pause and subsequent interface/resource work. The current iteration is V18
-(package 0.19.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
+V15 pause and subsequent interface/resource work. The current iteration is V19
+(package 0.20.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
 meals and affordable exploration. Current evidence, historical interrupted work,
 and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
+
+The [V19 neural experiments](docs/NEURAL_VARIATION.md) introduce varied founder
+graphs and compare architecture, mutation, and gentle motor learning across
+three seeds. All 15 pilots and three varied-founder continuations are complete;
+longer mutation/learning runs and paired learning transplants remain in progress.
+All 310 tests and separate CPU/CUDA replay exercises pass. The user's V16 working
+configuration is preserved.
 
 ## Research sequence
 

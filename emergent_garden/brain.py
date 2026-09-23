@@ -7,23 +7,34 @@ import torch
 from .topology import effective_masks
 
 
-def initial_brains(config, count, device, generator):
+def initial_brains(config, count, device, generator, active_counts=None):
     h, inputs, outputs = config.hidden_size, config.input_size, config.output_size
     active = config.initial_neurons if config.ecology_version >= 8 else h
     pieces = []
-    for shape, fan in (
-        ((h, inputs), inputs),
-        ((h, h), active),
-        ((h,), None),
-        ((outputs, h), active),
-        ((outputs,), None),
+    for block, (shape, fan) in enumerate(
+        (
+            ((h, inputs), inputs),
+            ((h, h), active),
+            ((h,), None),
+            ((outputs, h), active),
+            ((outputs,), None),
+        )
     ):
         size = (count, math.prod(shape))
-        pieces.append(
-            torch.zeros(size, device=device)
-            if fan is None
-            else torch.randn(size, device=device, generator=generator) / math.sqrt(fan)
-        )
+        if fan is None:
+            values = torch.zeros(size, device=device)
+        else:
+            values = torch.randn(size, device=device, generator=generator)
+            if active_counts is not None and block in (1, 3):
+                # Keep expected drive variance comparable across founder widths
+                # and recurrent densities. This changes initialization, not an
+                # inherited circuit during its lifetime or at reproduction.
+                density = config.initial_recurrent_density if block == 1 else 1.0
+                denominator = (active_counts * density).clamp_min(1).sqrt()[:, None]
+                values /= denominator
+            else:
+                values /= math.sqrt(fan)
+        pieces.append(values)
     return torch.cat(pieces, 1).clamp(-config.weight_limit, config.weight_limit)
 
 

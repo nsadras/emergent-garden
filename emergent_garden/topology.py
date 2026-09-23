@@ -28,10 +28,36 @@ def effective_masks(config, genomes):
     )
 
 
-def initial_structure(config, count, device):
+def initial_structure(config, count, device, generator=None):
     # Use a full temporary genome so layout offsets have one definition.
     genome = torch.zeros((count, config.parameter_count), device=device)
     nodes, wi, wr, wo = mask_parts(config, genome)
+    if config.initial_neuron_spread or config.initial_recurrent_density != 1:
+        if generator is None:
+            raise ValueError("Variable founder circuits require an explicit random generator")
+        spread = config.initial_neuron_spread
+        sizes = (
+            torch.randint(
+                config.initial_neurons - spread,
+                config.initial_neurons + spread + 1,
+                (count,),
+                generator=generator,
+                device=device,
+            )
+            if spread
+            else torch.full((count,), config.initial_neurons, device=device)
+        )
+        active = torch.arange(config.hidden_size, device=device)[None] < sizes[:, None]
+        nodes[:] = active
+        wi[:] = active[:, :, None]
+        wr[:] = active[:, :, None] & active[:, None, :]
+        if config.initial_recurrent_density != 1:
+            wr *= (
+                torch.rand(wr.shape, generator=generator, device=device)
+                < config.initial_recurrent_density
+            )
+        wo[:] = active[:, None, :]
+        return genome[:, config.brain_parameter_count + config.trait_count :]
     n = config.initial_neurons
     nodes[:, :n] = 1
     wi[:, :n] = 1

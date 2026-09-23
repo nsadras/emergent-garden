@@ -364,7 +364,7 @@ class Inspector:
             )
         if c.output_size >= 5:
             self.text(
-                "Gate and internal signals are used as signed values: 2 x output - 1.",
+                "Recurrent gate / internal signals: signed. Motor-learning gate: 0 to 1.",
                 (22, top + 126),
                 MUTED,
             )
