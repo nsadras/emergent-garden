@@ -104,7 +104,7 @@ def test_inherited_body_birth_investment_and_blocked_birth(config):
     torch.testing.assert_close(energy, w.agents["energy"])
 
 
-@pytest.mark.parametrize("version", [1, 2, 3, 4, 5, 6, 7])
+@pytest.mark.parametrize("version", [1, 2, 3, 4, 5, 6, 7, 8])
 def test_ecology_checkpoint_full_replay(config, tmp_path, version):
     w = eco(config, ecology_version=version, initial_food=50, food_rate=10.0)
     w.step(17)
@@ -136,11 +136,12 @@ def test_variable_radius_collision_and_wall(config):
     assert ((w.agents["pos"] - 64).norm(dim=1) <= 64 - w.agents["radius"] + 1e-4).all()
 
 
-def test_community_assay_preserves_phenotypes_and_disables_mutation(config, tmp_path):
+@pytest.mark.parametrize("version", [1, 8])
+def test_community_assay_preserves_phenotypes_and_disables_mutation(config, tmp_path, version):
     from emergent_garden.experiments import community_assay
     from emergent_garden.storage import RunStore
 
-    w = eco(config, initial_population=1)
+    w = eco(config, ecology_version=version, initial_population=1)
     w.agents["pos"][0] = 64
     w.agents["energy"] = config.max_energy * w.agents["area"]
     w.reproduce()
@@ -154,6 +155,8 @@ def test_community_assay_preserves_phenotypes_and_disables_mutation(config, tmp_
     resumed = load_checkpoint(output / "10001-descendants-none" / "latest.pt")
     assert resumed.config.mutation_probability == 0
     assert resumed.config.trait_mutation_probability == 0
+    assert resumed.config.node_mutation_probability == 0
+    assert resumed.config.edge_mutation_probability == 0
     assert (resumed.agents["radius"] > 0).all()
 
 
@@ -383,7 +386,7 @@ def test_developmental_birth_inherits_structure_and_resets_each_circuit(config):
     assert w.agents["module_h"][0].count_nonzero() > 0
 
 
-@pytest.mark.parametrize("version", [4, 7])
+@pytest.mark.parametrize("version", [4, 7, 8])
 def test_modular_rendering_is_read_only(config, version):
     from emergent_garden.viewer import Renderer
 
@@ -391,6 +394,7 @@ def test_modular_rendering_is_read_only(config, version):
     other = EcologyWorld.from_state(w.state_dict())
     renderer = Renderer(256)
     renderer.zoom = 4
+    renderer.show_brain = True
     renderer.center = w.agents["pos"][0].numpy()
     renderer.selected = 0
     for _ in range(3):

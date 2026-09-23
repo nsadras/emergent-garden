@@ -18,7 +18,13 @@ def fork_challenge(source, mode, reverse, target_tick):
     if mode not in ("intact", "erase_plastic", "erase_activity", "no_plasticity"):
         raise ValueError(f"Unsupported challenge intervention: {mode}")
     w = EcologyWorld.from_state(source.state_dict(), source.device)
-    w.config = replace(w.config, mutation_probability=0.0, trait_mutation_probability=0.0)
+    w.config = replace(
+        w.config,
+        mutation_probability=0.0,
+        trait_mutation_probability=0.0,
+        node_mutation_probability=0.0,
+        edge_mutation_probability=0.0,
+    )
     if mode in ("erase_plastic", "no_plasticity"):
         w.agents["module_plastic"].zero_()
         w.agents["module_trace"].zero_()

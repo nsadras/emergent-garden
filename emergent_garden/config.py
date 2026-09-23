@@ -46,6 +46,14 @@ class Config:
     plasticity_half_life_min: float = 30.0
     plasticity_half_life_max: float = 600.0
     plasticity_cost: float = 0.02
+    initial_neurons: int = 16
+    min_neurons: int = 4
+    node_mutation_probability: float = 0.05
+    edge_mutation_probability: float = 0.1
+    neuron_maintenance: float = 0.0005
+    synapse_maintenance: float = 0.00001
+    neuron_construction: float = 0.05
+    synapse_construction: float = 0.001
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -115,7 +123,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7):
+        if self.ecology_version not in (0, 1, 2, 3, 4, 5, 6, 7, 8):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -131,6 +139,15 @@ class Config:
             raise ValueError("Reversal ecology requires at least two patches")
         if self.plasticity_half_life_max < self.plasticity_half_life_min:
             raise ValueError("Plasticity half-life bounds must be ordered")
+        if self.ecology_version >= 8 and not (
+            1 <= self.min_neurons <= self.initial_neurons <= self.hidden_size
+        ):
+            raise ValueError("Require 1 <= min_neurons <= initial_neurons <= hidden_size")
+        if (
+            not 0 <= self.node_mutation_probability <= 1
+            or not 0 <= self.edge_mutation_probability <= 1
+        ):
+            raise ValueError("Structural mutation probabilities must be in [0, 1]")
         if self.ecology_version >= 3 and (
             self.resource_burst <= 0
             or self.cue_duration <= 0
@@ -166,7 +183,16 @@ class Config:
 
     @property
     def parameter_count(self):
-        return self.brain_parameter_count + self.trait_count
+        return self.brain_parameter_count + self.trait_count + self.structure_count
+
+    @property
+    def structure_count(self):
+        h = self.hidden_size
+        return (
+            h + h * self.input_size + h * h + self.output_size * h
+            if self.ecology_version >= 8
+            else 0
+        )
 
     @property
     def input_size(self):

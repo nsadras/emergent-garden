@@ -1,5 +1,6 @@
 from dataclasses import replace
 
+import pytest
 import torch
 
 from emergent_garden.challenges import challenge_run, fork_challenge
@@ -7,8 +8,9 @@ from emergent_garden.ecology import EcologyWorld
 from emergent_garden.storage import load_checkpoint, save_checkpoint
 
 
-def test_challenge_forks_preserve_everything_except_named_interventions(config):
-    w = EcologyWorld(replace(config, ecology_version=7))
+@pytest.mark.parametrize("version", [7, 8])
+def test_challenge_forks_preserve_everything_except_named_interventions(config, version):
+    w = EcologyWorld(replace(config, ecology_version=version))
     w.step(7)
     w.agents["module_plastic"].fill_(0.3)
     w.agents["module_trace"].fill_(0.2)
@@ -31,6 +33,8 @@ def test_challenge_forks_preserve_everything_except_named_interventions(config):
             assert branch.landscape.next_tick == 1001
             assert branch.config.mutation_probability == 0
             assert branch.config.trait_mutation_probability == 0
+            assert branch.config.node_mutation_probability == 0
+            assert branch.config.edge_mutation_probability == 0
             for a, b in zip(w.fields, branch.fields, strict=True):
                 torch.testing.assert_close(a.grid, b.grid, rtol=0, atol=0)
     assert w.agents["module_plastic"].count_nonzero() > 0

@@ -156,6 +156,13 @@ def association_probe(config, genomes, rounds=3, mode="none"):
         if "plastic" in state
         else [0.0] * n
     )
+    if config.ecology_version >= 8:
+        from .topology import counts
+
+        expressed = counts(config, genomes)[2].clamp_min(1)
+        magnitude = (
+            state["plastic"].abs().reshape(n, 4, -1).sum((1, 2)) / (4 * expressed)
+        ).tolist()
     train(1 - favorable)
     reversed_preference = preference()
     return dict(

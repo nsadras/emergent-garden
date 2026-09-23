@@ -227,30 +227,135 @@ was 2.02e-7 of cumulative introduced energy. Data, matched-founder checks,
 state-saturation measurements, CUDA checks, and raw challenge results are in
 `docs/results/v7*.json`; exact sources/checkpoints remain under `runs/`.
 
-Ongoing validation: tighter plasticity versus frozen controls on previously
-unused seeds 91/92/93, and continuation of tighter random seed 71 to three
-simulated hours. These outcomes will be recorded as they finish. Proceeding to
-V8's controlled structural mutations while those independent trials run.
+New-seed validation is complete. Tighter plasticity versus frozen controls on
+previously unused seeds 91/92/93 gave populations 32/7/17 versus 23/4/32 and
+births 209/64/203 versus 366/66/231 at 3,600 seconds. All six survived. The plastic
+treatment had more survivors in two seeds but fewer births in all three;
+there is no consistent ecological advantage across these measures. Each pair
+had identical founding genomes. Tighter random seed 71 reached three simulated
+hours with 44 creatures, 1,327 births, and living generation 46; all survivors
+had one module. These seven runs are in `docs/results/v7-validation.json`.
+Probing that three-hour population with both 3 and 30 conditioning rounds still
+gave tiny associations. At 30 rounds, mean association/reversal alignment was
+6.18e-7/1.24e-6 with plasticity versus 6.09e-6/6.09e-6 without it. Clearing neural
+activity left -1.49e-7/-2.81e-8. More conditioning changed synapses but did not
+produce evidence of useful plastic association learning in this assay.
 
-## V8 implementation plan
+## V8 design and validation
 
-Use a bounded recurrent graph with up to 32 neuron slots, initially 16 active,
+The implemented preset uses a recurrent graph with 32 neuron slots, initially 16 active,
 and inherited binary masks for neurons and input/recurrent/output connections.
 Inactive units, connections, and their plastic state must not affect behavior.
-Mutation may duplicate/delete a neuron or add/remove one edge, with a minimum of
-four active units. The controller remains recurrent; this first topology version
+Mutation may duplicate/delete a neuron (5% chance per birth attempt) and/or
+add/remove one edge (10%), with a minimum of four active units. Each selected
+operation chooses addition or removal equally; impossible operations do nothing.
+The controller remains recurrent; this first topology version
 does not introduce distinct feed-forward layers or the full NEAT algorithm.
 
 Neuron duplication copies incoming connections and bias, splits every outgoing
 connection between the two copies, and handles self-connections consistently.
-With matching initial hidden states and plasticity disabled, this should preserve
-the circuit's function until later mutations differentiate the copies. Test this
-directly over input sequences. Function-preserving network enlargement is also
+With matching initial hidden states and plasticity disabled, this preserves
+the circuit's function until later mutations differentiate the copies; a test
+checks 100 successive input patterns, including recurrent self-connections.
+Subsequent plastic trajectories need not remain equivalent because duplication
+changes the set of independently updated synapses. Function-preserving enlargement is also
 the principle behind [Net2Net](https://arxiv.org/abs/1511.05641); its published
 feed-forward results are not evidence for this recurrent implementation.
 
-Charge explicit energy for active neurons/connections at birth and during life.
-Record architecture sizes, mutations, and costs. Preserve older checkpoints and
-provide tested, neutral padding from 16-unit V7 genomes into the larger template.
-Then cross plastic/frozen connections with evolving/fixed topology, matching
-initial genotypes, resource laws, and cost coefficients across treatments.
+The 4,496 inherited values comprise 2,245 possible neural weights/biases, 11
+physical/plasticity traits, and 2,240 binary mask genes. The masks cover 32 nodes,
+1,024 input edges, 1,024 recurrent edges, and 160 output edges. A dense 16-unit
+founder expresses 848 connections. Dormant weights can mutate but do not affect
+activity, actions, or plastic traces. Edge addition starts its weight at zero;
+later weight mutations may make it useful. This avoids large immediate changes,
+but new structure still pays a cost and has no NEAT-style speciation protection.
+
+Per module, neuron/connection maintenance costs are 0.0005/0.00001 energy per
+second, and construction costs are 0.05/0.001 energy on successful reproduction.
+The initial 16-unit graph therefore costs 0.01648 energy per second and 1.648
+energy to build. These are additional to the existing body and plasticity costs.
+Construction is included in reproduction loss and maintenance in its existing
+ledger; their separate counters are informational, not additional deductions.
+Blocked births incur no construction cost. Founders are externally initialized
+with built bodies/brains and the usual starting energy.
+
+Neural architecture sizes and successful structural births are recorded. The
+new inspector can show inherited recurrent weights and module 1's acquired
+offsets (`B`). V7-to-V8 transfer preserves the old active circuit while padding
+into dormant slots; tests also check preservation of plastic trajectories.
+Older checkpoints remain loadable. Evaluation and state challenges disable
+structural mutation as well as ordinary weight/trait mutation.
+
+Mechanical verification: 107 tests pass; the GPU smoke check passed through 37
+quality reversals with a 0.000382 energy-ledger residual and about 11 MB peak
+allocated CUDA memory in its deliberately small world. This is a correctness
+check, not a full-population memory benchmark.
+
+Completed experiment: environments 111/112/113 each ran all four combinations of
+plastic/frozen synapses and evolving/fixed topology for 3,600 seconds, using
+matched transplants from V7's three-hour seed-71 population. All treatments share
+the same starting graph, resource laws, and cost coefficients. Fixed topology
+uses `configs/v8-fixed.toml` (both structural mutation probabilities zero),
+while ordinary inherited weights and traits still mutate. A separate random-
+founder batch (121/122/123) checked viability without the inherited circuit.
+These shared-ancestry transplants are separate from independent random origins.
+
+| Treatment | Final populations | Births | Maximum living generations |
+| --- | --- | --- | --- |
+| Evolving topology, plastic | 44 / 43 / 39 | 562 / 556 / 585 | 14 / 15 / 22 |
+| Evolving topology, frozen | 49 / 41 / 41 | 594 / 506 / 574 | 16 / 18 / 15 |
+| Fixed topology, plastic | 46 / 45 / 40 | 612 / 486 / 580 | 26 / 17 / 21 |
+| Fixed topology, frozen | 44 / 39 / 37 | 532 / 519 / 563 | 12 / 15 / 17 |
+| Random founders, evolving/plastic | 8 / 0 / 44 | 50 / 9 / 1,018 | 8 / — / 34 |
+
+All 12 transplants survived; random seed 122 went extinct at 1,009.8 seconds.
+Living brains spanned 14–18 neurons across the six evolving-topology endpoints,
+with population means 15.61–16.29. Fixed controls retained exactly 16 neurons and
+848 connections throughout. Initial genomes match exactly across each four-way
+treatment set, and cached neuron/connection counts match their actual masks.
+Ecological effects are mixed; more complicated circuits are not established as
+better. The [figure](docs/v8-topology.png), raw records, audits, and probes are
+committed. Sources and exact checkpoints remain under `runs/`.
+
+Thirty-round association probes of transplanted environment 111 and random seed
+123 descendants remained near zero or slightly negative. Clearing plasticity
+did not remove an otherwise useful association. In the adult environment-111
+challenge, intact original creatures acquired 15,674/15,634 energy with
+unchanged/reversed quality; clearing plastic offsets yielded 15,128/14,854, and
+disabling plasticity throughout yielded 16,774/15,995. Survival also varied by
+intervention. These are state effects in one community, not proof of learning.
+
+A 30.03-second V8 video decoded to 901 frames at 1,024×1,024; the circuit inspector
+was visually checked. Random seed 123 is continuing to three simulated hours.
+
+## Community assembly experiment
+
+The V7 three-hour seed-71 population consisted of 44 scavenger-allocated bodies
+(mean fresh-food allocation 0.085). Its cumulative uptake transfers were 8.8%
+fresh food, 56.5% detritus, and 34.7% predation. The V7 environment-81 population
+consisted of 55 grazer-allocated bodies (mean allocation 0.885), with uptake
+shares 57.2% fresh food, 5.9% detritus, and 36.9% predation. These are shares of
+recorded uptake transfers, not independent primary energy sources: energy can
+be eaten, recycled, and transferred again. Both groups also eat other organisms.
+
+Detritus retains its quality when fresh-food identities reverse. This gives
+scavengers an alternative route to persistence that may reduce pressure to learn
+those reversals. The four-way V8 experiment uses that scavenger ancestry, so its
+scope is narrower than testing all ecological strategies.
+
+`scripts/assemble_communities.py` tests the two naturally evolved source pools
+alone (192 founders) or mixed (96 each) in new environments 151/152/153 for
+3,600 seconds. All use V8's shared ecology and plasticity settings, reset acquired
+states, and retain normal mutation. The script preserves per-founder source
+IDs/generations, source-file hashes, the exact experiment script, and ancestry
+through each lineage. Its separate `origins.jsonl` tracks populations, births,
+deaths, mean diet, and cumulative uptake, including dead individuals. Tests check
+balanced mixtures, pure-source treatments, neutral genome padding, reset states,
+and saved ancestry. Different body sizes retain different founder energy.
+
+The purpose is to test coexistence and resource use. These are deliberately
+assembled populations, not spontaneous speciation. Aggregate intake cannot tell
+whose detritus was eaten or establish cooperation; causal food-flow provenance
+would be the next useful measurement if the communities persist together.
+Current batches are `runs/v8-assembly-grazers`, `v8-assembly-scavengers`, and
+`v8-assembly-mixed`. Their results will guide the next ecological addition.

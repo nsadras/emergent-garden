@@ -27,29 +27,39 @@ change and the modulation gate. A verified 30-second recording is at
 `runs/v7-video/timelapse.mp4`. The original wider plasticity range remains in
 [v7-wide.toml](configs/v7-wide.toml); every checkpoint retains its own settings.
 
+The experimental [V8 preset](configs/v8.toml) permits inherited neuron and
+connection changes, with 16 initially active recurrent units in a 32-slot
+template. Extra neurons and connections incur construction and maintenance
+costs. [Its four-way comparisons](docs/v8-topology.png) found modest structural
+variation and mixed ecological effects. The [brain inspector](docs/v8-preview.png)
+shows the expressed circuit and acquired changes. A V8 video is saved locally
+at `runs/v8-video/timelapse.mp4`.
+
 ## Start watching
 
 Python 3.13 and all Python packages are managed with **uv**:
 
 ```bash
 uv sync --locked
-uv run garden run --config configs/v5.toml --seed 11 --view --device cpu --seconds 0
+uv run garden run --config configs/v7.toml --seed 71 --view --device cpu --seconds 0
 ```
 
 `--seconds 0` runs until you close the window, press Ctrl+C, or the population
 becomes extinct. A checkpoint and preview are saved on exit. Every run gets its
 own directory under `runs/`; a supplied `--output` directory must not already exist.
 
-V5 starts 192 creatures in a 768-unit dish, with a capacity of 1,024. Each body
+V7 starts 192 creatures in a 512-unit dish, with a capacity of 1,024. Each body
 has one to three modules, each with local sensors, propulsion, and a 16-unit
-recurrent circuit. A circular membrane defines collision geometry; the inner
+recurrent circuit with its own acquired synaptic state. A circular membrane
+defines collision geometry; the inner
 modules collect food. Zoom in to inspect the body, actuators, and inherited traits.
 Green bodies favor fresh food; amber bodies favor detritus. Red marks show attacks.
 
-Seed 11 is a verified starting point: seeds 11–13 persisted for three simulated
-hours. Survival is not guaranteed; seed 1 became extinct after 732 simulated
-seconds. There is no automatic reseeding. To watch an already evolved population
-from the local experiments, resume `runs/v5-native-long-11/latest.pt`.
+V7 seed 71 is a verified starting point: it persisted for three simulated hours,
+ending with 44 creatures and living generation 46. Survival is not guaranteed,
+and there is no automatic reseeding. To watch that already evolved population,
+resume `runs/v7-bounded-long-71/latest.pt`. The earlier V5 preset and its verified
+seeds 11–13 remain available; see [its experiment record](EVOLUTION.md).
 
 Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures).
 
@@ -61,8 +71,9 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 | Right-drag | Pan |
 | Left-click | Select a creature and inspect energy, lineage, and neural activity |
 | `F` | Toggle the smell overlay |
-| Tab | Cycle fresh food, detritus, organisms, forecast cues, and secretion fields |
+| Tab | Cycle resource, organism, forecast, secretion, and patch-identity fields |
 | `C` | Switch between inherited diet and lineage colors |
+| `B` | Show recurrent weights and module 1's acquired changes for the selected creature |
 | `R` | Reset the camera |
 | Escape / close window | Save and exit |
 
@@ -70,10 +81,10 @@ Omitting `--config` preserves the original V0 defaults (256 fixed-body creatures
 
 ```bash
 # Run an experiment without a window; record a 100x timelapse.
-uv run garden run --config configs/v5.toml --seed 11 --device cpu --seconds 3600 --record --output runs/experiment-1
+uv run garden run --config configs/v7.toml --seed 71 --device cpu --seconds 3600 --record --output runs/experiment-1
 
 # Run overnight until stopped; sample video at a higher timelapse speed.
-uv run garden run --config configs/v5.toml --seed 11 --device cpu --seconds 0 --record --video-speed 1000 --output runs/overnight-1
+uv run garden run --config configs/v7.toml --seed 71 --device cpu --seconds 0 --record --video-speed 1000 --output runs/overnight-1
 
 # Resume for 600 additional simulated seconds, optionally with a window.
 uv run garden run --resume runs/experiment-1/latest.pt --device cpu --seconds 600 --view
@@ -268,8 +279,10 @@ differences and corresponding differences in founder energy endowment.
 `--seed-from` preserves inherited circuits and existing traits while neutralizing
 new sensory connections. New founders have fresh neural state, ages, and energy;
 source IDs and generations are recorded. This is distinct from exact `--resume`.
-Transfer supports equal hidden sizes and forward version changes, and rejects
-weight limits that would alter the source circuit. Python callers should use
+Transfer supports forward version changes and rejects weight limits that would
+alter the source circuit. V8 also supports padding into a larger neuron template
+with new units dormant; earlier versions require equal hidden sizes. Python
+callers should use
 `create_world(config)` from `emergent_garden.world` to select the correct engine.
 
 The committed [version trajectories](docs/evolution-versions.png),
@@ -282,3 +295,11 @@ Raw runs and videos stay under `runs/`; compact evidence is in `docs/results/`.
 The [V7 plasticity comparisons](docs/v7-learning.png) use
 `uv run python scripts/plot_learning.py`. They include failed starts and the
 original plasticity settings, as well as the tighter experimental preset.
+The V8 figure uses `uv run python scripts/plot_topology.py`.
+
+To test deliberately assembled communities, run
+`uv run python scripts/assemble_communities.py --help`. It compares two evolved
+source populations separately or in a balanced mixture, preserving source
+ancestry and recording each group's population, diet, and uptake. This is an
+ecology experiment with evolved organisms; it does not demonstrate spontaneous
+speciation or cooperative food sharing.

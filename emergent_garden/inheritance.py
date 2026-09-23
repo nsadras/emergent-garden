@@ -20,21 +20,30 @@ def brain_parts(config, genomes):
 
 
 def upgrade_genomes(source, target, genomes):
-    if source.hidden_size != target.hidden_size or source.ecology_version > target.ecology_version:
-        raise ValueError("Transfer requires equal hidden sizes and the same or a newer ecology")
+    if (
+        source.ecology_version > target.ecology_version
+        or source.hidden_size > target.hidden_size
+        or (source.hidden_size != target.hidden_size and target.ecology_version < 8)
+    ):
+        raise ValueError(
+            "Transfer requires a newer/equal ecology; only V8+ supports wider templates"
+        )
     if genomes.shape[1] != source.parameter_count:
         raise ValueError("Source genome does not match its configuration")
     out = torch.zeros((len(genomes), target.parameter_count), device=genomes.device)
     old, new = brain_parts(source, genomes), brain_parts(target, out)
+    h = source.hidden_size
     for index, name in enumerate(source.input_names):
-        new[0][:, :, target.input_names.index(name)] = old[0][:, :, index]
-    new[1][:], new[2][:] = old[1], old[2]
-    new[3][:, : source.output_size], new[4][:, : source.output_size] = old[3], old[4]
+        new[0][:, :h, target.input_names.index(name)] = old[0][:, :, index]
+    new[1][:, :h, :h], new[2][:, :h] = old[1], old[2]
+    new[3][:, : source.output_size, :h], new[4][:, : source.output_size] = old[3], old[4]
     new[4][:, source.output_size :] = -2.0
     if target.ecology_version >= 7 and source.ecology_version < 7:
         new[4][:, 4] = 0.0  # Signed plasticity modulation starts at zero.
     if target.trait_count:
-        traits = out[:, target.brain_parameter_count :]
+        traits = out[
+            :, target.brain_parameter_count : target.brain_parameter_count + target.trait_count
+        ]
         if target.ecology_version >= 2 and source.ecology_version < 2:
             traits[:, 3:5] = -2.0  # Modest initial weapon/armor investment.
         if target.ecology_version >= 3 and source.ecology_version < 3:
@@ -44,8 +53,29 @@ def upgrade_genomes(source, target, genomes):
             traits[:, 6] = -0.75  # One module, near a viable duplication mutation.
         if target.ecology_version >= 7 and source.ecology_version < 7:
             traits[:, 9] = -2.0  # Modest learning rate; decay starts at its midpoint.
-        traits[:, : source.trait_count] = genomes[:, source.brain_parameter_count :]
-    if (out.abs() > target.weight_limit).any():
+        traits[:, : source.trait_count] = genomes[
+            :, source.brain_parameter_count : source.brain_parameter_count + source.trait_count
+        ]
+    if target.ecology_version >= 8:
+        from .topology import mask_parts
+
+        nodes, mi, mr, mo = mask_parts(target, out)
+        if source.ecology_version >= 8:
+            on, oi, ore, oo = mask_parts(source, genomes)
+            nodes[:, :h] = on
+            for index, name in enumerate(source.input_names):
+                mi[:, :h, target.input_names.index(name)] = oi[:, :, index]
+            mr[:, :h, :h] = ore
+            mo[:, : source.output_size, :h] = oo
+        else:
+            nodes[:, :h] = 1
+            mi[:, :h] = 1
+            mr[:, :h, :h] = 1
+            mo[:, :, :h] = 1
+        if ((nodes > 0.5).sum(1) < target.min_neurons).any():
+            raise ValueError("Source has fewer active neurons than the destination minimum")
+    continuous = out[:, : target.brain_parameter_count + target.trait_count]
+    if (continuous.abs() > target.weight_limit).any():
         raise ValueError(
             "Transfer exceeds target weight_limit; increase it to preserve the circuit"
         )
@@ -78,6 +108,7 @@ def seed_population(world, path):
         interpretation="Sampled living genotypes initialize zero-age founders with fresh states. "
         "New sensory weights start at zero; new physical effector biases start at -2. "
         "Plasticity modulation starts at zero and learned synaptic changes are empty. "
-        "New modular bodies start with one module near the duplication boundary.",
+        "New modular bodies start with one module near the duplication boundary. "
+        "V8+ can pad into a wider template with all added neurons and edges dormant.",
     )
     world.rebuild_fields()

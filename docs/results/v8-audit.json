@@ -1,0 +1,682 @@
+{
+  "matched_founders": [
+    {
+      "paths": [
+        "runs/v8-evolving-plastic/seed-111",
+        "runs/v8-evolving-frozen/seed-111",
+        "runs/v8-fixed-plastic/seed-111",
+        "runs/v8-fixed-frozen/seed-111"
+      ],
+      "equal": true,
+      "sha256": "663262f052f1fa4b960d2244c1eab4ae1a46e151e68ef964563b931f1f5c7eee"
+    },
+    {
+      "paths": [
+        "runs/v8-evolving-plastic/seed-112",
+        "runs/v8-evolving-frozen/seed-112",
+        "runs/v8-fixed-plastic/seed-112",
+        "runs/v8-fixed-frozen/seed-112"
+      ],
+      "equal": true,
+      "sha256": "990d3689f64d48b6efe710bbd45633ce6368ae92789fac45891c01fd5cec0ec9"
+    },
+    {
+      "paths": [
+        "runs/v8-evolving-plastic/seed-113",
+        "runs/v8-evolving-frozen/seed-113",
+        "runs/v8-fixed-plastic/seed-113",
+        "runs/v8-fixed-frozen/seed-113"
+      ],
+      "equal": true,
+      "sha256": "e239106a8d5387fd3d0d5aee887c59a4a7e7438ee03c9a0a07c646fc809d86f9"
+    }
+  ],
+  "final_graphs": [
+    {
+      "path": "runs/v8-evolving-plastic/seed-111",
+      "node_range": [
+        15,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        6,
+        38,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 838.522705078125,
+      "structural_births": 65,
+      "energy_error": -0.0013263091241242364,
+      "relative_energy_error": -7.640638504172927e-10
+    },
+    {
+      "path": "runs/v8-evolving-frozen/seed-111",
+      "node_range": [
+        15,
+        17
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        31,
+        16,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 867.8163452148438,
+      "structural_births": 71,
+      "energy_error": 0.03162451653042808,
+      "relative_energy_error": 1.8069070391642594e-08
+    },
+    {
+      "path": "runs/v8-fixed-plastic/seed-111",
+      "node_range": [
+        16,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        46,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 848.0,
+      "structural_births": 0,
+      "energy_error": 0.022233617084566504,
+      "relative_energy_error": 1.2789100928885017e-08
+    },
+    {
+      "path": "runs/v8-fixed-frozen/seed-111",
+      "node_range": [
+        16,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        44,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 848.0,
+      "structural_births": 0,
+      "energy_error": 0.0016495383315486833,
+      "relative_energy_error": 9.416884319688174e-10
+    },
+    {
+      "path": "runs/v8-evolving-plastic/seed-112",
+      "node_range": [
+        16,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        43,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 847.534912109375,
+      "structural_births": 55,
+      "energy_error": -0.038933699106564745,
+      "relative_energy_error": -2.2249464586827875e-08
+    },
+    {
+      "path": "runs/v8-evolving-frozen/seed-112",
+      "node_range": [
+        16,
+        17
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        35,
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 857.6341552734375,
+      "structural_births": 55,
+      "energy_error": 0.008995163589133881,
+      "relative_energy_error": 5.127929206914741e-09
+    },
+    {
+      "path": "runs/v8-fixed-plastic/seed-112",
+      "node_range": [
+        16,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        45,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 848.0,
+      "structural_births": 0,
+      "energy_error": 0.027291524267639033,
+      "relative_energy_error": 1.5598264956042048e-08
+    },
+    {
+      "path": "runs/v8-fixed-frozen/seed-112",
+      "node_range": [
+        16,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        39,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 848.0,
+      "structural_births": 0,
+      "energy_error": -0.04393131246615667,
+      "relative_energy_error": -2.5047054004601116e-08
+    },
+    {
+      "path": "runs/v8-evolving-plastic/seed-113",
+      "node_range": [
+        15,
+        18
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        7,
+        17,
+        14,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 864.1538696289062,
+      "structural_births": 65,
+      "energy_error": -0.02550744407926686,
+      "relative_energy_error": -1.4608689202093593e-08
+    },
+    {
+      "path": "runs/v8-evolving-frozen/seed-113",
+      "node_range": [
+        14,
+        17
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        15,
+        24,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 821.48779296875,
+      "structural_births": 63,
+      "energy_error": 0.006158885356853716,
+      "relative_energy_error": 3.5149321372943857e-09
+    },
+    {
+      "path": "runs/v8-fixed-plastic/seed-113",
+      "node_range": [
+        16,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        40,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 848.0,
+      "structural_births": 0,
+      "energy_error": -0.00735436673858203,
+      "relative_energy_error": -4.207963106075523e-09
+    },
+    {
+      "path": "runs/v8-fixed-frozen/seed-113",
+      "node_range": [
+        16,
+        16
+      ],
+      "node_histogram": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        37,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_connections": 848.0,
+      "structural_births": 0,
+      "energy_error": 0.020416966901393607,
+      "relative_energy_error": 1.1695803386663375e-08
+    }
+  ],
+  "association": {
+    "111": {
+      "founders": {
+        "none": {
+          "association_alignment": 6.120535545051098e-07,
+          "reversal_alignment": 1.1345255188643932e-06,
+          "plastic_magnitude_after_training": 0.00531043376395246
+        },
+        "no_feedback": {
+          "association_alignment": 0.0,
+          "reversal_alignment": 0.0,
+          "plastic_magnitude_after_training": 0.00533414157689549
+        },
+        "reset_h": {
+          "association_alignment": -1.5459954738616943e-07,
+          "reversal_alignment": -3.236345946788788e-08,
+          "plastic_magnitude_after_training": 0.00531043376395246
+        },
+        "no_plasticity": {
+          "association_alignment": 4.9790251068770885e-06,
+          "reversal_alignment": 4.978326614946127e-06,
+          "plastic_magnitude_after_training": 0.0
+        }
+      },
+      "descendants": {
+        "none": {
+          "association_alignment": 7.30749558318745e-07,
+          "reversal_alignment": 1.283277842131528e-06,
+          "plastic_magnitude_after_training": 0.005239936099811034
+        },
+        "no_feedback": {
+          "association_alignment": 0.0,
+          "reversal_alignment": -1.6933137720281428e-10,
+          "plastic_magnitude_after_training": 0.005279791612834247
+        },
+        "reset_h": {
+          "association_alignment": -1.1785463853315874e-07,
+          "reversal_alignment": -1.6933137720281428e-10,
+          "plastic_magnitude_after_training": 0.005239936099811034
+        },
+        "no_plasticity": {
+          "association_alignment": 6.154264238747683e-06,
+          "reversal_alignment": 6.156634878028523e-06,
+          "plastic_magnitude_after_training": 0.0
+        }
+      }
+    },
+    "123": {
+      "founders": {
+        "none": {
+          "association_alignment": 8.69284849613905e-06,
+          "reversal_alignment": 4.3655745685100555e-08,
+          "plastic_magnitude_after_training": 0.015808008662020256
+        },
+        "no_feedback": {
+          "association_alignment": 0.0,
+          "reversal_alignment": 0.0,
+          "plastic_magnitude_after_training": 0.01566679485165423
+        },
+        "reset_h": {
+          "association_alignment": 6.057671271264553e-07,
+          "reversal_alignment": 4.819594323635101e-08,
+          "plastic_magnitude_after_training": 0.015808008662020256
+        },
+        "no_plasticity": {
+          "association_alignment": 7.26897269487381e-06,
+          "reversal_alignment": -6.521469913423061e-06,
+          "plastic_magnitude_after_training": 0.0
+        }
+      },
+      "descendants": {
+        "none": {
+          "association_alignment": -6.668269634246826e-07,
+          "reversal_alignment": -1.1581758206540888e-05,
+          "plastic_magnitude_after_training": 0.003799314058348748
+        },
+        "no_feedback": {
+          "association_alignment": 0.0,
+          "reversal_alignment": 0.0,
+          "plastic_magnitude_after_training": 0.0038693701975386252
+        },
+        "reset_h": {
+          "association_alignment": -3.5728920589793815e-08,
+          "reversal_alignment": -9.795820171182806e-08,
+          "plastic_magnitude_after_training": 0.003799314058348748
+        },
+        "no_plasticity": {
+          "association_alignment": -1.8497759645635432e-06,
+          "reversal_alignment": -1.7984685572710903e-06,
+          "plastic_magnitude_after_training": 0.0
+        }
+      }
+    }
+  }
+}

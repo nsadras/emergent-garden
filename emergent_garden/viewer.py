@@ -28,6 +28,7 @@ class Renderer:
         self.center = None
         self.selected = None
         self.show_field = True
+        self.show_brain = False
         self.field_index = 0
         self.color_mode = "diet"
 
@@ -104,7 +105,16 @@ class Renderer:
             "h",
         )
         data = {key: a[key].detach().cpu().numpy() for key in visible}
-        for key in ("radius", "power", "diet", "attack", "armor", "actions"):
+        for key in (
+            "radius",
+            "power",
+            "diet",
+            "attack",
+            "armor",
+            "actions",
+            "neurons",
+            "connections",
+        ):
             if key in a:
                 data[key] = a[key].detach().cpu().numpy()
         if "modules" in a:
@@ -205,7 +215,9 @@ class Renderer:
         description = "Particle scents / inherited recurrent brains / continuous life"
         if c.ecology_version >= 6:
             favorable = "A" if world.landscape.favorable == 0 else "B"
-            description = f"High-quality patches: {favorable} | Tab: field | C: body colors"
+            description = (
+                f"High-quality patches: {favorable} | Tab: field | C: body colors | B: brain"
+            )
         self.text(
             status or description,
             (20, self.size - 31),
@@ -217,6 +229,10 @@ class Renderer:
             height = 270 if "modules" in data else 248 if "attack" in data else 222
             if "module_plastic" in a:
                 height += 48
+            if "neurons" in data:
+                height += 22
+            if self.show_brain:
+                height += 150
             panel = pygame.Surface((285, height), pygame.SRCALPHA)
             panel.fill((6, 14, 21, 230))
             surface.blit(panel, (18, 92))
@@ -244,18 +260,60 @@ class Renderer:
                     small=True,
                 )
             if "modules" in data:
+                neurons = data["neurons"][i] if "neurons" in data else len(data["h"][i])
                 self.text(
-                    f"{data['modules'][i]} modules / {len(data['h'][i])} neurons each",
+                    f"{data['modules'][i]} modules / {neurons} neurons each",
                     (30, 327),
                     small=True,
                 )
             if "module_plastic" in a:
                 count = int(data["modules"][i])
-                magnitude = a["module_plastic"][i, :count].abs().mean().item()
+                connections = (
+                    int(a["recurrent_connections"][i])
+                    if "recurrent_connections" in a
+                    else c.hidden_size**2
+                )
+                magnitude = a["module_plastic"][i, :count].abs().sum().item() / max(
+                    1, count * connections
+                )
                 modulation = 2 * data["module_actions"][i, :count, 4].mean() - 1
                 self.text(f"Synaptic change {magnitude:.4f}", (30, 348), small=True)
                 self.text(f"Learning gate {modulation:+.2f}", (30, 369), small=True)
+            if "connections" in data:
+                self.text(f"{data['connections'][i]} connections per module", (30, 390), small=True)
+            if self.show_brain:
+                self.draw_brain(world, i, 92 + height - 146)
         return surface
+
+    def draw_brain(self, world, index, top):
+        from .inheritance import brain_parts
+        from .topology import effective_masks
+
+        c, a = world.config, world.agents
+        genome = a["genome"][index : index + 1]
+        base = brain_parts(c, genome)[1][0].detach().cpu().numpy()
+        mask = (
+            effective_masks(c, genome)[2][0].cpu().numpy()
+            if c.ecology_version >= 8
+            else np.ones_like(base, dtype=bool)
+        )
+        plastic = (
+            a["module_plastic"][index, 0].detach().cpu().numpy()
+            if "module_plastic" in a
+            else np.zeros_like(base)
+        )
+        panels = (
+            (base, 0.5, "Base ±0.5", 30),
+            (plastic, c.plasticity_limit, f"Module 1 ±{c.plasticity_limit:g}", 166),
+        )
+        for matrix, limit, label, x in panels:
+            strength = np.clip(np.abs(matrix) / limit, 0, 1)[..., None]
+            tint = np.where((matrix >= 0)[..., None], (100, 210, 161), (153, 133, 235))
+            rgb = (np.array((20, 35, 38)) + strength * (tint - (20, 35, 38))).astype(np.uint8)
+            rgb[~mask] = (10, 19, 23)
+            layer = pygame.surfarray.make_surface(rgb.transpose(1, 0, 2))
+            self.text(label, (x, top), small=True)
+            self.surface.blit(pygame.transform.scale(layer, (112, 112)), (x, top + 20))
 
     def save(self, world, path):
         Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -282,6 +340,8 @@ class Viewer(Renderer):
                     self.running = False
                 elif event.key == pygame.K_SPACE:
                     self.paused = not self.paused
+                elif event.key == pygame.K_b:
+                    self.show_brain = not self.show_brain
                 elif event.key in (pygame.K_EQUALS, pygame.K_PLUS, pygame.K_KP_PLUS):
                     self.speed = min(1024, self.speed * 2)
                 elif event.key in (pygame.K_MINUS, pygame.K_KP_MINUS):

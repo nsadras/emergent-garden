@@ -15,6 +15,7 @@ from .field import SmellField, TrailField
 from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .spatial import neighbors
+from .topology import counts, initial_structure, mutate_structure
 from .world import World, genome_hash
 
 
@@ -97,6 +98,11 @@ class EcologyWorld(World):
             )
         if c.ecology_version >= 7:
             self.totals.update(plasticity_cost=0.0, plasticity_changes=0.0)
+        if c.ecology_version >= 8:
+            self.rng["structure"] = torch.Generator(device=self.device).manual_seed(seed + 678679)
+            self.totals.update(
+                neural_maintenance=0.0, neural_construction=0.0, neural_structural_births=0
+            )
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_radius - c.food_radius)
         self.patch_phases = (
@@ -156,6 +162,11 @@ class EcologyWorld(World):
                 a[key] = torch.zeros(
                     (n, MAX_MODULES, c.hidden_size, c.hidden_size), device=self.device
                 )
+        if c.ecology_version >= 8:
+            for key in ("neurons", "connections", "recurrent_connections"):
+                a[key] = torch.zeros(n, device=self.device, dtype=torch.long)
+            for key in ("brain_maintenance", "brain_construction"):
+                a[key] = torch.zeros(n, device=self.device)
         return a
 
     def initial_genomes(self, n):
@@ -163,10 +174,16 @@ class EcologyWorld(World):
         traits = (self.rand((n, self.config.trait_count), "initial") * 4 - 2).clamp(
             -self.config.weight_limit, self.config.weight_limit
         )
-        return torch.cat((brain, traits), 1)
+        pieces = [brain, traits]
+        if self.config.ecology_version >= 8:
+            pieces.append(initial_structure(self.config, n, self.device))
+        return torch.cat(pieces, 1)
 
     def develop(self, a):
-        traits = a["genome"][:, self.config.brain_parameter_count :].sigmoid()
+        c = self.config
+        traits = a["genome"][
+            :, c.brain_parameter_count : c.brain_parameter_count + c.trait_count
+        ].sigmoid()
         a["radius"] = self.config.body_radius * (0.7 + 0.6 * traits[:, 0])
         a["area"] = (a["radius"] / self.config.body_radius).square()
         a["power"] = 0.5 + traits[:, 1]
@@ -177,6 +194,14 @@ class EcologyWorld(World):
             a["memory_tau"] = 0.2 + 4.8 * traits[:, 5]
         if self.config.ecology_version >= 4:
             develop_modules(self.config, a, traits)
+        if c.ecology_version >= 8:
+            a["neurons"], a["connections"], a["recurrent_connections"] = counts(c, a["genome"])
+            a["brain_maintenance"] = (
+                c.neuron_maintenance * a["neurons"] + c.synapse_maintenance * a["connections"]
+            ) * a["modules"]
+            a["brain_construction"] = (
+                c.neuron_construction * a["neurons"] + c.synapse_construction * a["connections"]
+            ) * a["modules"]
 
     def patch_stock(self):
         stock = torch.zeros(self.config.patches, device=self.device)
@@ -587,7 +612,7 @@ class EcologyWorld(World):
                 result[key] = self.agents[key][index].item()
         if "memory_tau" in self.agents:
             result["memory_tau"] = self.agents["memory_tau"][index].item()
-        for key in ("modules", "body_axis", "core_radius"):
+        for key in ("modules", "body_axis", "core_radius", "neurons", "connections"):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
         for key in ("high_acquired", "low_acquired"):
@@ -597,13 +622,18 @@ class EcologyWorld(World):
 
     def mutate(self, genome):
         c = self.config
-        mask = self.rand(genome.shape, "mutation") < c.mutation_probability
-        scale = torch.full_like(genome, c.mutation_sigma)
+        genes = genome[: c.brain_parameter_count + c.trait_count]
+        mask = self.rand(genes.shape, "mutation") < c.mutation_probability
+        scale = torch.full_like(genes, c.mutation_sigma)
         start = c.brain_parameter_count
         mask[start:] = self.rand((c.trait_count,), "mutation") < c.trait_mutation_probability
         scale[start:] = c.trait_mutation_sigma
-        noise = torch.randn(genome.shape, device=self.device, generator=self.rng["mutation"])
-        return (genome + mask * noise * scale).clamp(-c.weight_limit, c.weight_limit)
+        noise = torch.randn(genes.shape, device=self.device, generator=self.rng["mutation"])
+        changed = (genes + mask * noise * scale).clamp(-c.weight_limit, c.weight_limit)
+        if c.ecology_version >= 8:
+            changed = torch.cat((changed, genome[len(genes) :]))
+            changed = mutate_structure(c, changed, self.rng["structure"])
+        return changed
 
     def reproduce(self):
         a, c = self.agents, self.config
@@ -626,6 +656,8 @@ class EcologyWorld(World):
             self.develop(child)
             child["energy"] = c.birth_energy * child["area"]
             overhead = (c.reproduction_debit - c.birth_energy) * child["area"][0]
+            if c.ecology_version >= 8:
+                overhead = overhead + child["brain_construction"][0]
             debit = child["energy"][0] + overhead
             if a["energy"][i] <= debit:
                 self.totals["blocked_births"] += 1
@@ -660,6 +692,17 @@ class EcologyWorld(World):
                 if child["modules"][0] != a["modules"][i]:
                     self.totals["structural_births"] = self.totals.get("structural_births", 0) + 1
             self.totals["reproduction"] += float(overhead)
+            neural_event = {}
+            if c.ecology_version >= 8:
+                start = c.brain_parameter_count + c.trait_count
+                changed = bool((child["genome"][0, start:] != a["genome"][i, start:]).any())
+                self.totals["neural_structural_births"] += int(changed)
+                self.totals["neural_construction"] += float(child["brain_construction"][0])
+                neural_event = dict(
+                    neurons=int(child["neurons"][0]),
+                    connections=int(child["connections"][0]),
+                    neural_structure_changed=changed,
+                )
             self.events.append(
                 dict(
                     event="birth",
@@ -672,6 +715,7 @@ class EcologyWorld(World):
                     radius=float(child["radius"][0]),
                     diet=float(child["diet"][0]),
                     **({"modules": int(child["modules"][0])} if c.ecology_version >= 4 else {}),
+                    **neural_event,
                 )
             )
             self.next_id += 1
@@ -703,6 +747,8 @@ class EcologyWorld(World):
             maintenance += c.signal_cost * a["area"] * a["actions"][:, 3].square() * c.dt
         if c.ecology_version >= 7:
             maintenance += c.plasticity_cost * copies * c.dt
+        if c.ecology_version >= 8:
+            maintenance += a["brain_maintenance"] * c.dt
         return maintenance, propulsion
 
     def emit(self, paid_fraction):
@@ -757,6 +803,10 @@ class EcologyWorld(World):
                 self.totals["plasticity_cost"] += (
                     (c.plasticity_cost * a["modules"] * c.dt * scale).double().sum().item()
                 )
+            if c.ecology_version >= 8:
+                self.totals["neural_maintenance"] += (
+                    (a["brain_maintenance"] * c.dt * scale).double().sum().item()
+                )
             if c.ecology_version >= 5:
                 self.emit(scale)
             self.remove_dead()
@@ -806,10 +856,18 @@ class EcologyWorld(World):
             result["patch_identities"] = self.landscape.identities.tolist()
         if c.ecology_version >= 7:
             count = max(1, int(a["modules"].sum()) * c.hidden_size**2)
+            if c.ecology_version >= 8:
+                count = max(1, int((a["modules"] * a["recurrent_connections"]).sum()))
             result["mean_plastic_magnitude"] = (
                 a["module_plastic"].abs().double().sum().item() / count
             )
             result["mean_modulation"] = (2 * a["actions"][:, 4] - 1).mean().item() if n else 0
+        if c.ecology_version >= 8:
+            result["mean_neurons"] = a["neurons"].float().mean().item() if n else 0
+            result["mean_connections"] = a["connections"].float().mean().item() if n else 0
+            result["neuron_histogram"] = torch.bincount(
+                a["neurons"], minlength=c.hidden_size + 1
+            ).tolist()
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         i, j = self.overlap_pairs()
         overlap = a["radius"][i] + a["radius"][j] - (a["pos"][i] - a["pos"][j]).norm(dim=1)

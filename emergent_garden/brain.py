@@ -4,15 +4,18 @@ import math
 
 import torch
 
+from .topology import effective_masks
+
 
 def initial_brains(config, count, device, generator):
     h, inputs, outputs = config.hidden_size, config.input_size, config.output_size
+    active = config.initial_neurons if config.ecology_version >= 8 else h
     pieces = []
     for shape, fan in (
         ((h, inputs), inputs),
-        ((h, h), h),
+        ((h, h), active),
         ((h,), None),
-        ((outputs, h), h),
+        ((outputs, h), active),
         ((outputs,), None),
     ):
         size = (count, math.prod(shape))
@@ -38,6 +41,10 @@ def advance(config, genome, inputs, hidden, tau=None, plastic=None):
     if plastic is not None:
         wr = wr + plastic
     bias, wo, bo = take(h, (h,)), take(no * h, (no, h)), take(no, (no,))
+    if config.ecology_version >= 8:
+        nodes, mi, mr, mo = effective_masks(config, genome)
+        wi, wr, wo = wi * mi, wr * mr, wo * mo
+        hidden = hidden * nodes
     drive = (wi @ inputs[..., None]).squeeze(-1)
     drive += (wr @ hidden[..., None]).squeeze(-1) + bias
     alpha = (
@@ -46,6 +53,8 @@ def advance(config, genome, inputs, hidden, tau=None, plastic=None):
         else 1 - torch.exp(-1 / (config.controller_hz * tau[:, None]))
     )
     hidden = (1 - alpha) * hidden + alpha * drive.tanh()
+    if config.ecology_version >= 8:
+        hidden = hidden * nodes
     return hidden, ((wo @ hidden[..., None]).squeeze(-1) + bo).sigmoid()
 
 
@@ -84,9 +93,15 @@ def controller_step(config, genome, inputs, state, tau=None, plasticity=True):
     beta = 1 - math.exp(-dt / c.plasticity_trace_tau)
     correlation = hidden[:, :, None] * state["hidden"][:, None, :]
     trace = (1 - beta) * state["trace"] + beta * correlation
+    if config.ecology_version >= 8:
+        mask = effective_masks(config, genome)[2]
+        trace = trace * mask
     modulation = 2 * actions[:, 4] - 1
     decay = torch.exp(-math.log(2) * dt / half_life)
     changed = state["plastic"] * decay[:, None, None]
     changed += (dt * rate * modulation)[:, None, None] * trace
-    result.update(plastic=changed.clamp(-c.plasticity_limit, c.plasticity_limit), trace=trace)
+    changed = changed.clamp(-c.plasticity_limit, c.plasticity_limit)
+    if config.ecology_version >= 8:
+        changed = changed * mask
+    result.update(plastic=changed, trace=trace)
     return result, actions
