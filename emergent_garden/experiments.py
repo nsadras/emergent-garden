@@ -66,7 +66,20 @@ def calibration(
     return results
 
 
-def trial(config, genome, seed, seconds, device, ablation, stop=None, *, record_keys=()):
+def trial(
+    config,
+    genome,
+    seed,
+    seconds,
+    device,
+    ablation,
+    stop=None,
+    *,
+    record_keys=(),
+    start_mature=False,
+):
+    if start_mature and config.ecology_version < 13:
+        raise ValueError("Mature-start assays require developmental body plans")
     config = replace(
         config,
         initial_population=1,
@@ -79,9 +92,21 @@ def trial(config, genome, seed, seconds, device, ablation, stop=None, *, record_
     world = World(config, seed, device, ablation=ablation)
     world.agents["genome"][0] = genome.to(device)
     if config.ecology_version:
+        initial_radius = world.agents["radius"].clone()
+        if start_mature:
+            from .morphology import MAX_MODULES
+
+            world.agents["development_stage"].fill_(MAX_MODULES)
         world.develop(world.agents)
+        if start_mature:
+            # Reuse the original uniform disk draw in the adult's smaller valid
+            # placement disk, without concentrating projected bodies at the wall.
+            center = config.diameter / 2
+            scale = (center - world.agents["radius"]) / (center - initial_radius)
+            world.agents["pos"] = center + (world.agents["pos"] - center) * scale[:, None]
         world.agents["energy"] = config.birth_energy * world.agents["area"]
         world.initial_energy = world.agents["energy"].double().sum().item()
+    initial_modules = int(world.agents["modules"][0]) if "modules" in world.agents else 1
     world.founders = world.agents["genome"].clone()
     target = math.ceil(seconds * config.physics_hz)
     record = None
@@ -104,6 +129,7 @@ def trial(config, genome, seed, seconds, device, ablation, stop=None, *, record_
         raise RuntimeError("Evaluation lost the founding organism record")
     record["survived"] = record.get("event") != "death"
     record["first_growth_time"] = first_growth
+    record["initial_modules"] = initial_modules
     keys = ("acquired", "spent", "age", "offspring", "distance", *record_keys)
     return {key: record[key] for key in keys}
 

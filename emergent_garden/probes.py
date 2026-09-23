@@ -96,7 +96,8 @@ def association_probe(config, genomes, rounds=3, mode="none"):
     if (
         config.ecology_version < 6
         or rounds < 1
-        or mode not in ("none", "no_feedback", "reset_h", "no_plasticity")
+        or mode not in ("none", "no_feedback", "reset_h", "no_plasticity", "fixed_rule")
+        or (mode == "fixed_rule" and config.ecology_version < 15)
     ):
         raise ValueError("Association probes require V6+, positive rounds, and a supported mode")
     n = len(genomes)
@@ -112,7 +113,15 @@ def association_probe(config, genomes, rounds=3, mode="none"):
     feedback = config.input_names.index("food_feedback")
 
     def step(inputs, current):
-        return controller_step(config, g, inputs, current, tau, plasticity=mode != "no_plasticity")
+        return controller_step(
+            config,
+            g,
+            inputs,
+            current,
+            tau,
+            plasticity=mode != "no_plasticity",
+            evolved_rule=mode != "fixed_rule",
+        )
 
     def train(good):
         nonlocal state
@@ -218,7 +227,9 @@ def association_run(run, output, count=64, rounds=3, device="cpu"):
             trials=[
                 association_probe(config, chosen, rounds, mode)
                 for mode in (
-                    ("none", "no_feedback", "reset_h", "no_plasticity")
+                    ("none", "no_feedback", "reset_h", "no_plasticity", "fixed_rule")
+                    if config.ecology_version >= 15
+                    else ("none", "no_feedback", "reset_h", "no_plasticity")
                     if config.ecology_version >= 7
                     else ("none", "no_feedback", "reset_h")
                 )

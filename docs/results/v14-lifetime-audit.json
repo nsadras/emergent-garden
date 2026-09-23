@@ -1,0 +1,974 @@
+{
+  "interpretation": "Audit paired V14 lifetime outcomes and summarize within each source community.\n\nRelated genotypes and repeated test environments are not independent evolution\nreplicates. These descriptive comparisons measure performance in the specified\nassay habitat; removing a channel can perturb dynamics as well as information.\n",
+  "communities": [
+    {
+      "path": "runs/v14-coordination-assay-241",
+      "source": "runs/v14-full-mixed/seed-241/latest.pt",
+      "completed_trials": 120,
+      "genotypes": 8,
+      "environment_seeds": [
+        10121,
+        10122,
+        10123
+      ],
+      "paired_first_growth_times_exact": true,
+      "immutable_source_and_selection_verified": true,
+      "outcomes": {
+        "none": {
+          "trials": 24,
+          "survived": 22,
+          "grown": 3,
+          "means": {
+            "acquired": 463.91440264383954,
+            "offspring": 0.16666666666666666,
+            "age": 233.52369817097983,
+            "fresh_acquired": 459.3341204325358,
+            "detritus_acquired": 4.550881604353587,
+            "meat_acquired": 0.030289828777313232,
+            "internal_spent": 0.0018960690499625343
+          }
+        },
+        "no_internal": {
+          "trials": 24,
+          "survived": 22,
+          "grown": 3,
+          "means": {
+            "acquired": 463.8648268381755,
+            "offspring": 0.16666666666666666,
+            "age": 233.52369817097983,
+            "fresh_acquired": 459.32055791219074,
+            "detritus_acquired": 4.540862262248993,
+            "meat_acquired": 0.0043279065284878016,
+            "internal_spent": 0.001893852793273254
+          }
+        },
+        "self_internal": {
+          "trials": 24,
+          "survived": 22,
+          "grown": 3,
+          "means": {
+            "acquired": 464.40263811747235,
+            "offspring": 0.16666666666666666,
+            "age": 233.52369817097983,
+            "fresh_acquired": 459.85187403361004,
+            "detritus_acquired": 4.546483059724172,
+            "meat_acquired": 0.005194897918651502,
+            "internal_spent": 0.0018968493818647403
+          }
+        },
+        "no_body_sense": {
+          "trials": 24,
+          "survived": 22,
+          "grown": 3,
+          "means": {
+            "acquired": 466.0689385732015,
+            "offspring": 0.16666666666666666,
+            "age": 233.52369817097983,
+            "fresh_acquired": 461.5089276631673,
+            "detritus_acquired": 4.555040578047435,
+            "meat_acquired": 0.005867043510079384,
+            "internal_spent": 0.0019020374500845112
+          }
+        },
+        "no_coordination": {
+          "trials": 24,
+          "survived": 22,
+          "grown": 3,
+          "means": {
+            "acquired": 465.9565372467041,
+            "offspring": 0.16666666666666666,
+            "age": 233.52369817097983,
+            "fresh_acquired": 461.38964716593426,
+            "detritus_acquired": 4.563208083311717,
+            "meat_acquired": 0.004564075342689951,
+            "internal_spent": 0.0018992688414982695
+          }
+        }
+      },
+      "full_minus_control": {
+        "no_internal": {
+          "means": {
+            "acquired": 0.0495758056640625,
+            "offspring": 0,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 8.16619873046875,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -7.76959228515625,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 1,
+          "genotypes_with_more_offspring": 0
+        },
+        "self_internal": {
+          "means": {
+            "acquired": -0.48823547363281244,
+            "offspring": 0,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 3.8316243489583335,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -7.737508138020833,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 1,
+          "genotypes_with_more_offspring": 0
+        },
+        "no_body_sense": {
+          "means": {
+            "acquired": -2.1545359293619795,
+            "offspring": 0,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": -3.5745849609375,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -13.661702473958334,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 0,
+          "genotypes_with_more_offspring": 0
+        },
+        "no_coordination": {
+          "means": {
+            "acquired": -2.042134602864583,
+            "offspring": 0,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": -2.54052734375,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -13.796549479166666,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 0,
+          "genotypes_with_more_offspring": 0
+        }
+      }
+    },
+    {
+      "path": "runs/v14-coordination-assay-242",
+      "source": "runs/v14-full-mixed/seed-242/latest.pt",
+      "completed_trials": 120,
+      "genotypes": 8,
+      "environment_seeds": [
+        10121,
+        10122,
+        10123
+      ],
+      "paired_first_growth_times_exact": true,
+      "immutable_source_and_selection_verified": true,
+      "outcomes": {
+        "none": {
+          "trials": 24,
+          "survived": 19,
+          "grown": 4,
+          "means": {
+            "acquired": 439.4178663889567,
+            "offspring": 0.041666666666666664,
+            "age": 232.69018681844076,
+            "fresh_acquired": 432.9173463185628,
+            "detritus_acquired": 3.997821350892385,
+            "meat_acquired": 2.5032617251078286,
+            "internal_spent": 0.0030129484039396934
+          }
+        },
+        "no_internal": {
+          "trials": 24,
+          "survived": 19,
+          "grown": 4,
+          "means": {
+            "acquired": 441.8290195465088,
+            "offspring": 0.08333333333333333,
+            "age": 232.76242446899414,
+            "fresh_acquired": 437.43527285257977,
+            "detritus_acquired": 4.006464699904124,
+            "meat_acquired": 0.3877955675125122,
+            "internal_spent": 0.0030185886486719937
+          }
+        },
+        "self_internal": {
+          "trials": 24,
+          "survived": 19,
+          "grown": 4,
+          "means": {
+            "acquired": 441.94812711079913,
+            "offspring": 0.08333333333333333,
+            "age": 232.7485326131185,
+            "fresh_acquired": 437.55667940775555,
+            "detritus_acquired": 4.011020203431447,
+            "meat_acquired": 0.3808988730112712,
+            "internal_spent": 0.0030153311151366324
+          }
+        },
+        "no_body_sense": {
+          "trials": 24,
+          "survived": 19,
+          "grown": 4,
+          "means": {
+            "acquired": 440.4466660817464,
+            "offspring": 0.041666666666666664,
+            "age": 232.72213808695474,
+            "fresh_acquired": 433.9467067718506,
+            "detritus_acquired": 3.994784394900004,
+            "meat_acquired": 2.505734125773112,
+            "internal_spent": 0.0030128404481312523
+          }
+        },
+        "no_coordination": {
+          "trials": 24,
+          "survived": 19,
+          "grown": 4,
+          "means": {
+            "acquired": 440.9009215037028,
+            "offspring": 0.08333333333333333,
+            "age": 232.80965677897134,
+            "fresh_acquired": 436.7725315093994,
+            "detritus_acquired": 4.00570547580719,
+            "meat_acquired": 0.12324526906013489,
+            "internal_spent": 0.003021180286566505
+          }
+        }
+      },
+      "full_minus_control": {
+        "no_internal": {
+          "means": {
+            "acquired": -2.4111531575520835,
+            "offspring": -0.041666666666666664,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -19.289225260416668,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 0,
+          "genotypes_with_more_offspring": 0
+        },
+        "self_internal": {
+          "means": {
+            "acquired": -2.5302607218424478,
+            "offspring": -0.041666666666666664,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -20.242085774739582,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 0,
+          "genotypes_with_more_offspring": 0
+        },
+        "no_body_sense": {
+          "means": {
+            "acquired": -1.0287996927897136,
+            "offspring": 0,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -8.230397542317709,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 0,
+          "genotypes_with_more_offspring": 0
+        },
+        "no_coordination": {
+          "means": {
+            "acquired": -1.4830551147460938,
+            "offspring": -0.041666666666666664,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -11.86444091796875,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 0.0,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 0,
+          "genotypes_with_more_offspring": 0
+        }
+      }
+    },
+    {
+      "path": "runs/v14-coordination-assay-243",
+      "source": "runs/v14-full-mixed/seed-243/latest.pt",
+      "completed_trials": 120,
+      "genotypes": 8,
+      "environment_seeds": [
+        10121,
+        10122,
+        10123
+      ],
+      "paired_first_growth_times_exact": true,
+      "immutable_source_and_selection_verified": true,
+      "outcomes": {
+        "none": {
+          "trials": 24,
+          "survived": 24,
+          "grown": 20,
+          "means": {
+            "acquired": 1008.8328628540039,
+            "offspring": 1.4583333333333333,
+            "age": 240.02230834960938,
+            "fresh_acquired": 994.9300448099772,
+            "detritus_acquired": 12.608594675858816,
+            "meat_acquired": 1.2952940954516332,
+            "internal_spent": 0.0024295513388400045
+          }
+        },
+        "no_internal": {
+          "trials": 24,
+          "survived": 24,
+          "grown": 20,
+          "means": {
+            "acquired": 1003.2101058959961,
+            "offspring": 1.4583333333333333,
+            "age": 240.02230834960938,
+            "fresh_acquired": 988.7400118509928,
+            "detritus_acquired": 12.559503297011057,
+            "meat_acquired": 1.91157103360941,
+            "internal_spent": 0.0024290768057350456
+          }
+        },
+        "self_internal": {
+          "trials": 24,
+          "survived": 24,
+          "grown": 20,
+          "means": {
+            "acquired": 1005.2214126586914,
+            "offspring": 1.4583333333333333,
+            "age": 240.02230834960938,
+            "fresh_acquired": 991.7020606994629,
+            "detritus_acquired": 12.597653031349182,
+            "meat_acquired": 0.9225061251781881,
+            "internal_spent": 0.002429649173791404
+          }
+        },
+        "no_body_sense": {
+          "trials": 24,
+          "survived": 24,
+          "grown": 20,
+          "means": {
+            "acquired": 1023.2578786214193,
+            "offspring": 1.5833333333333333,
+            "age": 240.02230834960938,
+            "fresh_acquired": 1008.3531710306803,
+            "detritus_acquired": 12.581384658813477,
+            "meat_acquired": 2.3242882071062922,
+            "internal_spent": 0.0024211220400805664
+          }
+        },
+        "no_coordination": {
+          "trials": 24,
+          "survived": 24,
+          "grown": 20,
+          "means": {
+            "acquired": 1013.5587437947592,
+            "offspring": 1.5,
+            "age": 240.02230834960938,
+            "fresh_acquired": 999.494431813558,
+            "detritus_acquired": 12.552953064441681,
+            "meat_acquired": 1.5124398515326902,
+            "internal_spent": 0.002420597113086842
+          }
+        }
+      },
+      "full_minus_control": {
+        "no_internal": {
+          "means": {
+            "acquired": 5.6227569580078125,
+            "offspring": 0.0,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 1.1148681640625,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": -1.13360595703125,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 13.899454752604166,
+              "offspring": 0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 7.7452392578125,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 15.209757486979166,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 3.1994425455729165,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -2.182861328125,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 7.1297607421875,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 6,
+          "genotypes_with_more_offspring": 1
+        },
+        "self_internal": {
+          "means": {
+            "acquired": 3.6114501953125,
+            "offspring": 0.0,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": 1.23052978515625,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": -9.778788248697916,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 25.2969970703125,
+              "offspring": 0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": 0.5006103515625,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 10.117899576822916,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": 0.2946370442708333,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": 4.394775390625,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": -3.1650594075520835,
+              "offspring": 0,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 6,
+          "genotypes_with_more_offspring": 1
+        },
+        "no_body_sense": {
+          "means": {
+            "acquired": -14.425015767415365,
+            "offspring": -0.125,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": -14.612528483072916,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": -68.48917643229167,
+              "offspring": -0.6666666666666666,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 29.492635091145832,
+              "offspring": 0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": -17.2467041015625,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 8.51593017578125,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": -29.119649251302082,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -25.8773193359375,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": 1.9366861979166667,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 3,
+          "genotypes_with_more_offspring": 1
+        },
+        "no_coordination": {
+          "means": {
+            "acquired": -4.725880940755209,
+            "offspring": -0.041666666666666664,
+            "survived": 0
+          },
+          "genotype_mean_differences": [
+            {
+              "genotype": 0,
+              "acquired": -21.883321126302082,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 1,
+              "acquired": -24.627482096354168,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 2,
+              "acquired": 27.570475260416668,
+              "offspring": 0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 3,
+              "acquired": -14.804768880208334,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 4,
+              "acquired": 39.361612955729164,
+              "offspring": 0.3333333333333333,
+              "survived": 0
+            },
+            {
+              "genotype": 5,
+              "acquired": -31.57135009765625,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 6,
+              "acquired": -9.898640950520834,
+              "offspring": 0,
+              "survived": 0
+            },
+            {
+              "genotype": 7,
+              "acquired": -1.9535725911458333,
+              "offspring": -0.3333333333333333,
+              "survived": 0
+            }
+          ],
+          "genotypes_with_more_intake": 2,
+          "genotypes_with_more_offspring": 2
+        }
+      }
+    }
+  ]
+}

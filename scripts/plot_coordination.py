@@ -83,6 +83,10 @@ def main():
     reports = [json.loads(path.read_text()) for path in args.lifetimes]
     if not all(report["completed"] for report in reports):
         raise ValueError("Lifetime assays must be complete")
+    mature = {report.get("start_mature", False) for report in reports}
+    if len(mature) != 1:
+        raise ValueError("Plot adult and juvenile starts separately")
+    mature = mature.pop()
     fig, axes = plt.subplots(len(reports), 2, figsize=(11, 3.3 * len(reports)), squeeze=False)
     modes = ("none", "no_internal", "self_internal", "no_body_sense", "no_coordination")
     labels = ("Full", "No incoming\nsignals", "Self-signals", "No body\nposition", "Neither")
@@ -110,19 +114,26 @@ def main():
             ax.grid(axis="y", alpha=0.18)
             ax.spines[["top", "right"]].set_visible(False)
     axes[0, 0].legend(fontsize=8)
-    fig.suptitle("V14: fixed-genotype physical lifetime assays")
+    fig.suptitle(
+        "V14: fixed-genotype " + ("adult-start" if mature else "juvenile-start") + " assays"
+    )
+    starting = (
+        "Original bodies start fully grown with fresh neural state; offspring start as juveniles."
+        if mature
+        else "Original bodies start as juveniles; outcomes include early death and failure to grow."
+    )
     fig.text(
         0.5,
         0.02,
         "Each colored line: one two-module grazer genotype, averaged over three fresh "
-        "environments, 240 seconds each.\nNo genetic mutations; clonal offspring may share "
-        "the dish. Outcomes include early deaths and failure to grow.\n"
+        "environments, 240 seconds each.\n" + starting + "\n"
+        "No mutations; clonal offspring may share the dish. Outcomes include early deaths.\n"
         "Genotypes from the same source community are related; their environment repeats "
         "are not independent evolution experiments.",
         ha="center",
         fontsize=9,
     )
-    fig.tight_layout(rect=(0, 0.09, 1, 0.95))
+    fig.tight_layout(rect=(0, 0.11, 1, 0.95))
     save(fig, args.output, "-lifetimes")
 
 

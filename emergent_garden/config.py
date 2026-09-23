@@ -146,7 +146,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(15):
+        if self.ecology_version not in range(16):
             raise ValueError("Unsupported ecology version")
         if self.patch_capacity < self.food_energy or self.detritus_lifetime <= 0:
             raise ValueError("Patch capacity must hold food; detritus lifetime must be positive")
@@ -272,6 +272,8 @@ class Config:
 
     @property
     def trait_count(self):
+        if self.ecology_version >= 15:
+            return 17
         if self.ecology_version >= 12:
             return 13
         if self.ecology_version >= 7:

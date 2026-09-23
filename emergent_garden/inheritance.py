@@ -58,6 +58,8 @@ def upgrade_genomes(source, target, genomes):
         if target.ecology_version >= 12 and source.ecology_version < 12:
             traits[:, 11] = -2.0  # Modest initial motor-learning rate.
             traits[:, 12] = -1.0  # Small, nonzero motor exploration.
+        if target.ecology_version >= 15 and source.ecology_version < 15:
+            traits[:, 13] = 1.0  # A=1, B=C=D=0 preserves the earlier local rule.
         traits[:, : source.trait_count] = genomes[
             :, source.brain_parameter_count : source.brain_parameter_count + source.trait_count
         ]

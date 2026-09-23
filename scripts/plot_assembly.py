@@ -14,6 +14,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument(
+        "--native-foodweb", action="store_true", help="Plot the V13 native food-web assay"
+    )
     args = parser.parse_args()
     records = json.loads(args.input.read_text())
     treatments = (
@@ -23,10 +26,34 @@ def main():
         ("v8-assembly-no-attacks", "Mixed, attacks disabled"),
         ("v8-assembly-no-recycling", "Mixed, recycling disabled"),
     )
+    seeds, horizon = (151, 152, 153), 60
+    figure_title = "Community assembly depends on predation and recycling"
+    description = (
+        "Each trial starts 192 bodies: one evolved source, or 96 from each. Colors track ancestry, "
+        "not present diet.\nNormal evolution remains active; acquired neural state starts at zero. "
+        "These are assembled communities, not spontaneous speciation."
+    )
+    if args.native_foodweb:
+        treatments = (
+            ("v13-native-foodweb-grazers", "Grazer pool alone"),
+            ("v13-native-foodweb-scavengers", "Scavenger pool alone"),
+            ("v13-native-foodweb-mixed", "Both pools"),
+            ("v13-native-foodweb-no-recycling", "Both, recycling disabled"),
+        )
+        seeds, horizon = (251, 252, 253), 30
+        figure_title = "V13: food-web dependence in a community established from random founders"
+        description = (
+            "Dietary pools are sampled from one selected three-hour native community; "
+            "96 newborns each in mixtures, 192 when alone.\n"
+            "All genetic mutations are disabled. Recycling-off mixtures retain fresh-food "
+            "assimilation. Early extinction ends a trial.\n"
+            "These paired habitat repeats test this community's dependence; they do not "
+            "estimate how often such communities evolve."
+        )
     by_path = {row["path"]: row for row in records}
-    fig, axes = plt.subplots(3, 5, figsize=(14, 8), sharex=True, sharey=True)
+    fig, axes = plt.subplots(3, len(treatments), figsize=(14, 8), sharex=True, sharey=True)
     for column, (path, title) in enumerate(treatments):
-        for row, seed in enumerate((151, 152, 153)):
+        for row, seed in enumerate(seeds):
             record = by_path[f"runs/{path}/seed-{seed}"]["ancestry"]
             points = {r["time"]: r for r in [*record["checkpoints"], record["final"]]}
             points = sorted(points.values(), key=lambda r: r["time"])
@@ -42,7 +69,7 @@ def main():
                     label=label,
                     lw=1.8,
                 )
-            ax.set_xlim(0, 60)
+            ax.set_xlim(0, horizon)
             ax.set_ylim(0, 200)
             ax.grid(alpha=0.18)
             ax.spines[["top", "right"]].set_visible(False)
@@ -53,17 +80,15 @@ def main():
             if column == 0:
                 ax.set_ylabel(f"Environment {seed}\nPopulation")
     axes[0, 0].legend(fontsize=7)
-    fig.suptitle("Community assembly depends on predation and recycling", fontsize=14)
+    fig.suptitle(figure_title, fontsize=14)
     fig.text(
         0.5,
         0.025,
-        "Each trial starts 192 bodies: one evolved source, or 96 from each. Colors track ancestry, "
-        "not present diet.\nNormal evolution remains active; acquired neural state starts at zero. "
-        "These are assembled communities, not spontaneous speciation.",
+        description,
         ha="center",
         fontsize=9,
     )
-    fig.tight_layout(rect=(0, 0.08, 1, 0.95))
+    fig.tight_layout(rect=(0, 0.1, 1, 0.95))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     for suffix in ("png", "svg"):
         fig.savefig(args.output.with_suffix(f".{suffix}"), dpi=180)

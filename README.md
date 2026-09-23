@@ -7,6 +7,10 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
+Development is paused at **V15 / package 0.16.0** following the requested wrap-up.
+See [HANDOFF.md](HANDOFF.md) for completed findings, interrupted experiments,
+verification, and commands to watch or continue later. All simulations are stopped.
+
 ![V5 modular creatures and their chemical trails](docs/v5-detail.png)
 
 The five-version development record, including failed hypotheses and controlled
@@ -94,7 +98,9 @@ included larger body plans. [All three native populations](docs/v13-development-
 also persisted for three simulated hours, ending with 58, 73, and 28 creatures.
 Larger bodies remained common in two populations and became rare in the third.
 One population retained both fresh-food specialists and scavengers descended
-from differently allocated founders. Its verified recording is at
+from differently allocated founders. [Twelve transplantation controls](docs/v13-native-foodweb.png)
+support scavenger dependence on grazer-produced detritus in that selected
+community. Its verified recording is at
 `runs/v13-native-long-video/timelapse.mp4`.
 
 The experimental [V14 preset](configs/v14.toml) adds private signals between
@@ -105,9 +111,24 @@ on their next update. [The inspector](docs/v14-preview.png) shows the held signa
 Matched tests remove position readings, signal reception, or both; a self-signal
 control distinguishes extra local memory from information sharing. Short pilots
 and [twelve hour-long comparisons](docs/v14-coordination-communities.png)
-showed no consistent population or reproduction benefit. Fixed-genotype
-lifetime assays are checking immediate use of the interface separately.
+showed no consistent population or reproduction benefit. A further
+[360 fixed-genotype lifetimes](docs/v14-coordination-lifetimes.png) found small,
+mixed effects and no consistent reproductive benefit. Many founders remained
+juveniles. A supplementary adult-start assay was interrupted at wrap-up, with
+129 of 360 individual lifetimes retained; its comparison remains incomplete.
 A verified recording is at `runs/v14-video/timelapse.mp4`.
+
+The experimental [V15 preset](configs/v15.toml) lets evolution alter the local
+plasticity rule itself through four inherited signed coefficients. They control
+responses to joint activity, activity on either side of a connection, and a
+constant term. Updates remain bounded, offspring start with fresh neural state,
+and a fixed-rule control preserves the earlier mechanism. The
+[inspector](docs/v15-preview.png) shows the coefficients. Mechanical and replay
+checks pass. [Native starts](docs/v15-rules-native.png) established poorly under
+both rules. One matched environment completed all three comparisons using
+established food-web genomes; the remaining environments are unfinished.
+A learning benefit has not been established. A verified 30-second recording
+is at `runs/v15-video/timelapse.mp4`.
 
 ## Start watching
 

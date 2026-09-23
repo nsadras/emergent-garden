@@ -16,6 +16,7 @@ from .development import grow, mutate_module_count
 from .field import ShelterField, SmellField, TrailField
 from .landscape import ReversalLandscape
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
+from .plasticity import rule_coefficients
 from .runtime import enable_cuda_replay
 from .spatial import neighbors
 from .topology import counts, effective_masks, initial_structure, mutate_structure
@@ -58,6 +59,7 @@ class EcologyWorld(World):
             "no_body_sense",
             "no_coordination",
             "self_internal",
+            "fixed_rule",
         ):
             raise ValueError(f"Unknown ablation: {ablation}")
         if (
@@ -68,6 +70,7 @@ class EcologyWorld(World):
             or (ablation in ("no_identity", "no_feedback") and config.ecology_version < 6)
             or (ablation == "no_plasticity" and config.ecology_version < 7)
             or (ablation == "adult_births" and config.ecology_version < 13)
+            or (ablation == "fixed_rule" and config.ecology_version < 15)
             or (
                 ablation in ("no_internal", "no_body_sense", "no_coordination", "self_internal")
                 and config.ecology_version < 14
@@ -264,9 +267,16 @@ class EcologyWorld(World):
 
     def initial_genomes(self, n):
         brain = initial_brains(self.config, n, self.device, self.rng["initial"])
-        traits = (self.rand((n, self.config.trait_count), "initial") * 4 - 2).clamp(
+        trait_count = 13 if self.config.ecology_version >= 15 else self.config.trait_count
+        traits = (self.rand((n, trait_count), "initial") * 4 - 2).clamp(
             -self.config.weight_limit, self.config.weight_limit
         )
+        if self.config.ecology_version >= 15:
+            # Preserve V14's founder draws and begin with its learning rule.
+            # Subsequent ordinary trait mutations can explore signed mixtures.
+            rules = traits.new_zeros((n, 4))
+            rules[:, 0] = min(1.0, self.config.weight_limit)
+            traits = torch.cat((traits, rules), 1)
         pieces = [brain, traits]
         if self.config.ecology_version >= 8:
             pieces.append(initial_structure(self.config, n, self.device))
@@ -549,6 +559,7 @@ class EcologyWorld(World):
                     state,
                     times,
                     plasticity=self.ablation != "no_plasticity",
+                    evolved_rule=self.ablation != "fixed_rule",
                     **motor_arguments,
                 )
                 hidden = (
@@ -857,6 +868,12 @@ class EcologyWorld(World):
         ):
             if key in self.agents:
                 result[key] = self.agents[key][index].item()
+        if self.config.ecology_version >= 15:
+            genome = self.agents["genome"][index : index + 1]
+            result["encoded_learning_rule"] = rule_coefficients(self.config, genome)[0].tolist()
+            result["learning_rule"] = rule_coefficients(
+                self.config, genome, evolved=self.ablation != "fixed_rule"
+            )[0].tolist()
         return result
 
     def mutate(self, genome, *, body_event=None):
@@ -1177,6 +1194,14 @@ class EcologyWorld(World):
             count = max(1, 2 * int(a["modules"].sum()))
             result["mean_internal_magnitude"] = (
                 a["module_internal"].abs().double().sum().item() / count
+            )
+        if c.ecology_version >= 15:
+            encoded = rule_coefficients(c, a["genome"])
+            expressed = rule_coefficients(c, a["genome"], evolved=self.ablation != "fixed_rule")
+            result["mean_encoded_learning_rule"] = encoded.mean(0).tolist() if n else [0.0] * 4
+            result["mean_learning_rule"] = expressed.mean(0).tolist() if n else [0.0] * 4
+            result["mean_noncorrelation_rule_weight"] = (
+                encoded[:, 1:].abs().sum(1).mean().item() if n else 0.0
             )
         if c.ecology_version >= 9:
             result.update(self.trophic.metrics(self.food_credit, self.food_kind))

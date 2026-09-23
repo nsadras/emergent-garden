@@ -1,0 +1,92 @@
+[
+  {
+    "path": "runs/v15-native-261",
+    "time": 1776.0,
+    "populations": [
+      0
+    ],
+    "matched_founders_sha256": "9ce70aa93d647c428e03285bb02a31322275bbe065231c2abddceb58151dd0e3",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.036136071943474235,
+    "energy_injected": 684580.2860984802,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 2.7284841053187847e-12
+  },
+  {
+    "path": "runs/v15-fixed-rule-261",
+    "time": 1036.2,
+    "populations": [
+      0
+    ],
+    "matched_founders_sha256": "9ce70aa93d647c428e03285bb02a31322275bbe065231c2abddceb58151dd0e3",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.012368329586024629,
+    "energy_injected": 411800.2860984802,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 7.275957614183426e-12
+  },
+  {
+    "path": "runs/v15-native-262",
+    "time": 486.96666666666664,
+    "populations": [
+      0
+    ],
+    "matched_founders_sha256": "c60a602edec034042c8a1a009ec87ea470510e1cc3c2b768c3ea8509832477e4",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.0013950127777206944,
+    "energy_injected": 214287.79809188843,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 1.8189894035458565e-12
+  },
+  {
+    "path": "runs/v15-fixed-rule-262",
+    "time": 486.96666666666664,
+    "populations": [
+      0
+    ],
+    "matched_founders_sha256": "c60a602edec034042c8a1a009ec87ea470510e1cc3c2b768c3ea8509832477e4",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.0013950127777206944,
+    "energy_injected": 214287.79809188843,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 1.8189894035458565e-12
+  },
+  {
+    "path": "runs/v15-native-263",
+    "time": 643.4333333333333,
+    "populations": [
+      0
+    ],
+    "matched_founders_sha256": "310ad9a70070c69c34d74a154c423a85fd4a8cb93009fac46e6f9a3b375f9086",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": 0.003982686164818006,
+    "energy_injected": 271958.4882888794,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 9.094947017729282e-13
+  },
+  {
+    "path": "runs/v15-fixed-rule-263",
+    "time": 1800.0,
+    "populations": [
+      2
+    ],
+    "matched_founders_sha256": "310ad9a70070c69c34d74a154c423a85fd4a8cb93009fac46e6f9a3b375f9086",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.009466707950195996,
+    "energy_injected": 693778.4882888794,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 7.275957614183426e-12
+  }
+]

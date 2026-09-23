@@ -254,3 +254,28 @@ def test_lifetime_trial_tracks_development_and_death_without_survivor_filtering(
     assert not dead["survived"] and dead["modules"] == 1
     assert dead["first_growth_time"] is None and dead["development_spent"] == 0
     torch.testing.assert_close(genome, before, rtol=0, atol=0)
+
+
+def test_mature_lifetime_assay_exercises_both_modules_with_fresh_state(config):
+    from emergent_garden.experiments import trial
+
+    w = organism(config, 2)
+    g = w.agents["genome"][0].clone()
+    keys = (
+        "initial_modules",
+        "modules",
+        "first_growth_time",
+        "survived",
+        "development_spent",
+        "internal_spent",
+    )
+    normal = trial(w.config, g, 10021, 0.2, "cpu", "none", record_keys=keys, start_mature=True)
+    other = trial(
+        w.config, g, 10021, 0.2, "cpu", "no_internal", record_keys=keys, start_mature=True
+    )
+    for row in (normal, other):
+        assert row["survived"]
+        assert row["initial_modules"] == row["modules"] == 2
+        assert row["first_growth_time"] is None and row["development_spent"] == 0
+        assert row["internal_spent"] > 0
+    torch.testing.assert_close(g, w.agents["genome"][0], rtol=0, atol=0)

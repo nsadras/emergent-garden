@@ -1,7 +1,9 @@
 # Continuing evolution experiments
 
-The user authorized continuous implementation, simulations, evaluation, and local
-git commits until they request a stop. Dependencies remain managed with uv.
+Development is **paused at the user's request on September 22, 2026**. The current
+iteration is V15 (package 0.16.0), and all simulations have stopped. Completed
+evidence, interrupted work, viewing commands, and restart instructions are in
+[HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
 
 ## Research sequence
@@ -1014,10 +1016,7 @@ Environment 222 also retained 37 fresh-food specialists and 36 scavengers,
 with mean diet allocations 0.906 and 0.129. They descend from founders 32 and
 101, whose initial allocations were already 0.869 and 0.145. This is ecological
 sorting and persistence from random founders, not evidence that a new dietary
-split evolved. Fixed-genotype tests of these two dietary pools, alone, together,
-and with recycling disabled, are now checking their ecological dependence.
-Those follow-ups deliberately select this successful community; they cannot
-estimate how often native populations establish a food web.
+split evolved. Fixed-genotype tests of these two dietary pools are described below.
 
 The [three histories](docs/results/v13-native-long.json),
 [invariant audit](docs/results/v13-native-long-audit.json), and
@@ -1033,6 +1032,38 @@ environment 222 from 10,800 to 11,100 seconds. All 901 frames decoded at
 1,024×1,024 and 30 FPS; the [video audit](docs/results/v13-native-long-video.json)
 retains frame hashes. This is an illustrative continuation, outside the
 three-hour comparison horizon.
+
+### Dependence of the native dietary groups
+
+Twelve additional 1,800-second trials transplant the final environment-222
+dietary pools into new environments 251/252/253. Pools retain all 37 grazer and
+36 scavenger genotypes at their observed frequencies, including repeated clones;
+the [source record](docs/results/v13-native-foodweb-source.json) preserves IDs,
+ancestry, diets, and hashes. Each mixture starts with 96 newborns from each pool,
+and each alone treatment starts with 192 from its one pool. All five mutation
+pathways are disabled. A matched mixed treatment removes recycling while
+preserving fresh-food assimilation and the rest of the physical rules.
+
+| Environment | Mixture: grazer / scavenger survivors | Grazers alone | Scavengers alone: extinction | Mixture without recycling: grazer / scavenger survivors |
+| --- | --- | --- | --- | --- |
+| 251 | 46 / 51 | 55 | 107.9 s | 56 / 0 |
+| 252 | 48 / 32 | 73 | 104.5 s | 66 / 0 |
+| 253 | 19 / 24 | 76 | 90.7 s | 58 / 0 |
+
+Scavengers produced 249/218/302 offspring in normal mixtures, versus 0/0/1
+when alone. Without recycling they disappeared at 173/150/284 seconds, after
+1/0/1 offspring. Between 98.01% and 98.74% of scavenger detritus uptake in normal
+mixtures was traced to grazer producers. These controls support dependence on
+grazer-produced detritus in this community. They do not demonstrate cooperation,
+speciation, indefinite stability, or how often native populations establish a
+food web: the source was deliberately selected after observing coexistence.
+
+The [population figure](docs/v13-native-foodweb.png),
+[12 records](docs/results/v13-native-foodweb.json), and
+[audit](docs/results/v13-native-foodweb-audit.json) are retained. In addition to
+matched founders, geometry, topology, energy, and food-credit checks, every
+living descendant genome exactly matched its founding lineage's genome.
+Maximum absolute energy residual was 0.220 units.
 
 ## V14 — local coordination within a developing body
 
@@ -1162,8 +1193,188 @@ dish. This can test use of the interface without ongoing genetic selection,
 but related genotypes and repeated habitats are not independent evolutionary
 replicates, and the assay habitat differs from the evolution dish. The script
 retains exact source checkpoint hashes, selected genomes, package source,
-experiment source, and completed trials if interrupted. Results are pending.
+experiment source, and completed trials if interrupted.
+
+All 360 juvenile-start lifetimes completed and passed the
+[paired audit](docs/results/v14-lifetime-audit.json). Within each genotype and
+habitat, first-growth times matched exactly across interventions, as required:
+the new inputs are all zero until a second module exists.
+
+| Source environment | Bodies that grew, out of 24 per mode | Mean intake: full / no incoming signals / self-signals | Mean offspring: full / no incoming signals / self-signals |
+| --- | --- | --- | --- |
+| 241 | 3 | 463.91 / 463.86 / 464.40 | 0.167 / 0.167 / 0.167 |
+| 242 | 4 | 439.42 / 441.83 / 441.95 | 0.042 / 0.083 / 0.083 |
+| 243 | 20 | 1,008.83 / 1,003.21 / 1,005.22 | 1.458 / 1.458 / 1.458 |
+
+Survivors were 22/19/24 for the three sources, identical across all five modes.
+Relative to self-signals, neighbor reception changed mean intake by -0.49,
+-2.53, and +3.61 units. It did not improve mean offspring count in any source.
+Removing body-position readings increased mean intake in all three sources,
+although individual genotype responses varied. These results show small, mixed
+effects and no consistent reproductive benefit. The
+[figure](docs/v14-coordination-lifetimes.png) and raw reports for
+[241](docs/results/v14-lifetimes-241.json),
+[242](docs/results/v14-lifetimes-242.json), and
+[243](docs/results/v14-lifetimes-243.json) retain every treatment and early death.
+
+The low frequency of second-module growth in two sources limits the assay's
+exposure to the interface. A supplementary `--start-mature` comparison was started
+using the same selected genotypes and habitats, beginning the original body
+fully grown, with fresh neural state and the same birth energy per unit of
+adult area. Its position reuses the normalized initial disk draw, scaled to
+fit the larger body. Offspring still begin as juveniles. This deliberately
+changes initial anatomy and energy across the two assay protocols, while
+matching them across interventions within each protocol. It tests interface
+use when available and cannot measure juvenile developmental success.
+
+This follow-up was interrupted when the user requested the development wrap-up.
+Sources 241/242/243 retain 43/46/40 completed individual lifetimes out of 120
+planned per source. The incomplete reports are preserved for
+[241](docs/results/v14-adult-partial-241.json),
+[242](docs/results/v14-adult-partial-242.json), and
+[243](docs/results/v14-adult-partial-243.json), with provenance and row checks in
+the [stop record](docs/results/iteration-stop.json). No result from this partial
+comparison is treated as a completed paired outcome. Selected genomes and
+completed trials remain local; the assay currently requires a fresh output
+directory and has no automatic resume mode.
 
 `runs/v14-video/timelapse.mp4` records the full-interface pilot in environment
 231 from 600 to 900 seconds. All 901 frames decoded at 1,024×1,024 and 30 FPS;
 the [verification record](docs/results/v14-video.json) retains frame hashes.
+
+## V15 — inherited local learning rules
+
+The earlier recurrent plasticity mechanism always used the same correlation
+rule; evolution changed its rate, decay, and neural modulation. V15 gives
+evolution four signed coefficients controlling the rule itself. The family is
+inspired by the parameterized heterosynaptic rules of
+[Niv et al. (2002)](https://nivlab.princeton.edu/wp-content/uploads/sites/938/2024/02/nivetal2002.pdf).
+Their bee-foraging study used a small specialized circuit and a genetic
+algorithm selecting nectar intake. Here a shared recurrent body circuit
+evolves through local energy-funded reproduction. This is an extension of
+our mechanism, not a replication of their learning results.
+
+### Encoding and update
+
+The interface remains 40 inputs, seven outputs, and up to 32 recurrent neurons,
+initially 16 active. Four genes follow the existing 13 traits, bringing the
+genome to 5,144 values: 2,567 initial weights/biases, 17 trait/rule values, and
+2,560 structural mask values. Unlike the sigmoid body allocations, the new
+genes are signed. Decode their vector `g` as `g / max(1, sum(abs(g)))`, yielding
+coefficients A, B, C, and D with an absolute-sum budget of one.
+
+For a connection from the previous sender activity `x` to the updated receiver
+activity `y`, the eligibility drive becomes:
+
+```text
+q = A * y * x + B * x + C * y + D
+E = (1 - beta) * E + beta * q
+P = clamp(decay * P + dt * inherited_rate * neural_modulation * E, -0.1, +0.1)
+```
+
+The preset retains the two-second trace time constant, inherited rate up to
+0.02, inherited 30–600-second half-life, and signed fifth-output modulation.
+The coefficient budget bounds the drive to [-1, 1] for bounded neuron activity;
+it expands the rule family without increasing its maximum update scale.
+Inactive connections are masked after the trace and offset updates. All-zero
+coefficients add no new trace, while existing traces and offsets still decay.
+Food and damage enter through existing sensory feedback; the rule receives no
+hidden resource-quality label or externally supplied desired action.
+
+Fresh founders and transfers start with A=1, B=C=D=0 under the standard weight
+limit, exactly recovering the previous rule. V15 preserves the V14 founder
+random draws for existing genes and structures. Ordinary trait mutations
+(probability 0.15, Gaussian sigma 0.15, inherited gene bounds ±3) can change the
+four rule genes. Children inherit those genes, with zero neural activity,
+eligibility traces, acquired weights, and internal signals. Growing modules
+also start with fresh state. The acquired offsets never rewrite the genome.
+
+The `fixed_rule` control expresses A=1, B=C=D=0 regardless of the encoded
+coefficients. Those ignored genes can still mutate, preserving the mutation
+machinery. All other channels and cost rules remain active. The existing
+`no_plasticity` control removes acquired offsets and traces while retaining
+their metabolic cost. Motor exploration stays disabled following V12's
+negative physical learning results. Records distinguish encoded and expressed
+rule coefficients, and the inspector shows the expressed A/B/C/D values.
+
+### Verification and initial experiment
+
+All 205 tests pass. New checks cover signed bounded coefficients, previously
+unavailable updates at silent connections, structural masks, fixed-rule
+intervention, inheritance with fresh state, mutation of rule genes, exact
+V14-to-V15 controller transfer, unchanged native initialization before mutation,
+V15 checkpoint replay, and rendering without changing the simulation.
+
+Mechanical [CPU](docs/results/v15-cpu-rules.json) and
+[CUDA](docs/results/v15-cuda-rules.json) checks exercised varied signed rules,
+four births each, and six/nine growth events. Both passed exact checkpoint
+replay on their respective devices; energy residuals were -0.001045 and
+-0.001187 units. Peak CUDA allocation was about 37.5 MB. These intentionally
+funded, accelerated fixtures verify mechanics and do not demonstrate ecological
+learning benefits.
+
+Six initial native trials compared evolving rules and `fixed_rule` in
+environments 261/262/263, with identical random founders and habitat within
+each pair and ordinary evolution active. Five of six became extinct before
+the requested 1,800-second horizon:
+
+| Environment | Evolving rule: outcome / births | Fixed rule: outcome / births |
+| --- | --- | --- |
+| 261 | Extinct at 1,776.0 s / 8 | Extinct at 1,036.2 s / 5 |
+| 262 | Extinct at 487.0 s / 2 | Extinct at 487.0 s / 2 |
+| 263 | Extinct at 643.4 s / 7 | 2 survivors at 1,800 s / 17 |
+
+These starts did not reliably establish populations under either rule. The
+[population and rule histories](docs/v15-rules-native.png),
+[six records](docs/results/v15-native.json), and
+[audit](docs/results/v15-native-audit.json) retain these failures. Largest
+absolute energy residual was 0.0362 units, with all invariant checks passing.
+V13's successful starts used different seeds and a different neural interface,
+so they do not provide a matched version comparison here.
+
+Nine follow-up 3,600-second trials were planned to assemble the established V13 native
+food-web pools used above, with 96 newborns from each pool. Environments
+271/272/273 compare evolving rules, `fixed_rule`, and `no_plasticity`, with
+identical initial genotypes and habitat within each environment. All ordinary
+genetic mutations remain active. This measures the rules' effects on viable
+inherited foraging populations; it does not rescue or replace the failed native
+starts. Any claim of useful lifetime learning additionally requires
+fixed-genotype interventions and behavioral evidence.
+
+Only environment 271 completed all three treatments before the user requested
+a stop. Its completed trials are separate from the incomplete three-seed batches:
+
+| Treatment | Grazer-source / scavenger-source survivors | Births |
+| --- | --- | --- |
+| Evolving rule | 39 / 34 | 1,308 |
+| Fixed correlation rule | 23 / 21 | 1,133 |
+| Acquired plasticity disabled | 46 / 20 | 1,063 |
+
+Both source ancestries persisted in each treatment. These are outcomes from one
+matched environment, not evidence of a general advantage or useful learning.
+The [three complete histories](docs/results/v15-assembled-271.json) and
+[audit](docs/results/v15-assembled-271-audit.json) preserve the comparison.
+Founder genomes, source provenance, and patch geometry matched exactly; topology,
+development, energy, and food-credit checks passed. Maximum absolute energy
+residual was 0.135 units. The audit's explicit `--completed-trials-only` option
+checks finished trials while retaining `source_batch_completed=false`; its
+default still rejects incomplete batches.
+
+Environment 272 was interrupted in all three treatments; 273 had not started.
+Last logged times were 984/1,184/1,198 seconds in the order above, but terminal
+interruption did not write final checkpoints. Each has a valid archived checkpoint
+at 600 seconds, verified against the corresponding logged metrics. Later logs are
+preserved without being presented as saved final states. Exact paths, hashes,
+and unfinished work are in the [stop record](docs/results/iteration-stop.json)
+and [handoff](HANDOFF.md).
+
+The [inspector preview](docs/v15-preview.png) shows body 577 from the evolving
+rule treatment in environment 271 at 2,400 seconds. It has two modules and
+coefficients approximately (0.616, -0.119, 0.108, 0.156). It was selected for
+visible rule variation, not measured learning benefit. Its 12 offspring do
+not isolate the contribution of that rule from its other inherited traits.
+
+The verified recording `runs/v15-video/timelapse.mp4` follows that environment
+from 2,400 to 2,700 seconds. All 901 frames decoded at 1,024×1,024 and 30 FPS;
+the [video audit](docs/results/v15-video.json) retains frame hashes. This is an
+illustrative checkpoint fork, not an additional independent comparison.

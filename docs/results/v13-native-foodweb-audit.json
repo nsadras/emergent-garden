@@ -1,0 +1,194 @@
+[
+  {
+    "path": "runs/v13-native-foodweb-mixed/seed-251",
+    "time": 1800.0,
+    "populations": [
+      46,
+      51
+    ],
+    "matched_founders_sha256": "88a3f52bf9005d8838da424a9479770ca2093727627ac3112e600725f2843482",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.21903291448325035,
+    "energy_injected": 857707.7371253967,
+    "maximum_packet_credit_error": 1.3322676295501878e-15,
+    "maximum_detritus_balance_error": 5.820766091346741e-11
+  },
+  {
+    "path": "runs/v13-native-foodweb-mixed/seed-252",
+    "time": 1800.0,
+    "populations": [
+      48,
+      32
+    ],
+    "matched_founders_sha256": "95be445f96ac30096745727f38a139728cf6e334ad088ef68afeb303ec0f23ee",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.0030283158157544676,
+    "energy_injected": 843487.7318840027,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 1.7462298274040222e-10
+  },
+  {
+    "path": "runs/v13-native-foodweb-mixed/seed-253",
+    "time": 1800.0,
+    "populations": [
+      19,
+      24
+    ],
+    "matched_founders_sha256": "3dbc02b652617b822e17e72b43ab9c825a8389582e4e4499987b588a673a24e6",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.015218745780657628,
+    "energy_injected": 848398.0095710754,
+    "maximum_packet_credit_error": 2.220446049250313e-16,
+    "maximum_detritus_balance_error": 3.637978807091713e-10
+  },
+  {
+    "path": "runs/v13-native-foodweb-grazers/seed-251",
+    "time": 1800.0,
+    "populations": [
+      55,
+      0
+    ],
+    "matched_founders_sha256": "3a1023668aa13cdea1183e5728300ddc0474d7ed7f3bf5c1ea8757b71435123a",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.17636261494044447,
+    "energy_injected": 875270.6265029907,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 1.1641532182693481e-10
+  },
+  {
+    "path": "runs/v13-native-foodweb-grazers/seed-252",
+    "time": 1800.0,
+    "populations": [
+      73,
+      0
+    ],
+    "matched_founders_sha256": "09a3a3dc4255de681b372fbaeee565e019a45fd8c2a8bedd9753e1bbd218f8a2",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.11453966466797283,
+    "energy_injected": 876236.0356063843,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 5.820766091346741e-11
+  },
+  {
+    "path": "runs/v13-native-foodweb-grazers/seed-253",
+    "time": 1800.0,
+    "populations": [
+      76,
+      0
+    ],
+    "matched_founders_sha256": "d97e1894003b34b229f91cb8ea7d60ffb06ffcb512cb6c29a4a68c87e8959496",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.2102710505205323,
+    "energy_injected": 875190.9458618164,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 1.7462298274040222e-10
+  },
+  {
+    "path": "runs/v13-native-foodweb-scavengers/seed-251",
+    "time": 107.86666666666666,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "ffa35c84941a7cf66a89f31c0d773b4b82fb4b708c29add9b177e93da8078a6d",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.00016227641390287317,
+    "energy_injected": 54614.924072265625,
+    "maximum_packet_credit_error": 3.469446951953614e-18,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v13-native-foodweb-scavengers/seed-252",
+    "time": 104.46666666666667,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "fbe0b6783865b27a768415393c9db01824d6992ae522000c8340ecf653abde3e",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.00092787851463072,
+    "energy_injected": 53327.968868255615,
+    "maximum_packet_credit_error": 3.469446951953614e-18,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v13-native-foodweb-scavengers/seed-253",
+    "time": 90.73333333333333,
+    "populations": [
+      0,
+      0
+    ],
+    "matched_founders_sha256": "6d9ea6edafc630084174c76a0bbce071572c3adfa4a801081c992731844fb105",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.0010049895172414836,
+    "energy_injected": 50818.737255096436,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v13-native-foodweb-no-recycling/seed-251",
+    "time": 1800.0,
+    "populations": [
+      56,
+      0
+    ],
+    "matched_founders_sha256": "88a3f52bf9005d8838da424a9479770ca2093727627ac3112e600725f2843482",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.021859850254259072,
+    "energy_injected": 860007.7371253967,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v13-native-foodweb-no-recycling/seed-252",
+    "time": 1800.0,
+    "populations": [
+      66,
+      0
+    ],
+    "matched_founders_sha256": "95be445f96ac30096745727f38a139728cf6e334ad088ef68afeb303ec0f23ee",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": -0.03263273421180202,
+    "energy_injected": 862927.7318840027,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  },
+  {
+    "path": "runs/v13-native-foodweb-no-recycling/seed-253",
+    "time": 1800.0,
+    "populations": [
+      58,
+      0
+    ],
+    "matched_founders_sha256": "3dbc02b652617b822e17e72b43ab9c825a8389582e4e4499987b588a673a24e6",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": true,
+    "development_exact": true,
+    "energy_balance_error": 0.05597663964726962,
+    "energy_injected": 875518.0095710754,
+    "maximum_packet_credit_error": 0.0,
+    "maximum_detritus_balance_error": 0.0
+  }
+]

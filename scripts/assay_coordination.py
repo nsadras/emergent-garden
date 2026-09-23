@@ -1,6 +1,6 @@
 """Compare fixed two-module grazer genotypes in fresh physical habitats.
 
-The founding body starts as a juvenile with fresh neural and signal state.
+The founding body normally starts as a juvenile with fresh neural and signal state.
 Clonal offspring may share its dish. All mutation is disabled. Outcomes track
 that original body, including death before the horizon; no outcome is restricted
 to survivors. Comparisons measure use of the interface in this assay habitat,
@@ -32,6 +32,9 @@ def main():
     parser.add_argument("--seeds", type=int, nargs="+", default=[10121, 10122, 10123])
     parser.add_argument("--seconds", type=float, default=240)
     parser.add_argument("--modes", nargs="+", choices=MODES, default=MODES)
+    parser.add_argument(
+        "--start-mature", action="store_true", help="Test an initially fully grown body"
+    )
     args = parser.parse_args()
     if args.genomes < 1 or not 0 < args.seconds < float("inf"):
         parser.error("Positive genome count and finite duration required")
@@ -95,6 +98,7 @@ def main():
         requested_duration=args.seconds,
         environment_seeds=args.seeds,
         modes=args.modes,
+        start_mature=args.start_mature,
         selection="Uniform without replacement among distinct living genotypes encoding "
         "exactly two modules and fresh-food allocation above 0.65; fixed selection seed 982451653.",
         interpretation=__doc__ + " All genotypes share a source community; environmental repeats "
@@ -102,8 +106,16 @@ def main():
         completed=False,
         trials=[],
     )
+    if args.start_mature:
+        report["interpretation"] += (
+            " This supplementary assay starts the original body fully grown, with birth energy "
+            "per adult area and fresh neural state. Its initial position uses the same normalized "
+            "disk draw scaled to fit its adult radius. Offspring still begin as juveniles. "
+            "This measures use of an available coordination interface, not developmental success."
+        )
     record_keys = (
         "survived",
+        "initial_modules",
         "first_growth_time",
         "modules",
         "target_modules",
@@ -130,6 +142,7 @@ def main():
                             mode,
                             stop,
                             record_keys=record_keys,
+                            start_mature=args.start_mature,
                         )
                         row = dict(genotype=index, seed=seed, mode=mode, **result)
                         report["trials"].append(row)

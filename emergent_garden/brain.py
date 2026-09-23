@@ -83,6 +83,7 @@ def controller_step(
     noise=None,
     reward=None,
     elapsed=None,
+    evolved_rule=True,
 ):
     """One circuit update; acquired synaptic offsets never modify the genome.
 
@@ -92,6 +93,8 @@ def controller_step(
     V12 also adapts motor readouts using supplied energetic returns and
     exploration samples. Callers without those supplies test only the older
     recurrent mechanism; this function never draws random numbers itself.
+    V15 evolves a bounded mixture of correlation, pre-only, post-only, and
+    constant trace drives. The fixed-rule control retains the previous rule.
     """
     plastic = state.get("plastic") if plasticity else None
     hidden, actions = advance(
@@ -131,6 +134,16 @@ def controller_step(
     )
     beta = 1 - math.exp(-dt / c.plasticity_trace_tau)
     correlation = hidden[:, :, None] * state["hidden"][:, None, :]
+    if c.ecology_version >= 15 and evolved_rule:
+        from .plasticity import rule_coefficients
+
+        coefficients = rule_coefficients(c, genome)
+        correlation = (
+            coefficients[:, 0, None, None] * correlation
+            + coefficients[:, 1, None, None] * state["hidden"][:, None, :]
+            + coefficients[:, 2, None, None] * hidden[:, :, None]
+            + coefficients[:, 3, None, None]
+        )
     trace = (1 - beta) * state["trace"] + beta * correlation
     if config.ecology_version >= 8:
         mask = effective_masks(config, genome)[2]

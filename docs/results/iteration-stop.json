@@ -1,0 +1,253 @@
+{
+  "recorded_at_utc": "2026-09-23T06:45:34.130654+00:00",
+  "reason": "Development paused at user request for wrap-up, documentation, and commit.",
+  "ecology_version": 15,
+  "package_version": "0.16.0",
+  "simulation_processes_remaining": 0,
+  "process_check": "No garden, assemble_communities.py, or assay_coordination.py process with this workspace cwd remained after terminal interruption.",
+  "interpretation": "Completed trials are retained separately from incomplete batches. Later logged metrics in interrupted assemblies are not final checkpoints. Partial adult lifetime assays must not be interpreted as completed paired comparisons.",
+  "assembled_batches": [
+    {
+      "path": "runs/v15-evolving-mixed",
+      "ablation": "none",
+      "summary_sha256": "664272e04c6026c28693d792d307499a992b0991b91e27ae812a5e1fa9aa68ab",
+      "batch_completed": false,
+      "planned_seeds": [
+        271,
+        272,
+        273
+      ],
+      "requested_duration_per_seed": 3600.0,
+      "completed_trials": [
+        {
+          "seed": 271,
+          "time": 3600.0,
+          "population": 73,
+          "source_populations": [
+            39,
+            34
+          ],
+          "births": 1308,
+          "checkpoint": "runs/v15-evolving-mixed/seed-271/latest.pt",
+          "checkpoint_sha256": "0dab6e8b34fbcdc3d52751782c6246d7761ca0bd154a3ec73242a0e680acbc00"
+        }
+      ],
+      "interrupted_trials": [
+        {
+          "seed": 272,
+          "path": "runs/v15-evolving-mixed/seed-272",
+          "last_logged": {
+            "time": 984.0,
+            "tick": 29520,
+            "population": 77,
+            "births": 309,
+            "source_populations": [
+              47,
+              30
+            ],
+            "energy_balance_error": -0.04483415903087007
+          },
+          "last_saved_checkpoint": "runs/v15-evolving-mixed/seed-272/checkpoints/tick-000000018000.pt",
+          "checkpoint_sha256": "710af68e6cd2105888f0a50c06b40707eddbf33915e5115b50eaa5e80288f2d7",
+          "saved": {
+            "time": 600.0,
+            "tick": 18000,
+            "population": 64,
+            "births": 176,
+            "source_populations": [
+              31,
+              33
+            ],
+            "energy_balance_error": -0.03433832088740019
+          },
+          "saved_metrics_match_log": true,
+          "source_archive_hash_verified": true,
+          "latest_checkpoint_present": false,
+          "exact_stop_state_saved": false,
+          "notes": "Terminal interruption ended the process without a final checkpoint. Logs after the 600-second archive are preserved but do not identify a resumable final state."
+        }
+      ],
+      "not_started_seeds": [
+        273
+      ]
+    },
+    {
+      "path": "runs/v15-fixed-mixed",
+      "ablation": "fixed_rule",
+      "summary_sha256": "f3397c97b92cdf949f00ee05c046873c60dcdabd735b983ea774d318cf777e18",
+      "batch_completed": false,
+      "planned_seeds": [
+        271,
+        272,
+        273
+      ],
+      "requested_duration_per_seed": 3600.0,
+      "completed_trials": [
+        {
+          "seed": 271,
+          "time": 3600.0,
+          "population": 44,
+          "source_populations": [
+            23,
+            21
+          ],
+          "births": 1133,
+          "checkpoint": "runs/v15-fixed-mixed/seed-271/latest.pt",
+          "checkpoint_sha256": "e70c16c8853e69de399de72751c1696ffd7fcf7c23455de9e827d1a63a958c51"
+        }
+      ],
+      "interrupted_trials": [
+        {
+          "seed": 272,
+          "path": "runs/v15-fixed-mixed/seed-272",
+          "last_logged": {
+            "time": 1184.0,
+            "tick": 35520,
+            "population": 93,
+            "births": 395,
+            "source_populations": [
+              52,
+              41
+            ],
+            "energy_balance_error": -0.0229573966935277
+          },
+          "last_saved_checkpoint": "runs/v15-fixed-mixed/seed-272/checkpoints/tick-000000018000.pt",
+          "checkpoint_sha256": "97571a8216f1b461febf686ab635a25033e3ba6c0390e252f7450f8176add24c",
+          "saved": {
+            "time": 600.0,
+            "tick": 18000,
+            "population": 89,
+            "births": 195,
+            "source_populations": [
+              43,
+              46
+            ],
+            "energy_balance_error": -0.023361167179245967
+          },
+          "saved_metrics_match_log": true,
+          "source_archive_hash_verified": true,
+          "latest_checkpoint_present": false,
+          "exact_stop_state_saved": false,
+          "notes": "Terminal interruption ended the process without a final checkpoint. Logs after the 600-second archive are preserved but do not identify a resumable final state."
+        }
+      ],
+      "not_started_seeds": [
+        273
+      ]
+    },
+    {
+      "path": "runs/v15-no-plasticity-mixed",
+      "ablation": "no_plasticity",
+      "summary_sha256": "d54d3fd3cc14bcc10c5ed47426d80656b0b86553bbffb4758ece550a380f3a91",
+      "batch_completed": false,
+      "planned_seeds": [
+        271,
+        272,
+        273
+      ],
+      "requested_duration_per_seed": 3600.0,
+      "completed_trials": [
+        {
+          "seed": 271,
+          "time": 3600.0,
+          "population": 66,
+          "source_populations": [
+            46,
+            20
+          ],
+          "births": 1063,
+          "checkpoint": "runs/v15-no-plasticity-mixed/seed-271/latest.pt",
+          "checkpoint_sha256": "5b460932e7f91a524bb49909444e5d2cd25ba92d1e17a499ca964b6680c445c0"
+        }
+      ],
+      "interrupted_trials": [
+        {
+          "seed": 272,
+          "path": "runs/v15-no-plasticity-mixed/seed-272",
+          "last_logged": {
+            "time": 1198.0,
+            "tick": 35940,
+            "population": 86,
+            "births": 338,
+            "source_populations": [
+              57,
+              29
+            ],
+            "energy_balance_error": -0.10837531217475771
+          },
+          "last_saved_checkpoint": "runs/v15-no-plasticity-mixed/seed-272/checkpoints/tick-000000018000.pt",
+          "checkpoint_sha256": "fa0b1fd6bf5aab95610ba38f1c9b05593f9524d0273d2c5709e7daba1294382e",
+          "saved": {
+            "time": 600.0,
+            "tick": 18000,
+            "population": 79,
+            "births": 175,
+            "source_populations": [
+              53,
+              26
+            ],
+            "energy_balance_error": -0.047903825867251726
+          },
+          "saved_metrics_match_log": true,
+          "source_archive_hash_verified": true,
+          "latest_checkpoint_present": false,
+          "exact_stop_state_saved": false,
+          "notes": "Terminal interruption ended the process without a final checkpoint. Logs after the 600-second archive are preserved but do not identify a resumable final state."
+        }
+      ],
+      "not_started_seeds": [
+        273
+      ]
+    }
+  ],
+  "adult_assays": [
+    {
+      "path": "runs/v14-coordination-adult-241",
+      "source_environment": 241,
+      "completed": false,
+      "completed_individual_trials": 43,
+      "planned_individual_trials": 120,
+      "complete_genotype_environment_blocks": 8,
+      "planned_genotype_environment_blocks": 24,
+      "retained_report": "docs/results/v14-adult-partial-241.json",
+      "report_sha256": "aed9fb08300e5731fde786fefbcf35e50dd0723d865d9d244c8bea2a56e68af1",
+      "genomes_file_sha256": "f5c53b9038db3ba1b3ba19adf43da05d22d5638df6c6c0c158061486fb6e7599",
+      "provenance_and_row_checks_passed": true,
+      "selected_genotypes_match_juvenile_assay": true,
+      "unfinished_individual_trial_saved": false,
+      "notes": "Completed rows and exact selected genotypes are preserved. The assay has no resume command; rerun into a fresh directory or add explicit resumption later. No partial comparison is reported as a final outcome."
+    },
+    {
+      "path": "runs/v14-coordination-adult-242",
+      "source_environment": 242,
+      "completed": false,
+      "completed_individual_trials": 46,
+      "planned_individual_trials": 120,
+      "complete_genotype_environment_blocks": 9,
+      "planned_genotype_environment_blocks": 24,
+      "retained_report": "docs/results/v14-adult-partial-242.json",
+      "report_sha256": "1b652fb627ca96e8dbedc720a6dd3348fae7c9476d5b19d22ad6aa450e6995d2",
+      "genomes_file_sha256": "c05b0d41a81f4241aaf73f4b0492ad91d1365f6260db49158a04277958971cf2",
+      "provenance_and_row_checks_passed": true,
+      "selected_genotypes_match_juvenile_assay": true,
+      "unfinished_individual_trial_saved": false,
+      "notes": "Completed rows and exact selected genotypes are preserved. The assay has no resume command; rerun into a fresh directory or add explicit resumption later. No partial comparison is reported as a final outcome."
+    },
+    {
+      "path": "runs/v14-coordination-adult-243",
+      "source_environment": 243,
+      "completed": false,
+      "completed_individual_trials": 40,
+      "planned_individual_trials": 120,
+      "complete_genotype_environment_blocks": 8,
+      "planned_genotype_environment_blocks": 24,
+      "retained_report": "docs/results/v14-adult-partial-243.json",
+      "report_sha256": "3d0e82b21f33ac453944a5221027f6a62c754259a633038685a350aed23806c5",
+      "genomes_file_sha256": "bd5467e85d0b1d6a7bacfd377a770c3f95b31f43b5906c81362578d6245423d1",
+      "provenance_and_row_checks_passed": true,
+      "selected_genotypes_match_juvenile_assay": true,
+      "unfinished_individual_trial_saved": false,
+      "notes": "Completed rows and exact selected genotypes are preserved. The assay has no resume command; rerun into a fresh directory or add explicit resumption later. No partial comparison is reported as a final outcome."
+    }
+  ]
+}

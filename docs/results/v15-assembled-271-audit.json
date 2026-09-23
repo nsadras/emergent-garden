@@ -1,0 +1,53 @@
+[
+  {
+    "path": "runs/v15-evolving-mixed/seed-271",
+    "source_batch_completed": false,
+    "time": 3600.0,
+    "populations": [
+      39,
+      34
+    ],
+    "matched_founders_sha256": "f2910a7a3054e5c8e7453429e449110d21f5b72235ba47957c40cf1e8ce1d606",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.12069078689091839,
+    "energy_injected": 1685048.6970710754,
+    "maximum_packet_credit_error": 4.440892098500626e-16,
+    "maximum_detritus_balance_error": 1.3969838619232178e-09
+  },
+  {
+    "path": "runs/v15-fixed-mixed/seed-271",
+    "source_batch_completed": false,
+    "time": 3600.0,
+    "populations": [
+      23,
+      21
+    ],
+    "matched_founders_sha256": "f2910a7a3054e5c8e7453429e449110d21f5b72235ba47957c40cf1e8ce1d606",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.13458765566792863,
+    "energy_injected": 1630808.6970710754,
+    "maximum_packet_credit_error": 1.3322676295501878e-15,
+    "maximum_detritus_balance_error": 2.2992026060819626e-09
+  },
+  {
+    "path": "runs/v15-no-plasticity-mixed/seed-271",
+    "source_batch_completed": false,
+    "time": 3600.0,
+    "populations": [
+      46,
+      20
+    ],
+    "matched_founders_sha256": "f2910a7a3054e5c8e7453429e449110d21f5b72235ba47957c40cf1e8ce1d606",
+    "cached_topology_exact": true,
+    "frozen_genomes_exact": null,
+    "development_exact": true,
+    "energy_balance_error": -0.10676205156050855,
+    "energy_injected": 1672328.6970710754,
+    "maximum_packet_credit_error": 8.881784197001252e-16,
+    "maximum_detritus_balance_error": 1.1641532182693481e-09
+  }
+]

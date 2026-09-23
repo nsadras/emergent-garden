@@ -31,6 +31,11 @@ def main():
         action="store_true",
         help="Give half the V13 founders a three-module plan and accelerate juvenile growth",
     )
+    parser.add_argument(
+        "--exercise-rules",
+        action="store_true",
+        help="Give V15 founders varied signed plasticity rules for mechanical verification",
+    )
     args = parser.parse_args()
     torch.set_num_threads(1)
     c = replace(
@@ -53,6 +58,8 @@ def main():
         if c.ecology_version < 13:
             raise ValueError("Growth exercise requires V13 or later")
         c = replace(c, growth_delay=2.1, growth_reserve=10.0, module_mutation_probability=1.0)
+    if args.exercise_rules and c.ecology_version < 15:
+        raise ValueError("Rule exercise requires V15 or later")
     args.output.mkdir(parents=True, exist_ok=False)
     w = create_world(c, seed=7919, device=args.device)
     if args.exercise_growth:
@@ -61,6 +68,14 @@ def main():
         w.agents["genome"][:, c.brain_parameter_count + 6] = -2
         w.agents["genome"][::2, c.brain_parameter_count + 6] = 2
         w.develop(w.agents)
+    if args.exercise_rules:
+        cases = torch.tensor(
+            [[1.0, 0.0, 0.0, 0.0], [0.25] * 4, [-0.25, 0.25, -0.25, 0.25], [0.0] * 4],
+            device=w.device,
+        )
+        start = c.brain_parameter_count + 13
+        w.agents["genome"][:, start : start + 4] = cases[torch.arange(w.population) % 4]
+    if args.exercise_growth or args.exercise_rules:
         w.founders = w.agents["genome"].clone()
     w.step(60)
     if args.exercise_births or args.exercise_growth:
@@ -126,12 +141,21 @@ def main():
         assert metric["internal_signaling_cost"] > 0
         assert metric["mean_internal_magnitude"] > 0
         assert (w.agents["module_internal"].abs() <= 1).all()
+    if c.ecology_version >= 15:
+        from emergent_garden.plasticity import rule_coefficients
+
+        assert rule_coefficients(c, w.agents["genome"]).abs().sum(1).max() <= 1 + 1e-6
+        assert w.agents["module_trace"].abs().max() <= 1 + 1e-6
+        assert w.agents["module_plastic"].abs().max() <= c.plasticity_limit
+        if args.exercise_rules:
+            assert metric["mean_noncorrelation_rule_weight"] > 0
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
         metadata=runtime_metadata(w),
         replay_passed=True,
         birth_exercise=args.exercise_births,
         growth_exercise=args.exercise_growth,
+        rule_exercise=args.exercise_rules,
         tensor_absolute_tolerance=tolerance,
         quality_reversals=sum(e["event"] == "quality_reversal" for e in w.events),
         metrics=metric,

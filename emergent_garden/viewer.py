@@ -281,6 +281,8 @@ class Renderer:
                 height += 42
             if c.ecology_version >= 14:
                 height += 18 * (int(data["modules"][i]) + 1) + 8
+            if c.ecology_version >= 15:
+                height += 48
             if self.show_brain:
                 height += 150
                 if c.ecology_version >= 12:
@@ -372,6 +374,15 @@ class Renderer:
                         (30, 518 + 18 * k),
                         small=True,
                     )
+            if c.ecology_version >= 15:
+                from .plasticity import rule_coefficients
+
+                rule = rule_coefficients(
+                    c, a["genome"][i : i + 1], evolved=world.ablation != "fixed_rule"
+                )[0].tolist()
+                top = 526 + 18 * int(data["modules"][i])
+                self.text("Learning rule (A / B / C / D)", (30, top), small=True)
+                self.text(" / ".join(f"{v:+.2f}" for v in rule), (30, top + 21), small=True)
             if self.show_brain:
                 self.draw_brain(world, i, 92 + height - (220 if c.ecology_version >= 12 else 146))
         return surface
