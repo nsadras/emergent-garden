@@ -70,8 +70,10 @@ def probe():
     save(fig, "v25-native-recurrent-probe")
 
 
-def ecology(quiet=False):
+def ecology(quiet=False, gentle=False):
     name = "v25-quiet-recurrent-learning" if quiet else "v25-recurrent-learning"
+    if gentle:
+        name = "v25-quiet-gentle-recurrent-learning"
     report = json.loads(Path(f"docs/results/{name}.json").read_text())
     fig, axes = plt.subplots(3, 3, figsize=(12, 9), constrained_layout=True)
     for row in report["trials"]:
@@ -117,6 +119,11 @@ def ecology(quiet=False):
         else "V25: recurrent energetic learning in the unchanged sparse habitat\n"
         "Three matched evolutionary starts; no added charge for recurrent state"
     )
+    if gentle:
+        title = (
+            "V25: gentler recurrent learning (sigma .05, maximum rate .001/3)\n"
+            "Six new matched runs; noise-only and mechanism-off curves reuse completed references"
+        )
     fig.suptitle(title, fontsize=12)
     save(fig, name)
 
@@ -126,10 +133,14 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--probe-only", action="store_true")
     mode.add_argument("--quiet", action="store_true")
+    mode.add_argument("--gentle", action="store_true")
     args = parser.parse_args()
     plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False})
     if args.quiet:
         ecology(True)
+        return
+    if args.gentle:
+        ecology(gentle=True)
         return
     probe()
     if not args.probe_only:

@@ -1,7 +1,10 @@
 # Candidate: learning inside the recurrent circuit
 
-Status: mathematical and actual-adaptation diagnostics complete; no native
-controller change yet.
+Status: this research led to the optional native V25 learner. Its mathematical
+and adaptation diagnostics pass, while the initial ecological screens are
+mixed or negative. See [native results](RECURRENT_LEARNING.md) and the
+[quieter follow-up](QUIET_RECURRENT_LEARNING.md). The material below records
+the derivation and diagnostic evidence preceding that implementation.
 The V24 [timing transplants](NEURAL_TIMING_ASSAYS.md) are complete and support
 retaining the inherited-timing baseline for the next experiment.
 This is a candidate for a later version, not evidence of ecological learning.

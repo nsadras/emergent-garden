@@ -257,3 +257,10 @@ the original mechanism-off baseline. Do not launch selected-winner continuations
 If this candidate fails too, end this rate/noise screen and investigate the
 credit-assignment mechanism before another parameter grid. This ends neither
 the broader neural work nor the user's autonomous research request.
+
+All six gentler trials subsequently completed and failed the screen: both
+primary outcomes improve in 1/3 starts against quiet noise-only, 1/3 against
+gentle shuffled feedback, and 2/3 against the reused mechanism-off baseline.
+Three complete control replays verify the unused-rate neutrality exactly.
+This rate/noise screen is now closed; no longer runs or additional rate points
+are selected. See the [results](QUIET_RECURRENT_LEARNING.md#gentler-rate-follow-up).

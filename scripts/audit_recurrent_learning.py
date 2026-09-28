@@ -225,6 +225,64 @@ def neutral_parity(old, new):
     )
 
 
+def inert_rate_parity(old, new):
+    """A disabled learner's configured rate must not alter the entire 600-second run."""
+    before, after = (asdict(Config.load(path / "config.toml")) for path in (old, new))
+    assert before.pop("recurrent_learning_rate") == 0.001
+    assert after.pop("recurrent_learning_rate") == 0.001 / 3
+    assert before == after
+    _, left, events_a = read_history(old)
+    _, right, events_b = read_history(new)
+
+    def measurements(rows):
+        return physical(
+            [{k: v for k, v in row.items() if k != "mean_recurrent_learning_rate"} for row in rows]
+        )
+
+    assert measurements(left) == measurements(right), (old, new)
+    assert events_a == events_b, (old, new)
+    a, b = (load_checkpoint(path / "latest.pt").state_dict() for path in (old, new))
+    assert a["ablation"] == b["ablation"] == "no_recurrent_learning"
+    a.pop("config")
+    b.pop("config")
+    same_state(a, b)
+    return dict(
+        reference=str(old),
+        replay=str(new),
+        measurements=len(right),
+        events=len(events_b),
+        exact_common_state=True,
+        exact_common_measurements=True,
+        exact_events=True,
+        reference_checkpoint_sha256=digest(old / "latest.pt"),
+        replay_checkpoint_sha256=digest(new / "latest.pt"),
+    )
+
+
+def control_replays():
+    trials = []
+    for seed in (1, 2, 3):
+        old = Path(f"runs/v25-quiet-noise-only-pilot/seed-{seed}")
+        new = Path(f"runs/v25-quiet-gentle-control-replay-pilot/seed-{seed}")
+        row = recurrent_run(new, 600)
+        row.update(
+            seed=seed, parity=inert_rate_parity(old, new), independent_ecological_replicate=False
+        )
+        trials.append(row)
+    report = dict(
+        interpretation="Three full 600-second replays lower only the disabled recurrent "
+        "learner's configured maximum rate from .001 to .001/3. Every physical measurement, "
+        "event, genotype, and complete final state must match the original quiet noise-only "
+        "control. Only configuration and potential-rate telemetry are excluded. These are "
+        "verification replays, not additional ecological replicates.",
+        trials=trials,
+    )
+    output = Path("docs/results/v25-gentle-control-replays.json")
+    output.write_text(json.dumps(report, indent=2) + "\n")
+    print(f"Verified three full control replays: {output}")
+    return report
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
@@ -234,8 +292,17 @@ def main():
         action="store_true",
         help="Audit nine quieter pilots and the three reused baselines",
     )
+    mode.add_argument(
+        "--gentle",
+        action="store_true",
+        help="Audit six gentler pilots, six reused references, and three replay checks",
+    )
+    mode.add_argument("--control-replays-only", action="store_true")
     args = parser.parse_args()
     torch.set_num_threads(1)
+    if args.control_replays_only:
+        control_replays()
+        return
     probe = native_probe(Path("runs/v25-native-recurrent-probe"))
     Path("docs/results/v25-native-recurrent-probe.json").write_text(
         json.dumps(probe, indent=2) + "\n"
@@ -243,12 +310,19 @@ def main():
     print("Audited nine native delayed-task runs and exact endpoint validation replay")
     if args.probe_only:
         return
+    quieter = args.quiet or args.gentle
     groups = {
-        group: ("v25-quiet" if args.quiet and group != "baseline" else preset, mode)
+        group: ("v25-quiet" if quieter and group != "baseline" else preset, mode)
         for group, (preset, mode) in GROUPS.items()
     }
-    prefix = "v25-quiet" if args.quiet else "v25"
-    sigma = 0.05 if args.quiet else 0.15
+    prefix = "v25-quiet" if quieter else "v25"
+    replay_checks = None
+    if args.gentle:
+        prefix = "v25-quiet-gentle"
+        for group in ("learning", "shuffled"):
+            groups[group] = (prefix, groups[group][1])
+        replay_checks = control_replays()
+    sigma = 0.05 if quieter else 0.15
     configurations = {
         group: asdict(Config.load(f"configs/{preset}.toml"))
         for group, (preset, _) in groups.items()
@@ -257,7 +331,10 @@ def main():
     for group, configured in configurations.items():
         values = configured.copy()
         assert values.pop("recurrent_noise_sigma") == (0 if group == "baseline" else sigma)
-        assert values.pop("recurrent_learning_rate") == (0 if group == "baseline" else 0.001)
+        rate = 0 if group == "baseline" else 0.001
+        if args.gentle and group in ("learning", "shuffled"):
+            rate /= 3
+        assert values.pop("recurrent_learning_rate") == rate
         shared.append(values)
     assert all(values == shared[0] for values in shared)
     trials, compatibility = [], []
@@ -266,6 +343,8 @@ def main():
         reference = torch.load(old / "founders.pt", weights_only=True)["genomes"]
         for group, (_, mode) in groups.items():
             root = "v25" if group == "baseline" else prefix
+            if args.gentle and group == "noise-only":
+                root = "v25-quiet"
             path = Path(f"runs/{root}-{group}-pilot/seed-{seed}")
             assert asdict(Config.load(path / "config.toml")) == configurations[group], path
             founders = torch.load(path / "founders.pt", weights_only=True)["genomes"]
@@ -273,12 +352,14 @@ def main():
             row = recurrent_run(path, 600)
             assert row["segments"][0]["metadata"]["ablation"] == mode, path
             row.update(treatment=group, seed=seed, matched_complete_founders=True)
-            if args.quiet:
-                row["reused_reference"] = group == "baseline"
+            if quieter:
+                row["reused_reference"] = group == "baseline" or (
+                    args.gentle and group == "noise-only"
+                )
             trials.append(row)
         compatibility.append(neutral_parity(old, Path(f"runs/v25-baseline-pilot/seed-{seed}")))
     comparisons = []
-    controls = ("noise-only", "shuffled", "baseline") if args.quiet else ("noise-only", "shuffled")
+    controls = ("noise-only", "shuffled", "baseline") if quieter else ("noise-only", "shuffled")
     for control in controls:
         pairs = []
         for seed in (1, 2, 3):
@@ -323,9 +404,20 @@ def main():
         )
         report["new_runs"] = 9
         report["reused_references"] = 3
+    if args.gentle:
+        report["interpretation"] += (
+            " This gentler screen keeps sigma .05 and lowers maximum rate to .001/3. "
+            "Six own-return/shuffled trials are new; the three quiet noise-only controls and "
+            "three original mechanism-off baselines are reused. Three full replays verify "
+            "that the noise-only reference's unused higher rate has no physical effect. "
+            "The continuation criterion must also beat the mechanism-off baseline in two starts."
+        )
+        report.update(new_runs=6, reused_references=6, control_replay_checks=replay_checks)
     output = Path(f"docs/results/{prefix}-recurrent-learning.json")
     output.write_text(json.dumps(report, indent=2) + "\n")
     label = "9 new pilots and 3 reused baselines" if args.quiet else f"{len(trials)} pilots"
+    if args.gentle:
+        label = "6 new pilots, 6 reused references, and 3 verification replays"
     print(f"Audited {label}, {len(compatibility)} exact neutral comparisons: {output}")
     print(f"Continuation screen passed: {report['continuation_screen_passed']}")
 

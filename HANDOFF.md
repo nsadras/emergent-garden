@@ -81,19 +81,35 @@ longer runs were launched. Peak row saturation is 7.29%/5.40%/6.43%, with larger
 acquired offsets than the original .15-noise trials. Twenty-one ecological runs
 have now been completed in V25; the reused references are not additional runs.
 
-Next run the prospective gentler comparison already appended to the plan.
+The prospective gentler comparison is now **complete and audited**.
 `configs/v25-quiet-gentle.toml` is created: sigma .05, maximum rate `.001 / 3`,
-all other settings unchanged. **No gentle trials have been launched yet.**
-First verify reuse of quiet noise-only references: with updates disabled, lower
-rate must preserve the entire physical state, excluding only configuration and
-potential-rate telemetry. Then run six 600-second trials, seeds 1/2/3 crossed
+all other settings unchanged. Three complete 600-second control replays are
+finished and match their original quiet noise-only runs exactly: common metrics,
+events, genomes, complete states, and all random streams. Only configuration
+and potential-rate telemetry differ. The audit is
+`scripts/audit_recurrent_learning.py --control-replays-only`, with checked
+record `docs/results/v25-gentle-control-replays.json`; these are verification
+replays, not independent ecological replicates. Their process has exited.
+**Six gentle 600-second trials are complete**, seeds 1/2/3 crossed
 with own-return and shuffled recurrent feedback, under
-`runs/v25-quiet-gentle-{learning,shuffled}-pilot`. Extend the audit to include
-their matched quiet noise-only and original mechanism-off references, labeled
-as reused. The screen requires births AND fresh absorption to improve in two
-starts against each of the three controls before longer runs are considered.
-If it also fails, end this rate/noise screen and reassess credit assignment;
-do not keep extending a parameter grid. No processes remain running.
+`runs/v25-quiet-gentle-{learning,shuffled}-pilot`. The `--gentle` audit includes
+their quiet noise-only and original mechanism-off references, labeled reused.
+The resulting figure has been visually inspected.
+Logs are `/tmp/emergent-garden-v25-quiet-gentle-{learning,shuffled}-pilot.log`.
+Both processes have exited and sessions 21629 and 57961 are closed.
+Own-return births are 19/287/404 versus shuffled 204/198/453. Both primary
+outcomes improve in 1/3 starts against noise-only, 1/3 against shuffled feedback,
+and 2/3 against the mechanism-off baseline. The screen fails. This rate/noise
+sweep is **closed**; no longer runs or further rate points are selected.
+There are now 27 new ecological trials, plus three control-verification replays.
+No V25 simulation remains running; do not restart completed processes.
+The next research is in `docs/RECURRENT_CREDIT_RESEARCH.md`:
+primary literature on RFLO, e-prop, and online value representations, plus
+requirements for a passive representation-learning diagnostic if needed.
+No alternative native learner has been implemented. The author's public MATLAB
+update has now been reviewed: it trains the previous representation from the
+next TD error and uses either previous readout weights or fixed random feedback.
+Any leaky masked adaptation still needs its own derivative and causal checks.
 Do not infer weak or useful learning from magnitude alone. Preserve the user's
 V16 edits and unrelated notes. Research remains active.
 
