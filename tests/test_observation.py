@@ -109,7 +109,7 @@ def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
     assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
-@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20, 21, 22, 23, 24])
+@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25])
 def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, monkeypatch):
     c = replace(
         config,
@@ -126,6 +126,8 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         motor_normalized=int(version >= 22),
         neural_timing_range=4 if version >= 24 else 1,
         initial_timing_sigma=0.5 if version >= 24 else 0,
+        recurrent_noise_sigma=0.15 if version >= 25 else 0,
+        recurrent_learning_rate=0.001 if version >= 25 else 0,
     )
     w = create_world(c)
     a = w.agents
@@ -158,6 +160,9 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         a["module_motor_value_previous"].fill_(0.02)
         a["module_motor_value_trace"].fill_(0.03)
         a["module_motor_value_ready"].fill_(True)
+    if version >= 25:
+        a["module_recurrent_plastic"].fill_(0.03)
+        a["module_recurrent_trace"].fill_(0.7)
     if version >= 6:
         a["food_feedback"].fill_(4)
         a["damage_feedback"].fill_(2)
@@ -185,9 +190,10 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         assert a["food_feedback"].count_nonzero() == 0
     for module in range(count):
         input_drive, recurrent, bias = sample.drives(module)
+        hidden_noise = 0 if sample.hidden_noise is None else sample.hidden_noise[module]
         hidden = (
             (1 - sample.alpha) * sample.previous[module]
-            + sample.alpha * np.tanh(input_drive + recurrent + bias)
+            + sample.alpha * np.tanh(input_drive + recurrent + bias + hidden_noise)
         ) * sample.nodes
         np.testing.assert_allclose(hidden, sample.hidden[module], rtol=2e-6, atol=2e-7)
         _, _, _, wo, bo = sample.matrices(module)
@@ -207,6 +213,11 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         )
     if version >= 7:
         assert not np.array_equal(sample.plastic, a["module_plastic"][1, :count].numpy())
+    if version >= 25:
+        np.testing.assert_array_equal(
+            sample.recurrent_plastic, a["module_recurrent_plastic"][1, :count].numpy()
+        )
+        assert np.count_nonzero(sample.hidden_noise)
     # Samples own their arrays; inspecting an old frame cannot alias live state.
     copied = sample.hidden.copy()
     a["module_h" if version >= 4 else "h"].zero_()
@@ -244,6 +255,11 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         (24, "shuffled_motor_reward"),
         (24, "no_motor_learning"),
         (24, "no_plasticity"),
+        (25, "none"),
+        (25, "shuffled_recurrent_reward"),
+        (25, "no_recurrent_learning"),
+        (25, "no_plasticity"),
+        (25, "no_exploration"),
     ],
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
@@ -268,6 +284,8 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
             motor_normalized=int(version >= 22),
             neural_timing_range=4 if version >= 24 else 1,
             initial_timing_sigma=0.5 if version >= 24 else 0,
+            recurrent_noise_sigma=0.15 if version >= 25 else 0,
+            recurrent_learning_rate=0.001 if version >= 25 else 0,
         ),
         ablation=ablation,
     )
@@ -377,14 +395,24 @@ def test_trails_freeze_on_pause_fade_on_simulated_time_and_bound_history(config)
     assert 99 not in trails.tracks
 
 
-def test_viewer_module_controls_resize_and_detach(config, monkeypatch):
+@pytest.mark.parametrize("version", [12, 25])
+def test_viewer_module_controls_resize_and_detach(config, monkeypatch, version):
     monkeypatch.setenv("SDL_VIDEODRIVER", "dummy")
     import pygame
 
     from emergent_garden.viewer import Viewer
 
-    w = create_world(replace(config, ecology_version=12))
+    w = create_world(
+        replace(
+            config,
+            ecology_version=version,
+            recurrent_noise_sigma=0.15 if version >= 25 else 0,
+            recurrent_learning_rate=0.001 if version >= 25 else 0,
+        )
+    )
     w.agents["genome"][:, w.config.brain_parameter_count + 6] = 4
+    if version >= 13:
+        w.agents["development_stage"].fill_(3)
     w.develop(w.agents)
     viewer = Viewer(256)
     viewer.selected = 0

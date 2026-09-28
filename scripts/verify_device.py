@@ -5,6 +5,7 @@ benchmark or an ecology trial. It accelerates quality reversals when available.
 """
 
 import argparse
+import hashlib
 import json
 from dataclasses import asdict, replace
 from pathlib import Path
@@ -12,7 +13,12 @@ from pathlib import Path
 import torch
 
 from emergent_garden.config import Config
-from emergent_garden.storage import load_checkpoint, runtime_metadata, save_checkpoint
+from emergent_garden.storage import (
+    SOURCE_ARCHIVE,
+    load_checkpoint,
+    runtime_metadata,
+    save_checkpoint,
+)
 from emergent_garden.world import create_world
 
 
@@ -62,6 +68,9 @@ def main():
     if args.exercise_rules and c.ecology_version < 15:
         raise ValueError("Rule exercise requires V15 or later")
     args.output.mkdir(parents=True, exist_ok=False)
+    script = Path(__file__).read_bytes()
+    (args.output / Path(__file__).name).write_bytes(script)
+    (args.output / "source.zip").write_bytes(SOURCE_ARCHIVE)
     w = create_world(c, seed=7919, device=args.device)
     if args.exercise_growth:
         # Some founders mature, others juvenile: exercise births and growth.
@@ -197,9 +206,37 @@ def main():
         assert timing_genes(c, w.agents["genome"]).abs().max() <= c.weight_limit
         if c.neural_timing_range > 1 and c.initial_timing_sigma:
             assert metric["neural_timing_mean_within_log_std"] > 0
+    if c.ecology_version >= 25:
+        from emergent_garden.recurrent_learning import recurrent_shapes
+        from emergent_garden.topology import effective_masks
+
+        mask = w.agents["module_mask"]
+        nodes, _, edges, _ = effective_masks(c, w.agents["genome"])
+        for key, shape in recurrent_shapes(c.hidden_size).items():
+            value = w.agents[f"module_{key}"]
+            assert value.shape == (*mask.shape, *shape), key
+            assert torch.isfinite(value).all(), key
+            assert not value[~mask].count_nonzero(), key
+        for key in ("recurrent_plastic", "recurrent_trace"):
+            assert not w.agents[f"module_{key}"][
+                ~(mask[:, :, None, None] & edges[:, None])
+            ].count_nonzero(), key
+        assert not w.agents["module_recurrent_applied_noise"][
+            ~(mask[:, :, None] & nodes[:, None])
+        ].count_nonzero()
+        assert (
+            w.agents["module_recurrent_plastic"].norm(dim=-1).max()
+            <= c.recurrent_learning_limit + 1e-6
+        )
+        if c.recurrent_noise_sigma and c.recurrent_learning_rate:
+            assert metric["recurrent_noise_rms"] > 0
+            assert metric["mean_recurrent_plastic_magnitude"] > 0
+            assert metric["recurrent_learning_changes"] > 0
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
         config=asdict(w.config),
+        verifier_sha256=hashlib.sha256(script).hexdigest(),
+        source_archive="source.zip",
         metadata=runtime_metadata(w),
         replay_passed=True,
         birth_exercise=args.exercise_births,

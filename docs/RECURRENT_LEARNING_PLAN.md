@@ -1,6 +1,10 @@
 # V25 plan: energetic credit for recurrent connections
 
-Status: prospective; native implementation has not started. The independent
+Status: native implementation, 447 tests, CPU/CUDA replay, inspector checks, and
+the native delayed-cue diagnostic are complete for V25 / package 0.26.0.
+All twelve ecological pilots are complete and audited; the predeclared
+continuation screen failed. See the [results](RECURRENT_LEARNING.md).
+The independent
 [score and adaptation checks](RECURRENT_LEARNING_RESEARCH.md) are complete.
 The V24 timing transplants are complete. This plan records the next native
 experiment before seeing its results; it is not a release announcement.
@@ -64,6 +68,11 @@ native update when weights and activity change continually.
 | `recurrent_baseline_tau` | 10 s | 10 s |
 | `recurrent_half_life` | 120 s | 120 s |
 
+Configuration validation accepts zero noise or an enabled amplitude in
+`[1e-4, 10]`, a learning rate in `[0, 1]`, and positive finite times/bounds.
+A positive learning rate requires positive noise. These limits guard the new
+float32 score calculation; the experimental values remain as specified above.
+
 Scale the new rate by the existing inherited recurrent-learning allocation
 (`sigmoid` of trait 9). This deliberately couples learning capacity to that
 existing trait; it does not introduce a new gene or inherit acquired offsets.
@@ -116,6 +125,25 @@ diet allocation, food uptake, and lineage composition. Apply active-neuron and
 module masks in every summary.
 
 ## First ecological screen
+
+Before the ecological screen, repeat the supplied delayed-cue task through the
+actual `advance` and `controller_step` functions. The prospective native check
+uses seeds 11/12/13, 64 separate two-neuron circuits per condition, and 256
+episodes. Compare no updates, own-score learning, and shuffled scores with
+identical cues and perturbations. Each episode has 24 noisy updates and one
+feedback update at 10 Hz. Only the recurrent offsets and learned baseline
+persist between episodes. A separate fixed bank of 32 noisy trajectories per
+circuit measures error without training.
+
+This implementation check retains the fixture's effective rate .1 and row
+bound .5, uses a 48-second baseline, and negligible forgetting. Those values
+deliberately differ from the conservative ecological preset. There is no body,
+energetic survival, evolution, or hand-tuned movement policy in this diagnostic.
+The complete training sequence spans 640 seconds; report intermediate results
+and failures as well as its endpoint. Archive the script, native source, input
+genomes, final acquired states, and measurements. A positive result verifies
+that the native machinery can learn this supplied task; it does not establish
+useful adaptation during ordinary creature lifetimes.
 
 Run three matching founder seeds, 1/2/3, for 600 simulated seconds per treatment:
 

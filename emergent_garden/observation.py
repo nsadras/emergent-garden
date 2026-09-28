@@ -109,13 +109,19 @@ class BrainSample:
     noise: np.ndarray | None = None
     predicted_return: np.ndarray | None = None
     prediction_error: np.ndarray | None = None
+    recurrent_plastic: np.ndarray | None = None
+    hidden_noise: np.ndarray | None = None
 
     def matrices(self, module):
         """Effective weights used for this sample, including bounded motor learning."""
         wi, wr, bias, wo, bo = (part.copy() for part in self.parts)
         mi, mr, mo = self.masks
         wi *= mi
-        wr = (wr + self.plastic[module]) * mr
+        offset = self.plastic[module]
+        if self.recurrent_plastic is not None:
+            # Match the native grouping: base + (local offset + reward offset).
+            offset = offset + self.recurrent_plastic[module]
+        wr = (wr + offset) * mr
         wo *= mo
         if self.motor_plastic is not None:
             norm = (
@@ -224,8 +230,8 @@ class ControllerObserver:
         else:
             sample.actions = array(a.get("actions", a["motors"])[i : i + 1])
         if "module_motor_plastic" in a and world.controller == "neural":
-            # Motor learning is applied before action selection; recurrent
-            # learning is applied afterwards (and was captured above).
+            # Motor learning is applied before action selection; the older
+            # local recurrent update is applied afterwards (captured above).
             sample.motor_plastic = array(a["module_motor_plastic"][i, :count])
             if c.ecology_version >= 21:
                 sample.noise = array(a["module_motor_applied_noise"][i, :count])
@@ -240,6 +246,11 @@ class ControllerObserver:
             ):
                 sample.predicted_return = array(a["module_motor_value_prediction"][i, :count])
                 sample.prediction_error = array(a["module_motor_value_error"][i, :count])
+        if c.ecology_version >= 25 and c.recurrent_noise_sigma and world.controller == "neural":
+            # Recurrent energetic credit is applied before the transition,
+            # unlike local plasticity captured by before_controller above.
+            sample.recurrent_plastic = array(a["module_recurrent_plastic"][i, :count])
+            sample.hidden_noise = array(a["module_recurrent_applied_noise"][i, :count])
         self.sample = sample
 
 

@@ -335,9 +335,17 @@ class Inspector:
             (22, top),
             GOLD,
         )
-        self.text(
+        drive_text = (
             f"Drive = input {incoming[focus]:+.3f}  +  recurrent {recurrent[focus]:+.3f}"
-            f"  +  bias {bias[focus]:+.3f}",
+            f"  +  bias {bias[focus]:+.3f}"
+        )
+        if sample.hidden_noise is not None:
+            drive_text = (
+                f"Drive: input {incoming[focus]:+.3f}  recurrent {recurrent[focus]:+.3f}"
+                f"  bias {bias[focus]:+.3f}  noise {sample.hidden_noise[k, focus]:+.3f}"
+            )
+        self.text(
+            drive_text,
             (22, top + 21),
         )
         common, contrast = sample.sensory_drives(k)
@@ -370,7 +378,7 @@ class Inspector:
             )
         if c.output_size >= 5:
             self.text(
-                "Recurrent gate / internal signals: signed. Motor-learning gate: 0 to 1.",
+                "Local gate / internal signals: signed. Motor-learning gate: 0 to 1.",
                 (22, top + 126),
                 MUTED,
             )
@@ -516,9 +524,15 @@ class Inspector:
         side = min(176, self.layout_height - top - reserve)
         base = sample.parts[1] * sample.masks[1]
         plastic = sample.plastic[self.module] * sample.masks[1]
+        if sample.recurrent_plastic is not None:
+            plastic += sample.recurrent_plastic[self.module] * sample.masks[1]
         for x, values, label in (
             (22, base, "Inherited"),
-            (221, plastic, "Acquired"),
+            (
+                221,
+                plastic,
+                "Acquired (both rules)" if sample.recurrent_plastic is not None else "Acquired",
+            ),
             (420, base + plastic, "Effective"),
         ):
             self.text(label, (x, top), POSITIVE)

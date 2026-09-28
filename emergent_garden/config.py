@@ -85,6 +85,12 @@ class Config:
     exploration_max: float = 0.5
     motor_learning_cost: float = 0.02
     motor_normalized: int = 0  # Preserve the first V12 prototype's per-weight bound.
+    recurrent_noise_sigma: float = 0.0
+    recurrent_learning_rate: float = 0.0
+    recurrent_learning_limit: float = 0.15
+    recurrent_trace_tau: float = 2.0
+    recurrent_baseline_tau: float = 10.0
+    recurrent_half_life: float = 120.0
     diameter: float = 1024.0
     body_radius: float = 4.0
     initial_population: int = 256
@@ -163,6 +169,8 @@ class Config:
             "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate "
             "motor_learning_limit motor_trace_tau motor_baseline_tau "
             "motor_half_life motor_value_horizon motor_value_trace_tau motor_value_limit "
+            "recurrent_learning_limit recurrent_trace_tau recurrent_baseline_tau "
+            "recurrent_half_life "
             "growth_reserve growth_delay growth_retry internal_tau "
             "patch_aspect_ratio patch_drift_turn_time fertility_recovery_time sensor_radius_scale"
         )
@@ -171,8 +179,18 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(25):
+        if self.ecology_version not in range(26):
             raise ValueError("Unsupported ecology version")
+        if self.ecology_version < 25 and (
+            self.recurrent_noise_sigma or self.recurrent_learning_rate
+        ):
+            raise ValueError("Recurrent perturbation learning requires ecology_version >= 25")
+        if self.recurrent_noise_sigma and not 1e-4 <= self.recurrent_noise_sigma <= 10:
+            raise ValueError("Enabled recurrent_noise_sigma must be in [1e-4, 10]")
+        if self.recurrent_learning_rate > 1:
+            raise ValueError("recurrent_learning_rate must be in [0, 1]")
+        if self.recurrent_learning_rate and not self.recurrent_noise_sigma:
+            raise ValueError("Recurrent learning requires positive recurrent_noise_sigma")
         if not 1 <= self.neural_timing_range <= 100:
             raise ValueError("neural_timing_range must be in [1, 100]")
         if self.timing_mutation_probability > 1:

@@ -7,7 +7,7 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-The current experimental release is **V24 / package 0.25.0**. Research resumed
+The current experimental implementation is **V25 / package 0.26.0**. Research resumed
 on September 23, focusing on scarce, valuable food and affordable exploration.
 The [foraging experiments](docs/FORAGING.md) found that faster food processing
 supported all three tested populations for 30 minutes; a new optional spatial
@@ -46,6 +46,12 @@ lineage and dietary-specialist diversity. All thirty
 original timing beats reassignment for births in all six comparisons, while
 motor-learning evidence remains conditional. A verified 1× video and trail
 image are linked from that report. Details shows the selected neuron's response time.
+[V25](docs/RECURRENT_LEARNING.md) adds optional energetic reinforcement of
+recurrent connections. The native controller learns a supplied delayed-cue task;
+twelve matched ecological pilots show mixed results and fail the continuation
+screen. It remains optional; inherited timing with the new learner disabled
+is retained as the reference.
+The neural interface, inherited genome, and sparse-food ecology stay the same.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 
@@ -414,6 +420,13 @@ The original starting values are in [configs/v0.toml](configs/v0.toml).
 | [V16](configs/v16.toml) | Irregular drifting food sources and local fertility depletion/recovery |
 | [V17](configs/v17-contrast.toml) | Experimental mean/contrast sensory encoding; [paired results](docs/FORAGING.md) |
 | [V18](configs/v18-fast-feeding.toml) | Bounded carried food, digestion while traveling, and fullness inputs; [results](docs/CARRIED_FOOD.md) |
+| [V19](configs/v19.toml) | Varied founder graphs and circuit/mutation experiments; [results](docs/NEURAL_VARIATION.md) |
+| [V20](configs/v20.toml) | Configurable sensory footprint; [results](docs/SENSOR_RADIUS.md) |
+| [V21](configs/v21.toml) | Temporally correlated motor exploration; [results](docs/PERSISTENT_EXPLORATION.md) |
+| [V22](configs/v22.toml) | Acquired predictions of future energetic returns; [results](docs/VALUE_PREDICTION.md) |
+| [V23](configs/v23.toml) | Sensory features for the value predictor; [results](docs/SENSORY_VALUE.md) |
+| [V24](configs/v24-inherited.toml) | Inherited per-neuron response times; [results](docs/NEURAL_TIMESCALES.md) |
+| [V25](configs/v25.toml) | Optional energetic reinforcement of recurrent connections; [results](docs/RECURRENT_LEARNING.md) |
 
 ```bash
 cp configs/v5.toml configs/my-experiment.toml

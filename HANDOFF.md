@@ -1,9 +1,61 @@
-# Development handoff — V24
+# Development handoff — V25
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V24 / package 0.25.0**. Python and dependencies remain
+The current code is **V25 / package 0.26.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V25: energetic reinforcement of recurrent connections
+
+[V25](docs/RECURRENT_LEARNING.md) is implemented and its first ecological screen
+is complete and audited. It remains optional after failing that screen.
+The [prospective plan](docs/RECURRENT_LEARNING_PLAN.md) retains V24 inherited
+timing, sparse mobile patches, gentle motor learning, and the existing graph and
+genome. New independent hidden perturbations generate a local eligibility score;
+later energetic returns update separate bounded recurrent offsets before the
+current transition. Births and new modules start with fresh acquired state.
+The .15 noise/.001 maximum-rate preset is optional; all defaults are disabled.
+There is no additional energy charge for the new matrices in this first screen.
+The existing trait 9 scales both the new rate and older local plasticity.
+
+All 447 tests pass. Exact device-local CPU and CUDA replay checks pass through
+births, growth, and learning, with source and executed verifier archives. The
+inspector reconstructs the actual noisy update and fits all tabs at heights
+640/768/900/1024. Manual captures are under `runs/v25-viewer-check`.
+
+The native delayed-cue diagnostic completed all nine runs. Own-score learning
+reduces fixed-bank validation MSE by roughly 64–65% in seeds 11/12/13, while
+shuffled feedback remains near no-updates. This fixture uses a stronger rate,
+larger bound, episode resets, and 640 seconds of training; it does not establish
+ecological adaptation. Raw data are in `runs/v25-native-recurrent-probe` and
+`scripts/audit_recurrent_learning.py --probe-only` reconstructs every endpoint
+exactly and writes the checked record. Its process is closed; do not restart.
+
+**All twelve ecological pilots completed 600 seconds**. The four calibration
+processes have exited and their sessions are closed; do not restart them.
+Paths are `runs/v25-{baseline,noise-only,learning,shuffled}-pilot`; logs are
+`/tmp/emergent-garden-v25-{treatment}-pilot.log`. All use CPU with one PyTorch
+thread. Baseline births are 341/195/290, noise-only 216/183/265, own-learning
+186/172/333, and shuffled 30/54/389. Own learning beats noise-only for both
+births and fresh uptake in 1/3 starts, and shuffled feedback in 2/3. The
+prospective rule therefore fails. No V25 long runs or winner selections were
+launched. Retain the new mechanism as optional and the V24 inherited-timing
+reference as the baseline.
+
+`scripts/audit_recurrent_learning.py` checks all resource/energy/trophic
+accounting, exact V24 neutrality, source provenance, active masks, row bounds,
+and complete founder matching. All three neutral final states, histories,
+and events match exactly, including whole-genome digests. The inspected plots
+come from `scripts/plot_recurrent_learning.py`. The complete release guide
+contains tables, limitations, mechanical checks, and links to checked records.
+Acquired offsets are nonzero, but recorded saturation never exceeds 2.21% in
+the own-return pilots. Median founder survival is about 104/107/110 seconds;
+the stronger supplied task does not demonstrate learning within those lives.
+
+Next measure actual recurrent drive, noise effects, energetic feedback clipping,
+and acquired changes on passive replay forks before choosing further changes.
+Do not infer weak or useful learning from magnitude alone. Preserve the user's
+V16 edits and unrelated notes. Research remains active.
 
 ## V24: inherited neural response times
 
@@ -92,11 +144,9 @@ checked records and an inspected figure are linked from the research document.
 The prospective [V25 plan](docs/RECURRENT_LEARNING_PLAN.md) specifies optional
 hidden perturbations, separate bounded recurrent offsets, causal credit order,
 fresh acquired state, noise and feedback controls, compatibility requirements,
-and a twelve-run native screen. Native V25 implementation has **not started**.
-The V24 audit is finished and its baseline retained. Next implement and test
-the actual native mechanism, including causal updates, fresh acquired state,
-noise controls, masked score calculations, and a faithful inspector. This is
-ongoing authorized work, not a pause.
+and a twelve-run native screen. Native V25 implementation and diagnostic checks
+subsequently completed, as recorded above. The V24 audit is finished and its
+baseline retained. Research remains active.
 
 ## V23: direct sensory value features
 

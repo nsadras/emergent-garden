@@ -20,6 +20,7 @@ from .learning import motor_memory_shapes
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .neural_timing import initial_timing, mutate_timing, timing_metrics
 from .plasticity import rule_coefficients
+from .recurrent_learning import recurrent_metrics, recurrent_shapes
 from .resources import ResourceLandscape
 from .runtime import enable_cuda_replay
 from .senses import encode_field, receptor_values
@@ -60,6 +61,8 @@ class EcologyWorld(World):
             "no_motor_value",
             "no_motor_reward",
             "shuffled_motor_reward",
+            "no_recurrent_learning",
+            "shuffled_recurrent_reward",
             "no_exploration",
             "adult_births",
             "no_internal",
@@ -83,6 +86,10 @@ class EcologyWorld(World):
             or (ablation == "no_direction" and config.ecology_version < 17)
             or (ablation == "no_gut" and config.ecology_version < 18)
             or (ablation == "no_motor_value" and config.ecology_version < 22)
+            or (
+                ablation in ("no_recurrent_learning", "shuffled_recurrent_reward")
+                and config.ecology_version < 25
+            )
             or (
                 ablation in ("no_internal", "no_body_sense", "no_coordination", "self_internal")
                 and config.ecology_version < 14
@@ -198,6 +205,15 @@ class EcologyWorld(World):
             self.rng["neural_timing"] = torch.Generator(device=self.device).manual_seed(
                 seed + 6700417
             )
+        if c.ecology_version >= 25:
+            self.rng["recurrent_exploration"] = torch.Generator(device=self.device).manual_seed(
+                seed + 982451653
+            )
+            self.totals["recurrent_learning_changes"] = 0.0
+            if self.ablation == "shuffled_recurrent_reward":
+                self.rng["recurrent_reward_shuffle"] = torch.Generator(
+                    device=self.device
+                ).manual_seed(seed + 961748941)
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_extent - c.food_radius)
         self.patch_phases = (
@@ -297,6 +313,9 @@ class EcologyWorld(World):
                     device=self.device,
                     dtype=torch.bool if key.endswith("_ready") else torch.float32,
                 )
+        if c.ecology_version >= 25:
+            for key, shape in recurrent_shapes(c.hidden_size).items():
+                a[f"module_{key}"] = torch.zeros((n, MAX_MODULES, *shape), device=self.device)
         if c.ecology_version >= 13:
             a["development_stage"] = torch.ones(n, dtype=torch.long, device=self.device)
             a["growth_tick"] = torch.full(
@@ -622,6 +641,9 @@ class EcologyWorld(World):
                         state[key] = a[f"module_{key}"][index].reshape(
                             -1, c.hidden_size, c.hidden_size
                         )
+                if c.ecology_version >= 25:
+                    for key, shape in recurrent_shapes(c.hidden_size).items():
+                        state[key] = a[f"module_{key}"][index].reshape(-1, *shape)
                 motor_arguments = {}
                 if c.ecology_version >= 12:
                     for key in ("motor_plastic", "motor_trace"):
@@ -637,9 +659,12 @@ class EcologyWorld(World):
                     )
                     if self.ablation == "no_exploration":
                         noise.zero_()
-                    reward = a["motor_reward"][index] / (c.feedback_scale * a["area"][index])
+                    physical_reward = a["motor_reward"][index] / (
+                        c.feedback_scale * a["area"][index]
+                    )
+                    reward = physical_reward
                     if self.ablation in ("no_motor_reward", "no_feedback"):
-                        reward.zero_()
+                        reward = torch.zeros_like(reward)
                     elapsed = (self.tick - a["last_motor_tick"][index]) * c.dt
                     if self.ablation == "shuffled_motor_reward":
                         from .learning import shuffled_returns
@@ -653,6 +678,30 @@ class EcologyWorld(World):
                         reward=reward[:, None].expand(-1, MAX_MODULES).reshape(-1),
                         elapsed=elapsed[:, None].expand(-1, MAX_MODULES).reshape(-1),
                     )
+                    if c.ecology_version >= 25:
+                        recurrent_reward = physical_reward
+                        if self.ablation == "no_feedback":
+                            recurrent_reward = torch.zeros_like(recurrent_reward)
+                        elif self.ablation == "shuffled_recurrent_reward":
+                            from .learning import shuffled_returns
+
+                            recurrent_reward = shuffled_returns(
+                                recurrent_reward, elapsed, self.rng["recurrent_reward_shuffle"]
+                            )
+                        recurrent_noise = None
+                        if c.recurrent_noise_sigma:
+                            recurrent_noise = torch.randn(
+                                (count * MAX_MODULES, c.hidden_size),
+                                device=self.device,
+                                generator=self.rng["recurrent_exploration"],
+                            )
+                        motor_arguments.update(
+                            recurrent_learning=self.ablation != "no_recurrent_learning",
+                            recurrent_noise=recurrent_noise,
+                            recurrent_reward=recurrent_reward[:, None]
+                            .expand(-1, MAX_MODULES)
+                            .reshape(-1),
+                        )
                 updated, actions = controller_step(
                     c,
                     genomes.reshape(-1, c.parameter_count),
@@ -695,6 +744,15 @@ class EcologyWorld(World):
                             a[f"module_{key}"][index] = values * mask.reshape(
                                 count, MAX_MODULES, *([1] * len(shape))
                             )
+                if c.ecology_version >= 25:
+                    for key, shape in recurrent_shapes(c.hidden_size).items():
+                        values = updated[key].reshape(count, MAX_MODULES, *shape)
+                        values = values * mask.reshape(count, MAX_MODULES, *([1] * len(shape)))
+                        if key == "recurrent_plastic":
+                            self.totals["recurrent_learning_changes"] += (
+                                (values - a[f"module_{key}"][index]).abs().double().sum().item()
+                            )
+                        a[f"module_{key}"][index] = values
                 actions = actions.reshape(count, MAX_MODULES, c.output_size) * mask[..., None]
                 a["module_h"][index], a["module_actions"][index] = hidden, actions
                 a["h"][index] = hidden.sum(1) / mask.sum(1)[:, None]
@@ -1312,6 +1370,8 @@ class EcologyWorld(World):
             result.update(
                 timing_metrics(c, a["genome"], a["memory_tau"], effective_masks(c, a["genome"])[0])
             )
+        if c.ecology_version >= 25:
+            result.update(recurrent_metrics(c, a))
         if c.ecology_version >= 13:
             juvenile = a["modules"] < a["target_modules"]
             result["juvenile_population"] = int(juvenile.sum())

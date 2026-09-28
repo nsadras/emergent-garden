@@ -39,7 +39,17 @@ def initial_brains(config, count, device, generator, active_counts=None):
     return torch.cat(pieces, 1).clamp(-config.weight_limit, config.weight_limit)
 
 
-def advance(config, genome, inputs, hidden, tau=None, plastic=None, return_logits=False):
+def advance(
+    config,
+    genome,
+    inputs,
+    hidden,
+    tau=None,
+    plastic=None,
+    return_logits=False,
+    *,
+    hidden_noise=None,
+):
     h, ni, no = config.hidden_size, config.input_size, config.output_size
     offset = 0
 
@@ -59,6 +69,8 @@ def advance(config, genome, inputs, hidden, tau=None, plastic=None, return_logit
         hidden = hidden * nodes
     drive = (wi @ inputs[..., None]).squeeze(-1)
     drive += (wr @ hidden[..., None]).squeeze(-1) + bias
+    if hidden_noise is not None:
+        drive = drive + hidden_noise
     alpha = integration_factors(config, genome, tau)
     hidden = (1 - alpha) * hidden + alpha * drive.tanh()
     if config.ecology_version >= 8:
@@ -76,6 +88,10 @@ def initial_state(config, genomes):
         from .learning import motor_state
 
         state.update(motor_state(config, genomes))
+    if config.ecology_version >= 25:
+        from .recurrent_learning import recurrent_state
+
+        state.update(recurrent_state(config, genomes))
     return state
 
 
@@ -94,6 +110,9 @@ def controller_step(
     evolved_rule=True,
     exploration_enabled=True,
     value_learning=True,
+    recurrent_learning=True,
+    recurrent_noise=None,
+    recurrent_reward=None,
 ):
     """One circuit update; acquired synaptic offsets never modify the genome.
 
@@ -105,12 +124,46 @@ def controller_step(
     recurrent mechanism; this function never draws random numbers itself.
     V15 evolves a bounded mixture of correlation, pre-only, post-only, and
     constant trace drives. The fixed-rule control retains the previous rule.
+    V25 adds optional hidden perturbations and separately acquired recurrent
+    offsets. Energetic feedback credits the previous score trace before the
+    current transition. `recurrent_noise` is standard normal; `recurrent_reward`
+    may differ from motor feedback in mechanism-specific controls.
     """
     plastic = state.get("plastic") if plasticity else None
+    recurrent = {}
+    hidden_noise = None
+    if config.ecology_version >= 25:
+        from .recurrent_learning import recurrent_policy
+
+        received = reward if recurrent_reward is None else recurrent_reward
+        recurrent = recurrent_policy(
+            config,
+            genome,
+            state["hidden"],
+            state,
+            torch.zeros_like(state["hidden"]) if recurrent_noise is None else recurrent_noise,
+            inputs.new_zeros(len(genome)) if received is None else received,
+            inputs.new_full((len(genome),), 1 / config.controller_hz)
+            if elapsed is None
+            else elapsed,
+            learning=plasticity and recurrent_learning,
+            exploration_enabled=exploration_enabled,
+        )
+        if config.recurrent_noise_sigma:
+            learned = recurrent["recurrent_plastic"]
+            plastic = learned if plastic is None else plastic + learned
+            hidden_noise = recurrent["recurrent_applied_noise"]
     hidden, actions = advance(
-        config, genome, inputs, state["hidden"], tau, plastic, config.ecology_version >= 12
+        config,
+        genome,
+        inputs,
+        state["hidden"],
+        tau,
+        plastic,
+        config.ecology_version >= 12,
+        hidden_noise=hidden_noise,
     )
-    result = dict(hidden=hidden)
+    result = dict(hidden=hidden, **recurrent)
     if config.ecology_version >= 12:
         from .learning import motor_policy
 

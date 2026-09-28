@@ -38,6 +38,11 @@ def fork_challenge(source, mode, reverse, target_tick):
 
             for key in value_shapes(w.config.hidden_size):
                 w.agents[f"module_{key}"].zero_()
+        if w.config.ecology_version >= 25:
+            from .recurrent_learning import recurrent_shapes
+
+            for key in recurrent_shapes(w.config.hidden_size):
+                w.agents[f"module_{key}"].zero_()
     if mode == "erase_activity":
         w.agents["module_h"].zero_()
         w.agents["h"].zero_()
