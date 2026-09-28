@@ -5,6 +5,10 @@ has been implemented. The gentler V25 screen has completed and also failed its
 original decision rule. The rate/noise sweep is closed. These alternatives are
 research candidates, not evidence that another algorithm will improve the ecology.
 
+The [prospective passive experiment](REPRESENTATION_LEARNING_PLAN.md) is now
+specified. A separate observer kernel and native derivative diagnostic are
+implemented; the physical controller remains unchanged.
+
 ## What the measured failure does and does not say
 
 The [native V25 fixture](RECURRENT_LEARNING.md) learns its supplied delayed-cue
@@ -91,3 +95,44 @@ testing that representation in a live controller. Such an improvement would
 still need separate behavioral and ecological controls. Adding layers, sharing
 weights across unrelated organisms, or copying acquired weights to offspring
 would change other hypotheses and is outside this initial diagnostic.
+
+## Completed derivative diagnostic
+
+The six fixed-weight checks use three founder seeds (11/12/13), each with its
+inherited recurrent weights and a separate zero-recurrence control. Five of six
+hidden slots are active; absent sensory and recurrent edges, a self-edge,
+heterogeneous response times, biases, and normalized readout derivatives are
+included. Four sampled points span 1–40 updates (0.1–4 seconds).
+
+Exact online sensitivities agree with autograd through the actual native
+`advance` function to a maximum absolute error of `8.89e-16`. Conditional
+one-transition derivatives agree to `2.78e-17`. The separate normalization check
+includes zero activity. Local leak-only sensitivities are exact in the
+zero-recurrence controls; their error with nonzero recurrence is substantial:
+
+| Fixture seed | Relative gradient error at 4 s | Gradient cosine at 4 s |
+|---|---:|---:|
+| 11 | 28.5% | .963 |
+| 12 | 41.7% | .944 |
+| 13 | 18.7% | .984 |
+
+These are implementation and approximation measurements on a small supplied
+fixture, not evidence of prediction learning, foraging, or ecological benefit.
+Online weight changes introduce further approximation. All sampled derivatives
+respect the inherited masks.
+
+The [checked record](results/representation-gradients.json) points to the raw
+report and archived executed scripts/native source under
+`runs/representation-gradient-diagnostic`. Source and script digests were
+verified. The subsequent script formatting does not change these archived
+executed files or the reported results.
+
+```bash
+uv run python scripts/probe_representation_gradients.py --output runs/new-gradient-check
+```
+
+The observer's causal update has six additional passing tests for fresh state,
+old-trace credit, pre-update readout feedback, unchanged owner value learning
+under shuffled representation feedback, masks/bounds, and disabled adaptation.
+The population prediction experiment follows the separate plan; no adaptive
+representation has been added to the native controller.

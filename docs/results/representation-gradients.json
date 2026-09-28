@@ -1,0 +1,331 @@
+{
+  "interpretation": "Check exact and local sensitivities through native leaky, masked neurons.\n\nFixed-weight derivatives are implementation checks, not demonstrations of\nlearning or ecological fitness. Local sensitivity drops recurrent propagation.\n",
+  "completed": true,
+  "source_sha256": "4194464562b97bbc269eb12320cef64f286955c7e5b4d1cbc8c43d3f0e29c5a2",
+  "scripts_sha256": {
+    "probe_representation_gradients.py": "342af6a8d7b3cd31305f446af1f41f7e11aef7d23d0f69db91db9f8aabc22196",
+    "representation_learning.py": "f38e58f85d406ef8ed39ead4730706d860aabef18a6d32cb7c3327b255f41bfc"
+  },
+  "dtype": "float64",
+  "torch": "2.11.0+cu128",
+  "normalization": {
+    "maximum_absolute_error": 0.0,
+    "includes_zero_activity": true
+  },
+  "trials": [
+    {
+      "seed": 11,
+      "zero_recurrence": false,
+      "active_neurons": 5,
+      "alpha": [
+        0.02145529290103587,
+        0.014607007654984128,
+        0.04219612593311173,
+        0.0487679669353448,
+        0.02270549276861633,
+        0.026961250037591644
+      ],
+      "maximum_transition_error": 0.0,
+      "samples": [
+        {
+          "steps": 1,
+          "exact_maximum_error": 3.469446951953614e-18,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 1.0477074886115542e-16,
+          "local_cosine": 0.9999999999999998,
+          "autograd_norm": 0.0698450592830067,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 4,
+          "exact_maximum_error": 1.3877787807814457e-17,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 0.025790958791005975,
+          "local_cosine": 0.9997015959888514,
+          "autograd_norm": 0.16708060231136815,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 12,
+          "exact_maximum_error": 2.0816681711721685e-17,
+          "conditional_maximum_error": 1.734723475976807e-18,
+          "local_relative_error": 0.08761742274497694,
+          "local_cosine": 0.996580502322636,
+          "autograd_norm": 0.3911691845472289,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 40,
+          "exact_maximum_error": 2.220446049250313e-16,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 0.28474191646251684,
+          "local_cosine": 0.9627956437805281,
+          "autograd_norm": 1.0658971817917666,
+          "inactive_derivatives_zero": true
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "zero_recurrence": true,
+      "active_neurons": 5,
+      "alpha": [
+        0.02145529290103587,
+        0.014607007654984128,
+        0.04219612593311173,
+        0.0487679669353448,
+        0.02270549276861633,
+        0.026961250037591644
+      ],
+      "maximum_transition_error": 0.0,
+      "samples": [
+        {
+          "steps": 1,
+          "exact_maximum_error": 3.469446951953614e-18,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 1.0477074886115542e-16,
+          "local_cosine": 0.9999999999999998,
+          "autograd_norm": 0.0698450592830067,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 4,
+          "exact_maximum_error": 6.938893903907228e-18,
+          "conditional_maximum_error": 1.734723475976807e-18,
+          "local_relative_error": 1.2743617816397124e-16,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.1657181087071632,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 12,
+          "exact_maximum_error": 1.3877787807814457e-17,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 1.250980711751034e-16,
+          "local_cosine": 1.0000000000000002,
+          "autograd_norm": 0.37853903579378234,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 40,
+          "exact_maximum_error": 1.3877787807814457e-16,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 2.0466582529503957e-16,
+          "local_cosine": 0.9999999999999999,
+          "autograd_norm": 0.93121309707781,
+          "inactive_derivatives_zero": true
+        }
+      ]
+    },
+    {
+      "seed": 12,
+      "zero_recurrence": false,
+      "active_neurons": 5,
+      "alpha": [
+        0.05980869060852678,
+        0.11569054123886324,
+        0.04934512634622257,
+        0.18978433150579954,
+        0.07700311919123304,
+        0.061785454305828935
+      ],
+      "maximum_transition_error": 0.0,
+      "samples": [
+        {
+          "steps": 1,
+          "exact_maximum_error": 1.3877787807814457e-17,
+          "conditional_maximum_error": 1.3877787807814457e-17,
+          "local_relative_error": 9.304813094926774e-17,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.42865875094357847,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 4,
+          "exact_maximum_error": 1.1102230246251565e-16,
+          "conditional_maximum_error": 6.938893903907228e-18,
+          "local_relative_error": 0.06468360493246347,
+          "local_cosine": 0.9980640163967653,
+          "autograd_norm": 0.7748603185574053,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 12,
+          "exact_maximum_error": 1.1102230246251565e-16,
+          "conditional_maximum_error": 1.3877787807814457e-17,
+          "local_relative_error": 0.18615870429185372,
+          "local_cosine": 0.9857271605023263,
+          "autograd_norm": 1.4203860052693937,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 40,
+          "exact_maximum_error": 6.661338147750939e-16,
+          "conditional_maximum_error": 1.3877787807814457e-17,
+          "local_relative_error": 0.41718389870142436,
+          "local_cosine": 0.9443012668650599,
+          "autograd_norm": 2.059795746774249,
+          "inactive_derivatives_zero": true
+        }
+      ]
+    },
+    {
+      "seed": 12,
+      "zero_recurrence": true,
+      "active_neurons": 5,
+      "alpha": [
+        0.05980869060852678,
+        0.11569054123886324,
+        0.04934512634622257,
+        0.18978433150579954,
+        0.07700311919123304,
+        0.061785454305828935
+      ],
+      "maximum_transition_error": 0.0,
+      "samples": [
+        {
+          "steps": 1,
+          "exact_maximum_error": 1.3877787807814457e-17,
+          "conditional_maximum_error": 1.3877787807814457e-17,
+          "local_relative_error": 9.304813094926774e-17,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.42865875094357847,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 4,
+          "exact_maximum_error": 5.551115123125783e-17,
+          "conditional_maximum_error": 1.3877787807814457e-17,
+          "local_relative_error": 1.45215523645839e-16,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.7867252202643706,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 12,
+          "exact_maximum_error": 2.220446049250313e-16,
+          "conditional_maximum_error": 2.7755575615628914e-17,
+          "local_relative_error": 1.8904748947473654e-16,
+          "local_cosine": 1.0,
+          "autograd_norm": 1.5111437982442437,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 40,
+          "exact_maximum_error": 8.881784197001252e-16,
+          "conditional_maximum_error": 1.3877787807814457e-17,
+          "local_relative_error": 4.0575588031855156e-16,
+          "local_cosine": 1.0,
+          "autograd_norm": 2.455914387025499,
+          "inactive_derivatives_zero": true
+        }
+      ]
+    },
+    {
+      "seed": 13,
+      "zero_recurrence": false,
+      "active_neurons": 5,
+      "alpha": [
+        0.033732348726155714,
+        0.03003063396518757,
+        0.014169388542917605,
+        0.04622290520405081,
+        0.05046038662104735,
+        0.04011666804356939
+      ],
+      "maximum_transition_error": 0.0,
+      "samples": [
+        {
+          "steps": 1,
+          "exact_maximum_error": 3.469446951953614e-18,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 9.908967676929572e-17,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.10778148183754122,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 4,
+          "exact_maximum_error": 1.3877787807814457e-17,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 0.020729376999319628,
+          "local_cosine": 0.9997902285381386,
+          "autograd_norm": 0.23261641783890016,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 12,
+          "exact_maximum_error": 5.551115123125783e-17,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 0.06448685919368224,
+          "local_cosine": 0.9979950102250605,
+          "autograd_norm": 0.4994525570709984,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 40,
+          "exact_maximum_error": 4.996003610813204e-16,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 0.18742584850704738,
+          "local_cosine": 0.9835343640771768,
+          "autograd_norm": 0.9179427176065442,
+          "inactive_derivatives_zero": true
+        }
+      ]
+    },
+    {
+      "seed": 13,
+      "zero_recurrence": true,
+      "active_neurons": 5,
+      "alpha": [
+        0.033732348726155714,
+        0.03003063396518757,
+        0.014169388542917605,
+        0.04622290520405081,
+        0.05046038662104735,
+        0.04011666804356939
+      ],
+      "maximum_transition_error": 0.0,
+      "samples": [
+        {
+          "steps": 1,
+          "exact_maximum_error": 3.469446951953614e-18,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 9.908967676929572e-17,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.10778148183754122,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 4,
+          "exact_maximum_error": 1.3877787807814457e-17,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 1.3447331950249216e-16,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.23279968104117324,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 12,
+          "exact_maximum_error": 5.551115123125783e-17,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 1.8379014513719733e-16,
+          "local_cosine": 1.0,
+          "autograd_norm": 0.5046356385018941,
+          "inactive_derivatives_zero": true
+        },
+        {
+          "steps": 40,
+          "exact_maximum_error": 1.1102230246251565e-16,
+          "conditional_maximum_error": 3.469446951953614e-18,
+          "local_relative_error": 1.83919760636011e-16,
+          "local_cosine": 0.9999999999999998,
+          "autograd_norm": 0.9481322264649396,
+          "inactive_derivatives_zero": true
+        }
+      ]
+    }
+  ],
+  "raw_report": "runs/representation-gradient-diagnostic/summary.json",
+  "raw_report_sha256": "1460272c0a1c9a982d7cf109f0c81cefe4e286436c837b21a0d750e57e18b238"
+}

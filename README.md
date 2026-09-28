@@ -53,8 +53,9 @@ screen. It remains optional; inherited timing with the new learner disabled
 is retained as the reference.
 Nine quieter-noise trials and six subsequent gentler-rate trials also fail
 the [learning screen](docs/QUIET_RECURRENT_LEARNING.md). This rate/noise sweep
-is complete. The next investigation separates learning a useful sensory
-representation from changing the creature's movement.
+is complete. A [passive prediction experiment](docs/REPRESENTATION_LEARNING_PLAN.md)
+separates learning a useful sensory representation from changing the creature's
+movement; its derivative and observation checks pass.
 The neural interface, inherited genome, and sparse-food ecology stay the same.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.

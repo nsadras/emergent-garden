@@ -109,9 +109,46 @@ requirements for a passive representation-learning diagnostic if needed.
 No alternative native learner has been implemented. The author's public MATLAB
 update has now been reviewed: it trains the previous representation from the
 next TD error and uses either previous readout weights or fixed random feedback.
-Any leaky masked adaptation still needs its own derivative and causal checks.
+The separate leaky masked derivative and causal checks are recorded below.
 Do not infer weak or useful learning from magnitude alone. Preserve the user's
 V16 edits and unrelated notes. Research remains active.
+
+## Passive representation-learning experiment
+
+The V25 rate sweep is committed as `2034502`. The next experiment is specified
+in [REPRESENTATION_LEARNING_PLAN.md](docs/REPRESENTATION_LEARNING_PLAN.md).
+No V26 or alternative native learner has been introduced. Passive observers
+compare fixed inherited features, locally adapted features, shuffled adaptation,
+and direct sensory readouts, all on identical native histories and with fresh
+acquired state at birth. Two-second TD(0) predictions use trait-scaled maximum
+readout/representation rates .05/.01 and bounds 4/.3. The approximate local
+trace retains leak but drops recurrent Jacobian propagation. Native motor/local
+learning and the world continue unchanged.
+
+The six native derivative fixtures are complete under
+`runs/representation-gradient-diagnostic`; their process is closed. Exact
+sensitivities agree with autograd to 8.89e-16, conditional derivatives to
+2.78e-17. Local gradients have 18.7–41.7% relative error at four seconds with
+nonzero recurrence; zero-recurrence controls agree exactly within tolerance.
+Checked source/script provenance is in `docs/results/representation-gradients.json`.
+Formatting subsequently changed the working script bytes, not the archived
+executed scripts or the mathematics. Eleven added kernel/forecast tests pass,
+including full-state observational equality through native births and deaths.
+
+An engineering smoke test in `runs/representation-observer-smoke` completed an
+eight-second forecast-start window and 20-second follow-up, with exact passive
+replay and 192 age-five forecasts. Its process is closed. The independent audit
+reconstructs interval normalization, terminal returns, fixed predictions, ages,
+MSE, masks, bounds, and source provenance. This smoke test is not the prospective
+three-start comparison, and no parameters were changed from its results.
+
+The full experiment should replay seeds 1/2/3 for 600 seconds plus forecast
+follow-up, using `scripts/probe_learned_representations.py`. Its default output
+for the auditor is `runs/learned-representation-pilot`. Record forecasts at ages
+5/30/60, with age 30 primary. Native integration needs lower primary MSE than
+fixed, shuffled, and zero in at least two starts; direct sensations and a causal
+running-return reference must also be inspected. The observer and plan must be
+frozen before launching. No full experiment is running yet.
 
 ## V24: inherited neural response times
 
