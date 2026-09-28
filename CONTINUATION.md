@@ -96,6 +96,14 @@ genotypes. All six assay checks pass; the prospective design is in
 [the timing assay plan](docs/NEURAL_TIMING_ASSAY_PLAN.md).
 The user's V16 working settings remain untouched.
 
+A [recurrent-learning diagnostic](docs/RECURRENT_LEARNING_RESEARCH.md) now
+verifies a hidden-neuron perturbation score and demonstrates actual bounded
+adaptation in a separate delayed-cue fixture. Three random streams improve
+target error by about 79–80%; shuffled scores remain near disabled updates.
+This supplies a tested candidate, not a native learning result. The prospective
+[V25 plan](docs/RECURRENT_LEARNING_PLAN.md) specifies its integration and matched
+controls. Finish the V24 timing transplants before selecting the final baseline.
+
 ## Research sequence
 
 1. **V6 — learnable environmental variation.** Add stable patch identity cues,

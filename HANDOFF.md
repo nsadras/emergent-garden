@@ -62,6 +62,25 @@ The release guide retains the
 mechanical checks, source provenance, and initial experimental results.
 Research remains active. Preserve the user's V16 edits and unrelated notes.
 
+The next [recurrent-learning candidate](docs/RECURRENT_LEARNING_RESEARCH.md)
+has passed two independent diagnostics. Its conditional score matches autograd;
+reward-weighted gradients differ by .54% in a 163,840-trajectory fixture. Actual
+bounded recurrent adaptation then reduces a supplied delayed-cue task's error
+by about 79–80% in all three random streams, with shuffled feedback near the
+no-update controls. The baselines in the adaptation test use past experience,
+not an oracle. Full traces learn faster initially than two-second traces.
+The full training sequence represents about 41 minutes of neural time; these
+are not ecological results. Both diagnostic processes completed successfully.
+Raw data are `runs/recurrent-score-diagnostic` and `runs/recurrent-adaptation`;
+checked records and an inspected figure are linked from the research document.
+
+The prospective [V25 plan](docs/RECURRENT_LEARNING_PLAN.md) specifies optional
+hidden perturbations, separate bounded recurrent offsets, causal credit order,
+fresh acquired state, noise and feedback controls, compatibility requirements,
+and a twelve-run native screen. Native V25 implementation has **not started**.
+Finish the V24 timing audit and review its baseline choice, then implement and
+test the actual mechanism. This is ongoing authorized work, not a pause.
+
 ## V23: direct sensory value features
 
 [V23](docs/SENSORY_VALUE.md) optionally appends the actual 42 controller inputs
