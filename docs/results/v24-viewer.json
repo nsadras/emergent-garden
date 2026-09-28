@@ -1,0 +1,94 @@
+{
+  "source": "runs/v24-evolving-pilot/seed-1/latest.pt",
+  "source_checkpoint_sha256": "88f8a4fbd40a73ccabb8c3d0acfbb53c4d3a12da6a55e7f40f3eaa6605a00a1c",
+  "source_sha256": "232776b96cc57a847d720eae4724234ab948a772eefd941de997da9d49e3a425",
+  "time": 630.1,
+  "population": 138,
+  "selected": 220,
+  "selected_neuron": 0,
+  "active_neuron_times": [
+    0.9770024418830872,
+    0.732211172580719,
+    2.4356589317321777,
+    3.8657610416412354,
+    1.4745564460754395,
+    3.048313617706299,
+    3.4562900066375732,
+    5.312524795532227,
+    1.4300038814544678,
+    5.233316421508789,
+    0.7267265915870667,
+    1.0219835042953491,
+    1.4125852584838867,
+    2.203033924102783,
+    6.825519561767578,
+    6.841015815734863,
+    2.6014788150787354,
+    1.8528157472610474,
+    3.7625434398651123,
+    1.4481881856918335
+  ],
+  "layouts": [
+    {
+      "height": 640,
+      "tab": "brain",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "body",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "details",
+      "content_height": 567
+    },
+    {
+      "height": 768,
+      "tab": "brain",
+      "content_height": 768
+    },
+    {
+      "height": 768,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 768,
+      "tab": "details",
+      "content_height": 567
+    },
+    {
+      "height": 900,
+      "tab": "brain",
+      "content_height": 900
+    },
+    {
+      "height": 900,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 900,
+      "tab": "details",
+      "content_height": 567
+    },
+    {
+      "height": 1024,
+      "tab": "brain",
+      "content_height": 938
+    },
+    {
+      "height": 1024,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 1024,
+      "tab": "details",
+      "content_height": 567
+    }
+  ],
+  "meaning": "An illustrative 30-second fork, not an independent ecological experiment."
+}

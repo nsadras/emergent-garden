@@ -18,6 +18,7 @@ from .field import ShelterField, SmellField, TrailField
 from .landscape import ReversalLandscape
 from .learning import motor_memory_shapes
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
+from .neural_timing import initial_timing, mutate_timing, timing_metrics
 from .plasticity import rule_coefficients
 from .resources import ResourceLandscape
 from .runtime import enable_cuda_replay
@@ -193,6 +194,10 @@ class EcologyWorld(World):
             self.rng["founder_structure"] = torch.Generator(device=self.device).manual_seed(
                 seed + 32452843
             )
+        if c.ecology_version >= 24:
+            self.rng["neural_timing"] = torch.Generator(device=self.device).manual_seed(
+                seed + 6700417
+            )
         self.field = self.fields[0]
         self.patch_positions = self.disk(c.patches, c.diameter / 2 - c.patch_extent - c.food_radius)
         self.patch_phases = (
@@ -327,6 +332,8 @@ class EcologyWorld(World):
         pieces = [brain, traits]
         if self.config.ecology_version >= 8:
             pieces.append(structure)
+        if c.ecology_version >= 24:
+            pieces.append(initial_timing(c, n, self.device, self.rng["neural_timing"]))
         return torch.cat(pieces, 1)
 
     def develop(self, a):
@@ -1000,6 +1007,8 @@ class EcologyWorld(World):
         changed = (genes + mask * noise * scale).clamp(-c.weight_limit, c.weight_limit)
         if c.ecology_version >= 8:
             changed = torch.cat((changed, genome[len(genes) :]))
+            if c.ecology_version >= 24:
+                changed = mutate_timing(c, changed, self.rng["neural_timing"])
             changed = mutate_structure(c, changed, self.rng["structure"])
         if c.ecology_version >= 13:
             changed, event = mutate_module_count(c, changed, self.rng["body_structure"])
@@ -1086,7 +1095,8 @@ class EcologyWorld(World):
             neural_event = {}
             if c.ecology_version >= 8:
                 start = c.brain_parameter_count + c.trait_count
-                changed = bool((child["genome"][0, start:] != a["genome"][i, start:]).any())
+                end = start + c.structure_count
+                changed = bool((child["genome"][0, start:end] != a["genome"][i, start:end]).any())
                 self.totals["neural_structural_births"] += int(changed)
                 self.totals["neural_construction"] += float(child["brain_construction"][0])
                 neural_event = dict(
@@ -1298,6 +1308,10 @@ class EcologyWorld(World):
             result["neuron_histogram"] = torch.bincount(
                 a["neurons"], minlength=c.hidden_size + 1
             ).tolist()
+        if c.ecology_version >= 24:
+            result.update(
+                timing_metrics(c, a["genome"], a["memory_tau"], effective_masks(c, a["genome"])[0])
+            )
         if c.ecology_version >= 13:
             juvenile = a["modules"] < a["target_modules"]
             result["juvenile_population"] = int(juvenile.sum())

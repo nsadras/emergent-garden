@@ -7,7 +7,7 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-The current experimental release is **V23 / package 0.24.0**. Research resumed
+The current experimental release is **V24 / package 0.25.0**. Research resumed
 on September 23, focusing on scarce, valuable food and affordable exploration.
 The [foraging experiments](docs/FORAGING.md) found that faster food processing
 supported all three tested populations for 30 minutes; a new optional spatial
@@ -35,6 +35,12 @@ A faster prediction-learning rate increases error. All nine ecological pilots
 and the paired prediction diagnostics are complete.
 An optional [two-second prediction horizon](docs/PREDICTION_HORIZONS.md) improves
 local forecasts but still gives mixed ecological results and weak learning evidence.
+[V24](docs/NEURAL_TIMESCALES.md) gives individual recurrent neurons inherited
+response times. Matched pilots show mixed ecological effects: varied timing helps
+two of three starts, direct timing mutation helps one. A separate circuit probe
+confirms changed responses without demonstrating useful memory. Twelve pilots
+and six exact neutral comparisons are complete; nine longer continuations are
+underway. Details now shows the selected neuron's response time.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 

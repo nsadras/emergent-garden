@@ -1,8 +1,8 @@
 # Continuing evolution experiments
 
 Development **resumed at the user's request on September 23, 2026**, after the
-V15 pause and subsequent interface/resource work. The current iteration is V23
-(package 0.24.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
+V15 pause and subsequent interface/resource work. The current iteration is V24
+(package 0.25.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
 meals and affordable exploration. Current evidence, historical interrupted work,
 and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
@@ -72,6 +72,22 @@ prediction still does not establish useful motor adaptation. All 390 tests pass.
 The shorter preset remains optional. Next investigate variation in recurrent
 neural dynamics. The research loop remains active, and the user's V16 working
 configuration is unchanged.
+
+[V24](docs/NEURAL_TIMESCALES.md) adds inherited per-neuron response times without
+changing sensory channels, body laws, or acquired-state inheritance. The 32-slot
+genome now contains 5,304 values. Its separate RNG leaves ordinary initialization
+and mutation streams unchanged; duplication copies the donor's timing gene.
+All twelve pilots and the paired 576-circuit pulse probe are complete. Births
+are 288/265/156 with homogeneous timing, 341/195/290 with inherited variation,
+and 208/87/373 with direct timing mutation. Six compatibility comparisons match
+the complete common physical state, recorded measurements, and event fields.
+
+Immediate pulse responses increase, while retained activity has mixed effects.
+Neither this probe nor community birth counts establishes useful temporal memory.
+Mean response speed changes alongside within-brain variation. Every seed of all
+three treatments is continuing to 1,800 seconds, preserving the original physics
+and checkpoint state. All nine continuations must be reported before choosing
+the next controlled assay. The user's V16 working settings remain untouched.
 
 ## Research sequence
 

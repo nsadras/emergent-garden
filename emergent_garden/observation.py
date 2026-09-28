@@ -103,7 +103,8 @@ class BrainSample:
     nodes: np.ndarray
     masks: list
     plastic: np.ndarray
-    alpha: float
+    alpha: float | np.ndarray
+    response_times: np.ndarray | None = None
     motor_plastic: np.ndarray | None = None
     noise: np.ndarray | None = None
     predicted_return: np.ndarray | None = None
@@ -175,6 +176,7 @@ class ControllerObserver:
             a["module_h"][i, :count] if module_inputs is not None else a["h"][i : i + 1]
         )
         from .inheritance import brain_parts
+        from .neural_timing import integration_factors, response_times
         from .topology import effective_masks
 
         genome = a["genome"][i : i + 1]
@@ -188,7 +190,8 @@ class ControllerObserver:
         plastic = np.zeros((count, c.hidden_size, c.hidden_size), dtype=np.float32)
         if "module_plastic" in a and world.ablation != "no_plasticity":
             plastic = array(a["module_plastic"][i, :count])
-        tau = float(a["memory_tau"][i]) if "memory_tau" in a else c.neural_tau
+        tau = a["memory_tau"][i : i + 1] if "memory_tau" in a else None
+        factors = integration_factors(c, genome, tau)
         sample = BrainSample(
             self.selected,
             world.tick,
@@ -203,7 +206,8 @@ class ControllerObserver:
             nodes,
             masks,
             plastic,
-            1 - math.exp(-1 / (c.controller_hz * tau)),
+            factors if isinstance(factors, float) else array(factors[0]),
+            response_times=array(response_times(c, genome, tau)[0]),
         )
         self._pending = (i, local, sample)
 
@@ -229,7 +233,11 @@ class ControllerObserver:
                 trait = a["genome"][i, c.brain_parameter_count + 12].sigmoid().item()
                 sigma = c.exploration_min + (c.exploration_max - c.exploration_min) * trait
                 sample.noise = array(motor_noise[local, :count]) * sigma
-            if c.ecology_version >= 22:
+            if (
+                c.ecology_version >= 22
+                and c.motor_value_rate
+                and world.ablation not in ("no_motor_value", "no_motor_learning", "no_plasticity")
+            ):
                 sample.predicted_return = array(a["module_motor_value_prediction"][i, :count])
                 sample.prediction_error = array(a["module_motor_value_error"][i, :count])
         self.sample = sample

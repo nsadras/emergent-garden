@@ -41,6 +41,7 @@ def main():
         node_mutation_probability=0.0,
         edge_mutation_probability=0.0,
         module_mutation_probability=0.0,
+        timing_mutation_probability=0.0,
     )
     frozen.save(args.output / "frozen.toml")
     report = dict(

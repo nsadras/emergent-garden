@@ -25,6 +25,7 @@ def fork_challenge(source, mode, reverse, target_tick):
         node_mutation_probability=0.0,
         edge_mutation_probability=0.0,
         module_mutation_probability=0.0,
+        timing_mutation_probability=0.0,
     )
     if mode in ("erase_plastic", "no_plasticity"):
         w.agents["module_plastic"].zero_()

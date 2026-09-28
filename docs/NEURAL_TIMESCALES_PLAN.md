@@ -1,13 +1,14 @@
 # V24 plan: inherited response times within a recurrent circuit
 
-Status: planned, not implemented. V22/V23 prediction work and all scheduled
-follow-ups are complete. The next branch addresses the user's interest in
+Status: implemented as V24 / package 0.25.0. All twelve 600-second pilots,
+including the three fully neutral compatibility runs, and the paired circuit
+pulse probe are complete. The branch addresses the user's interest in
 greater neural and mutational variation by varying recurrent dynamics within
 one brain, before adding additional hidden layers.
 
 ## Hypothesis and scope
 
-Every neuron currently uses the organism's inherited `memory_tau`, developed as
+Before V24, every neuron used the organism's inherited `memory_tau`, developed as
 `.2 + 4.8 * sigmoid(trait)`. Different organisms can have different response
 times, but their individual neurons share one time constant. A mixture of fast
 and slow neurons may represent immediate sensory changes and longer temporal
@@ -88,3 +89,24 @@ from claims about useful memory. Follow ecological improvements with matched
 learning/feedback controls before calling them adaptive intelligence. Broader
 spatially structured or reflection-equivariant circuits remain later options;
 they are not part of this first timing experiment.
+
+## Continuation decision after the initial screen
+
+The no-direct-timing-mutation treatment improves births in two of three starts;
+timing mutation improves only one, but all nine treatment populations remain
+alive at 600 seconds. Extend **all three seeds of all three treatments** to
+1,800 seconds, by resuming each exact checkpoint for 1,200 additional seconds.
+The extra fully neutral compatibility runs need no separate continuation.
+
+Report persistence, births, lineage counts, trophic composition, neural size,
+and time-constant distributions for every continuation, including extinction.
+Treat them as extensions of the same three evolutionary starts, not additional
+replicates. Do not select only the successful seed-3 mutation population.
+No new physics or neural setting changes during these continuations.
+
+Different timing factors also shift each brain's mean response time. These
+comparisons therefore do not isolate the benefit of within-brain heterogeneity
+from a change in average response speed. Any later claim of useful adaptation
+needs matched genotype and feedback interventions; no such claim follows from
+more births or longer neural responses alone. The continuation outcomes will
+determine the next controlled assay.

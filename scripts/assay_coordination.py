@@ -67,6 +67,7 @@ def main():
         node_mutation_probability=0.0,
         edge_mutation_probability=0.0,
         module_mutation_probability=0.0,
+        timing_mutation_probability=0.0,
     ).validate()
     a = source.agents
     eligible = ((a["target_modules"] == 2) & (a["diet"] > 0.65)).nonzero().flatten().tolist()

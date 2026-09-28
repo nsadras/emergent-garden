@@ -54,6 +54,7 @@ def main():
         node_mutation_probability=0.0,
         edge_mutation_probability=0.0,
         module_mutation_probability=0.0,
+        timing_mutation_probability=0.0,
     ).validate()
     if c.ecology_version < 12:
         parser.error("Motor-learning assays require V12+")

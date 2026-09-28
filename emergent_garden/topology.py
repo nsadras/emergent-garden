@@ -5,6 +5,7 @@ import math
 import torch
 
 from .inheritance import brain_parts
+from .neural_timing import timing_genes
 
 
 def mask_parts(config, genomes):
@@ -31,6 +32,8 @@ def effective_masks(config, genomes):
 def initial_structure(config, count, device, generator=None):
     # Use a full temporary genome so layout offsets have one definition.
     genome = torch.zeros((count, config.parameter_count), device=device)
+    start = config.brain_parameter_count + config.trait_count
+    structure = genome[:, start : start + config.structure_count]
     nodes, wi, wr, wo = mask_parts(config, genome)
     if config.initial_neuron_spread or config.initial_recurrent_density != 1:
         if generator is None:
@@ -57,13 +60,13 @@ def initial_structure(config, count, device, generator=None):
                 < config.initial_recurrent_density
             )
         wo[:] = active[:, None, :]
-        return genome[:, config.brain_parameter_count + config.trait_count :]
+        return structure
     n = config.initial_neurons
     nodes[:, :n] = 1
     wi[:, :n] = 1
     wr[:, :n, :n] = 1
     wo[:, :, :n] = 1
-    return genome[:, config.brain_parameter_count + config.trait_count :]
+    return structure
 
 
 def counts(config, genomes):
@@ -90,6 +93,9 @@ def duplicate_neuron(config, genome, donor, destination):
     mr[:, destination] = 0
     wi[destination], mi[destination] = wi[donor].clone(), mi[donor].clone()
     bias[destination] = bias[donor]
+    if config.timing_count:
+        timing = timing_genes(config, out[None])[0]
+        timing[destination] = timing[donor]
     wr[destination], mr[destination] = wr[donor].clone(), mr[donor].clone()
     wr[:, donor] *= 0.5
     wr[:, destination] = wr[:, donor].clone()

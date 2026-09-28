@@ -4,6 +4,7 @@ import math
 
 import torch
 
+from .neural_timing import integration_factors
 from .topology import effective_masks
 
 
@@ -58,11 +59,7 @@ def advance(config, genome, inputs, hidden, tau=None, plastic=None, return_logit
         hidden = hidden * nodes
     drive = (wi @ inputs[..., None]).squeeze(-1)
     drive += (wr @ hidden[..., None]).squeeze(-1) + bias
-    alpha = (
-        1 - math.exp(-1 / (config.controller_hz * config.neural_tau))
-        if tau is None
-        else 1 - torch.exp(-1 / (config.controller_hz * tau[:, None]))
-    )
+    alpha = integration_factors(config, genome, tau)
     hidden = (1 - alpha) * hidden + alpha * drive.tanh()
     if config.ecology_version >= 8:
         hidden = hidden * nodes

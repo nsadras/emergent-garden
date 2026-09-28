@@ -109,7 +109,7 @@ def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
     assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
-@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20, 21, 22, 23])
+@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20, 21, 22, 23, 24])
 def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, monkeypatch):
     c = replace(
         config,
@@ -124,6 +124,8 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         motor_value_rate=0.02 if version >= 22 else 0,
         motor_value_inputs=int(version >= 23),
         motor_normalized=int(version >= 22),
+        neural_timing_range=4 if version >= 24 else 1,
+        initial_timing_sigma=0.5 if version >= 24 else 0,
     )
     w = create_world(c)
     a = w.agents
@@ -238,6 +240,10 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         (23, "shuffled_motor_reward"),
         (23, "no_direction"),
         (23, "no_feedback"),
+        (24, "none"),
+        (24, "shuffled_motor_reward"),
+        (24, "no_motor_learning"),
+        (24, "no_plasticity"),
     ],
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
@@ -260,6 +266,8 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
             motor_value_rate=0.02 if version >= 22 else 0,
             motor_value_inputs=int(version >= 23),
             motor_normalized=int(version >= 22),
+            neural_timing_range=4 if version >= 24 else 1,
+            initial_timing_sigma=0.5 if version >= 24 else 0,
         ),
         ablation=ablation,
     )
@@ -281,7 +289,13 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
                 panel.tab = tab
                 panel.draw(w, 0, observer, 800)
     assert observer.sample is not None
-    if version >= 23 and ablation != "no_motor_value":
+    value_enabled = version >= 22 and ablation not in (
+        "no_motor_value",
+        "no_motor_learning",
+        "no_plasticity",
+    )
+    assert (observer.sample.predicted_return is not None) == value_enabled
+    if version >= 23 and value_enabled:
         from emergent_garden.value import sensory_features
 
         sample = observer.sample
@@ -289,7 +303,7 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
             torch.from_numpy(sample.hidden), torch.from_numpy(sample.inputs)
         )
         torch.testing.assert_close(
-            w.agents["module_motor_value_previous"][0, :len(expected)], expected, rtol=0, atol=0
+            w.agents["module_motor_value_previous"][0, : len(expected)], expected, rtol=0, atol=0
         )
     assert "controller_observer" not in w.state_dict()
     assert_same(w.state_dict(), plain.state_dict())

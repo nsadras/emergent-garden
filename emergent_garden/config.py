@@ -125,6 +125,10 @@ class Config:
     birth_retry: float = 1.0
     hidden_size: int = 16
     neural_tau: float = 0.5
+    neural_timing_range: float = 1.0
+    initial_timing_sigma: float = 0.0
+    timing_mutation_probability: float = 0.0
+    timing_mutation_sigma: float = 0.15
     mutation_probability: float = 0.02
     mutation_sigma: float = 0.05
     weight_limit: float = 3.0
@@ -167,8 +171,18 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(24):
+        if self.ecology_version not in range(25):
             raise ValueError("Unsupported ecology version")
+        if not 1 <= self.neural_timing_range <= 100:
+            raise ValueError("neural_timing_range must be in [1, 100]")
+        if self.timing_mutation_probability > 1:
+            raise ValueError("timing_mutation_probability must be in [0, 1]")
+        if self.ecology_version < 24 and (
+            self.neural_timing_range != 1
+            or self.initial_timing_sigma
+            or self.timing_mutation_probability
+        ):
+            raise ValueError("Inherited neural timing requires ecology_version >= 24")
         if self.sensory_contrast not in (0, 1):
             raise ValueError("sensory_contrast must be 0 or 1")
         if self.sensory_contrast and self.ecology_version < 17:
@@ -295,7 +309,13 @@ class Config:
 
     @property
     def parameter_count(self):
-        return self.brain_parameter_count + self.trait_count + self.structure_count
+        return (
+            self.brain_parameter_count + self.trait_count + self.structure_count + self.timing_count
+        )
+
+    @property
+    def timing_count(self):
+        return self.hidden_size if self.ecology_version >= 24 else 0
 
     @property
     def structure_count(self):

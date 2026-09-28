@@ -188,6 +188,15 @@ def main():
             assert metric["motor_value_error_rms"] > 0
         else:
             assert metric["mean_motor_value_norm"] == 0
+    if c.ecology_version >= 24:
+        from emergent_garden.neural_timing import response_times, timing_genes
+
+        times = response_times(c, w.agents["genome"], w.agents["memory_tau"])
+        assert times.shape == (w.population, c.hidden_size)
+        assert torch.isfinite(times).all() and (times > 0).all()
+        assert timing_genes(c, w.agents["genome"]).abs().max() <= c.weight_limit
+        if c.neural_timing_range > 1 and c.initial_timing_sigma:
+            assert metric["neural_timing_mean_within_log_std"] > 0
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
         config=asdict(w.config),

@@ -324,8 +324,14 @@ class Inspector:
         c = sample.config
         top = 230
         incoming, recurrent, bias = sample.drives(k)
+        timing = (
+            f"   |   Response time: {sample.response_times[focus]:.2f} s"
+            if sample.response_times is not None
+            else ""
+        )
         self.text(
-            f"h{focus:02d}: {sample.previous[k, focus]:+.3f} -> {sample.hidden[k, focus]:+.3f}",
+            f"h{focus:02d}: {sample.previous[k, focus]:+.3f} -> "
+            f"{sample.hidden[k, focus]:+.3f}{timing}",
             (22, top),
             GOLD,
         )
@@ -417,8 +423,10 @@ class Inspector:
             )
             top += 24
             if c.ecology_version >= 23:
-                sources = "hidden activity + sensory inputs + bias" if c.motor_value_inputs else (
-                    "hidden activity + bias"
+                sources = (
+                    "hidden activity + sensory inputs + bias"
+                    if c.motor_value_inputs
+                    else ("hidden activity + bias")
                 )
                 count = c.hidden_size + (c.input_size if c.motor_value_inputs else 0) + 1
                 self.text(

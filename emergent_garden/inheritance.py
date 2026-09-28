@@ -6,6 +6,7 @@ from pathlib import Path
 import torch
 
 from .config import Config
+from .neural_timing import timing_genes
 
 
 def brain_parts(config, genomes):
@@ -100,8 +101,12 @@ def upgrade_genomes(source, target, genomes):
                 mi[:, :, target.input_names.index(name)] = nodes
         if ((nodes > 0.5).sum(1) < target.min_neurons).any():
             raise ValueError("Source has fewer active neurons than the destination minimum")
+    if source.timing_count:
+        timing_genes(target, out)[:, :h] = timing_genes(source, genomes)
     continuous = out[:, : target.brain_parameter_count + target.trait_count]
-    if (continuous.abs() > target.weight_limit).any():
+    if (continuous.abs() > target.weight_limit).any() or (
+        timing_genes(target, out).abs() > target.weight_limit
+    ).any():
         raise ValueError(
             "Transfer exceeds target weight_limit; increase it to preserve the circuit"
         )
@@ -135,6 +140,7 @@ def seed_population(world, path):
         "New sensory weights start at zero; new physical effector biases start at -2. "
         "Plasticity modulation starts at zero and learned synaptic changes are empty. "
         "New modular bodies start with one module near the duplication boundary. "
-        "V8+ can pad into a wider template with all added neurons and edges dormant.",
+        "V8+ can pad into a wider template with all added neurons and edges dormant. "
+        "New V24 timing genes start at zero, preserving each body's response time.",
     )
     world.rebuild_fields()

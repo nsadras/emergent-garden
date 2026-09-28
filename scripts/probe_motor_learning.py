@@ -22,7 +22,8 @@ from emergent_garden.topology import initial_structure
 def trial(config, count, seed, steps, learning):
     c = config
     genomes = torch.zeros(count, c.parameter_count)
-    genomes[:, c.brain_parameter_count + c.trait_count :] = initial_structure(
+    start = c.brain_parameter_count + c.trait_count
+    genomes[:, start : start + c.structure_count] = initial_structure(
         c, count, "cpu", torch.Generator().manual_seed(seed + 32452843)
     )
     state = motor_state(c, genomes)

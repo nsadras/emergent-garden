@@ -1,9 +1,52 @@
-# Development handoff — V23
+# Development handoff — V24
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V23 / package 0.24.0**. Python and dependencies remain
+The current code is **V24 / package 0.25.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V24: inherited neural response times
+
+[V24](docs/NEURAL_TIMESCALES.md) adds one timing gene per hidden slot after the
+structural masks, giving 5,304 values for the 32-slot preset. Each neuron's time
+constant is the body time constant multiplied by
+`exp(log(neural_timing_range) * tanh(gene))`. Range 1 preserves legacy arithmetic;
+range 4 is the heterogeneous screen. Founder genes use sigma .5 and a separate
+checkpointed RNG. Direct timing mutation uses probability .1 and sigma .15.
+Neuron duplication copies timing along with incoming influence. Acquired
+neural/learning states still reset at birth; timing has no extra energy charge.
+
+All twelve 600-second pilots are complete, including fully neutral V24 runs.
+Homogeneous populations are 144/78/100, births 288/265/156; inherited timing
+without direct timing mutation gives populations 164/42/147, births 341/195/290;
+timing mutation gives populations 121/29/176, births 208/87/373. All six neutral
+comparisons match common physical states, measurements, and events exactly.
+Added timing genes/RNG, their derived statistics, total-genome variance, and
+full-genome digests are explicitly excluded from those compatibility comparisons.
+
+The paired 576-circuit pulse probe uses unchanged inherited weights and no
+learning or movement. Varied timing increases immediate response magnitude in
+all three seeds, but does not consistently increase retained activity. The
+new timing factors also alter mean response speed, so no benefit can yet be
+attributed specifically to heterogeneity or useful temporal memory.
+
+Nine continuations are **running**: every seed of homogeneous, inherited, and
+evolving timing, resuming from 600 to 1,800 seconds. Each group runs its seeds
+sequentially. Paths are `runs/v24-{homogeneous,inherited,evolving}-long-{1,2,3}`;
+logs are `/tmp/emergent-garden-v24-{homogeneous,inherited,evolving}-long.log`.
+Do not restart completed or already-running jobs. Audit all nine when finished:
+`uv run python scripts/audit_neural_timing.py --include-long`, then rerun
+`scripts/plot_neural_timing.py`. The audit already covers the twelve pilots,
+source archives, resource/energy/trophic accounting, and pulse provenance.
+Continuation outcomes should determine the next matched genotype/feedback assay.
+
+CPU and RTX 5080 checks pass exact device-local replay through births, growth,
+and signed plasticity rules. Details shows the selected neuron's response time
+without another row, uses the actual per-neuron integration factors, and omits
+inactive value predictions. All inspector tabs fit at 640–1,024 pixels. All
+408 tests and repository-wide Ruff checks pass. The release guide retains the
+mechanical checks, source provenance, and initial experimental results.
+Research remains active. Preserve the user's V16 edits and unrelated notes.
 
 ## V23: direct sensory value features
 
@@ -43,11 +86,9 @@ and all three older subgroups. Six new native pilots produce own-return births
 210/13/281 versus shuffled 543/26/249. The shorter target helps two evolutionary
 starts but does not establish useful motor adaptation. `configs/v23-short.toml`
 is optional; the main preset retains 20 seconds. All 390 tests and Ruff checks
-pass. No runs from this follow-up remain unfinished. The next branch should
-investigate variation in recurrent dynamics. The
-[V24 timing plan](docs/NEURAL_TIMESCALES_PLAN.md) specifies inherited per-neuron
-response times, neutral compatibility, matched founder comparisons, and copied
-timing genes during neuron duplication. It is planned, not implemented.
+pass. No runs from this follow-up remain unfinished. The
+[V24 timing plan](docs/NEURAL_TIMESCALES_PLAN.md) subsequently led to the
+implemented timing experiments described above.
 Research remains active. Preserve
 the user's V16 edits and unrelated notes. V21–V23 have no unfinished scheduled
 ecological follow-ups.
