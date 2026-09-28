@@ -2,7 +2,8 @@
 
 Status: mathematical and actual-adaptation diagnostics complete; no native
 controller change yet.
-The V24 [timing transplants](NEURAL_TIMING_ASSAY_PLAN.md) are still running.
+The V24 [timing transplants](NEURAL_TIMING_ASSAYS.md) are complete and support
+retaining the inherited-timing baseline for the next experiment.
 This is a candidate for a later version, not evidence of ecological learning.
 
 ## Why investigate it
@@ -153,8 +154,8 @@ Existing configurations must preserve exact trajectories when the feature is
 disabled, and the inspector must display actual perturbations separately from
 inherited bias. Test resume, growth, mutation masks, and both available devices.
 
-Then compare native communities prospectively. The V24 timing-assay result will
-inform which timing baseline to retain. Reproduction, food absorption, and
+Then compare native communities prospectively using the
+[V25 plan](RECURRENT_LEARNING_PLAN.md). Reproduction, food absorption, and
 behavioral responses matter; more internal activity alone does not establish
 adaptation. The lack of scavenger specialists and lineage diversity in the V24
 long runs remains a separate ecological limitation.

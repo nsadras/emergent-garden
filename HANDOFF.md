@@ -42,16 +42,31 @@ Paths are `runs/v24-{homogeneous,inherited,evolving}-long-{1,2,3}`. All three
 batch processes exited successfully; do not restart them. The audit command
 `uv run python scripts/audit_neural_timing.py --include-long` and
 `scripts/plot_neural_timing.py` now include all continuations, source archives,
-resource/energy/trophic accounting, and pulse provenance. The next
-[controlled assay](docs/NEURAL_TIMING_ASSAY_PLAN.md) compares original timing,
+resource/energy/trophic accounting, and pulse provenance. The completed
+[controlled assay](docs/NEURAL_TIMING_ASSAYS.md) compares original timing,
 mean-preserved uniform timing, timing reassignment, and motor-feedback controls
 on the three inherited-timing descendant communities. All six assay tests pass.
-All thirty trials are now running in three sequential batches under
-`runs/v24-timing-assay-{1,2,3}`. Their exec sessions are 11962, 57248, and 2905;
-logs are `/tmp/emergent-garden-v24-timing-assay-{1,2,3}.log`. Each trial saves
-its complete initial state and final checkpoint. Do not restart a batch without
-checking its existing summary. The prospective plan records interventions and
-interpretation; auditing and summarizing all thirty trials is the next task.
+All thirty trials under `runs/v24-timing-assay-{1,2,3}` are complete and audited.
+The three processes exited successfully and their exec sessions are closed;
+do not restart them. Each trial retains its initial state, final checkpoint,
+frozen genotype sample, source archive, and script provenance.
+
+Native births beat mean-preserved uniform timing in 4/6 pairs, reassigned timing
+in 6/6, disabled motor updates in 6/6, and shuffled motor returns in 4/6. Fresh
+food improves in 5/6, 5/6, 5/6, and 4/6 respectively. Endpoint population effects
+are more mixed. The shuffled-return birth differences are often small, so
+general adaptive credit assignment remains unestablished. The result supports
+retaining `v24-inherited.toml` as the next baseline. Source pools contain
+273/124/289 distinct genotypes despite having only 1/2/1 original founder lineages.
+The audit and inspected plot use `scripts/audit_timing_assays.py` and
+`scripts/plot_timing_assays.py`; complete results are in the linked guide.
+
+A 1× video is at `runs/v24-inherited-real-time-preview/timelapse.mp4`, with its
+inspected last frame in `docs/v24-real-time-preview.png`. It is a 30-second fork
+of inherited seed 2 at 1,800 seconds, not another replicate. All 901 frames
+decode and its final state matches plain replay exactly after draining stored
+events. The trails still contain many loops; useful searching is unestablished.
+Every simulation and diagnostic process from this iteration has exited.
 
 CPU and RTX 5080 checks pass exact device-local replay through births, growth,
 and signed plasticity rules. Details shows the selected neuron's response time
@@ -78,8 +93,10 @@ The prospective [V25 plan](docs/RECURRENT_LEARNING_PLAN.md) specifies optional
 hidden perturbations, separate bounded recurrent offsets, causal credit order,
 fresh acquired state, noise and feedback controls, compatibility requirements,
 and a twelve-run native screen. Native V25 implementation has **not started**.
-Finish the V24 timing audit and review its baseline choice, then implement and
-test the actual mechanism. This is ongoing authorized work, not a pause.
+The V24 audit is finished and its baseline retained. Next implement and test
+the actual native mechanism, including causal updates, fresh acquired state,
+noise controls, masked score calculations, and a faithful inspector. This is
+ongoing authorized work, not a pause.
 
 ## V23: direct sensory value features
 

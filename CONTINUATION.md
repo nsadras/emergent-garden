@@ -90,10 +90,14 @@ physics and checkpoint state. Homogeneous births are 1,727/994/1,563; inherited
 timing gives 1,785/1,112/2,101; timing mutation gives 1,620/1,296/2,675. All nine
 extensions are audited. Only 1–2 founder lineages and no allocation-defined
 scavenger specialists remain per community, despite continuing detritus uptake
-and predation. Thirty controlled trials are now testing mean-preserved uniform
-timing, permuted timing, and motor-feedback interventions on matching evolved
-genotypes. All six assay checks pass; the prospective design is in
-[the timing assay plan](docs/NEURAL_TIMING_ASSAY_PLAN.md).
+and predation. All thirty [controlled trials](docs/NEURAL_TIMING_ASSAYS.md) are
+complete: native births beat mean-preserved uniform timing in 4/6 pairs,
+reassigned timing in 6/6, disabled motor updates in 6/6, and shuffled returns
+in 4/6. Fresh-food improvements occur in 5/6, 5/6, 5/6, and 4/6 pairs. Initial
+states, genotype provenance, frozen inheritance, and accounting are audited.
+Source pools still contain 273/124/289 unique complete genotypes despite few
+founder lineages. A 1× recording matches plain replay exactly, and its trails
+still show many loops. All 414 tests pass; every iteration process has exited.
 The user's V16 working settings remain untouched.
 
 A [recurrent-learning diagnostic](docs/RECURRENT_LEARNING_RESEARCH.md) now
@@ -102,7 +106,8 @@ adaptation in a separate delayed-cue fixture. Three random streams improve
 target error by about 79–80%; shuffled scores remain near disabled updates.
 This supplies a tested candidate, not a native learning result. The prospective
 [V25 plan](docs/RECURRENT_LEARNING_PLAN.md) specifies its integration and matched
-controls. Finish the V24 timing transplants before selecting the final baseline.
+controls. The completed V24 comparisons support retaining the inherited-timing
+baseline. Native V25 implementation is the next authorized step.
 
 ## Research sequence
 

@@ -1,15 +1,17 @@
 # V24: inherited neural response times
 
 V24 / package 0.25.0 lets individual neurons inherit different response times.
-The initial ecological comparison is mixed: varying timing improves births in
-two of three starts, while adding direct timing mutation improves only one.
-The mechanism adds another source of neural and behavioral variation; useful
-temporal memory has not been demonstrated.
+At thirty minutes, varied timing without direct timing mutation increases
+births in all three starts. Completed [controlled transplants](NEURAL_TIMING_ASSAYS.md)
+also favor the original assignment over reassigned timing for births in all
+six comparisons. The effects remain conditional; useful temporal memory has
+not been demonstrated.
 
 All twelve 600-second pilots, the separate paired pulse probe, and all nine
 exact continuations to 1,800 seconds are complete. The continuations extend every
 seed of the three treatments. The [prospective plan](NEURAL_TIMESCALES_PLAN.md)
-records this decision.
+records this decision. All thirty genotype/timing/feedback transplants are
+also complete, with exact common initial states and frozen inheritance.
 
 ## What changes
 
@@ -147,11 +149,13 @@ is established by these runs.
 
 Variation in timing persists: mean within-brain log-time standard deviations
 are .517/.524/.611 without direct timing mutation and .613/.565/.593 with it.
-The primary next step is a [matched-genotype assay](NEURAL_TIMING_ASSAY_PLAN.md):
-compare original timing, uniform timing with each brain's mean preserved,
-permuted neuron timing, and two motor-feedback controls. This will test these
-selected communities more directly before attributing their gains to useful
-temporal computation or learning.
+The completed [matched-genotype assay](NEURAL_TIMING_ASSAYS.md) compares
+original timing, uniform timing with each brain's mean preserved, reassigned
+neuron timing, and two motor-feedback controls. Native births exceed uniform
+timing in four of six comparisons, reassignment in six, disabled motor updates
+in six, and shuffled motor feedback in four. Final-population effects are more
+mixed. These results support retaining the inherited-timing baseline, without
+establishing general temporal memory or adaptive credit assignment.
 
 ## Separate pulse-response diagnostic
 

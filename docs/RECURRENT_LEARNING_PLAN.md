@@ -2,7 +2,7 @@
 
 Status: prospective; native implementation has not started. The independent
 [score and adaptation checks](RECURRENT_LEARNING_RESEARCH.md) are complete.
-The V24 timing transplants are running. This plan records the next native
+The V24 timing transplants are complete. This plan records the next native
 experiment before seeing its results; it is not a release announcement.
 
 ## Hypothesis and scope
@@ -80,8 +80,11 @@ continue to constrain inherited circuit size.
 
 Start from the sparse, mobile-patch `v24-inherited.toml` ecology: heterogeneous
 timing without direct timing mutation and a disabled value predictor. The
-completed V24 transplant results should be reviewed before finalizing that
-baseline. Preserve the user's working `configs/v16.toml`.
+[completed V24 transplants](NEURAL_TIMING_ASSAYS.md) support retaining this
+baseline: original timing beats reassignment for births in all six comparisons,
+and motor updates beat disabled updates in all six. Shuffled-feedback effects
+remain mixed. This baseline decision was finalized before any V25 native runs.
+Preserve the user's working `configs/v16.toml`.
 
 ## Controls and required checks
 

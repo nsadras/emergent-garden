@@ -1,6 +1,8 @@
 # Controlled V24 timing and feedback assays
 
-Status: running. The design and checks below were recorded before launch.
+Status: all thirty trials complete and audited. See the
+[results](NEURAL_TIMING_ASSAYS.md). The design and checks below were recorded
+before launch.
 All nine V24 continuations reached 1,800 seconds.
 Inherited timing without direct timing mutation increased births in all three
 starts: 1,785/1,112/2,101 versus homogeneous 1,727/994/1,563. This warrants a
@@ -16,8 +18,8 @@ into each of two new environments, seeds **901 and 902**. Use the same sampled
 genotypes and initial environment within each five-treatment comparison.
 Run each transplant for **360 simulated seconds**, or until extinction.
 Thirty community trials are planned; do not select only positive outcomes.
-The three independent batch processes write `runs/v24-timing-assay-{1,2,3}`;
-each runs its ten treatments sequentially.
+The three batch processes wrote `runs/v24-timing-assay-{1,2,3}`;
+each ran its ten treatments sequentially and exited successfully.
 
 1. **Native:** original timing genes and normal learning.
 2. **Mean tau:** all active neurons within a genotype share a time constant

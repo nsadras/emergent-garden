@@ -115,7 +115,13 @@ determine the next controlled assay.
 All nine extensions survived. Without direct timing mutation, births increased
 in all three starts relative to homogeneous timing; with timing mutation, they
 increased in two. Only one or two founder lineages remain per community, with
-no allocation-defined scavenger specialists at the endpoint. The next
+no allocation-defined scavenger specialists at the endpoint. The
 [matched-genotype assay plan](NEURAL_TIMING_ASSAY_PLAN.md) specifies controls
 for mean timing, timing placement, and motor feedback across the three
 inherited-timing communities. It does not infer useful memory from birth counts.
+
+All thirty follow-up trials are now [complete and audited](NEURAL_TIMING_ASSAYS.md).
+Native timing beats reassignment for births in all six matched comparisons;
+motor updates beat disabled updates in all six, with mixed advantages over
+shuffled returns. The inherited-timing preset is retained for the next optional
+recurrent-learning experiment. No simulation from this iteration remains running.

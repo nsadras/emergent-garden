@@ -41,8 +41,11 @@ two of three starts, direct timing mutation helps one. A separate circuit probe
 confirms changed responses without demonstrating useful memory. Twelve pilots
 and six exact neutral comparisons are complete. All nine longer continuations
 survived: inherited timing increased births in all three starts, with limited
-lineage and dietary-specialist diversity. Controlled genotype/feedback tests are
-the next step. Details now shows the selected neuron's response time.
+lineage and dietary-specialist diversity. All thirty
+[controlled genotype/feedback trials](docs/NEURAL_TIMING_ASSAYS.md) are complete:
+original timing beats reassignment for births in all six comparisons, while
+motor-learning evidence remains conditional. A verified 1× video and trail
+image are linked from that report. Details shows the selected neuron's response time.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 
