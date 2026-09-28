@@ -7,7 +7,7 @@ there is no global parent ranking. V12 additionally uses each creature's net
 energy flow for within-lifetime motor reinforcement. V0 and every subsequent
 experimental preset remain available.
 
-The current experimental release is **V21 / package 0.22.0**. Research resumed
+The current experimental release is **V22 / package 0.23.0**. Research resumed
 on September 23, focusing on scarce, valuable food and affordable exploration.
 The [foraging experiments](docs/FORAGING.md) found that faster food processing
 supported all three tested populations for 30 minutes; a new optional spatial
@@ -25,6 +25,10 @@ ecological effects; persistent noise alone reduces births in all three starts.
 The movement diagnostic shows changed routes, without a consistent increase in
 net travel. All six longer runs and 24 learning transplants are complete;
 matched descendant tests show mixed effects and no reliable learning advantage.
+[V22](docs/VALUE_PREDICTION.md) adds learned predictions of later energetic
+returns. All 15 pilots and six prospective forecast checks are complete: neither
+prediction target establishes a reliable ecological improvement, and forecast
+quality remains weak. The next priority is a more useful learned representation.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 

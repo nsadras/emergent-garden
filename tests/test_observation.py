@@ -109,7 +109,7 @@ def test_full_birth_bar_still_waits_for_maturity_retry_and_capacity(config):
     assert w.totals["births"] == 1 and w.totals["blocked_births"] == 1
 
 
-@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20, 21])
+@pytest.mark.parametrize("version", [0, 3, 4, 7, 8, 12, 15, 17, 18, 19, 20, 21, 22])
 def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, monkeypatch):
     c = replace(
         config,
@@ -121,6 +121,8 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         initial_recurrent_density=0.5 if version >= 19 else 1.0,
         sensor_radius_scale=4 if version >= 20 else 1,
         motor_noise_tau=2 if version >= 21 else 0,
+        motor_value_rate=0.02 if version >= 22 else 0,
+        motor_normalized=int(version >= 22),
     )
     w = create_world(c)
     a = w.agents
@@ -148,6 +150,11 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         a["module_motor_previous_logits"][..., 0].fill_(0.4)
         a["module_motor_previous_logits"][..., 1].fill_(-0.2)
         a["module_motor_history_ready"].fill_(True)
+    if version >= 22:
+        a["module_motor_value_weights"].fill_(0.01)
+        a["module_motor_value_previous"].fill_(0.02)
+        a["module_motor_value_trace"].fill_(0.03)
+        a["module_motor_value_ready"].fill_(True)
     if version >= 6:
         a["food_feedback"].fill_(4)
         a["damage_feedback"].fill_(2)
@@ -188,6 +195,13 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         np.testing.assert_allclose(outputs, sample.actions[module], rtol=2e-6, atol=2e-7)
     actual = a["module_actions"][1, :count] if version >= 4 else a.get("actions", a["motors"])[1:2]
     np.testing.assert_array_equal(sample.actions, actual.numpy())
+    if version >= 22:
+        np.testing.assert_array_equal(
+            sample.predicted_return, a["module_motor_value_prediction"][1, :count].numpy()
+        )
+        np.testing.assert_array_equal(
+            sample.prediction_error, a["module_motor_value_error"][1, :count].numpy()
+        )
     if version >= 7:
         assert not np.array_equal(sample.plastic, a["module_plastic"][1, :count].numpy())
     # Samples own their arrays; inspecting an old frame cannot alias live state.
@@ -215,6 +229,9 @@ def test_sample_reconstructs_actual_inputs_hidden_and_outputs(config, version, m
         (21, "none"),
         (21, "no_exploration"),
         (21, "shuffled_motor_reward"),
+        (22, "none"),
+        (22, "no_motor_value"),
+        (22, "shuffled_motor_reward"),
     ],
 )
 def test_inspection_and_trails_preserve_complete_trajectory(config, version, ablation):
@@ -234,6 +251,8 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
             initial_recurrent_density=0.5 if version >= 19 else 1.0,
             sensor_radius_scale=4 if version >= 20 else 1,
             motor_noise_tau=2 if version >= 21 else 0,
+            motor_value_rate=0.02 if version >= 22 else 0,
+            motor_normalized=int(version >= 22),
         ),
         ablation=ablation,
     )
@@ -251,7 +270,7 @@ def test_inspection_and_trails_preserve_complete_trajectory(config, version, abl
         if j % 5 == 0:
             renderer.draw(w)
             leaderboard.draw(w, 0, 800)
-            for tab in ("brain", "body"):
+            for tab in ("brain", "body", "details"):
                 panel.tab = tab
                 panel.draw(w, 0, observer, 800)
     assert observer.sample is not None

@@ -14,9 +14,9 @@ from .brain import advance, controller_step, initial_brains
 from .config import Config
 from .coordination import BODY_INPUTS, body_inputs, signal_cost, update_signals
 from .development import grow, mutate_module_count
-from .exploration import history_shapes
 from .field import ShelterField, SmellField, TrailField
 from .landscape import ReversalLandscape
+from .learning import motor_memory_shapes
 from .morphology import MAX_MODULES, develop_modules, module_centers, module_turn
 from .plasticity import rule_coefficients
 from .resources import ResourceLandscape
@@ -56,6 +56,7 @@ class EcologyWorld(World):
             "unlimited_feeding",
             "unlimited_handling",
             "no_motor_learning",
+            "no_motor_value",
             "no_motor_reward",
             "shuffled_motor_reward",
             "no_exploration",
@@ -80,6 +81,7 @@ class EcologyWorld(World):
             or (ablation == "fixed_rule" and config.ecology_version < 15)
             or (ablation == "no_direction" and config.ecology_version < 17)
             or (ablation == "no_gut" and config.ecology_version < 18)
+            or (ablation == "no_motor_value" and config.ecology_version < 22)
             or (
                 ablation in ("no_internal", "no_body_sense", "no_coordination", "self_internal")
                 and config.ecology_version < 14
@@ -284,11 +286,11 @@ class EcologyWorld(World):
             a["motor_change"] = torch.zeros(n, device=self.device)
             a["last_motor_tick"] = torch.full((n,), self.tick, dtype=torch.long, device=self.device)
         if c.ecology_version >= 21:
-            for key, shape in history_shapes(c.hidden_size).items():
+            for key, shape in motor_memory_shapes(c).items():
                 a[f"module_{key}"] = torch.zeros(
                     (n, MAX_MODULES, *shape),
                     device=self.device,
-                    dtype=torch.bool if key == "motor_history_ready" else torch.float32,
+                    dtype=torch.bool if key.endswith("_ready") else torch.float32,
                 )
         if c.ecology_version >= 13:
             a["development_stage"] = torch.ones(n, dtype=torch.long, device=self.device)
@@ -619,7 +621,7 @@ class EcologyWorld(World):
                         state[key] = a[f"module_{key}"][index].reshape(-1, 2, c.hidden_size + 1)
                     state["motor_baseline"] = a["module_motor_baseline"][index].reshape(-1)
                     if c.ecology_version >= 21:
-                        for key, shape in history_shapes(c.hidden_size).items():
+                        for key, shape in motor_memory_shapes(c).items():
                             state[key] = a[f"module_{key}"][index].reshape(-1, *shape)
                     noise = torch.randn(
                         (count, MAX_MODULES, 2),
@@ -639,6 +641,7 @@ class EcologyWorld(World):
                     motor_arguments = dict(
                         motor_learning=self.ablation != "no_motor_learning",
                         exploration_enabled=self.ablation != "no_exploration",
+                        value_learning=self.ablation != "no_motor_value",
                         noise=noise.reshape(-1, 2),
                         reward=reward[:, None].expand(-1, MAX_MODULES).reshape(-1),
                         elapsed=elapsed[:, None].expand(-1, MAX_MODULES).reshape(-1),
@@ -680,7 +683,7 @@ class EcologyWorld(World):
                         updated["motor_baseline"].reshape(count, MAX_MODULES) * mask
                     )
                     if c.ecology_version >= 21:
-                        for key, shape in history_shapes(c.hidden_size).items():
+                        for key, shape in motor_memory_shapes(c).items():
                             values = updated[key].reshape(count, MAX_MODULES, *shape)
                             a[f"module_{key}"][index] = values * mask.reshape(
                                 count, MAX_MODULES, *([1] * len(shape))
@@ -1359,6 +1362,28 @@ class EcologyWorld(World):
             count = max(1, 2 * int(a["modules"].sum()))
             result["motor_noise_rms"] = math.sqrt(
                 a["module_motor_applied_noise"].double().square().sum().item() / count
+            )
+        if c.ecology_version >= 22:
+            mask = a["module_mask"]
+            value_norm = a["module_motor_value_weights"].norm(dim=-1)[mask]
+            result.update(
+                mean_motor_value_norm=value_norm.mean().item() if n else 0.0,
+                motor_value_saturated_fraction=(value_norm >= 0.999 * c.motor_value_limit)
+                .float()
+                .mean()
+                .item()
+                if n
+                else 0.0,
+                mean_motor_predicted_return=a["module_motor_value_prediction"][mask].mean().item()
+                if n
+                else 0.0,
+                motor_value_error_rms=a["module_motor_value_error"][mask]
+                .square()
+                .mean()
+                .sqrt()
+                .item()
+                if n
+                else 0.0,
             )
         result["detritus_energy"] = self.food_energy[self.food_kind == 1].double().sum().item()
         if c.ecology_version >= 18:

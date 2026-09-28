@@ -1,8 +1,8 @@
 # Continuing evolution experiments
 
 Development **resumed at the user's request on September 23, 2026**, after the
-V15 pause and subsequent interface/resource work. The current iteration is V21
-(package 0.22.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
+V15 pause and subsequent interface/resource work. The current iteration is V22
+(package 0.23.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
 meals and affordable exploration. Current evidence, historical interrupted work,
 and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
@@ -36,6 +36,20 @@ complete: learning populations end at 65/181/295, disabled-update populations
 at 0/33/189, with one extinction. All 24 community transplants are complete:
 own-return learning increases births in three of six comparisons against each
 control. The result does not establish reliable adaptive credit assignment.
+
+[V22](docs/VALUE_PREDICTION.md) adds an acquired linear predictor and uses its
+temporal-difference error for motor updates. Both centered and direct net-energy
+targets are tested, without changing genes or sensory channels. All 15 matched
+600-second pilots and six prospective 100-second forecast forks are complete.
+Neither target reliably improves births; shuffled controls often do better.
+Centered forecasts lose to predicting zero in all three communities, direct
+forecasts in two. The predefined older subgroup has two direct-target wins.
+Deaths remain included and the diagnostic has no survivorship filter after its
+first prediction. No longer ecological or fixed-genotype follow-up was launched
+for these weak pilots. All 363 tests, Ruff, and CPU/CUDA replay checks pass.
+The next experiment will test access to existing sensory features before adding
+more inherited layers. That is a hypothesis about representation, not a proven
+explanation of the observed limitations. Autonomous research remains active.
 
 ## Research sequence
 

@@ -45,7 +45,22 @@ def motor_state(config, genomes):
         from .exploration import history_state
 
         state.update(history_state(h, genomes))
+    if config.ecology_version >= 22:
+        from .value import value_state
+
+        state.update(value_state(h, genomes))
     return state
+
+
+def motor_memory_shapes(config):
+    """Extra per-module motor memory added by the versioned learning policies."""
+    from .exploration import history_shapes
+    from .value import value_shapes
+
+    shapes = history_shapes(config.hidden_size) if config.ecology_version >= 21 else {}
+    if config.ecology_version >= 22:
+        shapes.update(value_shapes(config.hidden_size))
+    return shapes
 
 
 def motor_policy(
@@ -60,6 +75,7 @@ def motor_policy(
     learning=True,
     *,
     exploration_enabled=True,
+    value_learning=True,
 ):
     """Credit previous actions before choosing the next exploratory action.
 
@@ -75,12 +91,35 @@ def motor_policy(
     sigma = c.exploration_min + (c.exploration_max - c.exploration_min) * traits[:, 1]
     connections = effective_masks(c, genomes)[3][:, :2]
     mask = torch.cat((connections, torch.ones_like(connections[:, :, :1])), -1)
+    features = torch.cat((hidden, torch.ones_like(hidden[:, :1])), -1)
+    if c.motor_normalized:
+        # Bound both norms so the learned motor correction cannot grow with
+        # hidden-layer width or many changes combining in the same direction.
+        features /= features.norm(dim=-1, keepdim=True).clamp_min(1)
     # Compare rates so an off-phase newborn's shorter first interval does not
     # distort its baseline. Multiply back by time for the integrated advantage.
     reward_rate = reward / elapsed.clamp_min(1e-9)
-    advantage = ((reward_rate - state["motor_baseline"]) * elapsed).clamp(-1, 1)
+    centered = (reward_rate - state["motor_baseline"]) * elapsed
+    advantage = centered.clamp(-1, 1)
     beta = 1 - torch.exp(-elapsed / c.motor_baseline_tau)
     baseline = state["motor_baseline"] + beta * (reward_rate - state["motor_baseline"])
+    value = {}
+    if c.ecology_version >= 22:
+        from .value import advance_value, value_shapes
+
+        value = {key: torch.zeros_like(state[key]) for key in value_shapes(c.hidden_size)}
+        if learning and value_learning and c.motor_value_rate:
+            value, error = advance_value(
+                state,
+                features,
+                centered if c.motor_value_centered else reward,
+                elapsed,
+                c.motor_value_rate * traits[:, 0],
+                c.motor_value_horizon,
+                c.motor_value_trace_tau,
+                c.motor_value_limit,
+            )
+            advantage = error.clamp(-1, 1)
     if learning:
         decay = torch.exp(-math.log(2) * elapsed / c.motor_half_life)
         plastic = state["motor_plastic"] * decay[:, None, None]
@@ -93,11 +132,6 @@ def motor_policy(
             plastic = plastic.clamp(-c.motor_learning_limit, c.motor_learning_limit)
     else:
         plastic = torch.zeros_like(state["motor_plastic"])
-    features = torch.cat((hidden, torch.ones_like(hidden[:, :1])), -1)
-    if c.motor_normalized:
-        # Bound both norms so the learned motor correction cannot grow with
-        # hidden-layer width or many changes combining in the same direction.
-        features /= features.norm(dim=-1, keepdim=True).clamp_min(1)
     changed = logits.clone()
     history = {}
     credit_features = features
@@ -132,5 +166,5 @@ def motor_policy(
     else:
         trace = torch.zeros_like(state["motor_trace"])
     return dict(
-        motor_plastic=plastic, motor_trace=trace, motor_baseline=baseline, **history
+        motor_plastic=plastic, motor_trace=trace, motor_baseline=baseline, **history, **value
     ), actions

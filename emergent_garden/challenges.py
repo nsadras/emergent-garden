@@ -32,6 +32,11 @@ def fork_challenge(source, mode, reverse, target_tick):
         if w.config.ecology_version >= 12:
             for key in ("module_motor_plastic", "module_motor_trace", "module_motor_baseline"):
                 w.agents[key].zero_()
+        if w.config.ecology_version >= 22:
+            from .value import value_shapes
+
+            for key in value_shapes(w.config.hidden_size):
+                w.agents[f"module_{key}"].zero_()
     if mode == "erase_activity":
         w.agents["module_h"].zero_()
         w.agents["h"].zero_()

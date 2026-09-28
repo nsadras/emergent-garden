@@ -106,6 +106,8 @@ class BrainSample:
     alpha: float
     motor_plastic: np.ndarray | None = None
     noise: np.ndarray | None = None
+    predicted_return: np.ndarray | None = None
+    prediction_error: np.ndarray | None = None
 
     def matrices(self, module):
         """Effective weights used for this sample, including bounded motor learning."""
@@ -227,6 +229,9 @@ class ControllerObserver:
                 trait = a["genome"][i, c.brain_parameter_count + 12].sigmoid().item()
                 sigma = c.exploration_min + (c.exploration_max - c.exploration_min) * trait
                 sample.noise = array(motor_noise[local, :count]) * sigma
+            if c.ecology_version >= 22:
+                sample.predicted_return = array(a["module_motor_value_prediction"][i, :count])
+                sample.prediction_error = array(a["module_motor_value_error"][i, :count])
         self.sample = sample
 
 

@@ -1,0 +1,75 @@
+{
+  "source": "runs/v22-raw-pilot/seed-1/latest.pt",
+  "time": 630.1,
+  "population": 155,
+  "selected": 140,
+  "predicted_return": [
+    0.46840426325798035
+  ],
+  "prediction_error": [
+    0.13037699460983276
+  ],
+  "layouts": [
+    {
+      "height": 640,
+      "tab": "brain",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "body",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "details",
+      "content_height": 591
+    },
+    {
+      "height": 768,
+      "tab": "brain",
+      "content_height": 768
+    },
+    {
+      "height": 768,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 768,
+      "tab": "details",
+      "content_height": 591
+    },
+    {
+      "height": 900,
+      "tab": "brain",
+      "content_height": 900
+    },
+    {
+      "height": 900,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 900,
+      "tab": "details",
+      "content_height": 591
+    },
+    {
+      "height": 1024,
+      "tab": "brain",
+      "content_height": 938
+    },
+    {
+      "height": 1024,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 1024,
+      "tab": "details",
+      "content_height": 591
+    }
+  ],
+  "meaning": "An illustrative 30-second fork, not an independent ecological experiment."
+}

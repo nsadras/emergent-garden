@@ -75,6 +75,11 @@ class Config:
     motor_baseline_tau: float = 10.0
     motor_half_life: float = 120.0
     motor_noise_tau: float = 0.0
+    motor_value_rate: float = 0.0
+    motor_value_centered: int = 1
+    motor_value_horizon: float = 20.0
+    motor_value_trace_tau: float = 2.0
+    motor_value_limit: float = 4.0
     exploration_min: float = 0.05
     exploration_max: float = 0.5
     motor_learning_cost: float = 0.02
@@ -152,7 +157,8 @@ class Config:
             "plasticity_limit plasticity_trace_tau "
             "plasticity_half_life_min plasticity_half_life_max shelter_radius handling_rate "
             "motor_learning_limit motor_trace_tau motor_baseline_tau "
-            "motor_half_life growth_reserve growth_delay growth_retry internal_tau "
+            "motor_half_life motor_value_horizon motor_value_trace_tau motor_value_limit "
+            "growth_reserve growth_delay growth_retry internal_tau "
             "patch_aspect_ratio patch_drift_turn_time fertility_recovery_time sensor_radius_scale"
         )
         for key in positive.split():
@@ -160,7 +166,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(22):
+        if self.ecology_version not in range(23):
             raise ValueError("Unsupported ecology version")
         if self.sensory_contrast not in (0, 1):
             raise ValueError("sensory_contrast must be 0 or 1")
@@ -170,6 +176,17 @@ class Config:
             raise ValueError("Variable sensor radius requires ecology_version >= 20")
         if self.motor_noise_tau and self.ecology_version < 21:
             raise ValueError("Correlated motor exploration requires ecology_version >= 21")
+        if self.motor_value_centered not in (0, 1):
+            raise ValueError("motor_value_centered must be 0 or 1")
+        if not self.motor_value_centered and self.ecology_version < 22:
+            raise ValueError("Value target selection requires ecology_version >= 22")
+        if self.motor_value_rate:
+            if self.ecology_version < 22:
+                raise ValueError("Motor value prediction requires ecology_version >= 22")
+            if not self.motor_normalized:
+                raise ValueError("Motor value prediction requires normalized neural features")
+            if self.motor_value_horizon < max(self.motor_value_trace_tau, self.motor_trace_tau):
+                raise ValueError("Value prediction horizon must be at least both trace durations")
         if self.gut_capacity and self.ecology_version < 18:
             raise ValueError("Carried food requires ecology_version >= 18")
         if self.initial_recurrent_density > 1:

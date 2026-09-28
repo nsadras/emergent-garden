@@ -1,9 +1,39 @@
-# Development handoff — V21
+# Development handoff — V22
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V21 / package 0.22.0**. Python and dependencies remain
+The current code is **V22 / package 0.23.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V22: learned energy predictions
+
+[V22](docs/VALUE_PREDICTION.md) adds an optional acquired linear value readout
+per body module. Its TD error replaces the running-mean actor's feedback. Hidden
+activity plus bias gives 33 critic weights; the inherited 42-input, seven-output,
+32-slot, 5,272-gene controller is unchanged. Acquired predictions reset at birth
+and module growth. The head costs no additional energy in this first experiment.
+`configs/v22.toml` uses centered returns, `v22-raw.toml` direct net returns,
+and `v22-baseline.toml` disables prediction. Both use independent exploration.
+
+All 15 matched 600-second pilots are complete. Baseline births are 288/265/156,
+centered births 228/167/303, direct-target births 348/230/71. Shuffled controls
+produce 246/76/323 and 481/193/300 respectively. Neither predictor establishes a
+reliable benefit. All three neutral starts exactly reproduce the common V21
+final state and physical measurements. Six 100-second forecast forks are also
+complete, including deaths: centered predictions lose to a zero prediction in
+all three full cohorts; direct predictions win in one. The older subgroup has
+the same centered result and two direct-target wins. Shared communities are not
+independent creature-level replicates. No V22 long continuation or fixed-genotype
+fitness assay was launched after these weak results.
+
+All 363 tests and Ruff checks pass, plus CPU/CUDA device-local exact replay.
+All inspector tabs fit at 640–1,024 pixels, and Details displays the actual value
+and TD error. Source records, plots, forecast timing, and limitations are linked
+in the guide. Next test: give the predictor direct access to existing sensory
+observations, keeping the inherited circuit and actor unchanged, to distinguish
+a representation limitation from insufficient learning. This is an unproven
+hypothesis. Research remains active; preserve the user's V16 edits and unrelated
+notes. All V21 follow-ups are complete.
 
 ## V21: persistent motor exploration
 

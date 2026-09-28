@@ -170,6 +170,22 @@ def main():
         assert w.agents["module_plastic"].abs().max() <= c.plasticity_limit
         if args.exercise_rules:
             assert metric["mean_noncorrelation_rule_weight"] > 0
+    if c.ecology_version >= 22:
+        from emergent_garden.value import value_shapes
+
+        mask = w.agents["module_mask"]
+        for key in value_shapes(c.hidden_size):
+            value = w.agents[f"module_{key}"]
+            assert torch.isfinite(value).all(), key
+            assert not value[~mask].count_nonzero(), key
+        assert (
+            w.agents["module_motor_value_weights"].norm(dim=-1).max() <= c.motor_value_limit + 1e-6
+        )
+        if c.motor_value_rate:
+            assert metric["mean_motor_value_norm"] > 0
+            assert metric["motor_value_error_rms"] > 0
+        else:
+            assert metric["mean_motor_value_norm"] == 0
     save_checkpoint(w, args.output / "end.pt")
     report = dict(
         config=asdict(w.config),

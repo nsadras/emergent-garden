@@ -407,6 +407,15 @@ class Inspector:
             (22, top + 265),
             MUTED,
         )
+        if sample.predicted_return is not None:
+            label = "Predicted energy surplus" if c.motor_value_centered else "Predicted net energy"
+            self.text(
+                f"{label}: {sample.predicted_return[k]:+.3f}"
+                f"   |   Learning surprise: {sample.prediction_error[k]:+.3f}  (scaled)",
+                (22, top + 294),
+                GOLD,
+            )
+            top += 24
         self.text("Choose Brain to return to the live graph.", (22, top + 307), POSITIVE)
         return top + 337
 
