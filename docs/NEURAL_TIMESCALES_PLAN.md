@@ -2,7 +2,8 @@
 
 Status: implemented as V24 / package 0.25.0. All twelve 600-second pilots,
 including the three fully neutral compatibility runs, and the paired circuit
-pulse probe are complete. The branch addresses the user's interest in
+pulse probe are complete. All nine scheduled 1,800-second continuations have
+also completed and passed their audits. The branch addresses the user's interest in
 greater neural and mutational variation by varying recurrent dynamics within
 one brain, before adding additional hidden layers.
 
@@ -110,3 +111,11 @@ from a change in average response speed. Any later claim of useful adaptation
 needs matched genotype and feedback interventions; no such claim follows from
 more births or longer neural responses alone. The continuation outcomes will
 determine the next controlled assay.
+
+All nine extensions survived. Without direct timing mutation, births increased
+in all three starts relative to homogeneous timing; with timing mutation, they
+increased in two. Only one or two founder lineages remain per community, with
+no allocation-defined scavenger specialists at the endpoint. The next
+[matched-genotype assay plan](NEURAL_TIMING_ASSAY_PLAN.md) specifies controls
+for mean timing, timing placement, and motor feedback across the three
+inherited-timing communities. It does not infer useful memory from birth counts.

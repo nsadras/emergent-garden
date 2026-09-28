@@ -39,8 +39,10 @@ local forecasts but still gives mixed ecological results and weak learning evide
 response times. Matched pilots show mixed ecological effects: varied timing helps
 two of three starts, direct timing mutation helps one. A separate circuit probe
 confirms changed responses without demonstrating useful memory. Twelve pilots
-and six exact neutral comparisons are complete; nine longer continuations are
-underway. Details now shows the selected neuron's response time.
+and six exact neutral comparisons are complete. All nine longer continuations
+survived: inherited timing increased births in all three starts, with limited
+lineage and dietary-specialist diversity. Controlled genotype/feedback tests are
+the next step. Details now shows the selected neuron's response time.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 

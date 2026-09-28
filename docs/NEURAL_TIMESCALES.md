@@ -6,10 +6,10 @@ two of three starts, while adding direct timing mutation improves only one.
 The mechanism adds another source of neural and behavioral variation; useful
 temporal memory has not been demonstrated.
 
-All twelve 600-second pilots and the separate paired pulse probe are complete.
-Nine exact continuations to 1,800 seconds are in progress. They extend every
-seed of the three treatments, without selecting only successful populations.
-The [prospective plan](NEURAL_TIMESCALES_PLAN.md) records this decision.
+All twelve 600-second pilots, the separate paired pulse probe, and all nine
+exact continuations to 1,800 seconds are complete. The continuations extend every
+seed of the three treatments. The [prospective plan](NEURAL_TIMESCALES_PLAN.md)
+records this decision.
 
 ## What changes
 
@@ -111,12 +111,47 @@ neuron once per organism, without multiplying by its body-module count.
 
 There is already a strong lineage bottleneck in inherited-timing seed 1: only
 one founder lineage remains at 600 seconds. More births do not imply greater
-genetic diversity. The nine ongoing continuations will include lineage and
-trophic composition as well as persistence and reproduction.
+genetic diversity.
 
 Multiplicative timing variation also changes a brain's average response speed.
 Thus these treatments do not isolate within-brain heterogeneity from mean speed.
 No claim of improved memory or adaptive learning follows from the pilot counts.
+
+## Completed 30-minute continuations
+
+All nine populations survived to 1,800 seconds. These are extensions of the same
+three evolutionary starts, not nine additional independent ecological seeds.
+
+| Treatment | Population, seeds 1 / 2 / 3 | Cumulative births | Founder lineages remaining |
+| --- | --- | --- | --- |
+| Homogeneous | 235 / 125 / 274 | 1,727 / 994 / 1,563 | 1 / 2 / 2 |
+| Varied timing, no direct timing mutation | 273 / 124 / 289 | 1,785 / 1,112 / 2,101 | 1 / 2 / 1 |
+| Varied timing with mutation | 291 / 166 / 333 | 1,620 / 1,296 / 2,675 | 2 / 2 / 1 |
+
+![Complete thirty-minute histories](v24-neural-timing-long.png)
+
+Inherited variation without direct timing mutation increases births by
+3.4% / 11.9% / 34.4% relative to homogeneous timing. Fresh-food absorption
+increases in two starts and is slightly lower in the first. Adding timing
+mutation now improves births in seeds 2 and 3 and reduces them in seed 1,
+relative to either other treatment. More generations can change the ordering
+seen in short startup runs.
+
+The ecological outcome remains narrow. At the endpoint, every community has
+zero creatures in the digestive-allocation scavenger category (`diet < .35`).
+Grazer allocations (`diet > .65`) dominate: 96–333 creatures per community,
+with 0–32 generalists. The populations still absorb detritus and prey energy;
+these allocation labels do not imply exclusive diets or a lack of predation.
+No increase in specialist diversity or stable multispecies food-web dependence
+is established by these runs.
+
+Variation in timing persists: mean within-brain log-time standard deviations
+are .517/.524/.611 without direct timing mutation and .613/.565/.593 with it.
+The primary next step is a [matched-genotype assay](NEURAL_TIMING_ASSAY_PLAN.md):
+compare original timing, uniform timing with each brain's mean preserved,
+permuted neuron timing, and two motor-feedback controls. This will test these
+selected communities more directly before attributing their gains to useful
+temporal computation or learning.
 
 ## Separate pulse-response diagnostic
 
@@ -143,7 +178,8 @@ and curves sampled at 2 Hz. Full controller-rate curves and genomes remain in
 
 ## Verification and observation
 
-All **408 tests** and repository-wide Ruff checks pass, including the final
+All **414 tests** and repository-wide Ruff checks pass, including six new
+transplant checks and the final
 inspector correction and its disabled-learning controls.
 Mechanical cases cover analytical step and decay responses, finite bounded
 integration, dormant slots, duplication, neutral transfers, wider templates,
@@ -155,7 +191,7 @@ fully neutral V24 trajectories despite carrying random, unexpressed timing
 genes. Comparisons exclude only version metadata, new genes and their RNG,
 derived timing summaries, total-genome variance, and full-genome digests.
 Their original gene prefixes and all other physical state must match exactly.
-The twelve-run [audit](results/v24-neural-timing.json) also verifies source
+The [audit](results/v24-neural-timing.json) of twelve pilots and nine continuations verifies source
 archives, energy/resource/trophic accounting, and checkpoint measurements.
 
 Separate [CPU](results/v24-cpu-timing.json) and
@@ -199,8 +235,8 @@ uv run pytest -q
 uv run ruff check .
 ```
 
-The auditor uses the recorded batch paths above. After all nine continuations
-complete, `--include-long` adds their full histories and accounting checks.
+The auditor uses the recorded batch paths above. Add `--include-long` to include
+all nine completed continuations and their full histories and accounting checks.
 Each continuation resumes its 600-second checkpoint with `--seconds 1200`, into
 `runs/v24-{homogeneous,inherited,evolving}-long-{1,2,3}`. New source archives and
 original resume provenance remain attached to each segment.

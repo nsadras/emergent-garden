@@ -85,9 +85,16 @@ the complete common physical state, recorded measurements, and event fields.
 Immediate pulse responses increase, while retained activity has mixed effects.
 Neither this probe nor community birth counts establishes useful temporal memory.
 Mean response speed changes alongside within-brain variation. Every seed of all
-three treatments is continuing to 1,800 seconds, preserving the original physics
-and checkpoint state. All nine continuations must be reported before choosing
-the next controlled assay. The user's V16 working settings remain untouched.
+three treatments subsequently survived to 1,800 seconds, preserving the original
+physics and checkpoint state. Homogeneous births are 1,727/994/1,563; inherited
+timing gives 1,785/1,112/2,101; timing mutation gives 1,620/1,296/2,675. All nine
+extensions are audited. Only 1–2 founder lineages and no allocation-defined
+scavenger specialists remain per community, despite continuing detritus uptake
+and predation. Thirty controlled trials are now testing mean-preserved uniform
+timing, permuted timing, and motor-feedback interventions on matching evolved
+genotypes. All six assay checks pass; the prospective design is in
+[the timing assay plan](docs/NEURAL_TIMING_ASSAY_PLAN.md).
+The user's V16 working settings remain untouched.
 
 ## Research sequence
 

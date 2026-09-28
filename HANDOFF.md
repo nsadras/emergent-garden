@@ -30,21 +30,35 @@ all three seeds, but does not consistently increase retained activity. The
 new timing factors also alter mean response speed, so no benefit can yet be
 attributed specifically to heterogeneity or useful temporal memory.
 
-Nine continuations are **running**: every seed of homogeneous, inherited, and
-evolving timing, resuming from 600 to 1,800 seconds. Each group runs its seeds
-sequentially. Paths are `runs/v24-{homogeneous,inherited,evolving}-long-{1,2,3}`;
-logs are `/tmp/emergent-garden-v24-{homogeneous,inherited,evolving}-long.log`.
-Do not restart completed or already-running jobs. Audit all nine when finished:
-`uv run python scripts/audit_neural_timing.py --include-long`, then rerun
-`scripts/plot_neural_timing.py`. The audit already covers the twelve pilots,
-source archives, resource/energy/trophic accounting, and pulse provenance.
-Continuation outcomes should determine the next matched genotype/feedback assay.
+All nine continuations are **complete and audited** through 1,800 seconds.
+Homogeneous populations are 235/125/274, births 1,727/994/1,563; inherited timing
+gives populations 273/124/289, births 1,785/1,112/2,101; timing mutation gives
+populations 291/166/333, births 1,620/1,296/2,675. Only 1–2 founder lineages remain
+in each community, and no digestive-allocation scavenger specialists remain.
+Detritus and prey still contribute energy. Greater reproduction has not
+established a richer food web or useful memory.
+
+Paths are `runs/v24-{homogeneous,inherited,evolving}-long-{1,2,3}`. All three
+batch processes exited successfully; do not restart them. The audit command
+`uv run python scripts/audit_neural_timing.py --include-long` and
+`scripts/plot_neural_timing.py` now include all continuations, source archives,
+resource/energy/trophic accounting, and pulse provenance. The next
+[controlled assay](docs/NEURAL_TIMING_ASSAY_PLAN.md) compares original timing,
+mean-preserved uniform timing, timing reassignment, and motor-feedback controls
+on the three inherited-timing descendant communities. All six assay tests pass.
+All thirty trials are now running in three sequential batches under
+`runs/v24-timing-assay-{1,2,3}`. Their exec sessions are 11962, 57248, and 2905;
+logs are `/tmp/emergent-garden-v24-timing-assay-{1,2,3}.log`. Each trial saves
+its complete initial state and final checkpoint. Do not restart a batch without
+checking its existing summary. The prospective plan records interventions and
+interpretation; auditing and summarizing all thirty trials is the next task.
 
 CPU and RTX 5080 checks pass exact device-local replay through births, growth,
 and signed plasticity rules. Details shows the selected neuron's response time
 without another row, uses the actual per-neuron integration factors, and omits
 inactive value predictions. All inspector tabs fit at 640–1,024 pixels. All
-408 tests and repository-wide Ruff checks pass. The release guide retains the
+414 tests and repository-wide Ruff checks pass, including six transplant checks.
+The release guide retains the
 mechanical checks, source provenance, and initial experimental results.
 Research remains active. Preserve the user's V16 edits and unrelated notes.
 
