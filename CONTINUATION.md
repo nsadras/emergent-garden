@@ -60,9 +60,14 @@ in all three communities, but both representations lose to predicting zero in
 two. Repeating with fivefold faster prediction learning increases MSE everywhere,
 so the .02 rate remains. All six passive forks are complete, with physical states
 matching across rates. These are prediction comparisons, not fitness assays.
-All 388 tests, Ruff, and CPU/CUDA replay checks pass. Next inspect update clipping
-and bounded values before adding more neural structure. The research loop remains
-active, and the user's V16 working configuration is unchanged.
+All 388 tests, Ruff, and CPU/CUDA replay checks pass. Six instrumented replays
+subsequently matched the original worlds and shadow critics exactly. Positive
+clipping removed 2.56%/7.30%/<.01% of sensory error mass at the retained rate,
+with no negative clipping. This leaves clipping unestablished as the main
+limitation, especially in the third community where it is nearly absent.
+Next test a shorter forecast horizon on the
+same experience. The research loop remains active, and the user's V16 working
+configuration is unchanged.
 
 ## Research sequence
 

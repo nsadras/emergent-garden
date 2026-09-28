@@ -136,11 +136,33 @@ treatment was promoted from this failed diagnostic. Learned tail estimates do
 not change the main comparison directions. Full rows, source archives, both
 observer scripts, and shadow weights remain in `runs/v23-paired*-forecasts/`.
 
-The next diagnostic should inspect the update signals and their bounds. In
-particular, clipping TD errors may affect rare large meals differently from
-continuous costs. That is a hypothesis to measure, not an established cause.
-More layers or stronger mutation remain possible later steps, but the present
-evidence favors understanding prediction and credit assignment first.
+## Update-bound diagnostic
+
+Both passive batches were replayed with counters for clipping and norm limits.
+All six complete physical states and both shadow predictors per replay match
+the original records exactly. Statistics count core-module transitions, not
+independent creatures or physical energy transfers. Scalar error mass is measured
+before multiplication by eligibility and learning rate; it is not a synaptic
+update direction.
+
+At the retained .02 rate, the sensory predictor clips positive errors in about
+.280%, .257%, and .002% of transitions at seeds 1/2/3. This removes 2.56%, 7.30%,
+and less than .01% of positive scalar error mass. No negative errors are clipped.
+The norm bound is active in about .31%, .03%, and .06% of transitions. Faster
+learning raises bound occupancy to about 2.13%, .51%, and 1.08%, while its positive
+clipping mass fractions remain similar. The
+[original-rate record](results/v23-value-updates.json) and
+[faster-rate record](results/v23-fast-value-updates.json) preserve exact counts,
+extrema, signed masses, and source hashes. Reproduce either with
+`scripts/probe_value_updates.py --reference <paired-summary.json> --output <new-directory>`.
+
+Clipping is asymmetric, but nearly absent in the third community, where
+prediction is still weak. These observations do not establish clipping as the
+main limitation. The next focused comparison will test a shorter prediction
+horizon on unchanged physical experience: forecasting the next two seconds may
+be more learnable than forecasting a largely unseen 20-second future. The target
+changes, so its absolute error cannot be ranked directly against the old target.
+More layers or stronger mutation remain possible later steps.
 
 ## Verification and reproduction
 

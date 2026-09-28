@@ -32,10 +32,14 @@ follow-up was launched for these mixed results.
 
 All 388 tests, Ruff, and separate CPU/CUDA replay exercises pass. Inspector
 Details states the feature source; all tabs fit 640–1,024 pixels. Full evidence
-and commands are in the guide; local runs use `runs/v23-*`. The next diagnostic
-should measure update-error clipping and weight bounds before changing the
-learning rule. Rare meals and continuous costs could be affected differently;
-that mechanism has not been established. Research remains active. Preserve
+and commands are in the guide; local runs use `runs/v23-*`. Six additional
+instrumented replays match the original complete worlds and shadow critics.
+Positive error clipping removes 2.56%/7.30%/<.01% of sensory error mass at the .02
+rate; negative errors never clip. Norm bounds are uncommon at that rate. This
+does not establish clipping as the main limitation, especially in seed 3 where
+it is nearly absent. Next compare a two-second prediction horizon with the
+20-second target on identical experience, retaining matched zero predictors.
+Research remains active. Preserve
 the user's V16 edits and unrelated notes. V21–V23 have no unfinished scheduled
 ecological follow-ups.
 
