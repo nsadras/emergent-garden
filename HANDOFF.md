@@ -44,8 +44,10 @@ and all three older subgroups. Six new native pilots produce own-return births
 starts but does not establish useful motor adaptation. `configs/v23-short.toml`
 is optional; the main preset retains 20 seconds. All 390 tests and Ruff checks
 pass. No runs from this follow-up remain unfinished. The next branch should
-investigate variation in recurrent dynamics, such as different response times
-among neurons, rather than continuing to tune only the value readout.
+investigate variation in recurrent dynamics. The
+[V24 timing plan](docs/NEURAL_TIMESCALES_PLAN.md) specifies inherited per-neuron
+response times, neutral compatibility, matched founder comparisons, and copied
+timing genes during neuron duplication. It is planned, not implemented.
 Research remains active. Preserve
 the user's V16 edits and unrelated notes. V21–V23 have no unfinished scheduled
 ecological follow-ups.
