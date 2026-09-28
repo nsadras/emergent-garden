@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import math
+from dataclasses import replace
 from functools import partial
 from pathlib import Path
 
@@ -24,10 +25,15 @@ from emergent_garden.world import World
 
 
 class PairedValueObserver:
-    def __init__(self, world, rate=0.02):
+    def __init__(self, world, rate=0.02, horizon=None):
         c = world.config
         if c.ecology_version < 22 or c.motor_value_centered or world.ablation != "none":
             raise ValueError("Use an unablated V22+ community with the direct return target")
+        self.horizon = c.motor_value_horizon if horizon is None else horizon
+        if not math.isfinite(self.horizon) or self.horizon < c.motor_value_trace_tau:
+            raise ValueError(
+                "Prediction horizon must be finite and at least the value trace duration"
+            )
         self.rate, self.pending, self.forecasts = rate, None, {}
         reference = world.agents["energy"][:0]
         self.states = {
@@ -75,7 +81,7 @@ class PairedValueObserver:
             state = self.states[mode]
             updated, _ = advance_value(
                 {key: value[ids] for key, value in state.items()},
-                current, reward, elapsed, rate, c.motor_value_horizon,
+                current, reward, elapsed, rate, self.horizon,
                 c.motor_value_trace_tau, c.motor_value_limit,
             )
             for key, value in updated.items():
@@ -85,7 +91,9 @@ class PairedValueObserver:
 
     def start_forecasts(self, world, seconds):
         self.forecasts = {
-            mode: ForecastObserver(world, seconds, partial(self.readout, mode))
+            mode: ForecastObserver(
+                world, seconds, partial(self.readout, mode), horizon=self.horizon
+            )
             for mode in self.states
         }
 
@@ -94,9 +102,10 @@ class PairedValueObserver:
             forecast.record_step(world, before_time, event_offset)
 
 
-def trial(source, output, warmup, seconds, rate, verify):
+def trial(source, output, warmup, seconds, rate, verify, horizon=None):
     w = load_checkpoint(source / "latest.pt")
-    observer = PairedValueObserver(w, rate)
+    observer = PairedValueObserver(w, rate, horizon)
+    prediction_config = replace(w.config, motor_value_horizon=observer.horizon)
     plain = World.from_state(w.state_dict()) if verify else None
     w.controller_observer = observer
     start_time = w.time
@@ -134,9 +143,9 @@ def trial(source, output, warmup, seconds, rate, verify):
         assert maximum <= w.config.motor_value_limit + 1e-6
         predictors[mode] = dict(
             mature_cohort=len(rows), died_before_prediction=len(rows) - len(selected),
-            maximum_norm=maximum, all_adults=describe(selected, w.config, seconds),
+            maximum_norm=maximum, all_adults=describe(selected, prediction_config, seconds),
             adults_at_least_30_seconds_old=describe(
-                [r for r in selected if r["age"] >= 30], w.config, seconds
+                [r for r in selected if r["age"] >= 30], prediction_config, seconds
             ), rows=rows,
         )
     # These must be exactly the same observed outcomes, not merely similar cohorts.
@@ -153,6 +162,7 @@ def trial(source, output, warmup, seconds, rate, verify):
         start_time=start_time, forecast_start=forecast_time, end_time=w.time,
         forecast_checkpoint=str(output / "forecast-start.pt"),
         warmup_seconds=warmup, forecast_seconds=seconds,
+        prediction_horizon=observer.horizon,
         warmup_completed=forecast_time >= warmup_tick * w.config.dt,
         exactly_passive=verify, predictors=predictors,
     )
@@ -165,9 +175,13 @@ def main():
     parser.add_argument("--warmup", type=int, default=100)
     parser.add_argument("--seconds", type=int, default=100)
     parser.add_argument("--rate", type=float, default=0.02)
+    parser.add_argument("--horizon", type=float,
+                        help="Shadow prediction horizon; native world settings remain unchanged")
     args = parser.parse_args()
     if args.warmup < 0 or args.seconds < 1 or not math.isfinite(args.rate) or args.rate <= 0:
         parser.error("Warmup must be nonnegative; forecast duration and rate must be positive")
+    if args.horizon is not None and (not math.isfinite(args.horizon) or args.horizon <= 0):
+        parser.error("Prediction horizon must be positive and finite")
     torch.set_num_threads(1)
     args.output.mkdir(parents=True, exist_ok=False)
     (args.output / "source.zip").write_bytes(SOURCE_ARCHIVE)
@@ -178,11 +192,11 @@ def main():
         scripts[name] = hashlib.sha256(data).hexdigest()
     report = dict(
         interpretation=__doc__, source_sha256=SOURCE_SHA256, scripts_sha256=scripts,
-        prediction_rate=args.rate, completed=False, trials=[],
+        prediction_rate=args.rate, requested_horizon=args.horizon, completed=False, trials=[],
     )
     for index, source in enumerate(args.sources):
         result = trial(source, args.output / f"trial-{index + 1}", args.warmup, args.seconds,
-                       args.rate, verify=index == 0)
+                       args.rate, verify=index == 0, horizon=args.horizon)
         report["trials"].append(result)
         (args.output / "summary.json").write_text(json.dumps(report, indent=2) + "\n")
         print(source, {k: v["all_adults"] for k, v in result["predictors"].items()}, flush=True)

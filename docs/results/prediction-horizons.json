@@ -1,0 +1,612 @@
+{
+  "interpretation": "The predictors use the same physical trajectories and cohorts under two discount horizons. Native motor control, learning, genes, and ecology do not change. Each head is scored against returns under its own trained horizon. Absolute MSE across horizons measures different targets and cannot be ranked as if it measured the same prediction task. Relative errors use a matched zero or recent-return-rate predictor. These are three shared communities, not independent creature-level replicates or evidence of useful motor adaptation.",
+  "exact_physical_state_parity": true,
+  "long": {
+    "interpretation": "Compare fresh hidden-only and sensory critics on identical physical experience.\n\nBoth shadow predictors see the same core module, returns, and inherited learning\nrate. They never control actions. After a warmup, record one prediction per\ninitially mature creature and follow its discounted returns, including deaths.\nThe original community's native learning, reproduction, and mutation continue.\nThis is a paired prediction diagnostic, not a motor-learning or fitness assay.\n",
+    "report": "runs/v23-paired-forecasts/summary.json",
+    "report_sha256": "ed4e2f15250944adae8685d4b8dc19f848e4df46a245301140489481cfadd8f9",
+    "source_sha256": "ac30f5107c7add8430dc49acd1763cd884509ebc96682fbb3ee7e1d55bc4d609",
+    "scripts_sha256": {
+      "probe_paired_values.py": "61672de2ee62436c8aadf6a74f028171d6aac7404a617ef1cb4a4924b5c5bd37",
+      "probe_value_forecasts.py": "47188ca4674e6c0508e59e5969380bd394a10f8024566ad0ba730c450e0c3cc0"
+    },
+    "prediction_rate": 0.02,
+    "trials": [
+      {
+        "source": "runs/v22-raw-pilot/seed-1",
+        "source_metadata": {
+          "python": "3.13.11",
+          "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+          "torch": "2.11.0+cu128",
+          "cuda_build": "12.8",
+          "deterministic_algorithms": false,
+          "cublas_workspace_config": null,
+          "device": "cpu",
+          "seed": 1,
+          "revision": "b70a171b05def5f3ace70da6452982eff251a31e",
+          "dirty": true,
+          "source_sha256": "da0703af4dd7e3ccc23962486261b4ae907b21254f955d0b6d5b44bb4477da4e",
+          "source_capture": "process_import",
+          "controller": "neural",
+          "ablation": "none",
+          "seeded_from": null,
+          "created": 1790180385.365391,
+          "driver": "Failed to initialize NVML: GPU access blocked by the operating system\nFailed to properly shut down NVML: GPU access blocked by the operating system",
+          "resumed_from": null
+        },
+        "source_checkpoint_sha256": "e8b0dbd4c9b5f9030b9ded177fdd1e5b3fd9b83cdb8dba78eb7215e11a0ca7e5",
+        "start_time": 600.0,
+        "forecast_start": 700.0,
+        "end_time": 800.2,
+        "forecast_checkpoint": "runs/v23-paired-forecasts/trial-1/forecast-start.pt",
+        "warmup_seconds": 100,
+        "forecast_seconds": 100,
+        "warmup_completed": true,
+        "exactly_passive": true,
+        "prediction_horizon": 20.0,
+        "predictors": {
+          "hidden": {
+            "mature_cohort": 171,
+            "died_before_prediction": 0,
+            "maximum_norm": 3.8112645149230957,
+            "all_adults": {
+              "count": 171,
+              "deaths": 97,
+              "mean_prediction": -0.021143017867743447,
+              "mean_observed_return": 0.2829786954930253,
+              "mse_observed": 14.154602002980077,
+              "zero_mse_observed": 14.793161913336158,
+              "running_rate_mse_observed": 22.800375622052364,
+              "mse_with_estimated_tail": 14.156384762254207,
+              "zero_mse_with_estimated_tail": 14.794612373798394,
+              "maximum_tail_contribution": 0.02494655387734514,
+              "prediction_return_correlation": 0.2214317875388193
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 152,
+              "deaths": 91,
+              "mean_prediction": -0.061736516403279415,
+              "mean_observed_return": 0.27282359448454174,
+              "mse_observed": 15.282030555198892,
+              "zero_mse_observed": 15.983621076339379,
+              "running_rate_mse_observed": 22.059035887249184,
+              "mse_with_estimated_tail": 15.282853518960598,
+              "zero_mse_with_estimated_tail": 15.983811623745414,
+              "maximum_tail_contribution": 0.01913860589286986,
+              "prediction_return_correlation": 0.22496744560474574
+            }
+          },
+          "sensory": {
+            "mature_cohort": 171,
+            "died_before_prediction": 0,
+            "maximum_norm": 3.83095121383667,
+            "all_adults": {
+              "count": 171,
+              "deaths": 97,
+              "mean_prediction": -0.011519061867147684,
+              "mean_observed_return": 0.2829786954930253,
+              "mse_observed": 13.983418266328766,
+              "zero_mse_observed": 14.793161913336158,
+              "running_rate_mse_observed": 22.800375622052364,
+              "mse_with_estimated_tail": 13.985371399858975,
+              "zero_mse_with_estimated_tail": 14.7950931606656,
+              "maximum_tail_contribution": 0.02381465440039554,
+              "prediction_return_correlation": 0.23856416954718587
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 152,
+              "deaths": 91,
+              "mean_prediction": -0.04834591323129931,
+              "mean_observed_return": 0.27282359448454174,
+              "mse_observed": 15.090605679984742,
+              "zero_mse_observed": 15.983621076339379,
+              "running_rate_mse_observed": 22.059035887249184,
+              "mse_with_estimated_tail": 15.091575365594403,
+              "zero_mse_with_estimated_tail": 15.98434097712636,
+              "maximum_tail_contribution": 0.018659716200511992,
+              "prediction_return_correlation": 0.24288538067648102
+            }
+          }
+        }
+      },
+      {
+        "source": "runs/v22-raw-pilot/seed-2",
+        "source_metadata": {
+          "python": "3.13.11",
+          "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+          "torch": "2.11.0+cu128",
+          "cuda_build": "12.8",
+          "deterministic_algorithms": false,
+          "cublas_workspace_config": null,
+          "device": "cpu",
+          "seed": 2,
+          "revision": "b70a171b05def5f3ace70da6452982eff251a31e",
+          "dirty": true,
+          "source_sha256": "da0703af4dd7e3ccc23962486261b4ae907b21254f955d0b6d5b44bb4477da4e",
+          "source_capture": "process_import",
+          "controller": "neural",
+          "ablation": "none",
+          "seeded_from": null,
+          "created": 1790180506.7189386,
+          "driver": "Failed to initialize NVML: GPU access blocked by the operating system\nFailed to properly shut down NVML: GPU access blocked by the operating system",
+          "resumed_from": null
+        },
+        "source_checkpoint_sha256": "63acc40662c9ff6abe0eef29e363b3863b48d88b4f9e074b6e052a4047a34099",
+        "start_time": 600.0,
+        "forecast_start": 700.0,
+        "end_time": 800.2,
+        "forecast_checkpoint": "runs/v23-paired-forecasts/trial-2/forecast-start.pt",
+        "warmup_seconds": 100,
+        "forecast_seconds": 100,
+        "warmup_completed": true,
+        "exactly_passive": false,
+        "prediction_horizon": 20.0,
+        "predictors": {
+          "hidden": {
+            "mature_cohort": 89,
+            "died_before_prediction": 0,
+            "maximum_norm": 3.5779476165771484,
+            "all_adults": {
+              "count": 89,
+              "deaths": 28,
+              "mean_prediction": 0.20895746430340276,
+              "mean_observed_return": 0.14393196944124922,
+              "mse_observed": 4.82413240917471,
+              "zero_mse_observed": 4.289346254705311,
+              "running_rate_mse_observed": 26.286920810059957,
+              "mse_with_estimated_tail": 4.829479034653344,
+              "zero_mse_with_estimated_tail": 4.2988105988192755,
+              "maximum_tail_contribution": 0.02074472671339304,
+              "prediction_return_correlation": 0.07869485744617463
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 67,
+              "deaths": 24,
+              "mean_prediction": 0.24609949578767393,
+              "mean_observed_return": 0.12964258298775677,
+              "mse_observed": 4.636897068567041,
+              "zero_mse_observed": 3.9883460861143067,
+              "running_rate_mse_observed": 26.92895720855156,
+              "mse_with_estimated_tail": 4.638285151940466,
+              "zero_mse_with_estimated_tail": 3.995118359606915,
+              "maximum_tail_contribution": 0.02074472671339304,
+              "prediction_return_correlation": 0.1089366001004409
+            }
+          },
+          "sensory": {
+            "mature_cohort": 89,
+            "died_before_prediction": 0,
+            "maximum_norm": 3.7598977088928223,
+            "all_adults": {
+              "count": 89,
+              "deaths": 28,
+              "mean_prediction": 0.1707715022068973,
+              "mean_observed_return": 0.14393196944124922,
+              "mse_observed": 4.599491253952486,
+              "zero_mse_observed": 4.289346254705311,
+              "running_rate_mse_observed": 26.286920810059957,
+              "mse_with_estimated_tail": 4.604765354640563,
+              "zero_mse_with_estimated_tail": 4.297546343405855,
+              "maximum_tail_contribution": 0.01735139458597137,
+              "prediction_return_correlation": 0.10395671823181522
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 67,
+              "deaths": 24,
+              "mean_prediction": 0.20147312666748218,
+              "mean_observed_return": 0.12964258298775677,
+              "mse_observed": 4.353641665894687,
+              "zero_mse_observed": 3.9883460861143067,
+              "running_rate_mse_observed": 26.92895720855156,
+              "mse_with_estimated_tail": 4.3557237360368735,
+              "zero_mse_with_estimated_tail": 3.9943007915927025,
+              "maximum_tail_contribution": 0.01735139458597137,
+              "prediction_return_correlation": 0.13706025894190535
+            }
+          }
+        }
+      },
+      {
+        "source": "runs/v22-raw-pilot/seed-3",
+        "source_metadata": {
+          "python": "3.13.11",
+          "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+          "torch": "2.11.0+cu128",
+          "cuda_build": "12.8",
+          "deterministic_algorithms": false,
+          "cublas_workspace_config": null,
+          "device": "cpu",
+          "seed": 3,
+          "revision": "b70a171b05def5f3ace70da6452982eff251a31e",
+          "dirty": true,
+          "source_sha256": "da0703af4dd7e3ccc23962486261b4ae907b21254f955d0b6d5b44bb4477da4e",
+          "source_capture": "process_import",
+          "controller": "neural",
+          "ablation": "none",
+          "seeded_from": null,
+          "created": 1790180607.3938959,
+          "driver": "Failed to initialize NVML: GPU access blocked by the operating system\nFailed to properly shut down NVML: GPU access blocked by the operating system",
+          "resumed_from": null
+        },
+        "source_checkpoint_sha256": "ee0a2866c5552ef577bd926526b0cff30f8a7f3cfd67b5e7712094c1c4be39ed",
+        "start_time": 600.0,
+        "forecast_start": 700.0,
+        "end_time": 800.2,
+        "forecast_checkpoint": "runs/v23-paired-forecasts/trial-3/forecast-start.pt",
+        "warmup_seconds": 100,
+        "forecast_seconds": 100,
+        "warmup_completed": true,
+        "exactly_passive": false,
+        "prediction_horizon": 20.0,
+        "predictors": {
+          "hidden": {
+            "mature_cohort": 26,
+            "died_before_prediction": 0,
+            "maximum_norm": 3.4966342449188232,
+            "all_adults": {
+              "count": 26,
+              "deaths": 9,
+              "mean_prediction": 0.5189741706618896,
+              "mean_observed_return": 0.4136837745052699,
+              "mse_observed": 3.8798862213467036,
+              "zero_mse_observed": 3.4657938030728044,
+              "running_rate_mse_observed": 13.656295422006785,
+              "mse_with_estimated_tail": 3.8868024690346816,
+              "zero_mse_with_estimated_tail": 3.4840488551513946,
+              "maximum_tail_contribution": 0.023453148137379747,
+              "prediction_return_correlation": 0.11845375006284349
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 21,
+              "deaths": 9,
+              "mean_prediction": 0.588502382948285,
+              "mean_observed_return": 0.29485149867738275,
+              "mse_observed": 4.406943780573922,
+              "zero_mse_observed": 3.6465172859690167,
+              "running_rate_mse_observed": 13.975889647822141,
+              "mse_with_estimated_tail": 4.4075310262603375,
+              "zero_mse_with_estimated_tail": 3.658739031607714,
+              "maximum_tail_contribution": 0.021240203020065358,
+              "prediction_return_correlation": 0.09892075646749952
+            }
+          },
+          "sensory": {
+            "mature_cohort": 26,
+            "died_before_prediction": 0,
+            "maximum_norm": 3.673168420791626,
+            "all_adults": {
+              "count": 26,
+              "deaths": 9,
+              "mean_prediction": 0.39488666497457486,
+              "mean_observed_return": 0.4136837745052699,
+              "mse_observed": 3.6462358748673926,
+              "zero_mse_observed": 3.4657938030728044,
+              "running_rate_mse_observed": 13.656295422006785,
+              "mse_with_estimated_tail": 3.652908204302182,
+              "zero_mse_with_estimated_tail": 3.4809228240161003,
+              "maximum_tail_contribution": 0.022523847929280628,
+              "prediction_return_correlation": 0.14447876625298905
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 21,
+              "deaths": 9,
+              "mean_prediction": 0.43992025014900027,
+              "mean_observed_return": 0.29485149867738275,
+              "mse_observed": 4.10274349778436,
+              "zero_mse_observed": 3.6465172859690167,
+              "running_rate_mse_observed": 13.975889647822141,
+              "mse_with_estimated_tail": 4.104162296743318,
+              "zero_mse_with_estimated_tail": 3.6565826523518696,
+              "maximum_tail_contribution": 0.017268267133737417,
+              "prediction_return_correlation": 0.11925763175777439
+            }
+          }
+        }
+      }
+    ]
+  },
+  "short": {
+    "interpretation": "Compare fresh hidden-only and sensory critics on identical physical experience.\n\nBoth shadow predictors see the same core module, returns, and inherited learning\nrate. They never control actions. After a warmup, record one prediction per\ninitially mature creature and follow its discounted returns, including deaths.\nThe original community's native learning, reproduction, and mutation continue.\nThis is a paired prediction diagnostic, not a motor-learning or fitness assay.\n",
+    "report": "runs/v23-paired-short-forecasts/summary.json",
+    "report_sha256": "de89353e0a584634f12e540af7384fc75815985a9fee6d42dc7a39c8d83afd68",
+    "source_sha256": "ac30f5107c7add8430dc49acd1763cd884509ebc96682fbb3ee7e1d55bc4d609",
+    "scripts_sha256": {
+      "probe_paired_values.py": "921434d55967171b3bbde104d9bb790a4c928a71cb1b6b2344e941807cfccbcb",
+      "probe_value_forecasts.py": "52b9db2945253c94bca2c36abac145a76fc39e6e14f784960494f4561d9f1e9a"
+    },
+    "prediction_rate": 0.02,
+    "trials": [
+      {
+        "source": "runs/v22-raw-pilot/seed-1",
+        "source_metadata": {
+          "python": "3.13.11",
+          "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+          "torch": "2.11.0+cu128",
+          "cuda_build": "12.8",
+          "deterministic_algorithms": false,
+          "cublas_workspace_config": null,
+          "device": "cpu",
+          "seed": 1,
+          "revision": "b70a171b05def5f3ace70da6452982eff251a31e",
+          "dirty": true,
+          "source_sha256": "da0703af4dd7e3ccc23962486261b4ae907b21254f955d0b6d5b44bb4477da4e",
+          "source_capture": "process_import",
+          "controller": "neural",
+          "ablation": "none",
+          "seeded_from": null,
+          "created": 1790180385.365391,
+          "driver": "Failed to initialize NVML: GPU access blocked by the operating system\nFailed to properly shut down NVML: GPU access blocked by the operating system",
+          "resumed_from": null
+        },
+        "source_checkpoint_sha256": "e8b0dbd4c9b5f9030b9ded177fdd1e5b3fd9b83cdb8dba78eb7215e11a0ca7e5",
+        "start_time": 600.0,
+        "forecast_start": 700.0,
+        "end_time": 800.2,
+        "forecast_checkpoint": "runs/v23-paired-short-forecasts/trial-1/forecast-start.pt",
+        "warmup_seconds": 100,
+        "forecast_seconds": 100,
+        "prediction_horizon": 2.0,
+        "warmup_completed": true,
+        "exactly_passive": true,
+        "predictors": {
+          "hidden": {
+            "mature_cohort": 171,
+            "died_before_prediction": 0,
+            "maximum_norm": 2.4030721187591553,
+            "all_adults": {
+              "count": 171,
+              "deaths": 97,
+              "mean_prediction": 0.013421675963708532,
+              "mean_observed_return": 0.0419946184816474,
+              "mse_observed": 0.6426915828036527,
+              "zero_mse_observed": 0.748201997228682,
+              "running_rate_mse_observed": 0.6519661113831228,
+              "mse_with_estimated_tail": 0.6426915828036527,
+              "zero_mse_with_estimated_tail": 0.748201997228682,
+              "maximum_tail_contribution": 3.22803154057131e-22,
+              "prediction_return_correlation": 0.3986228313587286
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 152,
+              "deaths": 91,
+              "mean_prediction": -0.011363590399636641,
+              "mean_observed_return": 0.05769293161810198,
+              "mse_observed": 0.6548545664065284,
+              "zero_mse_observed": 0.8153932733299033,
+              "running_rate_mse_observed": 0.6619854290038403,
+              "mse_with_estimated_tail": 0.6548545664065284,
+              "zero_mse_with_estimated_tail": 0.8153932733299033,
+              "maximum_tail_contribution": 3.22803154057131e-22,
+              "prediction_return_correlation": 0.45048776646947114
+            }
+          },
+          "sensory": {
+            "mature_cohort": 171,
+            "died_before_prediction": 0,
+            "maximum_norm": 2.645317792892456,
+            "all_adults": {
+              "count": 171,
+              "deaths": 97,
+              "mean_prediction": 0.007583020701568726,
+              "mean_observed_return": 0.0419946184816474,
+              "mse_observed": 0.6277153900696743,
+              "zero_mse_observed": 0.748201997228682,
+              "running_rate_mse_observed": 0.6519661113831228,
+              "mse_with_estimated_tail": 0.6277153900696743,
+              "zero_mse_with_estimated_tail": 0.748201997228682,
+              "maximum_tail_contribution": 3.0737167547676906e-22,
+              "prediction_return_correlation": 0.4162434857686454
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 152,
+              "deaths": 91,
+              "mean_prediction": -0.01650433407753314,
+              "mean_observed_return": 0.05769293161810198,
+              "mse_observed": 0.6410348606596411,
+              "zero_mse_observed": 0.8153932733299033,
+              "running_rate_mse_observed": 0.6619854290038403,
+              "mse_with_estimated_tail": 0.6410348606596411,
+              "zero_mse_with_estimated_tail": 0.8153932733299033,
+              "maximum_tail_contribution": 3.0737167547676906e-22,
+              "prediction_return_correlation": 0.4677421857599857
+            }
+          }
+        }
+      },
+      {
+        "source": "runs/v22-raw-pilot/seed-2",
+        "source_metadata": {
+          "python": "3.13.11",
+          "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+          "torch": "2.11.0+cu128",
+          "cuda_build": "12.8",
+          "deterministic_algorithms": false,
+          "cublas_workspace_config": null,
+          "device": "cpu",
+          "seed": 2,
+          "revision": "b70a171b05def5f3ace70da6452982eff251a31e",
+          "dirty": true,
+          "source_sha256": "da0703af4dd7e3ccc23962486261b4ae907b21254f955d0b6d5b44bb4477da4e",
+          "source_capture": "process_import",
+          "controller": "neural",
+          "ablation": "none",
+          "seeded_from": null,
+          "created": 1790180506.7189386,
+          "driver": "Failed to initialize NVML: GPU access blocked by the operating system\nFailed to properly shut down NVML: GPU access blocked by the operating system",
+          "resumed_from": null
+        },
+        "source_checkpoint_sha256": "63acc40662c9ff6abe0eef29e363b3863b48d88b4f9e074b6e052a4047a34099",
+        "start_time": 600.0,
+        "forecast_start": 700.0,
+        "end_time": 800.2,
+        "forecast_checkpoint": "runs/v23-paired-short-forecasts/trial-2/forecast-start.pt",
+        "warmup_seconds": 100,
+        "forecast_seconds": 100,
+        "prediction_horizon": 2.0,
+        "warmup_completed": true,
+        "exactly_passive": false,
+        "predictors": {
+          "hidden": {
+            "mature_cohort": 89,
+            "died_before_prediction": 0,
+            "maximum_norm": 1.877829909324646,
+            "all_adults": {
+              "count": 89,
+              "deaths": 28,
+              "mean_prediction": 0.0961630198806315,
+              "mean_observed_return": 0.12522218383495431,
+              "mse_observed": 0.6252921210842484,
+              "zero_mse_observed": 0.6218483082720971,
+              "running_rate_mse_observed": 0.665992481423243,
+              "mse_with_estimated_tail": 0.6252921210842484,
+              "zero_mse_with_estimated_tail": 0.6218483082720971,
+              "maximum_tail_contribution": 2.654893376019245e-22,
+              "prediction_return_correlation": 0.18976525141126807
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 67,
+              "deaths": 24,
+              "mean_prediction": 0.1056267779959894,
+              "mean_observed_return": 0.06392442531935769,
+              "mse_observed": 0.5754547593937684,
+              "zero_mse_observed": 0.5478314246515689,
+              "running_rate_mse_observed": 0.6647384158769694,
+              "mse_with_estimated_tail": 0.5754547593937684,
+              "zero_mse_with_estimated_tail": 0.5478314246515689,
+              "maximum_tail_contribution": 2.654893376019245e-22,
+              "prediction_return_correlation": 0.2104317065415089
+            }
+          },
+          "sensory": {
+            "mature_cohort": 89,
+            "died_before_prediction": 0,
+            "maximum_norm": 2.2177178859710693,
+            "all_adults": {
+              "count": 89,
+              "deaths": 28,
+              "mean_prediction": 0.08398255706095042,
+              "mean_observed_return": 0.12522218383495431,
+              "mse_observed": 0.5952505611667822,
+              "zero_mse_observed": 0.6218483082720971,
+              "running_rate_mse_observed": 0.665992481423243,
+              "mse_with_estimated_tail": 0.5952505611667822,
+              "zero_mse_with_estimated_tail": 0.6218483082720971,
+              "maximum_tail_contribution": 2.3513129551961755e-22,
+              "prediction_return_correlation": 0.22812397050479277
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 67,
+              "deaths": 24,
+              "mean_prediction": 0.09254679160276011,
+              "mean_observed_return": 0.06392442531935769,
+              "mse_observed": 0.5370015463613891,
+              "zero_mse_observed": 0.5478314246515689,
+              "running_rate_mse_observed": 0.6647384158769694,
+              "mse_with_estimated_tail": 0.5370015463613891,
+              "zero_mse_with_estimated_tail": 0.5478314246515689,
+              "maximum_tail_contribution": 2.3513129551961755e-22,
+              "prediction_return_correlation": 0.2514263470017982
+            }
+          }
+        }
+      },
+      {
+        "source": "runs/v22-raw-pilot/seed-3",
+        "source_metadata": {
+          "python": "3.13.11",
+          "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+          "torch": "2.11.0+cu128",
+          "cuda_build": "12.8",
+          "deterministic_algorithms": false,
+          "cublas_workspace_config": null,
+          "device": "cpu",
+          "seed": 3,
+          "revision": "b70a171b05def5f3ace70da6452982eff251a31e",
+          "dirty": true,
+          "source_sha256": "da0703af4dd7e3ccc23962486261b4ae907b21254f955d0b6d5b44bb4477da4e",
+          "source_capture": "process_import",
+          "controller": "neural",
+          "ablation": "none",
+          "seeded_from": null,
+          "created": 1790180607.3938959,
+          "driver": "Failed to initialize NVML: GPU access blocked by the operating system\nFailed to properly shut down NVML: GPU access blocked by the operating system",
+          "resumed_from": null
+        },
+        "source_checkpoint_sha256": "ee0a2866c5552ef577bd926526b0cff30f8a7f3cfd67b5e7712094c1c4be39ed",
+        "start_time": 600.0,
+        "forecast_start": 700.0,
+        "end_time": 800.2,
+        "forecast_checkpoint": "runs/v23-paired-short-forecasts/trial-3/forecast-start.pt",
+        "warmup_seconds": 100,
+        "forecast_seconds": 100,
+        "prediction_horizon": 2.0,
+        "warmup_completed": true,
+        "exactly_passive": false,
+        "predictors": {
+          "hidden": {
+            "mature_cohort": 26,
+            "died_before_prediction": 0,
+            "maximum_norm": 1.1855857372283936,
+            "all_adults": {
+              "count": 26,
+              "deaths": 9,
+              "mean_prediction": 0.09667858997216591,
+              "mean_observed_return": 0.16195362732469862,
+              "mse_observed": 1.0870908537376875,
+              "zero_mse_observed": 1.0261998060848614,
+              "running_rate_mse_observed": 1.0959294249536635,
+              "mse_with_estimated_tail": 1.0870908537376875,
+              "zero_mse_with_estimated_tail": 1.0261998060848614,
+              "maximum_tail_contribution": 1.968848750366427e-22,
+              "prediction_return_correlation": 0.0474217068978867
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 21,
+              "deaths": 9,
+              "mean_prediction": 0.08366775064773503,
+              "mean_observed_return": 0.23244682366316738,
+              "mse_observed": 1.3074393233188293,
+              "zero_mse_observed": 1.2641637567796669,
+              "running_rate_mse_observed": 1.295679782499514,
+              "mse_with_estimated_tail": 1.3074393233188293,
+              "zero_mse_with_estimated_tail": 1.2641637567796669,
+              "maximum_tail_contribution": 1.943759345376967e-22,
+              "prediction_return_correlation": 0.050303038336272914
+            }
+          },
+          "sensory": {
+            "mature_cohort": 26,
+            "died_before_prediction": 0,
+            "maximum_norm": 1.9499038457870483,
+            "all_adults": {
+              "count": 26,
+              "deaths": 9,
+              "mean_prediction": 0.09049657194946821,
+              "mean_observed_return": 0.16195362732469862,
+              "mse_observed": 1.040126835855903,
+              "zero_mse_observed": 1.0261998060848614,
+              "running_rate_mse_observed": 1.0959294249536635,
+              "mse_with_estimated_tail": 1.040126835855903,
+              "zero_mse_with_estimated_tail": 1.0261998060848614,
+              "maximum_tail_contribution": 2.382052074806246e-22,
+              "prediction_return_correlation": 0.1372521657690082
+            },
+            "adults_at_least_30_seconds_old": {
+              "count": 21,
+              "deaths": 9,
+              "mean_prediction": 0.07735767951678663,
+              "mean_observed_return": 0.23244682366316738,
+              "mse_observed": 1.250380485406669,
+              "zero_mse_observed": 1.2641637567796669,
+              "running_rate_mse_observed": 1.295679782499514,
+              "mse_with_estimated_tail": 1.250380485406669,
+              "zero_mse_with_estimated_tail": 1.2641637567796669,
+              "maximum_tail_contribution": 1.2616212587222558e-22,
+              "prediction_return_correlation": 0.14977952142811032
+            }
+          }
+        }
+      }
+    ]
+  }
+}

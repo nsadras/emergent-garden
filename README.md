@@ -33,6 +33,8 @@ access to existing sensations. On identical experience it modestly improves
 forecast error in three communities, without a reliable ecological benefit.
 A faster prediction-learning rate increases error. All nine ecological pilots
 and the paired prediction diagnostics are complete.
+An optional [two-second prediction horizon](docs/PREDICTION_HORIZONS.md) improves
+local forecasts but still gives mixed ecological results and weak learning evidence.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.
 

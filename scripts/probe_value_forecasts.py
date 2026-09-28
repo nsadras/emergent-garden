@@ -25,9 +25,12 @@ from emergent_garden.world import World
 
 
 class ForecastObserver:
-    def __init__(self, world, seconds, readout=None):
+    def __init__(self, world, seconds, readout=None, *, horizon=None):
         a = world.agents
         self.readout = readout or self.native_readout
+        self.horizon = world.config.motor_value_horizon if horizon is None else horizon
+        if not math.isfinite(self.horizon) or self.horizon <= 0:
+            raise ValueError("Prediction horizon must be positive and finite")
         self.seconds, self.pending = seconds, None
         _, norms = self.readout(world)
         adults = (a["modules"] == a["target_modules"]).nonzero().flatten().tolist()
@@ -97,7 +100,7 @@ class ForecastObserver:
             if c.motor_value_centered:
                 increment -= row["current_baseline"] * c.dt
             # Rewards during one held motor interval share the learner's discount.
-            discount = math.exp(-(row["last_control"] - row["start"]) / c.motor_value_horizon)
+            discount = math.exp(-(row["last_control"] - row["start"]) / self.horizon)
             row["discounted_return"] += discount * increment
 
 

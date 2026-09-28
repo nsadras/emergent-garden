@@ -65,8 +65,12 @@ subsequently matched the original worlds and shadow critics exactly. Positive
 clipping removed 2.56%/7.30%/<.01% of sensory error mass at the retained rate,
 with no negative clipping. This leaves clipping unestablished as the main
 limitation, especially in the third community where it is nearly absent.
-Next test a shorter forecast horizon on the
-same experience. The research loop remains active, and the user's V16 working
+The [short-horizon follow-up](docs/PREDICTION_HORIZONS.md) is also complete.
+Two-second sensory forecasts beat zero in two full cohorts; six new native
+pilots yield own-return births 210/13/281 versus shuffled 543/26/249. Better local
+prediction still does not establish useful motor adaptation. All 390 tests pass.
+The shorter preset remains optional. Next investigate variation in recurrent
+neural dynamics. The research loop remains active, and the user's V16 working
 configuration is unchanged.
 
 ## Research sequence

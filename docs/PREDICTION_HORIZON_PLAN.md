@@ -1,5 +1,11 @@
 # Prediction timescale experiment
 
+Status: all three passive comparisons and six new native 600-second starts are
+complete. Two-second sensory predictions beat zero in two communities, and
+recent-rate extrapolation in all three. Native births improve in two starts,
+but own feedback still loses to shuffling in two. See
+[the results](PREDICTION_HORIZONS.md). The shorter horizon remains optional.
+
 V23's extra sensory features modestly improve paired forecasts, but still fail
 to beat predicting zero in two communities. A faster rate worsens accuracy.
 Clipping is asymmetric yet nearly absent in the third community, and most
@@ -26,4 +32,5 @@ age subgroup without choosing creatures by their later outcomes.
 If near-term energy becomes predictably learnable, test the shorter horizon in
 native motor control with matched ecological and shuffled-feedback comparisons.
 If it remains weak, inspect representation and reward timing before expanding
-the controller further. No native V24 mechanism is implemented by this plan.
+the controller further. This experiment uses an existing V23 parameter and
+adds no native V24 mechanism.

@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import torch
@@ -32,9 +32,12 @@ def paired_forecasts(path):
         assert trial["warmup_completed"], checkpoint
         a, c = w.agents, w.config
         assert c.motor_value_centered == 0 and w.ablation == "none", checkpoint
+        horizon = trial.get("prediction_horizon", c.motor_value_horizon)
+        prediction_config = replace(c, motor_value_horizon=horizon)
         adults = (a["modules"] == a["target_modules"]).nonzero().flatten().tolist()
         values = torch.load(checkpoint.parent / "end-values.pt", weights_only=True)
         record = {k: v for k, v in trial.items() if k != "predictors"}
+        record["prediction_horizon"] = horizon
         record["predictors"] = {}
         observed = []
         for mode, result in trial["predictors"].items():
@@ -52,7 +55,8 @@ def paired_forecasts(path):
                 ("all_adults", selected),
                 ("adults_at_least_30_seconds_old", [r for r in selected if r["age"] >= 30]),
             ):
-                assert result[group] == describe(cohort, c, trial["forecast_seconds"]), mode
+                assert result[group] == describe(cohort, prediction_config,
+                                                 trial["forecast_seconds"]), mode
             norm = values[mode]["motor_value_weights"].norm(dim=-1).max().item()
             assert norm == result["maximum_norm"] and norm <= c.motor_value_limit + 1e-6, mode
             for value in values[mode].values():
@@ -135,6 +139,7 @@ def main():
         assert len(previous["trials"]) == len(fast["trials"])
         for old, new in zip(previous["trials"], fast["trials"], strict=True):
             assert old["source_checkpoint_sha256"] == new["source_checkpoint_sha256"]
+            assert old["prediction_horizon"] == new["prediction_horizon"]
             assert (old["forecast_start"], old["forecast_seconds"]) == (
                 new["forecast_start"], new["forecast_seconds"]
             )

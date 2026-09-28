@@ -7,7 +7,7 @@ import pytest
 import torch
 
 
-def fixture(monkeypatch, centered):
+def fixture(monkeypatch, centered, horizon=None):
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
     observer = importlib.import_module("probe_value_forecasts").ForecastObserver
     a = {
@@ -26,15 +26,18 @@ def fixture(monkeypatch, centered):
         dt=0.1, feedback_scale=10, motor_value_centered=centered, motor_value_horizon=1
     )
     w = SimpleNamespace(agents=a, config=c, time=0.0, events=[])
-    probe = observer(w, 0.4)
+    probe = observer(w, 0.4, horizon=horizon)
     probe.before_controller(w, torch.tensor([0]), None)
     probe.after_controller(w)
     return w, probe
 
 
 @pytest.mark.parametrize("centered", [False, True])
-def test_forecast_uses_controller_discounts_and_does_not_count_later_deaths(monkeypatch, centered):
-    w, probe = fixture(monkeypatch, centered)
+@pytest.mark.parametrize("horizon", [None, 2])
+def test_forecast_uses_controller_discounts_and_does_not_count_later_deaths(
+    monkeypatch, centered, horizon
+):
+    w, probe = fixture(monkeypatch, centered, horizon)
     a = w.agents
     for tick in range(4):
         w.time = tick * 0.1
@@ -48,7 +51,8 @@ def test_forecast_uses_controller_discounts_and_does_not_count_later_deaths(monk
             a["spent"] += 1
         probe.record_step(w, w.time, 0)
     row = probe.rows[0]
-    expected = (0.14 - 0.12 * math.exp(-0.2)) if centered else (0.2 - 0.1 * math.exp(-0.2))
+    discount = math.exp(-0.2 / (1 if horizon is None else horizon))
+    expected = (0.14 - 0.12 * discount) if centered else (0.2 - 0.1 * discount)
     assert row["discounted_return"] == pytest.approx(expected, abs=1e-12)
     assert row["prediction"] == 1  # Subsequent predictions cannot replace the initial forecast.
     w.time = 0.4

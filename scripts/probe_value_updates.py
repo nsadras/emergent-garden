@@ -20,8 +20,8 @@ from emergent_garden.storage import SOURCE_ARCHIVE, SOURCE_SHA256, load_checkpoi
 
 
 class UpdateObserver(PairedValueObserver):
-    def __init__(self, world, rate):
-        super().__init__(world, rate)
+    def __init__(self, world, rate, horizon=None):
+        super().__init__(world, rate, horizon)
         self.statistics = {
             mode: dict(
                 transitions=0, positive_clipped=0, negative_clipped=0,
@@ -126,7 +126,9 @@ def main():
         folder = Path(original["forecast_checkpoint"]).parent
         expected = torch.load(folder / "end.pt", weights_only=True)
         expected_values = torch.load(folder / "end-values.pt", weights_only=True)
-        observer = w.controller_observer = UpdateObserver(w, reference["prediction_rate"])
+        observer = w.controller_observer = UpdateObserver(
+            w, reference["prediction_rate"], original.get("prediction_horizon")
+        )
         while w.population and w.tick < expected["tick"]:
             w.step()
         same_state(w.state_dict(), expected)
@@ -134,6 +136,7 @@ def main():
         same_state(observer.states, expected_values)
         row = dict(
             source=str(source), end_time=w.time, exact_world_replay=True,
+            prediction_horizon=observer.horizon,
             exact_predictor_replay=True, statistics=observer.results(),
         )
         report["trials"].append(row)

@@ -37,8 +37,15 @@ instrumented replays match the original complete worlds and shadow critics.
 Positive error clipping removes 2.56%/7.30%/<.01% of sensory error mass at the .02
 rate; negative errors never clip. Norm bounds are uncommon at that rate. This
 does not establish clipping as the main limitation, especially in seed 3 where
-it is nearly absent. Next compare a two-second prediction horizon with the
-20-second target on identical experience, retaining matched zero predictors.
+it is nearly absent. The [two-second horizon follow-up](docs/PREDICTION_HORIZONS.md)
+is now complete: three passive comparisons beat zero in two full sensory cohorts,
+and all three older subgroups. Six new native pilots produce own-return births
+210/13/281 versus shuffled 543/26/249. The shorter target helps two evolutionary
+starts but does not establish useful motor adaptation. `configs/v23-short.toml`
+is optional; the main preset retains 20 seconds. All 390 tests and Ruff checks
+pass. No runs from this follow-up remain unfinished. The next branch should
+investigate variation in recurrent dynamics, such as different response times
+among neurons, rather than continuing to tune only the value readout.
 Research remains active. Preserve
 the user's V16 edits and unrelated notes. V21–V23 have no unfinished scheduled
 ecological follow-ups.
