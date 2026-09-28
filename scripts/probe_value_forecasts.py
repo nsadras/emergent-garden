@@ -25,16 +25,18 @@ from emergent_garden.world import World
 
 
 class ForecastObserver:
-    def __init__(self, world, seconds):
+    def __init__(self, world, seconds, readout=None):
         a = world.agents
+        self.readout = readout or self.native_readout
         self.seconds, self.pending = seconds, None
+        _, norms = self.readout(world)
         adults = (a["modules"] == a["target_modules"]).nonzero().flatten().tolist()
         self.rows = {
             int(a["id"][i]): dict(
                 id=int(a["id"][i]),
                 age=float(a["age"][i]),
                 area=float(a["area"][i]),
-                norm=float(a["module_motor_value_weights"][i, 0].norm()),
+                norm=float(norms[i]),
                 start=None,
                 prediction=None,
                 baseline=None,
@@ -48,16 +50,25 @@ class ForecastObserver:
             for i in adults
         }
 
+    @staticmethod
+    def native_readout(world):
+        a = world.agents
+        return (
+            a["module_motor_value_prediction"][:, 0],
+            a["module_motor_value_weights"][:, 0].norm(dim=-1),
+        )
+
     def before_controller(self, world, index, inputs, module_inputs=None):
         self.pending = index
 
     def after_controller(self, world, noise=None):
         a, t = world.agents, world.time
+        predictions, _ = self.readout(world)
         for i in self.pending.tolist():
             row = self.rows.get(int(a["id"][i]))
             if row is None:
                 continue
-            prediction = float(a["module_motor_value_prediction"][i, 0])
+            prediction = float(predictions[i])
             baseline = float(a["module_motor_baseline"][i, 0])
             row["current_baseline"], row["last_control"] = baseline, t
             if row["start"] is None:

@@ -1,9 +1,43 @@
-# Development handoff — V22
+# Development handoff — V23
 
 Autonomous ecology research **resumed at the user's request on September 23,
 2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V22 / package 0.23.0**. Python and dependencies remain
+The current code is **V23 / package 0.24.0**. Python and dependencies remain
 managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+
+## V23: direct sensory value features
+
+[V23](docs/SENSORY_VALUE.md) optionally appends the actual 42 controller inputs
+to the critic's hidden activity and bias: 75 acquired weights instead of 33.
+`motor_value_inputs = 0` preserves V22 exactly. The inherited circuit and actor
+are unchanged; no extra energy is charged in this representation screen.
+`configs/v23.toml` enables the feature path, while `v23-baseline.toml` retains
+hidden-only prediction. Both use V22's direct returns and .02 maximum critic rate.
+
+All nine 600-second pilots are complete. Hidden-only populations are 147/67/22,
+births 348/230/71; sensory populations 84/81/4, births 131/262/16; shuffled sensory
+populations 172/7/171, births 480/25/384. There is no reliable ecological advantage.
+All three neutral runs match V22's common final state and measurements exactly.
+Three native forecast forks include deaths and beat zero in only one community;
+the third has just two initially mature creatures.
+
+Paired passive critics trained on identical V22 direct-return trajectories
+reduce MSE with sensory features by about 1.2%/4.7%/6.0%. Both representations
+still lose to predicting zero in two of three communities. A fivefold faster
+critic rate (.1) worsens MSE in all three for both representations, despite
+increasing correlation. Full physical states match across rates. All six
+passive forks are complete; neither their larger sample counts nor the native
+forks are independent ecological replicates. No longer ecological or transplant
+follow-up was launched for these mixed results.
+
+All 388 tests, Ruff, and separate CPU/CUDA replay exercises pass. Inspector
+Details states the feature source; all tabs fit 640–1,024 pixels. Full evidence
+and commands are in the guide; local runs use `runs/v23-*`. The next diagnostic
+should measure update-error clipping and weight bounds before changing the
+learning rule. Rare meals and continuous costs could be affected differently;
+that mechanism has not been established. Research remains active. Preserve
+the user's V16 edits and unrelated notes. V21–V23 have no unfinished scheduled
+ecological follow-ups.
 
 ## V22: learned energy predictions
 

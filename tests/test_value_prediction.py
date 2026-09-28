@@ -1,15 +1,14 @@
 import math
+from dataclasses import replace
 
+import pytest
 import torch
 
+from emergent_garden.learning import motor_policy, motor_state
 from emergent_garden.value import advance_value, value_state
 
 
 def test_motor_value_target_can_use_raw_returns_without_changing_the_temporal_baseline(config):
-    from dataclasses import replace
-
-    from emergent_garden.learning import motor_policy, motor_state
-
     c = replace(config, ecology_version=22, motor_value_rate=0.02, motor_normalized=1)
     genomes = torch.zeros(1, c.parameter_count)
     state = motor_state(c, genomes)
@@ -34,6 +33,56 @@ def test_motor_value_target_can_use_raw_returns_without_changing_the_temporal_ba
     torch.testing.assert_close(
         results[0]["motor_baseline"], results[1]["motor_baseline"], rtol=0, atol=0
     )
+
+
+def test_direct_sensory_features_predict_without_adding_an_actor_input_path(config):
+    c = replace(
+        config, ecology_version=23, motor_normalized=1,
+        motor_value_rate=0.02, motor_value_inputs=1,
+    ).validate()
+    genomes = torch.zeros(1, c.parameter_count)
+    state = motor_state(c, genomes)
+    # A supplied readout is only a routing fixture, never a founder initializer.
+    state["motor_value_weights"][0, c.hidden_size] = 1
+    state["motor_plastic"].fill_(0.03)
+    results, actions = [], []
+    for stimulus in (0.0, 1.0):
+        inputs = torch.zeros(1, c.input_size)
+        inputs[:, 0] = stimulus
+        result, action = motor_policy(
+            c, genomes, torch.zeros(1, c.hidden_size), torch.zeros(1, c.output_size),
+            state, torch.full((1, 2), 0.2), torch.zeros(1), torch.full((1,), 0.1), inputs=inputs,
+        )
+        results.append(result)
+        actions.append(action)
+    assert results[0]["motor_value_prediction"].item() == 0
+    assert results[1]["motor_value_prediction"].item() == pytest.approx(1 / math.sqrt(2))
+    for result in results:
+        features = result["motor_value_previous"]
+        assert features.shape == (1, c.hidden_size + c.input_size + 1)
+        assert features.norm().item() == pytest.approx(1)
+        assert result["motor_trace"].shape == (1, 2, c.hidden_size + 1)
+    # The first transition has no past motor eligibility; changing just the
+    # predictor's input cannot directly alter the existing actor's actions.
+    torch.testing.assert_close(actions[0], actions[1], rtol=0, atol=0)
+
+
+def test_direct_sensory_predictor_requires_real_inputs_only_when_enabled(config):
+    c = replace(
+        config, ecology_version=23, motor_normalized=1,
+        motor_value_rate=0.02, motor_value_inputs=1,
+    ).validate()
+    genomes = torch.zeros(1, c.parameter_count)
+    arguments = (
+        c, genomes, torch.zeros(1, c.hidden_size), torch.zeros(1, c.output_size),
+        motor_state(c, genomes), torch.zeros(1, 2), torch.zeros(1), torch.full((1,), 0.1),
+    )
+    for inputs in (None, torch.zeros(1, c.input_size - 1)):
+        with pytest.raises(ValueError, match="actual controller inputs"):
+            motor_policy(*arguments, inputs=inputs)
+    # Disabling value learning leaves no dependency on those extra features.
+    result, _ = motor_policy(*arguments, value_learning=False)
+    assert not result["motor_value_weights"].count_nonzero()
 
 
 def test_transition_credits_previous_features_with_preupdate_predictions():

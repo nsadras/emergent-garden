@@ -174,8 +174,10 @@ def main():
         from emergent_garden.value import value_shapes
 
         mask = w.agents["module_mask"]
-        for key in value_shapes(c.hidden_size):
+        extra = c.input_size if c.motor_value_inputs else 0
+        for key, shape in value_shapes(c.hidden_size, extra).items():
             value = w.agents[f"module_{key}"]
+            assert value.shape == (*mask.shape, *shape), key
             assert torch.isfinite(value).all(), key
             assert not value[~mask].count_nonzero(), key
         assert (

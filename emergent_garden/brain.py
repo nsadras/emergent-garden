@@ -131,6 +131,7 @@ def controller_step(
             learning=plasticity and motor_learning,
             exploration_enabled=exploration_enabled,
             value_learning=value_learning,
+            inputs=inputs,
         )
         result.update(acquired)
     if config.ecology_version < 7:

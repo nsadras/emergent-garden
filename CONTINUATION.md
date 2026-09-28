@@ -1,8 +1,8 @@
 # Continuing evolution experiments
 
 Development **resumed at the user's request on September 23, 2026**, after the
-V15 pause and subsequent interface/resource work. The current iteration is V22
-(package 0.23.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
+V15 pause and subsequent interface/resource work. The current iteration is V23
+(package 0.24.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
 meals and affordable exploration. Current evidence, historical interrupted work,
 and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
 V0–V5 and their evidence are preserved in `EVOLUTION.md`.
@@ -50,6 +50,19 @@ for these weak pilots. All 363 tests, Ruff, and CPU/CUDA replay checks pass.
 The next experiment will test access to existing sensory features before adding
 more inherited layers. That is a hypothesis about representation, not a proven
 explanation of the observed limitations. Autonomous research remains active.
+
+[V23](docs/SENSORY_VALUE.md) gives the acquired critic optional direct sensory
+features without changing genes or the motor readout. All nine matched pilots
+are complete: sensory births are 131/262/16, versus hidden-only 348/230/71 and
+shuffled sensory 480/25/384. Three native forecast forks show weak accuracy.
+Paired passive critics on identical experience reduce MSE with sensory features
+in all three communities, but both representations lose to predicting zero in
+two. Repeating with fivefold faster prediction learning increases MSE everywhere,
+so the .02 rate remains. All six passive forks are complete, with physical states
+matching across rates. These are prediction comparisons, not fitness assays.
+All 388 tests, Ruff, and CPU/CUDA replay checks pass. Next inspect update clipping
+and bounded values before adding more neural structure. The research loop remains
+active, and the user's V16 working configuration is unchanged.
 
 ## Research sequence
 

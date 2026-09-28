@@ -77,6 +77,7 @@ class Config:
     motor_noise_tau: float = 0.0
     motor_value_rate: float = 0.0
     motor_value_centered: int = 1
+    motor_value_inputs: int = 0
     motor_value_horizon: float = 20.0
     motor_value_trace_tau: float = 2.0
     motor_value_limit: float = 4.0
@@ -166,7 +167,7 @@ class Config:
                 raise ValueError(f"{key} must be positive")
         if self.schema_version != 1:
             raise ValueError("Unsupported configuration schema")
-        if self.ecology_version not in range(23):
+        if self.ecology_version not in range(24):
             raise ValueError("Unsupported ecology version")
         if self.sensory_contrast not in (0, 1):
             raise ValueError("sensory_contrast must be 0 or 1")
@@ -180,6 +181,10 @@ class Config:
             raise ValueError("motor_value_centered must be 0 or 1")
         if not self.motor_value_centered and self.ecology_version < 22:
             raise ValueError("Value target selection requires ecology_version >= 22")
+        if self.motor_value_inputs not in (0, 1):
+            raise ValueError("motor_value_inputs must be 0 or 1")
+        if self.motor_value_inputs and self.ecology_version < 23:
+            raise ValueError("Direct sensory value features require ecology_version >= 23")
         if self.motor_value_rate:
             if self.ecology_version < 22:
                 raise ValueError("Motor value prediction requires ecology_version >= 22")

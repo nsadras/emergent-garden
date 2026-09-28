@@ -1,0 +1,75 @@
+{
+  "source": "runs/v23-sensory-pilot/seed-1/latest.pt",
+  "time": 630.1,
+  "population": 87,
+  "selected": 30,
+  "predicted_return": [
+    0.992031455039978
+  ],
+  "prediction_error": [
+    -0.016446828842163086
+  ],
+  "layouts": [
+    {
+      "height": 640,
+      "tab": "brain",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "body",
+      "content_height": 640
+    },
+    {
+      "height": 640,
+      "tab": "details",
+      "content_height": 615
+    },
+    {
+      "height": 768,
+      "tab": "brain",
+      "content_height": 768
+    },
+    {
+      "height": 768,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 768,
+      "tab": "details",
+      "content_height": 615
+    },
+    {
+      "height": 900,
+      "tab": "brain",
+      "content_height": 900
+    },
+    {
+      "height": 900,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 900,
+      "tab": "details",
+      "content_height": 615
+    },
+    {
+      "height": 1024,
+      "tab": "brain",
+      "content_height": 938
+    },
+    {
+      "height": 1024,
+      "tab": "body",
+      "content_height": 744
+    },
+    {
+      "height": 1024,
+      "tab": "details",
+      "content_height": 615
+    }
+  ],
+  "meaning": "An illustrative 30-second fork, not an independent ecological experiment."
+}

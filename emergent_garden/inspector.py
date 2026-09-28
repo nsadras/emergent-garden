@@ -416,6 +416,15 @@ class Inspector:
                 GOLD,
             )
             top += 24
+            if c.ecology_version >= 23:
+                sources = "hidden activity + sensory inputs + bias" if c.motor_value_inputs else (
+                    "hidden activity + bias"
+                )
+                count = c.hidden_size + (c.input_size if c.motor_value_inputs else 0) + 1
+                self.text(
+                    f"Prediction features: {sources} ({count} weights)", (22, top + 294), MUTED
+                )
+                top += 24
         self.text("Choose Brain to return to the live graph.", (22, top + 307), POSITIVE)
         return top + 337
 

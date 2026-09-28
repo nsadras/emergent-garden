@@ -48,7 +48,7 @@ def motor_state(config, genomes):
     if config.ecology_version >= 22:
         from .value import value_state
 
-        state.update(value_state(h, genomes))
+        state.update(value_state(h, genomes, config.input_size if config.motor_value_inputs else 0))
     return state
 
 
@@ -59,7 +59,9 @@ def motor_memory_shapes(config):
 
     shapes = history_shapes(config.hidden_size) if config.ecology_version >= 21 else {}
     if config.ecology_version >= 22:
-        shapes.update(value_shapes(config.hidden_size))
+        shapes.update(
+            value_shapes(config.hidden_size, config.input_size if config.motor_value_inputs else 0)
+        )
     return shapes
 
 
@@ -76,6 +78,7 @@ def motor_policy(
     *,
     exploration_enabled=True,
     value_learning=True,
+    inputs=None,
 ):
     """Credit previous actions before choosing the next exploratory action.
 
@@ -105,13 +108,20 @@ def motor_policy(
     baseline = state["motor_baseline"] + beta * (reward_rate - state["motor_baseline"])
     value = {}
     if c.ecology_version >= 22:
-        from .value import advance_value, value_shapes
+        from .value import advance_value, sensory_features, value_shapes
 
         value = {key: torch.zeros_like(state[key]) for key in value_shapes(c.hidden_size)}
         if learning and value_learning and c.motor_value_rate:
+            predictor_features = features
+            if c.motor_value_inputs:
+                if inputs is None or inputs.shape != (len(hidden), c.input_size):
+                    raise ValueError(
+                        "Sensory value prediction requires the actual controller inputs"
+                    )
+                predictor_features = sensory_features(hidden, inputs)
             value, error = advance_value(
                 state,
-                features,
+                predictor_features,
                 centered if c.motor_value_centered else reward,
                 elapsed,
                 c.motor_value_rate * traits[:, 0],

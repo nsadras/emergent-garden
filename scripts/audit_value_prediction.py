@@ -40,7 +40,8 @@ def checked(path, duration, resumed=False):
         result["final"][key] = metric[key]
         for row in result["checkpoints"]:
             row[key] = lookup[row["tick"]][key]
-    for key, shape in value_shapes(w.config.hidden_size).items():
+    extra = w.config.input_size if w.config.motor_value_inputs else 0
+    for key, shape in value_shapes(w.config.hidden_size, extra).items():
         value = w.agents[f"module_{key}"]
         assert value.shape == (*mask.shape, *shape), (path, key)
         assert torch.isfinite(value).all(), (path, key)

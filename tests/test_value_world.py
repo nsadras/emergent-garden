@@ -65,11 +65,59 @@ def test_neutral_or_disabled_value_predictor_preserves_legacy_complete_state(con
     same(a, b)
 
 
+def test_neutral_sensory_value_setting_preserves_complete_v22_state(config):
+    c = configuration(config, motor_noise_tau=2, motor_value_centered=0)
+    old = create_world(c)
+    new = create_world(replace(c, ecology_version=23))
+    old.step(103)
+    new.step(103)
+    a, b = old.state_dict(), new.state_dict()
+    a.pop("config")
+    b.pop("config")
+    same(a, b)
+
+
+@pytest.mark.parametrize("disabled", ["config", "ablation"])
+def test_disabled_sensory_head_preserves_running_mean_actor(config, disabled):
+    c = configuration(config, motor_value_rate=0, motor_noise_tau=2)
+    old = create_world(c)
+    new = create_world(
+        replace(
+            c, ecology_version=23, motor_value_inputs=1,
+            motor_value_rate=0 if disabled == "config" else 0.02,
+        ), ablation="no_motor_value" if disabled == "ablation" else "none",
+    )
+    old.step(103)
+    new.step(103)
+    a, b = old.state_dict(), new.state_dict()
+    for state in (a, b):
+        state.pop("config")
+        state.pop("ablation")
+        for key in value_shapes(c.hidden_size):
+            assert not state["agents"].pop(f"module_{key}").count_nonzero()
+    same(a, b)
+
+
+def test_sensory_value_configuration_and_empty_world(config):
+    with pytest.raises(ValueError, match="ecology_version >= 23"):
+        configuration(config, motor_value_inputs=1)
+    with pytest.raises(ValueError, match="motor_value_inputs must"):
+        configuration(config, ecology_version=23, motor_value_inputs=2)
+    w = create_world(configuration(config, ecology_version=23, motor_value_inputs=1,
+                                   initial_population=0))
+    assert w.agents["module_motor_value_weights"].shape == (0, 3, 75)
+    assert w.metrics()["mean_motor_value_norm"] == 0
+
+
 @pytest.mark.parametrize("ablation", ["none", "shuffled_motor_reward"])
 @pytest.mark.parametrize("centered", [0, 1])
-def test_value_learning_replays_and_remains_bounded(config, ablation, centered):
+@pytest.mark.parametrize("inputs", [0, 1])
+def test_value_learning_replays_and_remains_bounded(config, ablation, centered, inputs):
     w = create_world(
-        configuration(config, motor_noise_tau=2, motor_value_centered=centered), ablation=ablation
+        configuration(
+            config, motor_noise_tau=2, motor_value_centered=centered,
+            ecology_version=23 if inputs else 22, motor_value_inputs=inputs,
+        ), ablation=ablation,
     )
     w.step(37)
     assert w.agents["module_motor_value_weights"].abs().sum() > 0
@@ -85,8 +133,14 @@ def test_value_learning_replays_and_remains_bounded(config, ablation, centered):
 
 
 @pytest.mark.parametrize("ablation", ["no_motor_learning", "no_plasticity"])
-def test_disabled_learning_has_no_acquired_predictor_but_retains_capacity_cost(config, ablation):
-    w = create_world(configuration(config), ablation=ablation)
+@pytest.mark.parametrize("inputs", [0, 1])
+def test_disabled_learning_has_no_acquired_predictor_but_retains_capacity_cost(
+    config, ablation, inputs
+):
+    w = create_world(
+        configuration(config, ecology_version=23 if inputs else 22, motor_value_inputs=inputs),
+        ablation=ablation,
+    )
     w.step(73)
     for key in value_shapes(w.config.hidden_size):
         assert not w.agents[f"module_{key}"].count_nonzero()
@@ -95,9 +149,12 @@ def test_disabled_learning_has_no_acquired_predictor_but_retains_capacity_cost(c
 
 
 @pytest.mark.parametrize("event", ["birth", "growth"])
-def test_new_neural_modules_start_without_acquired_predictions(config, event):
+@pytest.mark.parametrize("inputs", [0, 1])
+def test_new_neural_modules_start_without_acquired_predictions(config, event, inputs):
     c = configuration(
         config,
+        ecology_version=23 if inputs else 22,
+        motor_value_inputs=inputs,
         initial_population=1,
         initial_food=0,
         food_rate=0,
@@ -153,8 +210,11 @@ def test_value_configuration_guards_and_empty_world(config):
 
 
 @pytest.mark.parametrize("mode", ["erase_plastic", "no_plasticity", "erase_activity"])
-def test_acquired_state_challenges_include_the_value_predictor(config, mode):
-    w = create_world(configuration(config))
+@pytest.mark.parametrize("inputs", [0, 1])
+def test_acquired_state_challenges_include_the_value_predictor(config, mode, inputs):
+    w = create_world(
+        configuration(config, ecology_version=23 if inputs else 22, motor_value_inputs=inputs)
+    )
     w.step(73)
     assert w.agents["module_motor_value_weights"].abs().sum() > 0
     changed = fork_challenge(w, mode, False, w.tick + 300)
