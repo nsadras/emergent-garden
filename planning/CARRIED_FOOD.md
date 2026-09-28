@@ -35,7 +35,7 @@ diet; there is not a separate new gut-size gene or a prescribed foraging policy.
 The inspector's Body / learning tab shows carried raw food, and the graph shows
 the two fullness inputs.
 
-![V18 carried food in the inspector](v18-body.png)
+![V18 carried food in the inspector](../docs/v18-body.png)
 
 The neutral `gut_capacity = 0` and `no_gut` control both retain the 42-input
 interface, with zero fullness readings and contact-only feeding. All four V18
@@ -58,7 +58,7 @@ processing rate vary. Each run lasts 600 simulated seconds or ends at extinction
 | 300 | 0 | 47 / 1 / 15 | 97 / 37 / 32 |
 | 300 | 200 | 82 / 108 / 79 | 411 / 302 / 113 |
 
-![Paired V18 population histories](v18-carrying.png)
+![Paired V18 population histories](../docs/v18-carrying.png)
 
 At the original rate of 60, the three carrying continuations ended with
 populations **94 / 16 / 0** and cumulative births **264 / 42 / 8**. Seeds 1 and 2
@@ -73,7 +73,7 @@ The combined treatment has the strongest short-run establishment in this V18
 screen. That supports using it for the next brain comparisons; it does not show
 that circling has disappeared or that learning has emerged. The three seeds are
 screening evidence, and continued runs are not additional independent replicates.
-The [audit](results/v18-carrying.json) checks saved checkpoints, events, matched
+The [audit](../docs/results/v18-carrying.json) checks saved checkpoints, events, matched
 founders, resource ledgers, carrier identities, and capacity bounds. Large source
 archives and checkpoints stay under `runs/`.
 
@@ -87,7 +87,7 @@ uv run garden run --config configs/v18.toml --seed 1 --view --device cpu --secon
 The local video `runs/v18-carrying-video/timelapse.mp4` records a 120-second fork
 of fast-carrying seed 1 from t=600, at 4× playback with fading trails. It is an
 illustration, not a new independent trial. The
-[verification](results/v18-video.json) decodes all 901 frames.
+[verification](../docs/results/v18-video.json) decodes all 901 frames.
 
 ## Verification and next experiments
 
@@ -95,11 +95,11 @@ All **299 tests pass**, with Ruff lint and formatting checks clean. Tests cover
 shared and partial collection, compartment limits, food
 readiness and expiry, digestion during travel, odor exclusion, child state,
 death/compaction, source caps, credits, replay, and the other feeding controls.
-Separate [CPU](results/v18-cpu-carrying.json) and
-[RTX 5080](results/v18-cuda-carrying.json) exercises pass exact replay through
+Separate [CPU](../docs/results/v18-cpu-carrying.json) and
+[RTX 5080](../docs/results/v18-cuda-carrying.json) exercises pass exact replay through
 food carrying, births, growth, and evolving plasticity rules. The observer remains
-passive; all [three inspector tabs fit](results/v18-viewer.json) at heights from
-640 to 1,024 pixels. A [brain preview](v18-brain.png) shows the expanded interface.
+passive; all [three inspector tabs fit](../docs/results/v18-viewer.json) at heights from
+640 to 1,024 pixels. A [brain preview](../docs/v18-brain.png) shows the expanded interface.
 
 History auditing now compares parsed configurations rather than TOML bytes:
 adding explicit neutral defaults on resume is allowed, while changed world laws

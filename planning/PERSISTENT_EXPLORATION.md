@@ -52,7 +52,7 @@ per module. They are lifetime state: checkpoints retain them, while newborns
 and newly grown modules start empty. Explicitly disabling exploration removes
 the historical perturbation immediately. `motor_noise_rms` reports the actual
 applied perturbation, including its history contribution. The observer shows
-that same value; [Details](v21-details.png) states the persistence time.
+that same value; [Details](../docs/v21-details.png) states the persistence time.
 
 The genome remains **5,272 inherited values**, with **42 inputs, seven outputs,
 and up to 32 active recurrent neurons** per module. There are no additional
@@ -80,7 +80,7 @@ All 12 pilots are complete:
 | Persistent / enabled | 62 / 95 / 157 | 128 / 314 / 365 |
 | Persistent / disabled | 3 / 38 / 97 | 10 / 102 / 160 |
 
-![Pilot population histories](v21-exploration.png)
+![Pilot population histories](../docs/v21-exploration.png)
 
 Persistence increases births in two starts with learning enabled, but reduces
 them in all three without motor updates. Learning produces more births than
@@ -90,7 +90,7 @@ a useful association. The six independent-noise runs match every recorded
 common physical measurement and the complete common final state of V19 exactly;
 only the versioned configuration, new history tensors, and noise telemetry differ.
 
-The [audit](results/v21-exploration.json) verifies those matches, all founder
+The [audit](../docs/results/v21-exploration.json) verifies those matches, all founder
 genomes, checkpoint/measurement agreement, birth/death events, carrying limits,
 neural bounds, and energy/resource ledgers. All six continuations are complete:
 
@@ -122,7 +122,7 @@ neural state starts empty. Founder references add six of the 24 trials.
 | 3 / 801 | 448 | 493 | 469 | −2,310 |
 | 3 / 802 | 406 | 419 | 396 | +190 |
 
-![Paired descendant learning tests](v21-learning-assays.png)
+![Paired descendant learning tests](../docs/v21-learning-assays.png)
 
 Own-return learning increases births in **three of six** comparisons against
 disabled updates and **three of six** against shuffled returns. Fresh-food
@@ -132,7 +132,7 @@ communities does not establish reliable adaptive credit assignment. Changing
 motor dynamics, selection among starting genotypes, and environmental context
 can all affect these community outcomes.
 
-The [transplant audit](results/v21-learning-assays.json) checks all source pools,
+The [transplant audit](../docs/results/v21-learning-assays.json) checks all source pools,
 sampled genotypes, disabled mutation, configured mechanisms, complete event
 counts, and energy/resource ledgers. No unfinished V21 follow-up is included in
 these results. These are community interventions, not independent per-creature
@@ -141,7 +141,7 @@ and singleton update batches cannot be shuffled.
 
 ## Movement diagnostic
 
-A separate [diagnostic](results/v21-movement.json) uses 64 sampled inherited
+A separate [diagnostic](../docs/results/v21-movement.json) uses 64 sampled inherited
 founder circuits from each of the three starts. The same circuits drive a
 standardized single module in an empty plane for 120 seconds, after 25 seconds
 of settling. Fresh-food inputs stay at .4 and energy at .5; other inputs are
@@ -163,18 +163,18 @@ food-seeking benefit would require a separate environmental test. The path
 figure uses the first six predetermined sampled circuits from seed 1, without
 selection by appearance or outcome.
 
-![Predetermined circuit paths](v21-movement.png)
+![Predetermined circuit paths](../docs/v21-movement.png)
 
 ## Verification and commands
 
 All **336 tests pass**. They cover conditional gradients, stationary variance,
 neutral legacy trajectories, exploration suppression, acquired-state inheritance,
 growth, checkpoint replay, and observer reconstruction/purity. Separate
-[CPU](results/v21-cpu-exploration.json) and
-[RTX 5080](results/v21-cuda-exploration.json) exercises pass exact replay through
+[CPU](../docs/results/v21-cpu-exploration.json) and
+[RTX 5080](../docs/results/v21-cuda-exploration.json) exercises pass exact replay through
 births, growth, evolving plasticity rules, and active learning. The live observer's
 three tabs fit 640/768/900/1024-pixel heights. Its
-[preview](v21-brain.png) is a 30-second fork of the seed-3 learning pilot,
+[preview](../docs/v21-brain.png) is a 30-second fork of the seed-3 learning pilot,
 not an independent ecology experiment.
 
 ```bash

@@ -25,7 +25,7 @@ not a claim of robust evolved chemotaxis or lifetime learning.
 
 ## Population persistence
 
-Configuration: [configs/v0.toml](configs/v0.toml), unmodified ecological parameters.
+Configuration: [configs/v0.toml](../configs/v0.toml), unmodified ecological parameters.
 Five independent CPU runs, each lasting 600 simulated seconds:
 
 | Seed | Final population | Births | Deaths | Maximum living generation | Simulated/wall time |

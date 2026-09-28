@@ -33,9 +33,9 @@ representations beat recent-rate extrapolation in all three full cohorts.
 These are three communities, not independent samples for every creature.
 The discounted learned tail at 100 seconds is negligible for this horizon.
 
-![Errors relative to zero for each target](v23-prediction-horizons.png)
+![Errors relative to zero for each target](../docs/v23-prediction-horizons.png)
 
-The [audit](results/prediction-horizons.json) checks original source hashes,
+The [audit](../docs/results/prediction-horizons.json) checks original source hashes,
 cohorts, summary calculations, and complete physical-state equality. The first
 short-horizon fork also exactly matches an independently unobserved continuation.
 No shadow prediction changes an action or is inherited by offspring.
@@ -63,9 +63,9 @@ creatures. Own returns also lose to shuffled returns in two starts. This remains
 a mixed evolutionary screening result. More accurate local prediction does not
 by itself establish useful motor credit assignment, foraging, or fitness.
 
-![Native population histories](v23-short-pilots.png)
+![Native population histories](../docs/v23-short-pilots.png)
 
-The [native audit](results/v23-short-pilots.json) verifies founder/configuration
+The [native audit](../docs/results/v23-short-pilots.json) verifies founder/configuration
 matching, final measurements, complete birth/death events, neural bounds,
 carried-food ownership, and energy/resource accounts for all twelve comparisons.
 No longer continuation or fixed-genotype assay was launched from these pilots.

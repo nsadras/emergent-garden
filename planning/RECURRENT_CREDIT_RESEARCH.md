@@ -5,15 +5,16 @@ has been implemented. The gentler V25 screen has completed and also failed its
 original decision rule. The rate/noise sweep is closed. These alternatives are
 research candidates, not evidence that another algorithm will improve the ecology.
 
-The [prospective passive experiment](REPRESENTATION_LEARNING_PLAN.md) is now
-specified. A separate observer kernel and native derivative diagnostic are
-implemented; the physical controller remains unchanged.
+The [passive experiment](REPRESENTATION_LEARNING_PLAN.md) is complete and
+independently audited, and fails its predefined continuation screen. The separate
+observer and derivative diagnostic leave the physical controller unchanged.
+Research is paused at the user's request.
 
 ## What the measured failure does and does not say
 
 The [native V25 fixture](RECURRENT_LEARNING.md) learns its supplied delayed-cue
 task, but the first two ecological screens do not establish useful recurrent
-adaptation. The [passive probes](results/v25-recurrent-credit.json) show nonzero
+adaptation. The [passive probes](../docs/results/v25-recurrent-credit.json) show nonzero
 acquired effects, mostly unclipped energetic advantages, and larger immediate
 effects from current hidden perturbations. A quieter perturbation increases the
 score coefficient and worsens reproduction with the same rate. These observations
@@ -121,7 +122,7 @@ fixture, not evidence of prediction learning, foraging, or ecological benefit.
 Online weight changes introduce further approximation. All sampled derivatives
 respect the inherited masks.
 
-The [checked record](results/representation-gradients.json) points to the raw
+The [checked record](../docs/results/representation-gradients.json) points to the raw
 report and archived executed scripts/native source under
 `runs/representation-gradient-diagnostic`. Source and script digests were
 verified. The subsequent script formatting does not change these archived
@@ -134,5 +135,10 @@ uv run python scripts/probe_representation_gradients.py --output runs/new-gradie
 The observer's causal update has six additional passing tests for fresh state,
 old-trace credit, pre-update readout feedback, unchanged owner value learning
 under shuffled representation feedback, masks/bounds, and disabled adaptation.
-The population prediction experiment follows the separate plan; no adaptive
-representation has been added to the native controller.
+Five more measurement tests cover forecast timing, terminal intervals, growth
+normalization, and exact passive replay through native births and deaths.
+The full three-start prediction experiment is complete. Its
+[outcome](REPRESENTATION_LEARNING_PLAN.md#completed-outcome) and
+[checked record](../docs/results/learned-representations.json) retain all starts:
+only one of three passes the primary comparison, so the continuation screen
+fails. No adaptive representation has been added to the native controller.

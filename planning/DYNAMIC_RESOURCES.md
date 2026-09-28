@@ -82,7 +82,7 @@ energy 100 and the usual body-size scaling and neural construction charges.
   cells have less. This view is independent of the actual-food smell overlay.
 - **F:** toggle the current field overlay. Cyan circles continue to mark shelter.
 
-See the [source preview](v16-sources.png) and [fertility preview](v16-fertility.png).
+See the [source preview](../docs/v16-sources.png) and [fertility preview](../docs/v16-fertility.png).
 A 4x recording of the first 120 simulated seconds of seed 1 is available locally
 at `runs/v16-resources-preview/timelapse.mp4`. Its 901 frames were decoded and
 checked. Seed 1's first birth in the pilot was later, at about 232 seconds; seed 2
@@ -114,7 +114,7 @@ These are checks of the combined environment, not isolated tests of each mechani
 or evidence that circling was caused by patch geometry. Source placement now uses
 the larger shape inset, and rejected proposals change actual food supply.
 Improved tracking, learning, and long-term persistence have not been established.
-The [audit](results/v16-resources.json) records source hashes, proposal accounting,
+The [audit](../docs/results/v16-resources.json) records source hashes, proposal accounting,
 the previous V15 comparison, checkpoint checks, and verification scope.
 
 ## Possible later step: simple producers

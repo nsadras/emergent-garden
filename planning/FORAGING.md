@@ -28,7 +28,7 @@ valuable particles, and cheap movement. All three starts persisted to 30 minutes
 Seed 3 passed through a one-creature bottleneck before recovering; this is not
 reliable establishment across arbitrary seeds.
 
-![Recorded foraging experiments](foraging-pilots.png)
+![Recorded foraging experiments](../docs/foraging-pilots.png)
 
 | Treatment | Final populations at 600 s, seeds 1 / 2 / 3 | Births |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ Important comparison limits:
 - These are three-seed screening experiments. Births and persistence alone do not
   establish directed searching, useful learning, or open-ended intelligence.
 
-The [audit](results/foraging-pilots.json) verifies all 24 pilots and three
+The [audit](../docs/results/foraging-pilots.json) verifies all 24 pilots and three
 continuations against saved checkpoints and events, checks matched founder
 genomes, retains source hashes and sampled histories, and checks energy,
 fertility, and trophic ledgers. Every recorded physical measurement in the V17
@@ -113,7 +113,7 @@ temporal fold-change detection mechanism in the first paper.
 Verification: 281 tests pass, including legacy trajectory equality, mirrored and
 rotated spatial transforms, bounded/empty inputs, checkpoint replay, observer
 purity, and explicit genotype-transfer rejection. Separate
-[CPU](results/v17-cpu-senses.json) and [RTX 5080](results/v17-cuda-senses.json)
+[CPU](../docs/results/v17-cpu-senses.json) and [RTX 5080](../docs/results/v17-cuda-senses.json)
 exercises passed exact replay through births, growth, rule variation, and resource
 changes with all accounting checks. Cross-device trajectories need not match.
 
@@ -129,7 +129,7 @@ uv run python scripts/plot_foraging.py
 Two evolved fast-feeding communities were transplanted into environments 501 and
 502, with 360-second trials and mutation disabled. Descendant genomes are exactly
 matched across normal, disabled-field, and rotated-field treatments. The
-[16-trial audit](results/foraging-sensory-assays.json) also retains the founder
+[16-trial audit](../docs/results/foraging-sensory-assays.json) also retains the founder
 comparisons and energy accounting.
 
 | Source / environment | Births: normal | Fields removed | Fields rotated |

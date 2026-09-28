@@ -96,7 +96,7 @@ by neuron duplication. Selection and reproduction continue in all treatments.
 | Varied timing, `v24-inherited.toml` | 164 / 42 / 147 | 341 / 195 / 290 |
 | Varied timing with mutation, `v24.toml` | 121 / 29 / 176 | 208 / 87 / 373 |
 
-![Matched population and birth histories](v24-neural-timing.png)
+![Matched population and birth histories](../docs/v24-neural-timing.png)
 
 Varied timing increases both births and fresh-food absorption in seeds 1 and 3,
 and reduces them in seed 2. Direct timing mutation reduces births relative to
@@ -130,7 +130,7 @@ three evolutionary starts, not nine additional independent ecological seeds.
 | Varied timing, no direct timing mutation | 273 / 124 / 289 | 1,785 / 1,112 / 2,101 | 1 / 2 / 1 |
 | Varied timing with mutation | 291 / 166 / 333 | 1,620 / 1,296 / 2,675 | 2 / 2 / 1 |
 
-![Complete thirty-minute histories](v24-neural-timing-long.png)
+![Complete thirty-minute histories](../docs/v24-neural-timing-long.png)
 
 Inherited variation without direct timing mutation increases births by
 3.4% / 11.9% / 34.4% relative to homogeneous timing. Fresh-food absorption
@@ -166,7 +166,7 @@ Both then run for 20 further seconds. Homogeneous and heterogeneous treatments
 use the same inherited weights and body time constants. The probe has no moving
 body, acquired learning, exploration, reproduction, or task reward.
 
-![Timing distributions and paired pulse responses](v24-pulse-responses.png)
+![Timing distributions and paired pulse responses](../docs/v24-pulse-responses.png)
 
 Heterogeneous timing increases mean activity differences at the pulse's end
 from .0644/.0687/.0664 to .0732/.0766/.0747 RMS. Differences also reach motor
@@ -175,7 +175,7 @@ seeds and slightly larger in the third. The probe confirms altered response
 dynamics; it shows no consistent increase in retained activity, and does not
 test whether any retained information is useful.
 
-The [compact record](results/v24-pulse-responses.json) includes source hashes,
+The [compact record](../docs/results/v24-pulse-responses.json) includes source hashes,
 matched-founder checks, binned response times, pulse-end/follow-up summaries,
 and curves sampled at 2 Hz. Full controller-rate curves and genomes remain in
 `runs/v24-pulse-responses`.
@@ -195,11 +195,11 @@ fully neutral V24 trajectories despite carrying random, unexpressed timing
 genes. Comparisons exclude only version metadata, new genes and their RNG,
 derived timing summaries, total-genome variance, and full-genome digests.
 Their original gene prefixes and all other physical state must match exactly.
-The [audit](results/v24-neural-timing.json) of twelve pilots and nine continuations verifies source
+The [audit](../docs/results/v24-neural-timing.json) of twelve pilots and nine continuations verifies source
 archives, energy/resource/trophic accounting, and checkpoint measurements.
 
-Separate [CPU](results/v24-cpu-timing.json) and
-[RTX 5080](results/v24-cuda-timing.json) exercises pass exact device-local replay.
+Separate [CPU](../docs/results/v24-cpu-timing.json) and
+[RTX 5080](../docs/results/v24-cuda-timing.json) exercises pass exact device-local replay.
 They include 5 births / 3 growth events on CPU and 6 births / 9 growth events on
 CUDA, with changing signed plasticity rules. This does not assert identical
 trajectories across CPU and CUDA.
@@ -209,9 +209,9 @@ the selected neuron's inherited response time on the existing activity line,
 without adding a row. Disabled value prediction no longer appears as a zero
 forecast. All three inspector tabs fit at heights 640–1,024 pixels.
 
-![Selected neuron response time in Details](v24-timing-details.png)
+![Selected neuron response time in Details](../docs/v24-timing-details.png)
 
-The [viewer record](results/v24-viewer.json) comes from a 30-second illustrative
+The [viewer record](../docs/results/v24-viewer.json) comes from a 30-second illustrative
 fork of mutation seed 1, not another independent ecological experiment.
 
 ## Reproduce and inspect

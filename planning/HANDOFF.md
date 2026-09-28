@@ -1,15 +1,21 @@
 # Development handoff — V25
 
-Autonomous ecology research **resumed at the user's request on September 23,
-2026**, after the earlier V15 pause and subsequent interface/resource updates.
-The current code is **V25 / package 0.26.0**. Python and dependencies remain
-managed with **uv**. Detailed history is in [CONTINUATION.md](CONTINUATION.md).
+Research is **paused at the user's request**. All launched simulations and
+audits have finished; no work should resume without a new request. The current
+code is **V25 / package 0.26.0**. Python and dependencies remain managed with
+**uv**. The user's `configs/v16.toml` edits and unrelated notes are preserved.
+
+This handoff and the [research index](README.md) hold current status. The version
+notes below retain historical decisions; older references to an active research
+loop describe their time, not the present. Detailed history is in
+[CONTINUATION.md](CONTINUATION.md), and setup and controls are in the
+[usage guide](../docs/USAGE.md).
 
 ## V25: energetic reinforcement of recurrent connections
 
-[V25](docs/RECURRENT_LEARNING.md) is implemented and its first ecological screen
+[V25](RECURRENT_LEARNING.md) is implemented and its first ecological screen
 is complete and audited. It remains optional after failing that screen.
-The [prospective plan](docs/RECURRENT_LEARNING_PLAN.md) retains V24 inherited
+The [prospective plan](RECURRENT_LEARNING_PLAN.md) retains V24 inherited
 timing, sparse mobile patches, gentle motor learning, and the existing graph and
 genome. New independent hidden perturbations generate a local eligibility score;
 later energetic returns update separate bounded recurrent offsets before the
@@ -73,7 +79,7 @@ Each treatment runs seeds 1/2/3 for 600 seconds. Paths are
 The original three mechanism-off runs are explicitly reused references.
 `scripts/audit_recurrent_learning.py --quiet` audits all outcomes, and the figure
 from `scripts/plot_recurrent_learning.py --quiet` has been visually inspected.
-The [quieter-results guide](docs/QUIET_RECURRENT_LEARNING.md) records births
+The [quieter-results guide](QUIET_RECURRENT_LEARNING.md) records births
 461/151/424 for noise-only, 5/141/183 for own learning, and 103/90/352 for shuffled
 feedback. Own learning beats both primary outcomes in 0/3 noise-only comparisons,
 1/3 shuffled comparisons, and 0/3 baseline comparisons. The screen fails; no
@@ -103,7 +109,7 @@ and 2/3 against the mechanism-off baseline. The screen fails. This rate/noise
 sweep is **closed**; no longer runs or further rate points are selected.
 There are now 27 new ecological trials, plus three control-verification replays.
 No V25 simulation remains running; do not restart completed processes.
-The next research is in `docs/RECURRENT_CREDIT_RESEARCH.md`:
+The subsequent research is in `planning/RECURRENT_CREDIT_RESEARCH.md`:
 primary literature on RFLO, e-prop, and online value representations, plus
 requirements for a passive representation-learning diagnostic if needed.
 No alternative native learner has been implemented. The author's public MATLAB
@@ -111,12 +117,12 @@ update has now been reviewed: it trains the previous representation from the
 next TD error and uses either previous readout weights or fixed random feedback.
 The separate leaky masked derivative and causal checks are recorded below.
 Do not infer weak or useful learning from magnitude alone. Preserve the user's
-V16 edits and unrelated notes. Research remains active.
+V16 edits and unrelated notes. Research is now paused.
 
 ## Passive representation-learning experiment
 
-The V25 rate sweep is committed as `2034502`. The next experiment is specified
-in [REPRESENTATION_LEARNING_PLAN.md](docs/REPRESENTATION_LEARNING_PLAN.md).
+The V25 rate sweep is committed as `2034502`. The completed passive experiment is specified
+in [REPRESENTATION_LEARNING_PLAN.md](REPRESENTATION_LEARNING_PLAN.md).
 No V26 or alternative native learner has been introduced. Passive observers
 compare fixed inherited features, locally adapted features, shuffled adaptation,
 and direct sensory readouts, all on identical native histories and with fresh
@@ -142,17 +148,27 @@ reconstructs interval normalization, terminal returns, fixed predictions, ages,
 MSE, masks, bounds, and source provenance. This smoke test is not the prospective
 three-start comparison, and no parameters were changed from its results.
 
-The full experiment should replay seeds 1/2/3 for 600 seconds plus forecast
-follow-up, using `scripts/probe_learned_representations.py`. Its default output
-for the auditor is `runs/learned-representation-pilot`. Record forecasts at ages
-5/30/60, with age 30 primary. Native integration needs lower primary MSE than
-fixed, shuffled, and zero in at least two starts; direct sensations and a causal
-running-return reference must also be inspected. The observer and plan must be
-frozen before launching. No full experiment is running yet.
+The full experiment is **complete and independently audited**. The plan and
+observer were frozen in commit `4be302c` before replaying seeds 1/2/3 for 600
+seconds plus forecast follow-up. All three physical worlds and random streams
+match plain replay exactly; the 600-second states/events match the original
+baselines. The processes are closed. Raw results are in
+`runs/learned-representation-pilot`; checked results are in
+[learned-representations.json](../docs/results/learned-representations.json).
+
+The age-30 primary comparison **fails the predefined continuation screen**:
+adaptive representations beat fixed, shuffled, and zero predictors together
+in only one of three starts, with less than .004% improvement over fixed features
+in every start. Direct sensory and running-return comparisons are retained in
+the [completed outcome](REPRESENTATION_LEARNING_PLAN.md#completed-outcome).
+No native V26 learner or further rate sweep was launched. The independent audit
+is `scripts/audit_learned_representations.py`; the draft plotting script remains
+local and its figure has not been generated or inspected. Research remains
+paused; do not restart completed experiments.
 
 ## V24: inherited neural response times
 
-[V24](docs/NEURAL_TIMESCALES.md) adds one timing gene per hidden slot after the
+[V24](NEURAL_TIMESCALES.md) adds one timing gene per hidden slot after the
 structural masks, giving 5,304 values for the 32-slot preset. Each neuron's time
 constant is the body time constant multiplied by
 `exp(log(neural_timing_range) * tanh(gene))`. Range 1 preserves legacy arithmetic;
@@ -188,7 +204,7 @@ batch processes exited successfully; do not restart them. The audit command
 `uv run python scripts/audit_neural_timing.py --include-long` and
 `scripts/plot_neural_timing.py` now include all continuations, source archives,
 resource/energy/trophic accounting, and pulse provenance. The completed
-[controlled assay](docs/NEURAL_TIMING_ASSAYS.md) compares original timing,
+[controlled assay](NEURAL_TIMING_ASSAYS.md) compares original timing,
 mean-preserved uniform timing, timing reassignment, and motor-feedback controls
 on the three inherited-timing descendant communities. All six assay tests pass.
 All thirty trials under `runs/v24-timing-assay-{1,2,3}` are complete and audited.
@@ -222,7 +238,7 @@ The release guide retains the
 mechanical checks, source provenance, and initial experimental results.
 Research remains active. Preserve the user's V16 edits and unrelated notes.
 
-The next [recurrent-learning candidate](docs/RECURRENT_LEARNING_RESEARCH.md)
+The next [recurrent-learning candidate](RECURRENT_LEARNING_RESEARCH.md)
 has passed two independent diagnostics. Its conditional score matches autograd;
 reward-weighted gradients differ by .54% in a 163,840-trajectory fixture. Actual
 bounded recurrent adaptation then reduces a supplied delayed-cue task's error
@@ -234,7 +250,7 @@ are not ecological results. Both diagnostic processes completed successfully.
 Raw data are `runs/recurrent-score-diagnostic` and `runs/recurrent-adaptation`;
 checked records and an inspected figure are linked from the research document.
 
-The prospective [V25 plan](docs/RECURRENT_LEARNING_PLAN.md) specifies optional
+The prospective [V25 plan](RECURRENT_LEARNING_PLAN.md) specifies optional
 hidden perturbations, separate bounded recurrent offsets, causal credit order,
 fresh acquired state, noise and feedback controls, compatibility requirements,
 and a twelve-run native screen. Native V25 implementation and diagnostic checks
@@ -243,7 +259,7 @@ baseline retained. Research remains active.
 
 ## V23: direct sensory value features
 
-[V23](docs/SENSORY_VALUE.md) optionally appends the actual 42 controller inputs
+[V23](SENSORY_VALUE.md) optionally appends the actual 42 controller inputs
 to the critic's hidden activity and bias: 75 acquired weights instead of 33.
 `motor_value_inputs = 0` preserves V22 exactly. The inherited circuit and actor
 are unchanged; no extra energy is charged in this representation screen.
@@ -273,14 +289,14 @@ instrumented replays match the original complete worlds and shadow critics.
 Positive error clipping removes 2.56%/7.30%/<.01% of sensory error mass at the .02
 rate; negative errors never clip. Norm bounds are uncommon at that rate. This
 does not establish clipping as the main limitation, especially in seed 3 where
-it is nearly absent. The [two-second horizon follow-up](docs/PREDICTION_HORIZONS.md)
+it is nearly absent. The [two-second horizon follow-up](PREDICTION_HORIZONS.md)
 is now complete: three passive comparisons beat zero in two full sensory cohorts,
 and all three older subgroups. Six new native pilots produce own-return births
 210/13/281 versus shuffled 543/26/249. The shorter target helps two evolutionary
 starts but does not establish useful motor adaptation. `configs/v23-short.toml`
 is optional; the main preset retains 20 seconds. All 390 tests and Ruff checks
 pass. No runs from this follow-up remain unfinished. The
-[V24 timing plan](docs/NEURAL_TIMESCALES_PLAN.md) subsequently led to the
+[V24 timing plan](NEURAL_TIMESCALES_PLAN.md) subsequently led to the
 implemented timing experiments described above.
 Research remains active. Preserve
 the user's V16 edits and unrelated notes. V21–V23 have no unfinished scheduled
@@ -288,7 +304,7 @@ ecological follow-ups.
 
 ## V22: learned energy predictions
 
-[V22](docs/VALUE_PREDICTION.md) adds an optional acquired linear value readout
+[V22](VALUE_PREDICTION.md) adds an optional acquired linear value readout
 per body module. Its TD error replaces the running-mean actor's feedback. Hidden
 activity plus bias gives 33 critic weights; the inherited 42-input, seven-output,
 32-slot, 5,272-gene controller is unchanged. Acquired predictions reset at birth
@@ -318,7 +334,7 @@ notes. All V21 follow-ups are complete.
 
 ## V21: persistent motor exploration
 
-[V21](docs/PERSISTENT_EXPLORATION.md) adds two-second correlated motor exploration
+[V21](PERSISTENT_EXPLORATION.md) adds two-second correlated motor exploration
 with the matching conditional likelihood score. Previous features/logits are
 acquired module state, retained by checkpoints and reset at birth/growth. No
 genome or interface dimensions change. The observer displays the actual applied
@@ -349,7 +365,7 @@ Keep the research loop active and preserve the user's `configs/v16.toml` edits.
 
 ## V20: sensory reach and a learning control
 
-[V20](docs/SENSOR_RADIUS.md) adds optional receptor distances of 1, 2, or 4 body
+[V20](SENSOR_RADIUS.md) adds optional receptor distances of 1, 2, or 4 body
 module radii. Nine matched 600-second starts are complete. Four-radius births
 were 266/111/201 versus 455/26/195 at radius 1: mixed effects. All four-radius
 starts reached 1,800 seconds with populations 253/13/277 and births
@@ -367,7 +383,7 @@ settings, caveats, and commands. Research remains authorized and active.
 
 ## V19: neural diversity
 
-[V19](docs/NEURAL_VARIATION.md) initializes inherited circuits with 8–24 active
+[V19](NEURAL_VARIATION.md) initializes inherited circuits with 8–24 active
 neurons and half the recurrent edges, using independent randomness and fan-in
 weight scaling. Neutral settings match V18's complete final physical states and
 all recorded physical measurements in three 600-second runs. The 42-input,
@@ -382,7 +398,7 @@ All three varied-founder continuations reached 1,800 seconds: populations
 251/34/327 and births 2,413/237/2,198. Stronger mutation ended at populations
 162/0/363; seed 2 became extinct at 771.13 seconds. Learning and noise-only
 continuations all reached 1,800 seconds; learning had fewer births in all three
-starts. The [audit](docs/results/v19-circuits.json) includes 15 pilots and all
+starts. The [audit](../docs/results/v19-circuits.json) includes 15 pilots and all
 12 continuations. The 18 paired learning transplants are complete: births
 improved in five of six descendant pairs, food intake in three. These
 conditional effects do not establish adaptive credit assignment. Shuffled-return
@@ -405,7 +421,7 @@ networks are automatically more capable.
 
 ## V18: carried meals
 
-[V18](docs/CARRIED_FOOD.md) adds bounded fresh/detritus compartments, 42 neural
+[V18](CARRIED_FOOD.md) adds bounded fresh/detritus compartments, 42 neural
 inputs including fullness, and 5,272 inherited values. Food can be collected and
 digested while moving; old expiry, processing, and source/provenance rules remain.
 Carried meals drop on death and are not inherited. The live inspector shows them.
@@ -423,13 +439,13 @@ All 299 tests and Ruff checks pass. Separate CPU/CUDA carrying checks passed
 exact replay and all ledgers; food
 transactions now use float64 in V18. Existing versions retain their old layout
 and arithmetic. History auditing permits explicit neutral defaults on resume.
-The [viewer previews](docs/v18-body.png) fit the window without scrolling, and
+The [viewer previews](../docs/v18-body.png) fit the window without scrolling, and
 `runs/v18-carrying-video/timelapse.mp4` is a 4× recording with trails.
 
 The user reinforced interest in neural/mutation diversity and within-lifetime
 learning. Prioritize controlled founder-architecture, mutation, and motor-learning
 comparisons next. Keep neural weights unprescribed and preserve the user's V16
-working settings. The completed [sensory assays](docs/FORAGING.md#follow-up-sensory-interventions)
+working settings. The completed [sensory assays](FORAGING.md#follow-up-sensory-interventions)
 show some environmental dependence but weak/mixed directional dependence.
 
 ## V17 foraging record
@@ -437,7 +453,7 @@ show some environmental dependence but weak/mixed directional dependence.
 The user clarified that their V16 edits aim for rare, valuable meals and cheap
 exploration. Their working `configs/v16.toml` is preserved; an explicit baseline
 snapshot and separate experiment presets are added. See the
-[design, results, commands, and limitations](docs/FORAGING.md).
+[design, results, commands, and limitations](FORAGING.md).
 
 Twenty-four 600-second pilots show an intake bottleneck: larger food particles
 still require sustained physical contact for digestion. Increasing handling rate
@@ -452,7 +468,7 @@ seven-output recurrent architecture or hand-tuning neural weights. Its three
 paired tests were mixed; it is not promoted as a proven improvement. Disabled
 encoding preserves legacy trajectories exactly. All 281 tests and Ruff checks
 pass; separate CPU/CUDA mechanical exercises passed exact checkpoint replay.
-Committed evidence is in [foraging-pilots.json](docs/results/foraging-pilots.json).
+Committed evidence is in [foraging-pilots.json](../docs/results/foraging-pilots.json).
 
 The subsequent V18 carried-food implementation is described above. Simple
 producers remain a later option.
@@ -470,7 +486,7 @@ constant. Existing food and shelter do not move. Forecast and identity fields
 follow source centers. Neither fertility nor source geometry adds neural inputs.
 
 Press `P` for source outlines and use Tab to reach fertility. The
-[design and parameter guide](docs/DYNAMIC_RESOURCES.md) includes previews,
+[design and parameter guide](DYNAMIC_RESOURCES.md) includes previews,
 compatibility, and **simple producers as a possible later step**. Launch with
 `uv run garden run --config configs/v16.toml --seed 2 --view --device cpu --seconds 0`.
 Old presets and resumed checkpoints retain their previous rules.
@@ -479,7 +495,7 @@ Three 600-second CPU starts produced 13/30/12 births and final populations 6/4/5
 at seeds 1/2/3. First births were at 232.03/5.43/16.23 seconds. This verifies that
 the combined environment can support reproduction in these starts, not reliable
 persistence, better learning, or a causal explanation of circling. The
-[audit](docs/results/v16-resources.json) retains comparison and accounting data.
+[audit](../docs/results/v16-resources.json) retains comparison and accounting data.
 The first 120 seconds of seed 1 are recorded at
 `runs/v16-resources-preview/timelapse.mp4`; all 901 frames decoded correctly.
 
@@ -503,7 +519,7 @@ above it; growth, cooldown, or population-cap status remains below. These use
 actual body size and saved world settings. Reaching the marker is not a guaranteed
 birth: child funding and placement are checked after mutation at the real attempt.
 The bar fits on every tab without scrolling. See the
-[preview](docs/energy-threshold.png).
+[preview](../docs/energy-threshold.png).
 
 The sidebar also has a live **Leaderboard** (`L` or its button). Column headers
 sort living creatures by lifetime, generation, cumulative food energy absorbed,
@@ -513,7 +529,7 @@ immediately on checkpoint resume. Dead creatures leave the list. Pages adapt to
 the window, with Previous/Next, Page Up/Down, and wheel navigation over the table.
 Clicking a row centers the creature and opens its inspector; `L` returns to the
 same sort/page. Selection uses the ID displayed in the row and ignores a click
-if that creature has since died. See the [preview](docs/leaderboard.png).
+if that creature has since died. See the [preview](../docs/leaderboard.png).
 
 At the user's request, `configs/v15.toml` lowers the parent-area birth threshold
 from 220 to 150 and the child-area base debit from 120 to 110; neural construction
@@ -523,7 +539,7 @@ comparisons. Saved checkpoints retain their original settings when resumed.
 Three paired 600-second fresh CPU starts (seeds 1/2/3) produced 3/19/3 births and
 ended with 3/11/1 creatures, compared with 0/22/0 births and 0/20/0 creatures under
 the original settings. This is a small startup check, not evidence of reliable
-long-term persistence. The [record](docs/results/v15-birth-readiness.json)
+long-term persistence. The [record](../docs/results/v15-birth-readiness.json)
 retains commands, first-birth times, and source hashes.
 
 Controller inputs are captured at the actual update boundary. Recurrent weights
@@ -534,8 +550,8 @@ copies only the selected creature's modules. Neither observer state nor trails
 enter checkpoints. A selection made while paused waits for `N` or resume before
 showing its first exact sample.
 
-See [controls and interpretation](README.md), [preview](docs/viewer.png), and
-[verification record](docs/results/viewer-validation.json). Launch with
+See [controls and interpretation](../docs/USAGE.md), [preview](../docs/viewer.png), and
+[verification record](../docs/results/viewer-validation.json). Launch with
 `uv run garden run --config configs/v15.toml --view --device cpu --seconds 0`,
 or use `--resume` with a saved checkpoint instead of `--config`.
 
@@ -561,8 +577,8 @@ with grazers, but disappeared alone or when recycling was disabled. More than
 98% of their detritus uptake in the mixtures came from grazer producers. This
 supports food-web dependence in this selected community; it does not establish
 speciation, cooperation, or how commonly that community would emerge.
-See the [figure](docs/v13-native-foodweb.png) and
-[audited records](docs/results/v13-native-foodweb-audit.json).
+See the [figure](../docs/v13-native-foodweb.png) and
+[audited records](../docs/results/v13-native-foodweb-audit.json).
 
 V14's 12 completed community comparisons and 360 juvenile-start lifetime assays
 found no consistent reproductive benefit from the coordination interface.
@@ -575,8 +591,8 @@ completed all treatments: final populations were 73 with evolving rules, 44 with
 the fixed rule, and 66 with acquired plasticity disabled; births were
 1,308 / 1,133 / 1,063. This is one matched environment, so neither a general
 advantage nor useful within-lifetime learning has been established.
-The [complete histories](docs/results/v15-assembled-271.json) and
-[invariant audit](docs/results/v15-assembled-271-audit.json) are retained.
+The [complete histories](../docs/results/v15-assembled-271.json) and
+[invariant audit](../docs/results/v15-assembled-271-audit.json) are retained.
 
 ## Verification
 
@@ -600,16 +616,16 @@ The earlier V15 mechanical checks
 passed exact checkpoint replay separately on CPU and the RTX 5080, including
 signed rule variation, births, growth, fresh inherited state, and energy
 accounting. This means replay on each device, not identical trajectories across
-devices. The [CPU](docs/results/v15-cpu-rules.json) and
-[CUDA](docs/results/v15-cuda-rules.json) reports retain the measurements.
+devices. The [CPU](../docs/results/v15-cpu-rules.json) and
+[CUDA](../docs/results/v15-cuda-rules.json) reports retain the measurements.
 
 The V15 video decoded all **901 frames**, at 1,024×1,024 and 30 FPS
-([verification](docs/results/v15-video.json)). It is a checkpoint fork for
+([verification](../docs/results/v15-video.json)). It is a checkpoint fork for
 illustration, not another independent experiment.
 
 ## Interrupted work
 
-The [stop record](docs/results/iteration-stop.json) records paths, hashes,
+The [stop record](../docs/results/iteration-stop.json) records paths, hashes,
 completed work, and partial progress. Large checkpoints, videos, source archives,
 and full logs remain under the git-ignored `runs/` directory. Compact results,
 figures, and incomplete lifetime reports are committed.
@@ -630,9 +646,9 @@ resumable final states. Batch summaries remain `completed=false`.
 
 The adult-start V14 assays retain **43 / 46 / 40** completed individual lifetimes
 out of 120 planned for sources 241 / 242 / 243, respectively. Reports are
-[241](docs/results/v14-adult-partial-241.json),
-[242](docs/results/v14-adult-partial-242.json), and
-[243](docs/results/v14-adult-partial-243.json). Their selected genomes match the
+[241](../docs/results/v14-adult-partial-241.json),
+[242](../docs/results/v14-adult-partial-242.json), and
+[243](../docs/results/v14-adult-partial-243.json). Their selected genomes match the
 juvenile assays, provenance checks pass, and summary rows match the trial logs.
 These incomplete comparisons are not reported as final treatment outcomes.
 The selected genomes and completed rows remain in

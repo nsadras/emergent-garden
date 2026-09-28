@@ -1,13 +1,15 @@
 # Continuing evolution experiments
 
-Development **resumed at the user's request on September 23, 2026**, after the
-V15 pause and subsequent interface/resource work. The current iteration is V24
-(package 0.25.0); [foraging experiments](docs/FORAGING.md) focus on rare, valuable
-meals and affordable exploration. Current evidence, historical interrupted work,
-and viewing commands are in [HANDOFF.md](HANDOFF.md). Dependencies remain managed with uv.
-V0–V5 and their evidence are preserved in `EVOLUTION.md`.
+Research is **paused at the user's request**. The current implementation is
+**V25 / package 0.26.0**; see the [handoff](HANDOFF.md) for the latest completed
+experiments and outstanding work. Dependencies remain managed with uv.
 
-The [V19 neural experiments](docs/NEURAL_VARIATION.md) introduce varied founder
+This is a historical development record. References to an active loop or a next
+experiment describe the state at that point, not instructions to resume. The
+September 23 continuation focused on [rare, valuable meals](FORAGING.md) and
+affordable exploration. V0–V5 are recorded in [EVOLUTION.md](EVOLUTION.md).
+
+The [V19 neural experiments](NEURAL_VARIATION.md) introduce varied founder
 graphs and compare architecture, mutation, and gentle motor learning across
 three seeds. All 15 pilots, 12 continuations, and 18 paired learning transplants are
 complete. Learning improved births in five of six same-genotype descendant pairs,
@@ -17,14 +19,14 @@ diagnostic remained weak despite extending the eligibility trace.
 All 310 tests and separate CPU/CUDA replay exercises pass. The user's V16 working
 configuration is preserved.
 
-[V20](docs/SENSOR_RADIUS.md) tests larger sensory footprints with matched
+[V20](SENSOR_RADIUS.md) tests larger sensory footprints with matched
 genomes and unchanged energy laws. Nine pilots show stronger spatial signals
 but mixed reproduction. All three four-radius starts reached 1,800 seconds, but had fewer births than
 the radius-1 controls. The shuffled-return control has also completed; the
 evidence still supports conditional effects rather than a general learning advantage. All 322 tests pass; CPU/CUDA mechanics and replay
 checks pass. The active research loop continues.
 
-[V21](docs/PERSISTENT_EXPLORATION.md) tests temporally correlated exploratory
+[V21](PERSISTENT_EXPLORATION.md) tests temporally correlated exploratory
 motor commands with the corresponding conditional likelihood score. All 12
 matched pilots are complete: persistence raises births in two of three starts
 when motor updates are enabled, and lowers births in all three disabled-update
@@ -37,7 +39,7 @@ at 0/33/189, with one extinction. All 24 community transplants are complete:
 own-return learning increases births in three of six comparisons against each
 control. The result does not establish reliable adaptive credit assignment.
 
-[V22](docs/VALUE_PREDICTION.md) adds an acquired linear predictor and uses its
+[V22](VALUE_PREDICTION.md) adds an acquired linear predictor and uses its
 temporal-difference error for motor updates. Both centered and direct net-energy
 targets are tested, without changing genes or sensory channels. All 15 matched
 600-second pilots and six prospective 100-second forecast forks are complete.
@@ -51,7 +53,7 @@ The next experiment will test access to existing sensory features before adding
 more inherited layers. That is a hypothesis about representation, not a proven
 explanation of the observed limitations. Autonomous research remains active.
 
-[V23](docs/SENSORY_VALUE.md) gives the acquired critic optional direct sensory
+[V23](SENSORY_VALUE.md) gives the acquired critic optional direct sensory
 features without changing genes or the motor readout. All nine matched pilots
 are complete: sensory births are 131/262/16, versus hidden-only 348/230/71 and
 shuffled sensory 480/25/384. Three native forecast forks show weak accuracy.
@@ -65,7 +67,7 @@ subsequently matched the original worlds and shadow critics exactly. Positive
 clipping removed 2.56%/7.30%/<.01% of sensory error mass at the retained rate,
 with no negative clipping. This leaves clipping unestablished as the main
 limitation, especially in the third community where it is nearly absent.
-The [short-horizon follow-up](docs/PREDICTION_HORIZONS.md) is also complete.
+The [short-horizon follow-up](PREDICTION_HORIZONS.md) is also complete.
 Two-second sensory forecasts beat zero in two full cohorts; six new native
 pilots yield own-return births 210/13/281 versus shuffled 543/26/249. Better local
 prediction still does not establish useful motor adaptation. All 390 tests pass.
@@ -73,7 +75,7 @@ The shorter preset remains optional. Next investigate variation in recurrent
 neural dynamics. The research loop remains active, and the user's V16 working
 configuration is unchanged.
 
-[V24](docs/NEURAL_TIMESCALES.md) adds inherited per-neuron response times without
+[V24](NEURAL_TIMESCALES.md) adds inherited per-neuron response times without
 changing sensory channels, body laws, or acquired-state inheritance. The 32-slot
 genome now contains 5,304 values. Its separate RNG leaves ordinary initialization
 and mutation streams unchanged; duplication copies the donor's timing gene.
@@ -90,7 +92,7 @@ physics and checkpoint state. Homogeneous births are 1,727/994/1,563; inherited
 timing gives 1,785/1,112/2,101; timing mutation gives 1,620/1,296/2,675. All nine
 extensions are audited. Only 1–2 founder lineages and no allocation-defined
 scavenger specialists remain per community, despite continuing detritus uptake
-and predation. All thirty [controlled trials](docs/NEURAL_TIMING_ASSAYS.md) are
+and predation. All thirty [controlled trials](NEURAL_TIMING_ASSAYS.md) are
 complete: native births beat mean-preserved uniform timing in 4/6 pairs,
 reassigned timing in 6/6, disabled motor updates in 6/6, and shuffled returns
 in 4/6. Fresh-food improvements occur in 5/6, 5/6, 5/6, and 4/6 pairs. Initial
@@ -100,12 +102,12 @@ founder lineages. A 1× recording matches plain replay exactly, and its trails
 still show many loops. All 414 tests pass; every iteration process has exited.
 The user's V16 working settings remain untouched.
 
-A [recurrent-learning diagnostic](docs/RECURRENT_LEARNING_RESEARCH.md) now
+A [recurrent-learning diagnostic](RECURRENT_LEARNING_RESEARCH.md) now
 verifies a hidden-neuron perturbation score and demonstrates actual bounded
 adaptation in a separate delayed-cue fixture. Three random streams improve
 target error by about 79–80%; shuffled scores remain near disabled updates.
 This supplies a tested candidate, not a native learning result. The prospective
-[V25 plan](docs/RECURRENT_LEARNING_PLAN.md) specifies its integration and matched
+[V25 plan](RECURRENT_LEARNING_PLAN.md) specifies its integration and matched
 controls. The completed V24 comparisons support retaining the inherited-timing
 baseline. Native V25 implementation is the next authorized step.
 
@@ -324,7 +326,7 @@ unchanged quality (12,562 → 13,577) but reduced it after reversal
 fresh-food and favorable/unfavorable intake are reported separately. They show
 state dependence, with no consistent adaptive benefit established.
 
-The [paired trajectories](docs/v7-learning.png) are regenerated from compact
+The [paired trajectories](../docs/v7-learning.png) are regenerated from compact
 evidence by `uv run python scripts/plot_learning.py`. A 30.03-second recording
 decoded to 901 frames at 1,024×1,024. The selected-creature inspector was checked
 visually. Maximum absolute energy-ledger error across the 15 completed pilots
@@ -419,7 +421,7 @@ with population means 15.61–16.29. Fixed controls retained exactly 16 neurons 
 848 connections throughout. Initial genomes match exactly across each four-way
 treatment set, and cached neuron/connection counts match their actual masks.
 Ecological effects are mixed; more complicated circuits are not established as
-better. The [figure](docs/v8-topology.png), raw records, audits, and probes are
+better. The [figure](../docs/v8-topology.png), raw records, audits, and probes are
 committed. Sources and exact checkpoints remain under `runs/`.
 
 Thirty-round association probes of transplanted environment 111 and random seed
@@ -434,7 +436,7 @@ A 30.03-second V8 video decoded to 901 frames at 1,024×1,024; the circuit inspe
 was visually checked. Random seed 123 completed three simulated hours with 56
 living creatures, 3,341 births, and maximum living generation 87. Its mean active
 circuit had 16.30 neurons and its mean fresh-food allocation was 0.916. The
-[long-run record](docs/results/v8-long.json) retains the trajectory; this is one
+[long-run record](../docs/results/v8-long.json) retains the trajectory; this is one
 surviving origin, not a general survival guarantee.
 
 ## Community assembly experiment
@@ -479,7 +481,7 @@ establish indefinite coexistence. Removing recycling eliminated scavenger
 ancestry after 137, 127, and 147 seconds. The recycling intervention preserves
 primary assimilation and dissipates the otherwise recycled energy. The attack
 intervention disables bites while retaining weapon costs and digestive penalties.
-[The plot](docs/v8-assembly.png) is generated from [compact records](docs/results/v8-assembly.json).
+[The plot](../docs/v8-assembly.png) is generated from [compact records](../docs/results/v8-assembly.json).
 
 These interventions establish dependence on the mechanisms in these particular
 communities. They do not identify each direct transfer or prove cooperation.
@@ -514,11 +516,11 @@ eight-second test. This is a correctness check, not a performance benchmark.
 All six traced repeats completed. Their final agents, food, fields, random
 streams, totals, and complete birth/death histories match the corresponding V8
 runs exactly; only the new death-cause annotations differ. The largest
-detritus-credit balance residual was 2.91e-11. The [audits](docs/results/v9-audit-mixed.json)
-and [no-attack audits](docs/results/v9-audit-no-attacks.json) are reproducible with
+detritus-credit balance residual was 2.91e-11. The [audits](../docs/results/v9-audit-mixed.json)
+and [no-attack audits](../docs/results/v9-audit-no-attacks.json) are reproducible with
 `scripts/audit_trophic.py`; exact checkpoints remain under `runs/v9-traced-*`.
 
-The [food-flow figure](docs/v9-trophic.png) shows that 95.8–97.9% of detritus uptake
+The [food-flow figure](../docs/v9-trophic.png) shows that 95.8–97.9% of detritus uptake
 by scavenger-allocated creatures came from their own guild with attacks active.
 Even with attacks disabled and grazers present, that share was 90.7–92.3%.
 Scavenger-to-scavenger predation also dominated their meat uptake. Transfers
@@ -562,7 +564,7 @@ The three matched assembly treatments all use the same transferred genomes and
 the same resulting brain costs.
 
 The viewer outlines covered patches and provides a shelter overlay with Tab;
-[the preview](docs/v10-preview.png) shows environment 161 at 1,200 seconds. Logs
+[the preview](../docs/v10-preview.png) shows environment 161 at 1,200 seconds. Logs
 record current shelter occupancy by diet guild and each creature's cumulative
 cover exposure, including its final life record. The obstruction counter reports
 potential bite demand removed before target-energy and storage caps; it is not
@@ -589,8 +591,8 @@ seconds. Removing protection retained it for the hour in environment 161, but
 lost it at 613/2,223 seconds in the others. Removing the cue lost it at
 2,303/860/687 seconds. Shelter can change the timing of exclusion, and sensing
 can change outcomes, but this preset did not sustain coexistence or establish
-a consistent sensory advantage. The [figure](docs/v10-shelter.png),
-[records](docs/results/v10.json), and [matched-genome audit](docs/results/v10-audit.json)
+a consistent sensory advantage. The [figure](../docs/v10-shelter.png),
+[records](../docs/results/v10.json), and [matched-genome audit](../docs/results/v10-audit.json)
 include every treatment. Maximum absolute energy residual was 0.0486; detritus
 credits balanced exactly at all nine endpoints.
 
@@ -598,13 +600,13 @@ The video at `runs/v10-video/timelapse.mp4` continues protected environment 163
 from 600 to 900 simulated seconds. All 901 frames decoded at 1,024×1,024 and
 30 FPS. `scripts/verify_video.py` checks the decoded count against the run record.
 
-An exploratory parameter adjustment, [v10-covered.toml](configs/v10-covered.toml),
+An exploratory parameter adjustment, [v10-covered.toml](../configs/v10-covered.toml),
 places cover around all eight patches. The completed 161/162/163 batch is under
 `runs/v10-full-shelter`:
 endpoints were 0/53, 0/56, and 0/55; grazer ancestry disappeared at
 2,614/2,596/1,155 seconds. Broader coverage did not preserve both ancestries.
-The [full-coverage records](docs/results/v10-full-shelter.json) and
-[12-run audit](docs/results/v10-complete-audit.json) retain this failed parameter
+The [full-coverage records](../docs/results/v10-full-shelter.json) and
+[12-run audit](../docs/results/v10-complete-audit.json) retain this failed parameter
 adjustment alongside the original half-covered preset. Founder genomes and
 patch layouts match across all four treatments in each environment.
 
@@ -664,24 +666,24 @@ pilot reached 35,295 food particles, ran at 2.42x simulated/wall time, and had
 an energy residual of +1.636. Repeated float32 additions of tiny meals to much
 larger body-energy stores amplified rounding error.
 
-The [V11 preset](configs/v11.toml) instead feeds at 5 Hz, budgeting 1/5 second's
+The [V11 preset](../configs/v11.toml) instead feeds at 5 Hz, budgeting 1/5 second's
 capacity at each feeding step. Physics remains at 30 Hz. Intake is summed in
 float64 per creature before one update to each float32 body store or lifetime
 counter. This keeps the physical residual visible rather than adding a balancing
 term to the ledger. The same mixed pilot then peaked at 7,318 particles, ran
 at 7.96x, and had an energy residual of +0.00147. These are observed concurrent
 run speeds, not isolated benchmarks. The updated per-tick alternative remains
-in [v11-per-tick.toml](configs/v11-per-tick.toml); original prototype runs require
+in [v11-per-tick.toml](../configs/v11-per-tick.toml); original prototype runs require
 their archived sources to reproduce their earlier arithmetic exactly.
 
 The viewer aggregates overlapping crumbs by screen pixel and colors them by
 summed fresh/detritus energy. Small remnants are smaller and dimmer than full
-particles. This only changes rendering. The [inspector](docs/v11-preview.png)
+particles. This only changes rendering. The [inspector](../docs/v11-preview.png)
 shows each creature's two processing capacities; life histories and total
 metrics record raw fresh and detritus amounts processed.
 The recording at `runs/v11-video/timelapse.mp4` follows the mixed pilot from
 300 to 600 seconds at 10x speed. All 901 frames decoded at 1,024×1,024 and
-30 FPS; [the verification record](docs/results/v11-video.json) stores its hashes.
+30 FPS; [the verification record](../docs/results/v11-video.json) stores its hashes.
 
 `unlimited_handling` removes the capacity limit while preserving 5 Hz feeding
 and the revised accumulation arithmetic. It is the main comparison for the
@@ -729,8 +731,8 @@ was transferred, and differ conceptually from source ancestry. The combined
 provenance and intervention evidence supports a grazer-to-scavenger food
 dependency in these tested communities. It does not establish cooperation,
 spontaneous speciation, or permanent coexistence. See the
-[population figure](docs/v11-handling.png), [food-flow figure](docs/v11-trophic.png),
-[complete records](docs/results/v11.json), and [18-run audit](docs/results/v11-audit.json).
+[population figure](../docs/v11-handling.png), [food-flow figure](../docs/v11-trophic.png),
+[complete records](../docs/results/v11.json), and [18-run audit](../docs/results/v11-audit.json).
 Maximum absolute energy residual was 0.0272 units. Founder samples and patch
 layouts match across paired treatments, and all food-credit checks passed.
 
@@ -740,20 +742,20 @@ populations 53/18 and 14/11, 3,728 and 1,905 total births, and maximum generatio
 68 and 51. Energy residuals were -0.00561 and -0.0751 units. All surviving bodies
 had one module. These are selected continuations of successful mixtures, not
 independent replicates or an unbiased estimate of long-term coexistence frequency.
-The [continuation records](docs/results/v11-long.json) retain their histories.
+The [continuation records](../docs/results/v11-long.json) retain their histories.
 
 The fresh random-founder pilots were much less viable than the assembled
 communities: seed 171 reached 1,800 seconds with one founding creature and only
 two births across the run; seed 172 became extinct at 480.3 seconds after two
 births. Neither establishes a reproducing population from a new random origin.
-[All pilot records](docs/results/v11-pilots.json) include the failed initial
+[All pilot records](../docs/results/v11-pilots.json) include the failed initial
 fragmentation runs.
 
 The 139-test suite covers time scaling at 30/60 Hz, the 5 Hz control cadence,
 simultaneous competition, storage caps, many tiny meals, food-credit conservation,
 birth-state reset, exact old-law parity, and checkpoint and observer behavior.
-Small [CPU](docs/results/v11-cpu-births.json) and
-[RTX 5080](docs/results/v11-cuda-births.json) exercises passed exact checkpoint
+Small [CPU](../docs/results/v11-cpu-births.json) and
+[RTX 5080](../docs/results/v11-cuda-births.json) exercises passed exact checkpoint
 replay through eight births and eight structurally mutated offspring each.
 Their energy residuals were +0.000778 and -0.000329; the GPU exercise used about
 38 MB of peak allocated tensor memory. These are correctness checks, not full
@@ -818,12 +820,12 @@ the older recurrent rule continues to use that output's signed transform.
 | Total acquired motor-logit correction bound | 0.5 per motor, before exploration |
 | Added maintenance | 0.02 energy per active module per second |
 
-The [current preset](configs/v12.toml) normalizes `(hidden_state, 1)` to unit
+The [current preset](../configs/v12.toml) normalizes `(hidden_state, 1)` to unit
 length and constrains each offset row's length to at most 0.5. Their dot product
 therefore cannot exceed 0.5 in magnitude, regardless of hidden-layer width.
 This bounds each decision's correction, not divergence of whole trajectories.
 Exploration uses a separate checkpointed random stream. The original
-[per-weight-bound preset](configs/v12-wide.toml) retains `motor_normalized = 0`;
+[per-weight-bound preset](../configs/v12-wide.toml) retains `motor_normalized = 0`;
 older prototype checkpoints without this field load with that original setting.
 
 `no_motor_learning` removes motor offsets and their eligibility while retaining
@@ -848,8 +850,8 @@ With bounded corrections, the late initial mean squared error was approximately
 0.184–0.185, versus 0.254–0.255 with learning disabled. It worsened to
 0.319–0.321 after reversal, then returned to 0.192–0.193. The original per-weight
 rule reached about 0.153–0.156, with a larger reversal error. The
-[figure](docs/v12-rule.png), [original rule records](docs/results/v12-motor-rule.json),
-and [bounded rule records](docs/results/v12-bounded-rule.json) establish that the
+[figure](../docs/v12-rule.png), [original rule records](../docs/results/v12-motor-rule.json),
+and [bounded rule records](../docs/results/v12-bounded-rule.json) establish that the
 readout can learn this supplied task. They do not demonstrate evolved feature
 learning, ecological usefulness, or intelligent navigation.
 
@@ -861,8 +863,8 @@ the total correction left 76 creatures and 94 births in the same pilot.
 This is recovery from a harmful rule setting, not consistent evidence of a
 learning benefit. The disabled-learning control's physics is exactly unchanged
 by normalization, as checked independently. All three pilots and matched-founder
-checks are retained in [the pilot records](docs/results/v12-pilots.json) and
-[audit](docs/results/v12-pilot-audit.json).
+checks are retained in [the pilot records](../docs/results/v12-pilots.json) and
+[audit](../docs/results/v12-pilot-audit.json).
 
 ### Completed ecological and lifetime evaluation
 
@@ -897,8 +899,8 @@ populations (grazer/scavenger); ordinary genetic mutation remained active:
 Both ancestries persisted for the hour in one, two, and three communities,
 respectively. Three environments are too few to establish general persistence
 probabilities. They do show that the new motor mechanism is not a consistent
-improvement for these starting populations. The [community figure](docs/v12-outcomes-communities.png),
-[all nine records](docs/results/v12.json), and [matched-founder audit](docs/results/v12-audit.json)
+improvement for these starting populations. The [community figure](../docs/v12-outcomes-communities.png),
+[all nine records](../docs/results/v12.json), and [matched-founder audit](../docs/results/v12-audit.json)
 retain the failed trials as well as the survivors.
 
 All 72 fixed-genotype lifetime trials also completed. Averaged across eight
@@ -910,8 +912,8 @@ Compared with exploration alone, learning reduced mean acquired energy for
 seven of eight genotypes after averaging their three environments; one genotype
 improved. The paired mean difference was -120.5 energy and -0.50 offspring.
 These genotypes share one source community, so environmental repeats are not
-independent evolutionary replicates. See the [paired figure](docs/v12-outcomes-lifetimes.png)
-and [all lifetime records](docs/results/v12-lifetime-assay.json).
+independent evolutionary replicates. See the [paired figure](../docs/v12-outcomes-lifetimes.png)
+and [all lifetime records](../docs/results/v12-lifetime-assay.json).
 
 The constructed cue task establishes that the readout can learn a supplied
 association. The physical assays establish no useful ecological adaptation at
@@ -923,8 +925,8 @@ mechanism and original presets remain available for later targeted experiments.
 The 154-test suite passes, including causal timing of motor credit, inactive-edge
 masking, inherited-rule preservation, newborn resets, energetic feedback,
 normalization independent of circuit width, control parity, and exact checkpoint
-and observer behavior. Both [CPU](docs/results/v12-bounded-cpu-births.json) and
-[CUDA](docs/results/v12-bounded-cuda-births.json) exercises passed exact replay
+and observer behavior. Both [CPU](../docs/results/v12-bounded-cpu-births.json) and
+[CUDA](../docs/results/v12-bounded-cuda-births.json) exercises passed exact replay
 through eight births and structural mutations, with active motor learning and
 the readout bound checked. Their energy residuals were -0.000248 and -0.000330.
 The GPU exercise used about 38 MB of peak allocated tensor memory. The earlier
@@ -932,8 +934,8 @@ per-weight-bound checks are retained separately.
 
 `runs/v12-video/timelapse.mp4` continues the bounded pilot from 300 to 600 seconds.
 All 901 frames decoded at 1,024×1,024 and 30 FPS; the
-[verification record](docs/results/v12-video.json) retains frame hashes. The
-[inspector preview](docs/v12-preview.png) displays inherited recurrent weights,
+[verification record](../docs/results/v12-video.json) retains frame hashes. The
+[inspector preview](../docs/v12-preview.png) displays inherited recurrent weights,
 acquired recurrent changes, and the two acquired motor rows separately.
 
 ## V13 — juvenile growth and accessible body plans
@@ -944,7 +946,7 @@ count is affordable under the existing birth law. Among all 73 and 41 living
 parents at the two one-hour mixed-community checkpoints, **none could afford a
 two-module offspring even at maximum stored energy**. Median required debits
 were 106.32% and 105.57% of the parents' maximum stores. A three-module offspring
-cost still more. [The counterfactual audit](docs/results/development-affordability.json)
+cost still more. [The counterfactual audit](../docs/results/development-affordability.json)
 includes each parent's bound and the proposed child's debit.
 
 This identifies an accessibility barrier, not proof that larger bodies are
@@ -1015,7 +1017,7 @@ through growth and births. All assay paths that disable mutation also disable
 the new body-plan events. The counterfactual affordability audit explicitly
 constructs a fully formed child even when reading a V13 checkpoint.
 
-[CPU](docs/results/v13-cpu-growth.json) and [CUDA](docs/results/v13-cuda-growth.json)
+[CPU](../docs/results/v13-cpu-growth.json) and [CUDA](../docs/results/v13-cuda-growth.json)
 mechanical exercises passed exact replay through four births with neural
 structural mutation and four/nine growth events, respectively. Energy residuals
 were +0.000402 and -0.000239 units; peak CUDA allocation was about 37 MB.
@@ -1034,23 +1036,23 @@ Juvenile trials ended with 2/0/7 two-module bodies, versus none in the controls.
 Two-module parents produced 3/0/26 offspring. The control attempted 2/1/6
 explicit module mutations but accepted none of those offspring. The juvenile
 treatment accepted 2/1/6 such births; descendants could then inherit their body
-plans without a new module event. The [six-run records](docs/results/v13-pilots.json),
-[matched-founder and phenotype audit](docs/results/v13-pilot-audit.json), and
-[reconstructed developmental histories](docs/results/v13-pilot-development.json)
+plans without a new module event. The [six-run records](../docs/results/v13-pilots.json),
+[matched-founder and phenotype audit](../docs/results/v13-pilot-audit.json), and
+[reconstructed developmental histories](../docs/results/v13-pilot-development.json)
 retain the evidence. The largest absolute energy residual was 0.0105 units.
-The [pilot figure](docs/v13-development-pilots.png) uses ten-second samples to
+The [pilot figure](../docs/v13-development-pilots.png) uses ten-second samples to
 retain the short-lived two-module body in environment 212; two-minute sampling
 would have missed that episode.
 
 The first juvenile pilot provides a concrete example of the newly accessible life cycle:
 creature 300, descended from single-module founder 118, was born at 417.63 s
 with a two-module plan, grew at 490.63 s, and produced three offspring by 600 s.
-Its child 348 also grew. The [adult preview](docs/v13-preview.png) and
-[juvenile preview](docs/v13-juvenile.png) show that family at the same checkpoint.
+Its child 348 also grew. The [adult preview](../docs/v13-preview.png) and
+[juvenile preview](../docs/v13-juvenile.png) show that family at the same checkpoint.
 This establishes access and reproduction, not a general advantage or long-term
 survival of larger bodies. A recording from 600 to 900 seconds is saved at
 `runs/v13-video/timelapse.mp4`; all 901 frames decoded at 1,024×1,024 and 30 FPS
-in the [video verification](docs/results/v13-video.json).
+in the [video verification](../docs/results/v13-video.json).
 
 All six fresh 3,600-second assembled-community trials completed:
 
@@ -1067,9 +1069,9 @@ bodies accessible in all three environments. Two-module parents produced
 222, although no three-module body survived there to the endpoint. Three-module
 growth occurred 3/3/2 times, and two such bodies remained in environment 223.
 The fully formed treatments attempted 32/18/39 explicit module mutations but
-accepted no larger offspring. See the [figure](docs/v13-development.png),
-[six full records](docs/results/v13.json), [audit](docs/results/v13-audit.json),
-and [parenthood/growth reconstruction](docs/results/v13-development.json).
+accepted no larger offspring. See the [figure](../docs/v13-development.png),
+[six full records](../docs/results/v13.json), [audit](../docs/results/v13-audit.json),
+and [parenthood/growth reconstruction](../docs/results/v13-development.json).
 Largest absolute energy residual was 0.0654 units, and all food-credit checks passed.
 
 ### Fresh random founders
@@ -1092,9 +1094,9 @@ or that V13 beats the original fully formed V11 initialization. It shows viable
 random establishment with V13 founder development, and mixed effects of the
 offspring rule. The clearest access result remains the one-module-source experiment.
 
-The [population/body figure](docs/v13-development-native.png),
-[six histories](docs/results/v13-native.json), [invariant audit](docs/results/v13-native-audit.json),
-and [event reconstruction](docs/results/v13-native-development.json) are retained.
+The [population/body figure](../docs/v13-development-native.png),
+[six histories](../docs/results/v13-native.json), [invariant audit](../docs/results/v13-native-audit.json),
+and [event reconstruction](../docs/results/v13-native-development.json) are retained.
 Maximum absolute energy residual was 0.222 units, within one part per million
 of injected energy in each run; food-credit conservation checks also passed.
 All three juvenile-offspring populations completed three simulated hours under
@@ -1107,7 +1109,7 @@ continued; none was dropped after its 30-minute result.
 | 222 | 73 / 2,952 / 30 | (60, 13, 0) | 2,044 / 0 |
 | 223 | 28 / 726 / 19 | (14, 14, 0) | 522 / 22 |
 
-The [full trajectories](docs/v13-development-long.png) show substantially
+The [full trajectories](../docs/v13-development-long.png) show substantially
 different outcomes: larger bodies became rare in 221, remained common in 222,
 and coexisted with single-module bodies in 223. Twenty-four and 22 survivors
 in the latter two runs encoded two-module plans; some had not yet grown.
@@ -1121,9 +1123,9 @@ with mean diet allocations 0.906 and 0.129. They descend from founders 32 and
 sorting and persistence from random founders, not evidence that a new dietary
 split evolved. Fixed-genotype tests of these two dietary pools are described below.
 
-The [three histories](docs/results/v13-native-long.json),
-[invariant audit](docs/results/v13-native-long-audit.json), and
-[event reconstruction](docs/results/v13-native-long-development.json) include
+The [three histories](../docs/results/v13-native-long.json),
+[invariant audit](../docs/results/v13-native-long-audit.json), and
+[event reconstruction](../docs/results/v13-native-long-development.json) include
 both saved segments. Resume boundaries must agree on every physical metric,
 configuration, seed, controller, and intervention before records are joined.
 All growth and birth events reconcile with the final checkpoint. Maximum
@@ -1132,7 +1134,7 @@ injected in that run (0.274 parts per million); food-credit checks also passed.
 
 The verified recording `runs/v13-native-long-video/timelapse.mp4` follows
 environment 222 from 10,800 to 11,100 seconds. All 901 frames decoded at
-1,024×1,024 and 30 FPS; the [video audit](docs/results/v13-native-long-video.json)
+1,024×1,024 and 30 FPS; the [video audit](../docs/results/v13-native-long-video.json)
 retains frame hashes. This is an illustrative continuation, outside the
 three-hour comparison horizon.
 
@@ -1141,7 +1143,7 @@ three-hour comparison horizon.
 Twelve additional 1,800-second trials transplant the final environment-222
 dietary pools into new environments 251/252/253. Pools retain all 37 grazer and
 36 scavenger genotypes at their observed frequencies, including repeated clones;
-the [source record](docs/results/v13-native-foodweb-source.json) preserves IDs,
+the [source record](../docs/results/v13-native-foodweb-source.json) preserves IDs,
 ancestry, diets, and hashes. Each mixture starts with 96 newborns from each pool,
 and each alone treatment starts with 192 from its one pool. All five mutation
 pathways are disabled. A matched mixed treatment removes recycling while
@@ -1161,9 +1163,9 @@ grazer-produced detritus in this community. They do not demonstrate cooperation,
 speciation, indefinite stability, or how often native populations establish a
 food web: the source was deliberately selected after observing coexistence.
 
-The [population figure](docs/v13-native-foodweb.png),
-[12 records](docs/results/v13-native-foodweb.json), and
-[audit](docs/results/v13-native-foodweb-audit.json) are retained. In addition to
+The [population figure](../docs/v13-native-foodweb.png),
+[12 records](../docs/results/v13-native-foodweb.json), and
+[audit](../docs/results/v13-native-foodweb-audit.json) are retained. In addition to
 matched founders, geometry, topology, energy, and food-credit checks, every
 living descendant genome exactly matched its founding lineage's genome.
 Maximum absolute energy residual was 0.220 units.
@@ -1238,8 +1240,8 @@ All 186 tests pass. Coverage includes private adjacent routing, exclusion of sel
 inactive modules, delayed causal influence on motors, bounded position readings,
 separate interventions, energy costs including starvation, newborn/growth resets,
 neutral inherited circuit extension, and checkpoint replay. Mechanical
-[CPU](docs/results/v14-cpu-coordination.json) and
-[CUDA](docs/results/v14-cuda-coordination.json) exercises passed exact replay
+[CPU](../docs/results/v14-cpu-coordination.json) and
+[CUDA](../docs/results/v14-cuda-coordination.json) exercises passed exact replay
 through four births and six/nine growth events with active internal signaling.
 Energy residuals were -0.000109 and -0.000944 units; peak CUDA allocation was
 about 37.5 MB. These mechanical checks do not demonstrate evolved coordination.
@@ -1259,10 +1261,10 @@ guild or a single independently evolved genotype. All eight pilots completed:
 Both source ancestries persisted in every pilot, with no consistent advantage
 for the complete interface. Signal magnitude averaged 0.0022–0.0068 across
 all pilot endpoints; nonzero emissions also occurred when reception was disabled.
-[All eight histories](docs/results/v14-pilots.json) and the
-[matched-founder audit](docs/results/v14-pilot-audit.json) are retained.
+[All eight histories](../docs/results/v14-pilots.json) and the
+[matched-founder audit](../docs/results/v14-pilot-audit.json) are retained.
 Maximum absolute energy residual was 0.0199 units, with all food-credit checks passing.
-The [inspector preview](docs/v14-preview.png) shows a body selected for visible
+The [inspector preview](../docs/v14-preview.png) shows a body selected for visible
 emission, not measured communication benefit.
 
 Twelve 3,600-second trials completed all four treatments in new environments
@@ -1280,8 +1282,8 @@ birth counts were mixed. Population is not individual fitness, and the evolving
 trajectories diverge, but these comparisons establish no consistent community
 benefit. Signal magnitudes averaged 0.0141–0.0315 across endpoints, including
 the reception-disabled treatments. Nonzero emission is not evidence of useful
-communication. See the [ancestry trajectories](docs/v14-coordination-communities.png),
-[12 histories](docs/results/v14.json), and [audit](docs/results/v14-audit.json).
+communication. See the [ancestry trajectories](../docs/v14-coordination-communities.png),
+[12 histories](../docs/results/v14.json), and [audit](../docs/results/v14-audit.json).
 All founder, neural topology, development, and food-credit checks passed;
 maximum absolute energy residual was 0.136 units.
 
@@ -1299,7 +1301,7 @@ retains exact source checkpoint hashes, selected genomes, package source,
 experiment source, and completed trials if interrupted.
 
 All 360 juvenile-start lifetimes completed and passed the
-[paired audit](docs/results/v14-lifetime-audit.json). Within each genotype and
+[paired audit](../docs/results/v14-lifetime-audit.json). Within each genotype and
 habitat, first-growth times matched exactly across interventions, as required:
 the new inputs are all zero until a second module exists.
 
@@ -1315,10 +1317,10 @@ Relative to self-signals, neighbor reception changed mean intake by -0.49,
 Removing body-position readings increased mean intake in all three sources,
 although individual genotype responses varied. These results show small, mixed
 effects and no consistent reproductive benefit. The
-[figure](docs/v14-coordination-lifetimes.png) and raw reports for
-[241](docs/results/v14-lifetimes-241.json),
-[242](docs/results/v14-lifetimes-242.json), and
-[243](docs/results/v14-lifetimes-243.json) retain every treatment and early death.
+[figure](../docs/v14-coordination-lifetimes.png) and raw reports for
+[241](../docs/results/v14-lifetimes-241.json),
+[242](../docs/results/v14-lifetimes-242.json), and
+[243](../docs/results/v14-lifetimes-243.json) retain every treatment and early death.
 
 The low frequency of second-module growth in two sources limits the assay's
 exposure to the interface. A supplementary `--start-mature` comparison was started
@@ -1333,17 +1335,17 @@ use when available and cannot measure juvenile developmental success.
 This follow-up was interrupted when the user requested the development wrap-up.
 Sources 241/242/243 retain 43/46/40 completed individual lifetimes out of 120
 planned per source. The incomplete reports are preserved for
-[241](docs/results/v14-adult-partial-241.json),
-[242](docs/results/v14-adult-partial-242.json), and
-[243](docs/results/v14-adult-partial-243.json), with provenance and row checks in
-the [stop record](docs/results/iteration-stop.json). No result from this partial
+[241](../docs/results/v14-adult-partial-241.json),
+[242](../docs/results/v14-adult-partial-242.json), and
+[243](../docs/results/v14-adult-partial-243.json), with provenance and row checks in
+the [stop record](../docs/results/iteration-stop.json). No result from this partial
 comparison is treated as a completed paired outcome. Selected genomes and
 completed trials remain local; the assay currently requires a fresh output
 directory and has no automatic resume mode.
 
 `runs/v14-video/timelapse.mp4` records the full-interface pilot in environment
 231 from 600 to 900 seconds. All 901 frames decoded at 1,024×1,024 and 30 FPS;
-the [verification record](docs/results/v14-video.json) retains frame hashes.
+the [verification record](../docs/results/v14-video.json) retains frame hashes.
 
 ## V15 — inherited local learning rules
 
@@ -1408,8 +1410,8 @@ intervention, inheritance with fresh state, mutation of rule genes, exact
 V14-to-V15 controller transfer, unchanged native initialization before mutation,
 V15 checkpoint replay, and rendering without changing the simulation.
 
-Mechanical [CPU](docs/results/v15-cpu-rules.json) and
-[CUDA](docs/results/v15-cuda-rules.json) checks exercised varied signed rules,
+Mechanical [CPU](../docs/results/v15-cpu-rules.json) and
+[CUDA](../docs/results/v15-cuda-rules.json) checks exercised varied signed rules,
 four births each, and six/nine growth events. Both passed exact checkpoint
 replay on their respective devices; energy residuals were -0.001045 and
 -0.001187 units. Peak CUDA allocation was about 37.5 MB. These intentionally
@@ -1428,9 +1430,9 @@ the requested 1,800-second horizon:
 | 263 | Extinct at 643.4 s / 7 | 2 survivors at 1,800 s / 17 |
 
 These starts did not reliably establish populations under either rule. The
-[population and rule histories](docs/v15-rules-native.png),
-[six records](docs/results/v15-native.json), and
-[audit](docs/results/v15-native-audit.json) retain these failures. Largest
+[population and rule histories](../docs/v15-rules-native.png),
+[six records](../docs/results/v15-native.json), and
+[audit](../docs/results/v15-native-audit.json) retain these failures. Largest
 absolute energy residual was 0.0362 units, with all invariant checks passing.
 V13's successful starts used different seeds and a different neural interface,
 so they do not provide a matched version comparison here.
@@ -1455,8 +1457,8 @@ a stop. Its completed trials are separate from the incomplete three-seed batches
 
 Both source ancestries persisted in each treatment. These are outcomes from one
 matched environment, not evidence of a general advantage or useful learning.
-The [three complete histories](docs/results/v15-assembled-271.json) and
-[audit](docs/results/v15-assembled-271-audit.json) preserve the comparison.
+The [three complete histories](../docs/results/v15-assembled-271.json) and
+[audit](../docs/results/v15-assembled-271-audit.json) preserve the comparison.
 Founder genomes, source provenance, and patch geometry matched exactly; topology,
 development, energy, and food-credit checks passed. Maximum absolute energy
 residual was 0.135 units. The audit's explicit `--completed-trials-only` option
@@ -1468,10 +1470,10 @@ Last logged times were 984/1,184/1,198 seconds in the order above, but terminal
 interruption did not write final checkpoints. Each has a valid archived checkpoint
 at 600 seconds, verified against the corresponding logged metrics. Later logs are
 preserved without being presented as saved final states. Exact paths, hashes,
-and unfinished work are in the [stop record](docs/results/iteration-stop.json)
+and unfinished work are in the [stop record](../docs/results/iteration-stop.json)
 and [handoff](HANDOFF.md).
 
-The [inspector preview](docs/v15-preview.png) shows body 577 from the evolving
+The [inspector preview](../docs/v15-preview.png) shows body 577 from the evolving
 rule treatment in environment 271 at 2,400 seconds. It has two modules and
 coefficients approximately (0.616, -0.119, 0.108, 0.156). It was selected for
 visible rule variation, not measured learning benefit. Its 12 offspring do
@@ -1479,7 +1481,7 @@ not isolate the contribution of that rule from its other inherited traits.
 
 The verified recording `runs/v15-video/timelapse.mp4` follows that environment
 from 2,400 to 2,700 seconds. All 901 frames decoded at 1,024×1,024 and 30 FPS;
-the [video audit](docs/results/v15-video.json) retains frame hashes. This is an
+the [video audit](../docs/results/v15-video.json) retains frame hashes. This is an
 illustrative checkpoint fork, not an additional independent comparison.
 
 ## Pygame observation interface — package 0.16.1
@@ -1511,13 +1513,13 @@ trail history, stable selection, and viewer controls. An actual V15 CLI run
 combined three paused steps, 32x playback, and 61 recording frames over 60 physics
 ticks; its complete state matched headless execution exactly. A separate native
 CUDA V15 check also matched with shuffled sensing on the RTX 5080.
-The [verification record](docs/results/viewer-validation.json) retains the scope.
+The [verification record](../docs/results/viewer-validation.json) retains the scope.
 
-The [interface preview](docs/viewer.png) follows body 577 from the existing V15
+The [interface preview](../docs/viewer.png) follows body 577 from the existing V15
 environment-271 checkpoint for 32 additional seconds, to t=2,432 seconds. Its
 two modules have different live sensory values and neural states. This is an
 illustrative fork for interface validation, not a new ecological experiment.
-See the [README controls](README.md) for use and interpretation.
+See the [viewer controls](../docs/USAGE.md#viewer-controls) for use and interpretation.
 
 ## Energy bars and an easier V15 reproduction preset
 
@@ -1548,21 +1550,21 @@ under the new settings occurred at 15.43/5.43/15.93 seconds. Seed 2 had fewer to
 births despite its earlier first birth. This improves access to reproduction in
 these starts, but the small, fragile populations do not establish long-term
 viability. Full logs and checkpoints are under `runs/v15-birth-readiness-*`;
-the [compact audit](docs/results/v15-birth-readiness.json) records the comparison.
+the [compact audit](../docs/results/v15-birth-readiness.json) records the comparison.
 
 All 233 tests and Ruff checks pass. Six new cases compare the readout with actual
 birth gates across V0/V1/V8/V12/V15, distinguish storage capacity from the birth
 threshold, and check growth, retry, and population blockers. Existing rendering
 purity tests exercise both bars and still match complete unobserved trajectories.
 All tabs fit at 640/768/984/1024 pixels, with no overflowing text. The new
-[preview](docs/reproduction-readiness.png) shows fresh seed 1, creature 13, at
+[preview](../docs/reproduction-readiness.png) shows fresh seed 1, creature 13, at
 30.1 seconds; it is a separate UI check, not an additional ecology replicate.
 
 ## V16: irregular, drifting sources and local recovery — package 0.17.0
 
 The next bounded user request adds three resource mechanisms and records simple
 producers as a possible later step. The autonomous research loop remains paused.
-The [design guide](docs/DYNAMIC_RESOURCES.md) specifies the rules and tuning values.
+The [design guide](DYNAMIC_RESOURCES.md) specifies the rules and tuning values.
 
 Each source uses an area-preserving ellipse and sinusoidal shear, with independently
 sampled orientation and signed bend. Its center moves at 0.5 units/s, with unbiased
@@ -1589,7 +1591,7 @@ Fresh 600-second CPU starts at seeds 1/2/3 produced 13/30/12 births, ending with
 These are combined-environment startup checks: actual food supply and the source
 placement inset differ, so they do not isolate shape, drift, or depletion effects.
 They establish neither reliable long-term persistence nor improved food tracking.
-See the [audit](docs/results/v16-resources.json) for full scope and measurements.
+See the [audit](../docs/results/v16-resources.json) for full scope and measurements.
 
 All 253 tests passed, including 20 resource cases. Validation requires a cell's
 capacity to exceed one particle because exponential recovery approaches its
@@ -1615,7 +1617,7 @@ below. The Details legend and current viewer documentation describe the marker.
 All 64 existing observation, runtime, field-storage, and resource tests pass,
 including complete-trajectory rendering checks. Ruff checks pass. Every tab fits
 at window heights 256, 640, 768, 984, and 1024; header font bounds do not overlap.
-The [preview](docs/energy-threshold.png) uses the V16 seed-1 UI fork at 150.1 seconds,
+The [preview](../docs/energy-threshold.png) uses the V16 seed-1 UI fork at 150.1 seconds,
 creature 72, matching the earlier source preview. This is a display refinement;
 simulation mechanics and the paused research loop are unchanged.
 
@@ -1644,7 +1646,7 @@ routing, and scaled controls. Existing complete-trajectory tests now draw the
 leaderboard too, including shuffled sensing and V16 resource replay. Ruff checks
 pass. Manual checks cover all panels at heights 256/640/768/984/1024.
 
-The [preview](docs/leaderboard.png) uses the archived V16 seed-2 native-run
+The [preview](../docs/leaderboard.png) uses the archived V16 seed-2 native-run
 configuration at 80.1 simulated seconds, with 46 living creatures, seven births,
 and creature 123 selected. It is a UI check, not an ecology comparison. Its
 layout record is at `runs/leaderboard-preview/verification.json`. User edits to
@@ -1656,7 +1658,7 @@ The user authorized renewed experiments and clarified that the large V16 habitat
 valuable particles, and inexpensive movement were intended to reward food seeking.
 Those uncommitted settings remain untouched. A separate baseline snapshot and
 seven treatments cover 24 fresh starts with exactly matched inherited founders.
-The [full record](docs/FORAGING.md) includes results, comparison confounds,
+The [full record](FORAGING.md) includes results, comparison confounds,
 mechanical checks, source provenance, and reproducible plots.
 
 The baseline went extinct in all three seeds. Raising raw food handling from 60
@@ -1695,7 +1697,7 @@ yielded 411/302/113 births and populations 82/108/79, versus 97/37/32 births and
 47/1/15 creatures with contact feeding. All four treatments have exactly matched
 founder genomes within seeds. These V18 founders differ from V16/V17 because
 of the two additional inputs. Detailed accounting and limitations are in
-[CARRIED_FOOD.md](docs/CARRIED_FOOD.md).
+[CARRIED_FOOD.md](CARRIED_FOOD.md).
 
 The rate-60 carrying extensions reached populations 94/16 at 1,800 seconds for
 seeds 1/2; seed 3 became extinct at 834.4 seconds. Fast-carrying extensions were

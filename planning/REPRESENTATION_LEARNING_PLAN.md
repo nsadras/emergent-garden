@@ -1,11 +1,12 @@
 # Passive test of learned neural representations
 
-Status: the native derivative diagnostic and eleven kernel/measurement tests
-pass. An eight-second forecast-start smoke test, with a 20-second follow-up,
-completed exact passive replay. The full matched-experience experiment remains
-prospective, following the closed V25 rate/noise screen.
-No new native controller or ecological version is implied. Preserve the user's
-scarce, valuable food and inexpensive exploration settings.
+Status: **complete and independently audited; continuation screen failed**.
+The plan and observer were committed as `4be302c` before the three-start
+experiment. Native derivative checks and eleven kernel/measurement tests pass.
+The [completed outcome](#completed-outcome) records the forecast comparison;
+the original prospective design below is preserved. Research is paused at the
+user's request. No new native controller or ecological version is implied.
+Preserve the user's scarce, valuable food and inexpensive exploration settings.
 
 ## Question and scope
 
@@ -126,3 +127,35 @@ starts, and improves on zero in those starts. Compare direct sensations and the
 running-return reference explicitly even if that screen passes. Inspect actual
 update magnitudes, saturation, timing, and younger cohorts before deciding a next
 step. A failed screen calls for reassessment, not automatic new rate points.
+
+## Completed outcome
+
+All three physical replays with observers exactly match unobserved full-world/RNG
+replay, and their 600-second states/events match the original V25 baselines.
+The independent audit reconstructed forecasts and checked interval normalization,
+finite states, bounds, inherited masks, and source provenance. These are replays
+of existing communities, not new independent ecological trials.
+
+Primary age-30 forecast MSE (lower is better):
+
+| Predictor | Seed 1 (470 forecasts) | Seed 2 (360 forecasts) | Seed 3 (428 forecasts) |
+| --- | ---: | ---: | ---: |
+| Fixed representation | 0.352907035 | 0.564305597 | 0.510838311 |
+| Adaptive representation | 0.352894806 | 0.564296871 | 0.510834353 |
+| Shuffled representation feedback | 0.352885042 | 0.564305093 | 0.510829401 |
+| Direct sensations | 0.356736006 | 0.561719735 | 0.504582126 |
+| Zero | 0.382697337 | 0.595543518 | 0.507206906 |
+| Running-return reference | 0.439796055 | 0.549311761 | 0.531085007 |
+
+The adaptive predictor beats fixed, shuffled, and zero together only in seed 2,
+failing the required two-of-three screen. Its improvement over fixed features
+is below .004% in every start; direct sensations and the running-return reference
+also beat it in seed 2. No native integration is justified by this screen.
+
+The primary forecasts include 26/37/31 deaths within their outcome windows.
+Age-five and age-sixty cohorts, update magnitudes, clipping, and all comparison
+values remain in the [checked record](../docs/results/learned-representations.json).
+Raw data are in `runs/learned-representation-pilot`. Forecasts within each
+community are correlated, reaching an age selects survivors, and targets are
+truncated at 20 seconds. Passive prediction does not establish behavioral or
+ecological benefit. No further experiment was launched before the pause.

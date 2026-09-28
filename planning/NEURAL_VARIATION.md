@@ -71,7 +71,7 @@ baseline comparison measures their combined effect, not graph shape alone.
 | Gentle motor learning | 144 / 78 / 100 | 288 / 265 / 156 |
 | Same noise, motor learning disabled | 194 / 88 / 112 | 367 / 264 / 310 |
 
-![Paired pilot population histories](v19-circuits.png)
+![Paired pilot population histories](../docs/v19-circuits.png)
 
 Varied founders improved two starts and weakened another. Stronger mutation
 also had mixed effects. Motor learning did not provide a consistent advantage:
@@ -98,7 +98,7 @@ Learning had fewer cumulative births in all three of these evolutionary runs.
 The descendant populations differ genetically, so these endpoints do not isolate
 an individual's learning response. The same-genotype tests below address that.
 
-The [audit](results/v19-circuits.json) verifies the checkpoint against recorded
+The [audit](../docs/results/v19-circuits.json) verifies the checkpoint against recorded
 measurements, birth/death events, carrying constraints, and energy/resource
 ledgers. With neutral settings, **all recorded physical measurements and the
 complete final physical state match V18 exactly** for all three 600-second runs.
@@ -121,13 +121,13 @@ plasticity remains active when motor learning is disabled.
 | 3 / 601 | 396 | 390 | −218 |
 | 3 / 602 | 362 | 371 | −424 |
 
-![Paired learning outcomes](v19-learning-assays.png)
+![Paired learning outcomes](../docs/v19-learning-assays.png)
 
 Births increase in five of six comparisons, while fresh-food intake increases in
 three. Effects depend on source and environment, and some differences are small.
 This supports a conditional ecological effect from motor updates, not a general
 learning advantage or proof of adaptive credit assignment. The
-[transplant audit](results/v19-learning-assays.json) includes the six founder
+[transplant audit](../docs/results/v19-learning-assays.json) includes the six founder
 reference runs; these are community outcomes, not independent per-agent fitness.
 
 The completed stronger follow-up assigns each learner another creature's
@@ -174,7 +174,7 @@ it does not establish its ecological usefulness. The assay omits body geometry,
 other observations, and acquired state. Sampled descendants share ancestry and
 are not independent evolutionary replicates. Raw responses at three intensities
 for fresh food and detritus, founder comparisons, genotype hashes, and source
-provenance are retained in [the diagnostic record](results/v19-food-response.json).
+provenance are retained in [the diagnostic record](../docs/results/v19-food-response.json).
 
 ## Delayed-credit diagnostic
 
@@ -197,14 +197,14 @@ Adaptation is small with these deliberately bounded motor changes, and very
 weak at longer delays. A longer eligibility trace alone does not solve this
 constructed problem. Reward timing, the moving baseline, readout decay, and
 noise all contribute; this does not isolate the cause of an ecological failure.
-The [36 trial records](results/v19-delayed-credit.json) retain both noisy and
+The [36 trial records](../docs/results/v19-delayed-credit.json) retain both noisy and
 deterministic readouts and exact sources. Run with:
 
 ```bash
 uv run python scripts/probe_delayed_credit.py --output runs/my-delayed-credit
 ```
 
-The [live-controller preview](v19-learning-brain.png) follows the first learning
+The [live-controller preview](../docs/v19-learning-brain.png) follows the first learning
 population for 30 additional seconds after its 1,800-second checkpoint. Trails
 show both loops and wider excursions. It is illustrative, not a new replicate.
 
@@ -213,8 +213,8 @@ show both loops and wider excursions. It is illustrative, not a new replicate.
 All 310 tests pass, including variable founder graphs, weight scaling,
 inheritance, fresh child neural state, unchanged legacy trajectories, observer
 purity, and the directional diagnostic. Ruff checks pass. Separate
-[CPU](results/v19-cpu-circuits.json) and
-[RTX 5080](results/v19-cuda-circuits.json) checks passed exact checkpoint replay
+[CPU](../docs/results/v19-cpu-circuits.json) and
+[RTX 5080](../docs/results/v19-cuda-circuits.json) checks passed exact checkpoint replay
 through births, growth, changing rules, and motor learning. They verify
 mechanics, not useful learning.
 

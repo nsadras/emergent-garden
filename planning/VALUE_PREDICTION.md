@@ -66,8 +66,8 @@ a terminal learning update. Nothing learned is passed to offspring.
 
 The Details tab shows the actual pre-update prediction and temporal-difference
 error in scaled return units. These are neither stored energy nor promises of
-future food. [The preview](v22-value-details.png) and
-[layout record](results/v22-viewer.json) cover all tabs at 640–1,024 pixels.
+future food. [The preview](../docs/v22-value-details.png) and
+[layout record](../docs/results/v22-viewer.json) cover all tabs at 640–1,024 pixels.
 
 ## Matched ecological pilots
 
@@ -90,10 +90,10 @@ Both value variants improve births over baseline in one start and reduce them
 in two. Each also loses to its own shuffled-return control in two starts.
 Evolving populations differ in genomes and environments by the end: these
 screens do not isolate individual adaptive learning. The
-[audited record](results/v22-value-prediction.json) retains configurations,
+[audited record](../docs/results/v22-value-prediction.json) retains configurations,
 checkpoints, events, energy accounts, and source provenance.
 
-![Matched V22 population histories](v22-value-prediction.png)
+![Matched V22 population histories](../docs/v22-value-prediction.png)
 
 The three disabled-head baselines match V21's complete common final state and
 every common physical measurement exactly. This establishes neutral-version
@@ -132,9 +132,9 @@ two. These animals share just three communities per treatment, not hundreds of
 independent experiments. The two targets also have different variances;
 their absolute errors are not a head-to-head accuracy ranking.
 
-![Forecast errors relative to predicting zero](v22-value-forecasts.png)
+![Forecast errors relative to predicting zero](../docs/v22-value-forecasts.png)
 
-The [compact forecast audit](results/v22-value-forecasts.json) links original
+The [compact forecast audit](../docs/results/v22-value-forecasts.json) links original
 records with per-creature observations and source/checkpoint hashes. The first
 fork for each target was independently replayed without the observer and matched
 its entire final state exactly. `exactly_passive: false` on the other forks means
@@ -156,10 +156,10 @@ returns and shifts error earlier; that supplied representation is never seeded
 into ecological controllers. Forecast fixtures cover held controller intervals,
 fatal partial intervals, and deaths after the forecast window.
 
-Separate [CPU](results/v22-cpu-value.json) and
-[CUDA](results/v22-cuda-value.json) exercises pass exact device-local replay
+Separate [CPU](../docs/results/v22-cpu-value.json) and
+[CUDA](../docs/results/v22-cuda-value.json) exercises pass exact device-local replay
 through births, growth, and inherited plasticity rules. The
-[direct-target CUDA check](results/v22-cuda-raw-value.json) also passes.
+[direct-target CUDA check](../docs/results/v22-cuda-raw-value.json) also passes.
 This does not claim CPU and GPU trajectories are identical.
 
 ```bash

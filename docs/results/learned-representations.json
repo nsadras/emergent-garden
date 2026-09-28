@@ -1,0 +1,327 @@
+{
+  "interpretation": "Compare passive neural representations on identical native sensory histories.\n\nEvery predictor is private to one creature and starts fresh at birth. Predictions\nare recorded before their returns, including partial fatal intervals. None of\nthese learners changes physical actions, genomes, energy, or world random streams.\n",
+  "source_sha256": "4194464562b97bbc269eb12320cef64f286955c7e5b4d1cbc8c43d3f0e29c5a2",
+  "scripts_sha256": {
+    "probe_learned_representations.py": "5f215ae64150c241c06b0f33bf96a9490e6e9da3a96e9d1047c158f5c5121c35",
+    "representation_learning.py": "e9b0f8fb898e942ebe7b7217d0c5e42178e9da58140fc5fd2b4bcb3ca5104828",
+    "audit_circuits.py": "292b32229585fb5edb67b176f6431d49e2ee86b1e30fe9e3775bb300ef7849ec"
+  },
+  "completed": true,
+  "prediction_seconds": 600,
+  "horizon": 2,
+  "window": 20,
+  "readout_rate": 0.05,
+  "representation_rate": 0.01,
+  "readout_limit": 4,
+  "representation_limit": 0.3,
+  "baseline_tau": 10,
+  "trials": [
+    {
+      "cohorts": {
+        "5": {
+          "count": 528,
+          "deaths": 18,
+          "mean_observed_return": 0.027794434804905444,
+          "mse": {
+            "fixed": 0.6200703290841645,
+            "adaptive": 0.6200667310615597,
+            "shuffled": 0.6200698163106769,
+            "sensory": 0.6198499705248484,
+            "zero": 0.6606596188606249,
+            "running_rate": 0.7026831238376704
+          }
+        },
+        "30": {
+          "count": 470,
+          "deaths": 26,
+          "mean_observed_return": -0.07274748403488442,
+          "mse": {
+            "fixed": 0.3529070347473997,
+            "adaptive": 0.3528948064003224,
+            "shuffled": 0.35288504237647483,
+            "sensory": 0.35673600591349935,
+            "zero": 0.382697336940298,
+            "running_rate": 0.43979605518115306
+          }
+        },
+        "60": {
+          "count": 394,
+          "deaths": 33,
+          "mean_observed_return": -0.03285466004021296,
+          "mse": {
+            "fixed": 0.35633077838501875,
+            "adaptive": 0.35633992273147513,
+            "shuffled": 0.3563345105626088,
+            "sensory": 0.35115556648152607,
+            "zero": 0.37155825009829213,
+            "running_rate": 0.42782916000327265
+          }
+        }
+      },
+      "observed_births": 557,
+      "deaths": 390,
+      "updates": 698743,
+      "shuffled_updates": 698186,
+      "unshuffled_singleton_updates": 0,
+      "absolute_offset_changes": {
+        "fixed": 0.0,
+        "adaptive": 72.13024884641354,
+        "shuffled": 68.67194186577235
+      },
+      "peak_saturated_row_fraction": {
+        "fixed": 0.0,
+        "adaptive": 0.0,
+        "shuffled": 0.0
+      },
+      "peak_readout_norm": {
+        "fixed": 1.591684341430664,
+        "adaptive": 1.5917774438858032,
+        "shuffled": 1.5916755199432373,
+        "sensory": 1.6113582849502563
+      },
+      "clipped_errors": {
+        "fixed": 1477,
+        "adaptive": 1477,
+        "shuffled": 1477,
+        "sensory": 1386
+      },
+      "artifacts_sha256": {
+        "learners.pt": "3ba1f53d3f021e7003cf6d15ca526c21fadd5bae7168d8d9a854cb34a684f69d",
+        "intervals.pt": "9fabe73eea48d8dc8579781e33f4d13aa0849d32b6c0a98a229df5353a6ced9a",
+        "predictions.json": "b843f94a656b6f2477e9319c0c601ce9bf702d50e4ca1674ae325132bdbabe1c"
+      },
+      "seed": 1,
+      "source": "runs/v25-baseline-pilot/seed-1",
+      "source_checkpoint_sha256": "144b9cdc62907e215671936777141dc0de4737561331ee1124f8db1146594a60",
+      "output": "runs/learned-representation-pilot/seed-1",
+      "end_time": 620.0333333333333,
+      "exactly_passive": true,
+      "reference_600_second_parity": true,
+      "complete_founders_match": true,
+      "forecasts_reconstructed": 1392,
+      "maximum_target_reconstruction_error": 5.329070518200751e-15,
+      "interval_normalization_exact": true,
+      "finite_states_and_bounds": true,
+      "final_living_masks_exact": true
+    },
+    {
+      "cohorts": {
+        "5": {
+          "count": 387,
+          "deaths": 13,
+          "mean_observed_return": -0.07127181095646115,
+          "mse": {
+            "fixed": 0.5818537556183354,
+            "adaptive": 0.5818539360376525,
+            "shuffled": 0.5818536053999518,
+            "sensory": 0.5817165094712051,
+            "zero": 0.5875025530504385,
+            "running_rate": 0.8786212586945763
+          }
+        },
+        "30": {
+          "count": 360,
+          "deaths": 37,
+          "mean_observed_return": -0.030286975541988222,
+          "mse": {
+            "fixed": 0.5643055971252632,
+            "adaptive": 0.5642968709087919,
+            "shuffled": 0.5643050928297798,
+            "sensory": 0.5617197347659099,
+            "zero": 0.5955435177157911,
+            "running_rate": 0.5493117607188108
+          }
+        },
+        "60": {
+          "count": 298,
+          "deaths": 38,
+          "mean_observed_return": -0.06383123010502927,
+          "mse": {
+            "fixed": 0.49044069518577693,
+            "adaptive": 0.4904234308325273,
+            "shuffled": 0.49043069649416693,
+            "sensory": 0.4859057071606625,
+            "zero": 0.5218186846602693,
+            "running_rate": 0.5273176850492591
+          }
+        }
+      },
+      "observed_births": 390,
+      "deaths": 351,
+      "updates": 519044,
+      "shuffled_updates": 518654,
+      "unshuffled_singleton_updates": 0,
+      "absolute_offset_changes": {
+        "fixed": 0.0,
+        "adaptive": 70.0425457074421,
+        "shuffled": 65.39904833804941
+      },
+      "peak_saturated_row_fraction": {
+        "fixed": 0.0,
+        "adaptive": 0.0,
+        "shuffled": 0.0
+      },
+      "peak_readout_norm": {
+        "fixed": 0.7155660390853882,
+        "adaptive": 0.7172603607177734,
+        "shuffled": 0.7155347466468811,
+        "sensory": 0.8487128615379333
+      },
+      "clipped_errors": {
+        "fixed": 2105,
+        "adaptive": 2105,
+        "shuffled": 2105,
+        "sensory": 2101
+      },
+      "artifacts_sha256": {
+        "learners.pt": "7357a9e3607ba2777d5d62af4f504e691a82c43ffd81c24147092fc3a3bb67df",
+        "intervals.pt": "1009b43d94abe0c362d4a8d3a1597b147dd124e8e22539367fadc639dd7f1628",
+        "predictions.json": "55b0f278601113aec02d0eb0bc90a42d326d24f3ed47eead47a7746039955f3c"
+      },
+      "seed": 2,
+      "source": "runs/v25-baseline-pilot/seed-2",
+      "source_checkpoint_sha256": "78e952094eb6b9f4e1ca51f6015172b29631f9f263f00f6e57ec846160d20002",
+      "output": "runs/learned-representation-pilot/seed-2",
+      "end_time": 620.0333333333333,
+      "exactly_passive": true,
+      "reference_600_second_parity": true,
+      "complete_founders_match": true,
+      "forecasts_reconstructed": 1045,
+      "maximum_target_reconstruction_error": 6.217248937900877e-15,
+      "interval_normalization_exact": true,
+      "finite_states_and_bounds": true,
+      "final_living_masks_exact": true
+    },
+    {
+      "cohorts": {
+        "5": {
+          "count": 471,
+          "deaths": 15,
+          "mean_observed_return": -0.015248798028936616,
+          "mse": {
+            "fixed": 0.6528936538107014,
+            "adaptive": 0.6528949402344949,
+            "shuffled": 0.6528935728090323,
+            "sensory": 0.6511452415561807,
+            "zero": 0.6606572454988104,
+            "running_rate": 0.947433186525643
+          }
+        },
+        "30": {
+          "count": 428,
+          "deaths": 31,
+          "mean_observed_return": -0.04557259754939629,
+          "mse": {
+            "fixed": 0.5108383108717047,
+            "adaptive": 0.5108343526615599,
+            "shuffled": 0.5108294006415011,
+            "sensory": 0.5045821261155022,
+            "zero": 0.5072069057266908,
+            "running_rate": 0.531085006822893
+          }
+        },
+        "60": {
+          "count": 335,
+          "deaths": 48,
+          "mean_observed_return": -0.02055345296980537,
+          "mse": {
+            "fixed": 0.52366036304674,
+            "adaptive": 0.5236001367414772,
+            "shuffled": 0.5236824312918819,
+            "sensory": 0.5130786205738415,
+            "zero": 0.5472635063496888,
+            "running_rate": 0.5614374934375704
+          }
+        }
+      },
+      "observed_births": 521,
+      "deaths": 343,
+      "updates": 616287,
+      "shuffled_updates": 615766,
+      "unshuffled_singleton_updates": 0,
+      "absolute_offset_changes": {
+        "fixed": 0.0,
+        "adaptive": 129.94985833486353,
+        "shuffled": 110.41585364857286
+      },
+      "peak_saturated_row_fraction": {
+        "fixed": 0.0,
+        "adaptive": 0.0,
+        "shuffled": 0.0
+      },
+      "peak_readout_norm": {
+        "fixed": 0.9025717973709106,
+        "adaptive": 0.9024952054023743,
+        "shuffled": 0.9026637077331543,
+        "sensory": 1.010491967201233
+      },
+      "clipped_errors": {
+        "fixed": 3893,
+        "adaptive": 3893,
+        "shuffled": 3893,
+        "sensory": 3882
+      },
+      "artifacts_sha256": {
+        "learners.pt": "85d64756cecfd2f7b65bc05af54fa0575daa72d4df6c297068e258de1ba1fbf5",
+        "intervals.pt": "e5cd544f63855ce71a1383374e06df3743e3536053d7084ade94ae51bc54bdfb",
+        "predictions.json": "afa34ebde9d28f31f8ad4c7696e89114092d2c60e8a34ff1c4a5972d174255f5"
+      },
+      "seed": 3,
+      "source": "runs/v25-baseline-pilot/seed-3",
+      "source_checkpoint_sha256": "0baf5458c25d9f7315f67d05967921d587a372a0644fcaf017817d327f596695",
+      "output": "runs/learned-representation-pilot/seed-3",
+      "end_time": 620.0333333333333,
+      "exactly_passive": true,
+      "reference_600_second_parity": true,
+      "complete_founders_match": true,
+      "forecasts_reconstructed": 1234,
+      "maximum_target_reconstruction_error": 6.217248937900877e-15,
+      "interval_normalization_exact": true,
+      "finite_states_and_bounds": true,
+      "final_living_masks_exact": true
+    }
+  ],
+  "comparisons": [
+    {
+      "seed": 1,
+      "count": 470,
+      "relative_improvement": {
+        "fixed": 3.4650335281831475e-05,
+        "shuffled": -2.7669134916581483e-05,
+        "sensory": 0.010767624936935493,
+        "zero": 0.07787493578672303,
+        "running_rate": 0.19759442531842591
+      },
+      "passed": false
+    },
+    {
+      "seed": 2,
+      "count": 360,
+      "relative_improvement": {
+        "fixed": 1.5463636220788293e-05,
+        "shuffled": 1.4569992531340875e-05,
+        "sensory": -0.004587939471195561,
+        "zero": 0.05246744507747442,
+        "running_rate": -0.027279791298063683
+      },
+      "passed": true
+    },
+    {
+      "seed": 3,
+      "count": 428,
+      "relative_improvement": {
+        "fixed": 7.748459856344187e-06,
+        "shuffled": -9.69407800837562e-06,
+        "sensory": -0.01239089976133328,
+        "zero": -0.007151809042646799,
+        "running_rate": 0.038130720884926646
+      },
+      "passed": false
+    }
+  ],
+  "complete_screen": true,
+  "prospective_screen_passed": false,
+  "raw_report": "runs/learned-representation-pilot/summary.json",
+  "raw_report_sha256": "1b8858057372de4c92ed3087af1b31510c71e77d47b500a90220c588d962bfb8",
+  "limitations": "Passive predictors observe the same native histories and do not control movement. Forecasts within each community are correlated; reaching an age selects survivors. Targets include recorded terminal returns but truncate at 20 seconds. A prediction improvement alone does not establish a behavioral or ecological benefit."
+}

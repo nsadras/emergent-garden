@@ -37,7 +37,7 @@ alone beats the baseline in two starts for both outcomes, but that is not eviden
 that the recurrent learner works. No settings were changed while these runs
 were underway, and the nearly collapsed first learning population is retained.
 
-![Quieter perturbations: nine new matched runs and three reused references](v25-quiet-recurrent-learning.png)
+![Quieter perturbations: nine new matched runs and three reused references](../docs/v25-quiet-recurrent-learning.png)
 
 Final mean absolute acquired recurrent weights are .0088/.0150/.0151, compared
 with .0038/.0095/.0095 in the original .15-noise learning pilots. The maximum
@@ -48,7 +48,7 @@ reason to test rate explicitly before attributing the outcome to noise alone.
 
 ## Verification and next comparison
 
-The [checked record](results/v25-quiet-recurrent-learning.json) contains all nine
+The [checked record](../docs/results/v25-quiet-recurrent-learning.json) contains all nine
 new outcomes, labeled reused references, founder matching, source archives,
 checkpoint/history agreement, masks, bounds, energy and resource accounting,
 and every screening comparison. The reused baselines still match V24 physical
@@ -93,7 +93,7 @@ quiet noise-only, **1/3** with gentle shuffled feedback, and **2/3** with the
 mechanism-off baseline. The required two wins against each control are absent.
 The stronger second start does not justify selecting it for a longer run.
 
-![Gentler recurrent learning: six new runs and six reused references](v25-quiet-gentle-recurrent-learning.png)
+![Gentler recurrent learning: six new runs and six reused references](../docs/v25-quiet-gentle-recurrent-learning.png)
 
 Final mean absolute acquired weights are .00468/.01031/.01032; maximum recorded
 saturated-row fractions are 3.32%/1.30%/1.40%. Lowering the rate changes both
@@ -105,10 +105,10 @@ for the complete 600 seconds in all three seeds. Common measurements, events
 (including whole-genome hashes), complete final physical states, and random
 streams match the original quiet noise-only runs exactly. Only configuration
 and the unused potential-rate measurement differ. The
-[control replay record](results/v25-gentle-control-replays.json) verifies reuse;
+[control replay record](../docs/results/v25-gentle-control-replays.json) verifies reuse;
 these three verification replays are not new independent ecological replicates.
 
-The [gentler audit](results/v25-quiet-gentle-recurrent-learning.json) includes
+The [gentler audit](../docs/results/v25-quiet-gentle-recurrent-learning.json) includes
 all six new trials, six labeled reused references, all control-replay checks,
 source provenance, founder matching, bounds, masks, and resource/energy accounts.
 The inspected figure is generated from that checked record.

@@ -21,7 +21,7 @@ keep their previous meaning. There remain **42 inputs, seven outputs, up to
 This experiment changes observation distance only. It adds no physical appendage,
 collision shape, neural connection, energy cost, or inherited reach gene.
 Movement, source production, food collection, and digestion retain V19's laws.
-The inspector's [Details tab](v20-sensor-details.png) states the sampling distance.
+The inspector's [Details tab](../docs/v20-sensor-details.png) states the sampling distance.
 Old presets and saved
 worlds load the neutral default.
 
@@ -38,7 +38,7 @@ configuration remains untouched.
 | `v20-radius2.toml` | 2 | 152 / 11 / 102 | 207 / 58 / 156 |
 | `v20.toml` | 4 | 153 / 29 / 125 | 266 / 111 / 201 |
 
-![Sensory contrast and reproduction](v20-sensor-radius.png)
+![Sensory contrast and reproduction](../docs/v20-sensor-radius.png)
 
 The four-radius treatment improved births in the weakest start and slightly in
 the third, but reduced them in the strongest start. It exceeded the two-radius
@@ -57,7 +57,7 @@ intensity RMS changes by less than 1.5%. Thus the intended information change is
 measurable. More available directional information does not, by itself, prove
 better use of it. Wider receptors also change non-food cues.
 
-The [audit](results/v20-sensor-radius.json) verifies matching founders,
+The [audit](../docs/results/v20-sensor-radius.json) verifies matching founders,
 checkpoint/measurement agreement, birth and death event counts, gut constraints,
 and all resource/energy ledgers. The three radius-1 runs match **every recorded
 physical measurement and the complete final physical state** of the corresponding
@@ -93,9 +93,9 @@ All **322 tests pass**, with Ruff lint and formatting checks passing. Tests cove
 analytical field gradients, neutral-version parity, unchanged costs/physics
 under a fixed controller, replay, observer purity, shuffled-rate distributions,
 newborn timing, and independence from physical energy transfer. Separate
-[CPU](results/v20-cpu-radius.json) and [RTX 5080](results/v20-cuda-radius.json)
+[CPU](../docs/results/v20-cpu-radius.json) and [RTX 5080](../docs/results/v20-cuda-radius.json)
 checks passed exact replay through growth, births, and evolving plasticity rules.
-A further [CUDA exercise](results/v20-cuda-shuffled-reward.json) verified replay
+A further [CUDA exercise](../docs/results/v20-cuda-shuffled-reward.json) verified replay
 with shuffled returns and active motor learning. The inspector was checked at
 640/768/900/1024-pixel heights; all three tabs fit without scrolling.
 

@@ -39,7 +39,7 @@ discount horizon, two-second trace, and weight-row norm bound of 4. Rates retain
 their inherited multiplier. Whole-vector normalization changes feature scaling
 as well as information access, so this is not a pure information-content test.
 As in V22, no extra critic-specific energy cost is charged in this screen.
-The main action graph remains the same. [Details](v23-sensory-details.png) now
+The main action graph remains the same. [Details](../docs/v23-sensory-details.png) now
 states which prediction features are configured and how many weights they use.
 
 ## Ecological screening
@@ -63,10 +63,10 @@ and population composition have diverged; these are not fixed-genotype learning
 comparisons. No long ecological continuations or transplant fitness assays were
 started after these mixed results.
 
-![V23 matched population histories](v23-sensory-values.png)
+![V23 matched population histories](../docs/v23-sensory-values.png)
 
 The three neutral starts exactly reproduce V22's complete common final states
-and all common physical measurements. The [audit](results/v23-sensory-values.json)
+and all common physical measurements. The [audit](../docs/results/v23-sensory-values.json)
 also checks source records, founder matching, resource and energy accounts,
 carried-food ownership, neural state shapes, finite values, and bounds.
 
@@ -86,7 +86,7 @@ return over that window; a learned tail estimate is reported separately.
 Only seed 1 beats zero, including in the predefined subgroup aged at least
 30 seconds. Seed 3's two-creature cohort is especially uninformative about
 generality. Both these forecasts and the earlier V22 hidden-only forecasts are
-retained in the [forecast audit](results/v23-value-forecasts.json). Comparing
+retained in the [forecast audit](../docs/results/v23-value-forecasts.json). Comparing
 their errors directly would confound representation with different populations.
 
 ## Paired prediction on exactly the same experience
@@ -127,7 +127,7 @@ three communities for both representations:
 | Seed 2 | 5.451 | 5.310 |
 | Seed 3 | 4.542 | 4.116 |
 
-![Paired prediction errors under both rates](v23-paired-forecasts.png)
+![Paired prediction errors under both rates](../docs/v23-paired-forecasts.png)
 
 Correlation improves with the faster rate, while absolute prediction accuracy
 declines. Some weight rows reach their norm bound. A larger or more responsive
@@ -151,8 +151,8 @@ and less than .01% of positive scalar error mass. No negative errors are clipped
 The norm bound is active in about .31%, .03%, and .06% of transitions. Faster
 learning raises bound occupancy to about 2.13%, .51%, and 1.08%, while its positive
 clipping mass fractions remain similar. The
-[original-rate record](results/v23-value-updates.json) and
-[faster-rate record](results/v23-fast-value-updates.json) preserve exact counts,
+[original-rate record](../docs/results/v23-value-updates.json) and
+[faster-rate record](../docs/results/v23-fast-value-updates.json) preserve exact counts,
 extrema, signed masses, and source hashes. Reproduce either with
 `scripts/probe_value_updates.py --reference <paired-summary.json> --output <new-directory>`.
 
@@ -173,13 +173,13 @@ erasure. Passive critics reproduce the native core critic exactly under each
 representation, through births and growth, while leaving the complete physical
 world unchanged. Forecast timing tests cover deaths and held motor intervals.
 
-Separate [CPU](results/v23-cpu-sensory.json) and
-[RTX 5080](results/v23-cuda-sensory.json) mechanical exercises pass exact
+Separate [CPU](../docs/results/v23-cpu-sensory.json) and
+[RTX 5080](../docs/results/v23-cuda-sensory.json) mechanical exercises pass exact
 device-local replay with births, growth, and varied inherited plasticity rules.
 The first full native forecast and the first full passive fork at each rate
 also match an independently unobserved continuation exactly. Other passive
 forks additionally match across rates. All inspector tabs fit heights of
-640–1,024 pixels; [the layout record](results/v23-viewer.json) and preview use
+640–1,024 pixels; [the layout record](../docs/results/v23-viewer.json) and preview use
 an illustrative 30-second seed-1 fork, not another ecological replicate.
 
 ```bash

@@ -14,8 +14,8 @@ engineering defaults; the initial validation results are recorded in
 [VALIDATION.md](VALIDATION.md).
 The detailed mechanics below fill in the remaining implementation choices.
 
-The executable defaults are recorded in [configs/v0.toml](configs/v0.toml). See
-[README.md](README.md) for uv setup, running the viewer, recording, resume, and
+The executable defaults are recorded in [configs/v0.toml](../configs/v0.toml). See
+[usage guide](../docs/USAGE.md) for uv setup, running the viewer, recording, resume, and
 evaluation commands. Reproduction and population persistence are distinct from
 the research criteria of improved foraging and a demonstrated sensory advantage.
 

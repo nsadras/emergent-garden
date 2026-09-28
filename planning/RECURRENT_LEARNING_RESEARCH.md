@@ -86,7 +86,7 @@ only to this diagnostic. A native organism cannot use it. This check verifies
 the score calculation at the chosen weights; it does not train a network or
 demonstrate a useful learning rate, temporal credit, or food seeking.
 
-The [record](results/recurrent-score-diagnostic.json) includes all batch
+The [record](../docs/results/recurrent-score-diagnostic.json) includes all batch
 estimates and the archived script hash. Exact local inputs and the archived
 script are under `runs/recurrent-score-diagnostic`.
 
@@ -128,7 +128,7 @@ All three batches completed. Final held-out mean squared errors are:
 | Two-second trace | .001779 | .001931 | .001912 |
 | Two-second trace, shuffled scores | .008935 | .008852 | .009314 |
 
-![Learning curves in the supplied task](recurrent-adaptation.png)
+![Learning curves in the supplied task](../docs/recurrent-adaptation.png)
 
 Both feedback-aligned rules reduce error by about 79–80% in every batch;
 shuffling scores leaves it near the no-update control. At 64 episodes, the
@@ -138,7 +138,7 @@ validation errors match exactly across conditions, and the no-update curves
 remain exactly unchanged. The new rollout also matches the independently
 checked score fixture to `1e-12` tolerance.
 
-The [complete record](results/recurrent-adaptation.json) retains each circuit's
+The [complete record](../docs/results/recurrent-adaptation.json) retains each circuit's
 errors, all recorded curves, parameters, and script/final-state hashes.
 This demonstrates learning in the supplied task, not ecological fitness. The
 full training sequence represents about 41 minutes of neural time; 64 episodes

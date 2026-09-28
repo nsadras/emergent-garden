@@ -64,7 +64,7 @@ Number of the six comparisons in which native exceeds each control:
 | Motor updates disabled | 6 / 6 | 5 / 6 | 3 / 6 |
 | Motor feedback shuffled | 4 / 6 | 4 / 6 | 4 / 6 |
 
-![Every paired timing and feedback contrast](v24-timing-assays.png)
+![Every paired timing and feedback contrast](../docs/v24-timing-assays.png)
 
 Reassignment reduces births relative to native by varying amounts: native's
 advantage ranges from **0.39% to 16.01%** when expressed relative to the control.
@@ -75,7 +75,7 @@ mixed fresh-food effects warrant caution about the learning mechanism.
 
 More births do not consistently mean a larger endpoint population. For example,
 native beats reassignment for births in all six comparisons but for endpoint
-population in only two. The [full record](results/v24-timing-assays.json) retains
+population in only two. The [full record](../docs/results/v24-timing-assays.json) retains
 population, deaths, all food sources, timing and learning statistics, and
 accounting diagnostics, alongside every paired contrast.
 
@@ -109,10 +109,10 @@ runs at **1× simulated speed**, with one frame per physics step, 30 FPS, and
 30-second fading trails. All 901 frames decode successfully. The complete final
 simulation state matches a plain replay exactly after draining the event queue
 that the run store already recorded. This fork is not another experimental
-replicate. The [verification record](results/v24-real-time-preview.json)
+replicate. The [verification record](../docs/results/v24-real-time-preview.json)
 includes hashes, source archives, replay result, and accounting.
 
-![Final frame with thirty seconds of actual movement trails](v24-real-time-preview.png)
+![Final frame with thirty seconds of actual movement trails](../docs/v24-real-time-preview.png)
 
 The trail image shows many loops as well as longer routes across the dish.
 Reproduction and food uptake have improved in some comparisons, but that image

@@ -65,7 +65,7 @@ credited immediately before the displayed transition. Details shows the actual
 hidden-noise contribution; the Body / learning heatmap combines both rules.
 All tabs fit at heights 640, 768, 900, and 1,024 with no measured text overflow.
 
-![V25 inspector showing actual input, recurrent, bias, and hidden-noise drive](v25-inspector-details.png)
+![V25 inspector showing actual input, recurrent, bias, and hidden-noise drive](../docs/v25-inspector-details.png)
 
 New telemetry reports active-connection offset magnitude, row saturation,
 hidden-noise RMS, inherited potential learning rate, and cumulative absolute
@@ -97,12 +97,12 @@ reduction demonstrates this supplied task, without bodies, food, survival,
 evolution, or a claim that ordinary creatures learn quickly enough to benefit.
 
 Raw files are in `runs/v25-native-recurrent-probe`. The
-[audited record](results/v25-native-recurrent-probe.json) includes intermediate
+[audited record](../docs/results/v25-native-recurrent-probe.json) includes intermediate
 curves, script/source/genome hashes, final state hashes, and exact reconstruction
 of validation error from every saved endpoint. No-update weights stay zero and
 their validation errors remain exactly unchanged.
 
-![Native delayed-cue task: learning improves the supplied task across three seeds](v25-native-recurrent-probe.png)
+![Native delayed-cue task: learning improves the supplied task across three seeds](../docs/v25-native-recurrent-probe.png)
 
 ## Verification and ecological screen
 
@@ -113,8 +113,8 @@ exact neutral V24 behavior through births/mutations, and reconstruction of the
 displayed noisy update. Rendering leaves simulation trajectories and random
 streams unchanged.
 
-Separate [CPU](results/v25-cpu-recurrent.json) and
-[RTX 5080](results/v25-cuda-recurrent.json) exercises pass exact device-local
+Separate [CPU](../docs/results/v25-cpu-recurrent.json) and
+[RTX 5080](../docs/results/v25-cuda-recurrent.json) exercises pass exact device-local
 checkpoint replay with births, growth, signed plasticity, and active recurrent
 learning. CPU exercises five births and three growths; CUDA exercises six and
 nine. They do not assert cross-device equality. Native source and the executed
@@ -147,14 +147,14 @@ not isolate an individual learning deficit: the evolving communities diverge.
 No longer V25 evolutionary runs or selected-winner continuations were launched.
 Retain the inherited-timing baseline for subsequent comparisons.
 
-![Twelve matched ecological pilots, including both noise controls](v25-recurrent-learning.png)
+![Twelve matched ecological pilots, including both noise controls](../docs/v25-recurrent-learning.png)
 
 The three mechanism-off runs match V24's common physical state, complete
 histories, and events exactly, including genome digests and genetic variance.
 All full founder genomes match within seed across treatments. Source archives,
 checkpoint/history agreement, energy accounting, fertility, food provenance,
 and trophic accounting pass. The
-[audited results](results/v25-recurrent-learning.json) retain every outcome and
+[audited results](../docs/results/v25-recurrent-learning.json) retain every outcome and
 the exact screening comparisons.
 
 The learner is active: final mean absolute recurrent offsets are
@@ -192,7 +192,7 @@ Hidden-noise drive RMS is .150 throughout, compared with spatial-contrast drive
 clipping removes 4.4%/1.1%/4.0% of absolute signal mass. These limited snapshots
 motivate testing quieter hidden perturbations before changing clipping or adding
 architecture. They do not identify a single cause of the mixed ecological result.
-The [checked measurements](results/v25-recurrent-credit.json) retain every age
+The [checked measurements](../docs/results/v25-recurrent-credit.json) retain every age
 bucket, source/endpoint hashes, replay checks, and intermediate quantities.
 Raw forks are in `runs/v25-recurrent-credit-probe`.
 

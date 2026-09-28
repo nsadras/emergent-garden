@@ -98,7 +98,7 @@ this is a community comparison, not a clean individual-fitness estimate.
 
 Artifacts: `runs/v1-pilot`, `runs/v1-maturation`, `runs/v1-assay`, and the
 30-second MP4 in `runs/v1-mature-video`. The MP4 decoder and image inspection were
-checked. [Compact numerical evidence](docs/results/v1.json) includes source
+checked. [Compact numerical evidence](../docs/results/v1.json) includes source
 hashes, seeds, final metrics, and sampled trajectories. A further assay of the
 revised preset is retained under `runs/v1-mature-assay`.
 
@@ -152,7 +152,7 @@ were 82/72 versus 80/98. Attacks materially alter the ecology; these observation
 do not establish evolved pursuit, escape, or an escalating arms race.
 
 Artifacts: `runs/v2-pilot`, `runs/v2-assay`, `runs/v2-video` (30-second MP4).
-[Compact evidence](docs/results/v2.json). Decision: retain predation at its tested
+[Compact evidence](../docs/results/v2.json). Decision: retain predation at its tested
 costs, then introduce forecast cues and direct tests of history dependence.
 
 ### V3 design — forecast cues and history probes
@@ -213,9 +213,9 @@ cue-aligned direction. All reset controls have zero history effect. Intrinsic
 dynamics can support circling or other movement patterns without adaptive recall.
 
 Artifacts: `runs/v3-pilot`, `runs/v3-short-food`, `runs/v3-assay`, `runs/v3-video`.
-[Compact trajectories](docs/results/v3.json) and independent-run probes
-([11](docs/results/v3-probe-11.json), [12](docs/results/v3-probe-12.json),
-[13](docs/results/v3-probe-13.json)) retain the numerical evidence. Additional
+[Compact trajectories](../docs/results/v3.json) and independent-run probes
+([11](../docs/results/v3-probe-11.json), [12](../docs/results/v3-probe-12.json),
+[13](../docs/results/v3-probe-13.json)) retain the numerical evidence. Additional
 community assays of evolutionary seeds 12/13 test whether the sensory effect
 generalizes; their results will be included in the next checkpoint report.
 
@@ -293,7 +293,7 @@ directional channels while preserving their instantaneous mean intensity.
 
 Artifacts: `runs/v4-pilot`, `runs/v4-recovery`, `runs/v4-seeded`, `runs/v4-body-assay`,
 and `runs/v4-video` (30-second recording and zoomed inspection).
-[Compact evidence](docs/results/v4.json).
+[Compact evidence](../docs/results/v4.json).
 
 Decision: retain the 45-second preset and explicit genotype transfer, keep the
 cost of extra body structure, and test persistent chemical trails in V5. Greater
@@ -373,7 +373,7 @@ Different feeding mechanisms coexist, but specialized scavenger lineages and
 broad morphological diversity were not sustained. Founding-lineage counts do
 not represent species counts.
 
-![V5 random-founder body composition and intake](docs/evolution-native.png)
+![V5 random-founder body composition and intake](../docs/evolution-native.png)
 
 The lower panels report community intake averaged over two-minute windows.
 Predation is a transfer between organisms, not another external energy source.
@@ -396,7 +396,7 @@ count. Their shared earlier ancestry and transfer initialization prevent treatin
 them as three further independent random origins, or as a paired comparison of
 one-module and two-module designs.
 
-![V5 runs initialized from V4](docs/evolution-long.png)
+![V5 runs initialized from V4](../docs/evolution-long.png)
 
 Survival is seed-dependent. A separate V5 check with the CLI's default seed 1
 became extinct at **732.17 seconds**, after six births. Seed 41 reached population
@@ -464,10 +464,10 @@ navigation. **Useful trail following and communication remain unestablished.**
   three-module creature is an early surviving founder, not a newly evolved body.
   Plots also regenerate from committed compact evidence without local raw runs.
 
-Artifacts: [V5 compact evidence](docs/results/v5.json),
-[final verification](docs/results/final-verification.json),
-[late video](runs/v5-late-video/timelapse.mp4), and
-[early video](runs/v5-video/timelapse.mp4). Videos and full states are local
+Artifacts: [V5 compact evidence](../docs/results/v5.json),
+[final verification](../docs/results/final-verification.json),
+[late video](../runs/v5-late-video/timelapse.mp4), and
+[early video](../runs/v5-video/timelapse.mp4). Videos and full states are local
 artifacts excluded from git. The final assays are under `runs/v5-late-assay-*`.
 Earlier evidence is in `docs/results/v1.json` through `v4.json`, including late
 V3/V4 comparisons completed during the next version.
