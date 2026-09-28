@@ -1,0 +1,4789 @@
+{
+  "completed": true,
+  "seconds": 30,
+  "script_sha256": "7299ba0be9495a02db5d8eb0d2bb9a4e7a1479b7c7c211fe5adc499c1ec4257d",
+  "source_sha256": "4194464562b97bbc269eb12320cef64f286955c7e5b4d1cbc8c43d3f0e29c5a2",
+  "trials": [
+    {
+      "source": "runs/v25-learning-pilot/seed-1",
+      "source_checkpoint_sha256": "bab8cb43503f4ec9d4f873dc1957a57e8b92f4e912b6dfa136a94fa2911c2c28",
+      "final_checkpoint_sha256": "1b1e45394933a6bfb2006e951fca1c2f047a9e9fcba8e6807f8d6066fb56b9f1",
+      "completed": true,
+      "exactly_passive": true,
+      "controller_calls": 324,
+      "maximum_motor_reconstruction_error": 5.960464477539063e-08,
+      "exact_hidden_and_inherited_motor_reconstruction": true,
+      "initial": {
+        "time": 600.0,
+        "tick": 18000,
+        "population": 132,
+        "food_count": 1416,
+        "food_energy": 22565.590855632545,
+        "living_energy": 8365.004213511944,
+        "mean_age": 99.9591064453125,
+        "generation_max": 13,
+        "generation_mean": 6.492424011230469,
+        "lineages": 2,
+        "genome_variance": 0.0060126599855721,
+        "contacts": 27,
+        "overlaps": 0,
+        "max_overlap": 0.0011019706726074219,
+        "births": 186,
+        "deaths": 246,
+        "blocked_births": 0,
+        "food_spawned": 416600.0,
+        "food_expired": 225341.3076025381,
+        "food_absorbed": 38621.97245203173,
+        "maintenance": 35410.29649161427,
+        "propulsion": 5011.17378979903,
+        "reproduction": 1967.7358660697937,
+        "death_energy": 0.0,
+        "organism_steps": 1292876,
+        "distance": 643150.6596101997,
+        "digestion_loss": 130071.1290897973,
+        "detritus_created": 62661.02860613528,
+        "fresh_absorbed": 30672.041989558424,
+        "detritus_absorbed": 7949.930462473335,
+        "predation_absorbed": 14346.53643970683,
+        "predation_loss": 7727.320764475535,
+        "predation_kills": 87,
+        "signaling_cost": 1229.6930920385962,
+        "signal_emitted": 2049488.5320165737,
+        "signal_decayed": 1935813.174513678,
+        "quality_reversals": 2,
+        "high_quality_absorbed": 25556.85500543919,
+        "low_quality_absorbed": 5115.18698411924,
+        "plasticity_cost": 947.6046787502535,
+        "plasticity_changes": 628.1021056919408,
+        "neural_maintenance": 948.0180464594218,
+        "neural_construction": 497.15603709220886,
+        "neural_structural_births": 27,
+        "shelter_agent_seconds": 967.766660053634,
+        "shelter_obstructed_demand": 202.22447982365338,
+        "fresh_processed": 179031.51335213165,
+        "detritus_processed": 52322.616795832655,
+        "motor_learning_cost": 947.6046787502535,
+        "motor_learning_changes": 5135.716194167039,
+        "growths": 33,
+        "growth_attempts": 11176,
+        "growth_unaffordable": 11095,
+        "growth_blocked": 48,
+        "development_cost": 812.5863552093506,
+        "module_mutation_events": 7,
+        "module_event_births": 7,
+        "internal_signaling_cost": 25.462103663031442,
+        "food_collected": 233339.39239778684,
+        "recurrent_learning_changes": 2654.756929193999,
+        "module_births_1": 186,
+        "planned_module_births_1": 175,
+        "structural_births": 9,
+        "planned_module_births_2": 11,
+        "energy_balance_error": -0.00044780677490052767,
+        "ecology_version": 25,
+        "mean_radius": 3.753685235977173,
+        "std_radius": 0.4942321479320526,
+        "mean_power": 0.8640595078468323,
+        "std_power": 0.029900088906288147,
+        "mean_diet": 0.7539185285568237,
+        "std_diet": 0.05163666978478432,
+        "grazers": 129,
+        "scavengers": 0,
+        "generalists": 3,
+        "mean_attack": 0.30242180824279785,
+        "mean_armor": 0.41751641035079956,
+        "meat_eaters": 25,
+        "mean_memory_tau": 2.0348317623138428,
+        "cue_patches": 0,
+        "module_histogram": [
+          124,
+          8,
+          0
+        ],
+        "mean_modules": 1.0606060028076172,
+        "signal_mass": 113675.35976466537,
+        "signal_balance_error": -0.002261769725009799,
+        "mean_secretion": 0.37461337447166443,
+        "patch_stock": [
+          2100.0,
+          2168.481918334961,
+          1300.0,
+          1962.0158882141113,
+          1042.7162704467773,
+          508.4796732873103,
+          700.0,
+          800.0,
+          1839.384407043457,
+          400.0
+        ],
+        "food_spawn_proposals": 13000,
+        "food_rejected_capacity": 8770,
+        "food_rejected_fertility": 64,
+        "fertility_spent": 416600.0,
+        "fertility_recovered": 329463.78056962154,
+        "fertility_remaining": 1565599.7805696223,
+        "fertility_balance_error": -6.984919309616089e-10,
+        "fertility_mean_fraction": 0.9472775933782662,
+        "fertility_depleted_fraction": 0.0018587360594795538,
+        "source_travel": 11993.89269465208,
+        "source_mean_displacement": 387.134765625,
+        "patch_positions": [
+          [
+            595.1122436523438,
+            719.1734008789062
+          ],
+          [
+            670.9962768554688,
+            104.14193725585938
+          ],
+          [
+            841.1981811523438,
+            542.1824340820312
+          ],
+          [
+            664.4744873046875,
+            808.0011596679688
+          ],
+          [
+            257.9059753417969,
+            854.5509643554688
+          ],
+          [
+            565.7334594726562,
+            91.77337646484375
+          ],
+          [
+            227.97171020507812,
+            243.3125
+          ],
+          [
+            419.3359069824219,
+            837.4490966796875
+          ],
+          [
+            656.8779296875,
+            268.16510009765625
+          ],
+          [
+            461.4288635253906,
+            351.03802490234375
+          ]
+        ],
+        "favorable_identity": 1,
+        "next_quality_reversal": 800.5666666666666,
+        "patch_identities": [
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mean_plastic_magnitude": 0.003791337708544147,
+        "mean_modulation": -0.08863206952810287,
+        "mean_neurons": 21.765151977539062,
+        "mean_connections": 1295.9241943359375,
+        "neuron_histogram": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          119,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "neural_timing_mean_seconds": 2.3592889050946932,
+        "neural_timing_std_seconds": 1.2114709947084474,
+        "neural_timing_min_seconds": 0.4513021409511566,
+        "neural_timing_max_seconds": 7.154849052429199,
+        "neural_timing_mean_within_log_std": 0.5151495083696027,
+        "mean_recurrent_plastic_magnitude": 0.0038119730990399405,
+        "recurrent_rows_saturated_fraction": 0.0,
+        "recurrent_noise_rms": 0.14764731485967633,
+        "mean_recurrent_learning_rate": 0.000181025912752375,
+        "juvenile_population": 1,
+        "adult_population": 131,
+        "adult_module_histogram": [
+          123,
+          8,
+          0
+        ],
+        "target_module_histogram": [
+          123,
+          9,
+          0
+        ],
+        "mean_internal_magnitude": 0.12449400942652054,
+        "mean_encoded_learning_rule": [
+          0.7726354598999023,
+          0.016617536544799805,
+          0.035495925694704056,
+          -0.0017139147967100143
+        ],
+        "mean_learning_rule": [
+          0.7726354598999023,
+          0.016617536544799805,
+          0.035495925694704056,
+          -0.0017139147967100143
+        ],
+        "mean_noncorrelation_rule_weight": 0.226221963763237,
+        "trophic_fresh_uptake": [
+          27809.789594595848,
+          2271.4798892494714,
+          590.7725057133047
+        ],
+        "trophic_detritus_introduced": [
+          48149.56424475006,
+          9463.00838119638,
+          5048.455980188665,
+          0.0
+        ],
+        "trophic_detritus_uptake": [
+          [
+            3747.0067230236973,
+            599.8195761824284,
+            1084.5301692038797
+          ],
+          [
+            460.19325979584903,
+            418.53628819118774,
+            633.2592999188917
+          ],
+          [
+            161.5805052458492,
+            194.78613476701574,
+            650.2185061445823
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "trophic_detritus_dissipated": [
+          34246.99261618055,
+          6787.212767919839,
+          3338.4809492588392,
+          0.0
+        ],
+        "trophic_detritus_expired": [
+          1970.9327211161096,
+          1019.5765061081117,
+          703.3898847723726,
+          0.0
+        ],
+        "trophic_predation_uptake": [
+          [
+            4446.5600942078045,
+            1448.0594322467223,
+            1200.8083532550372
+          ],
+          [
+            1226.7484083238232,
+            651.742201566376,
+            1373.6089181437565
+          ],
+          [
+            1376.7525118762483,
+            1215.4662841279933,
+            1406.7902354370483
+          ]
+        ],
+        "trophic_predation_kills": [
+          32.0,
+          23.0,
+          32.0
+        ],
+        "trophic_guilds": [
+          "grazer",
+          "generalist",
+          "scavenger"
+        ],
+        "trophic_producers": [
+          "grazer",
+          "generalist",
+          "scavenger",
+          "unattributed"
+        ],
+        "trophic_detritus_stock": [
+          6500.282439043434,
+          144.23025926249593,
+          0.0,
+          0.0
+        ],
+        "trophic_detritus_balance_error": [
+          -3.637978807091713e-11,
+          4.547473508864641e-12,
+          5.9117155615240335e-12,
+          0.0
+        ],
+        "shelter_patches": [
+          0,
+          1,
+          2,
+          7,
+          9
+        ],
+        "mean_shelter": 0.02796577662229538,
+        "sheltered_population": 4,
+        "sheltered_guilds": [
+          4,
+          0,
+          0
+        ],
+        "mean_motor_plastic_magnitude": 0.015762412356291704,
+        "motor_saturated_fraction": 0.0,
+        "motor_rows_saturated_fraction": 0.15357142857142858,
+        "mean_motor_learning_rate": 0.008120685815811157,
+        "mean_exploration_sigma": 0.07284964621067047,
+        "motor_noise_rms": 0.07674535318933214,
+        "mean_motor_value_norm": 0.0,
+        "motor_value_saturated_fraction": 0.0,
+        "mean_motor_predicted_return": 0.0,
+        "motor_value_error_rms": 0.0,
+        "detritus_energy": 6644.512698305931,
+        "carried_food_energy": 497.45399523361493,
+        "carried_food_count": 113,
+        "free_food_count": 1303,
+        "free_food_energy": 22068.136860398932,
+        "mean_gut_fullness": [
+          0.0069556692615151405,
+          0.07530568540096283
+        ]
+      },
+      "final": {
+        "time": 630.0,
+        "tick": 18900,
+        "population": 143,
+        "food_count": 1097,
+        "food_energy": 19736.845688955513,
+        "living_energy": 8389.473411679268,
+        "mean_age": 105.93402099609375,
+        "generation_max": 13,
+        "generation_mean": 7.314685344696045,
+        "lineages": 2,
+        "genome_variance": 0.0057400851510465145,
+        "contacts": 30,
+        "overlaps": 3,
+        "max_overlap": 0.021233081817626953,
+        "births": 213,
+        "deaths": 262,
+        "blocked_births": 0,
+        "food_spawned": 434600.0,
+        "food_expired": 231292.90024433954,
+        "food_absorbed": 42784.010447347435,
+        "maintenance": 38263.07613437537,
+        "propulsion": 5356.693488977418,
+        "reproduction": 2257.9385256767273,
+        "death_energy": 0.0,
+        "organism_steps": 1420536,
+        "distance": 706572.3034562569,
+        "digestion_loss": 140786.24361935715,
+        "detritus_created": 67391.90242168125,
+        "fresh_absorbed": 34167.60861089864,
+        "detritus_absorbed": 8616.401836448835,
+        "predation_absorbed": 15551.945568039844,
+        "predation_loss": 8376.387286996987,
+        "predation_kills": 90,
+        "signaling_cost": 1292.6942835324548,
+        "signal_emitted": 2154490.52015182,
+        "signal_decayed": 2022329.1733188543,
+        "quality_reversals": 2,
+        "high_quality_absorbed": 28786.535468979946,
+        "low_quality_absorbed": 5381.073141918693,
+        "plasticity_cost": 1037.5061005806772,
+        "plasticity_changes": 686.9361768850185,
+        "neural_maintenance": 1055.332456167935,
+        "neural_construction": 562.2510418891907,
+        "neural_structural_births": 33,
+        "shelter_agent_seconds": 1042.7022645097254,
+        "shelter_obstructed_demand": 210.66382005747437,
+        "fresh_processed": 192548.29591245227,
+        "detritus_processed": 58413.86057593357,
+        "motor_learning_cost": 1037.5061005806772,
+        "motor_learning_changes": 5829.8706931772695,
+        "growths": 33,
+        "growth_attempts": 11241,
+        "growth_unaffordable": 11160,
+        "growth_blocked": 48,
+        "development_cost": 812.5863552093506,
+        "module_mutation_events": 7,
+        "module_event_births": 7,
+        "internal_signaling_cost": 27.824938561956973,
+        "food_collected": 252606.23379272537,
+        "recurrent_learning_changes": 2908.7554730514958,
+        "module_births_1": 213,
+        "planned_module_births_1": 197,
+        "structural_births": 14,
+        "planned_module_births_2": 16,
+        "energy_balance_error": -0.0001747262394928839,
+        "ecology_version": 25,
+        "mean_radius": 3.754497766494751,
+        "std_radius": 0.47479772567749023,
+        "mean_power": 0.8656675219535828,
+        "std_power": 0.031003616750240326,
+        "mean_diet": 0.762973427772522,
+        "std_diet": 0.05685683339834213,
+        "grazers": 140,
+        "scavengers": 0,
+        "generalists": 3,
+        "mean_attack": 0.30219852924346924,
+        "mean_armor": 0.41874393820762634,
+        "meat_eaters": 35,
+        "mean_memory_tau": 2.0010061264038086,
+        "cue_patches": 0,
+        "module_histogram": [
+          135,
+          8,
+          0
+        ],
+        "mean_modules": 1.0559440851211548,
+        "signal_mass": 132161.34836429358,
+        "signal_balance_error": -0.0015313278418034315,
+        "mean_secretion": 0.36947154998779297,
+        "patch_stock": [
+          805.3726272583008,
+          607.9763460438087,
+          400.0,
+          239.69862365722656,
+          400.0,
+          1434.1706733703613,
+          2331.1939811706543,
+          2300.0,
+          1600.0,
+          2121.744110107422
+        ],
+        "food_spawn_proposals": 13505,
+        "food_rejected_capacity": 9093,
+        "food_rejected_fertility": 66,
+        "fertility_spent": 434600.0,
+        "fertility_recovered": 350855.3864477313,
+        "fertility_remaining": 1568991.386447732,
+        "fertility_balance_error": -6.984919309616089e-10,
+        "fertility_mean_fraction": 0.949329709310944,
+        "fertility_depleted_fraction": 0.0006195786864931846,
+        "source_travel": 12593.569077536464,
+        "source_mean_displacement": 370.20367431640625,
+        "patch_positions": [
+          [
+            651.1954345703125,
+            704.075927734375
+          ],
+          [
+            659.7604370117188,
+            162.50338745117188
+          ],
+          [
+            846.8623657226562,
+            599.2715454101562
+          ],
+          [
+            656.4027709960938,
+            755.9729614257812
+          ],
+          [
+            299.81097412109375,
+            883.3621215820312
+          ],
+          [
+            570.1326904296875,
+            111.92623901367188
+          ],
+          [
+            276.3687744140625,
+            209.63519287109375
+          ],
+          [
+            475.1562194824219,
+            822.0549926757812
+          ],
+          [
+            605.562255859375,
+            248.805419921875
+          ],
+          [
+            519.9769287109375,
+            359.10626220703125
+          ]
+        ],
+        "favorable_identity": 1,
+        "next_quality_reversal": 800.5666666666666,
+        "patch_identities": [
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mean_plastic_magnitude": 0.004111119962043807,
+        "mean_modulation": -0.09311698377132416,
+        "mean_neurons": 21.790210723876953,
+        "mean_connections": 1297.5245361328125,
+        "neuron_histogram": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          129,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "neural_timing_mean_seconds": 2.3214583077273105,
+        "neural_timing_std_seconds": 1.197691914589083,
+        "neural_timing_min_seconds": 0.4513021409511566,
+        "neural_timing_max_seconds": 7.154849052429199,
+        "neural_timing_mean_within_log_std": 0.5154444226535507,
+        "mean_recurrent_plastic_magnitude": 0.003782021045950416,
+        "recurrent_rows_saturated_fraction": 0.0,
+        "recurrent_noise_rms": 0.15116680040449185,
+        "mean_recurrent_learning_rate": 0.00017892637697514147,
+        "juvenile_population": 6,
+        "adult_population": 137,
+        "adult_module_histogram": [
+          129,
+          8,
+          0
+        ],
+        "target_module_histogram": [
+          129,
+          14,
+          0
+        ],
+        "mean_internal_magnitude": 0.13090018165376444,
+        "mean_encoded_learning_rule": [
+          0.7598000168800354,
+          0.007567404769361019,
+          0.04077330604195595,
+          0.006247357930988073
+        ],
+        "mean_learning_rule": [
+          0.7598000168800354,
+          0.007567404769361019,
+          0.04077330604195595,
+          0.006247357930988073
+        ],
+        "mean_noncorrelation_rule_weight": 0.2396724969148636,
+        "trophic_fresh_uptake": [
+          31261.091664683965,
+          2315.744440501596,
+          590.7725057133047
+        ],
+        "trophic_detritus_introduced": [
+          52670.43806387222,
+          9673.00837762009,
+          5048.455980188665,
+          0.0
+        ],
+        "trophic_detritus_uptake": [
+          [
+            4369.868872409137,
+            624.911823840168,
+            1084.5301692038797
+          ],
+          [
+            478.71023672828943,
+            418.53628819118774,
+            633.2592999188917
+          ],
+          [
+            161.5805052458492,
+            194.78613476701574,
+            650.2185061445823
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "trophic_detritus_dissipated": [
+          39502.16687582077,
+          6956.810914405032,
+          3338.4809492588392,
+          0.0
+        ],
+        "trophic_detritus_expired": [
+          2058.386127519305,
+          1019.5765061081117,
+          703.3898847723726,
+          0.0
+        ],
+        "trophic_predation_uptake": [
+          [
+            5532.707133692541,
+            1549.3511592531577,
+            1200.8083532550372
+          ],
+          [
+            1244.7187704189855,
+            651.742201566376,
+            1373.6089181437565
+          ],
+          [
+            1376.7525118762483,
+            1215.4662841279933,
+            1406.7902354370483
+          ]
+        ],
+        "trophic_predation_kills": [
+          35.0,
+          23.0,
+          32.0
+        ],
+        "trophic_guilds": [
+          "grazer",
+          "generalist",
+          "scavenger"
+        ],
+        "trophic_producers": [
+          "grazer",
+          "generalist",
+          "scavenger",
+          "unattributed"
+        ],
+        "trophic_detritus_stock": [
+          5030.57419507916,
+          166.11513226857977,
+          0.0,
+          0.0
+        ],
+        "trophic_detritus_balance_error": [
+          -1.8917489796876907e-10,
+          -2.7284841053187847e-12,
+          5.9117155615240335e-12,
+          0.0
+        ],
+        "shelter_patches": [
+          0,
+          1,
+          2,
+          7,
+          9
+        ],
+        "mean_shelter": 0.005384295247495174,
+        "sheltered_population": 1,
+        "sheltered_guilds": [
+          1,
+          0,
+          0
+        ],
+        "mean_motor_plastic_magnitude": 0.01577328724366214,
+        "motor_saturated_fraction": 0.0,
+        "motor_rows_saturated_fraction": 0.10596026490066225,
+        "mean_motor_learning_rate": 0.008113229647278786,
+        "mean_exploration_sigma": 0.07254717499017715,
+        "motor_noise_rms": 0.07739217104150392,
+        "mean_motor_value_norm": 0.0,
+        "motor_value_saturated_fraction": 0.0,
+        "mean_motor_predicted_return": 0.0,
+        "motor_value_error_rms": 0.0,
+        "detritus_energy": 5196.689327347739,
+        "carried_food_energy": 156.26904975054393,
+        "carried_food_count": 83,
+        "free_food_count": 1014,
+        "free_food_energy": 19580.57663920497,
+        "mean_gut_fullness": [
+          0.0,
+          0.032665301114320755
+        ]
+      },
+      "groups": {
+        "all": {
+          "input_drive": {
+            "count": 979984,
+            "mean": -0.013256076517871534,
+            "rms": 0.18743537662744753,
+            "mean_absolute": 0.13671765114491294,
+            "minimum": -1.0460312366485596,
+            "maximum": 0.9107941389083862
+          },
+          "field_mean_drive": {
+            "count": 979984,
+            "mean": -0.019905536388946286,
+            "rms": 0.16144921931769624,
+            "mean_absolute": 0.1145380173520095,
+            "minimum": -1.0198978185653687,
+            "maximum": 0.7609004974365234
+          },
+          "field_contrast_drive": {
+            "count": 979984,
+            "mean": 0.0006668581452945383,
+            "rms": 0.012188537651088668,
+            "mean_absolute": 0.0074216898917400945,
+            "minimum": -0.2624572515487671,
+            "maximum": 0.3164820075035095
+          },
+          "inherited_recurrent_drive": {
+            "count": 979984,
+            "mean": -0.02847486941878015,
+            "rms": 0.3102018540623484,
+            "mean_absolute": 0.2337977273808083,
+            "minimum": -1.2153904438018799,
+            "maximum": 1.4886668920516968
+          },
+          "local_recurrent_drive": {
+            "count": 979984,
+            "mean": -1.0537537424407425e-06,
+            "rms": 0.014009320373173054,
+            "mean_absolute": 0.007432529433864476,
+            "minimum": -0.1622612029314041,
+            "maximum": 0.1282128095626831
+          },
+          "acquired_recurrent_drive": {
+            "count": 979984,
+            "mean": 1.9686909312113685e-05,
+            "rms": 0.022516888425072174,
+            "mean_absolute": 0.010689876601542974,
+            "minimum": -0.24585512280464172,
+            "maximum": 0.26834163069725037
+          },
+          "hidden_noise": {
+            "count": 979984,
+            "mean": 0.0001504762658166059,
+            "rms": 0.15000661508397628,
+            "mean_absolute": 0.11967183834140487,
+            "minimum": -0.7419765591621399,
+            "maximum": 0.6670900583267212
+          },
+          "hidden": {
+            "count": 979984,
+            "mean": -0.040718448029645526,
+            "rms": 0.3113295590547736,
+            "mean_absolute": 0.24888134493991682,
+            "minimum": -0.855329692363739,
+            "maximum": 0.9045917391777039
+          },
+          "offset_hidden_effect": {
+            "count": 979984,
+            "mean": 9.679567424719964e-06,
+            "rms": 0.001236093437412315,
+            "mean_absolute": 0.0004962400878019209,
+            "minimum": -0.030721545219421387,
+            "maximum": 0.02277284860610962
+          },
+          "noise_hidden_effect": {
+            "count": 979984,
+            "mean": -6.927092889491604e-06,
+            "rms": 0.008292423070853672,
+            "mean_absolute": 0.0056946941004566085,
+            "minimum": -0.10982026159763336,
+            "maximum": 0.09418518841266632
+          },
+          "inherited_weight": {
+            "count": 10350984,
+            "mean": -0.016270949422262385,
+            "rms": 0.28506452065541765,
+            "mean_absolute": 0.23076966525861728,
+            "minimum": -1.0430667400360107,
+            "maximum": 0.9759684801101685
+          },
+          "acquired_weight": {
+            "count": 10350984,
+            "mean": -1.2958871187844462e-05,
+            "rms": 0.00678380908184562,
+            "mean_absolute": 0.0038062674709319136,
+            "minimum": -0.06824600696563721,
+            "maximum": 0.07429204881191254
+          },
+          "old_score_trace": {
+            "count": 10350984,
+            "mean": -0.012185437860751576,
+            "rms": 6.756410701273144,
+            "mean_absolute": 4.380480124183078,
+            "minimum": -66.84532928466797,
+            "maximum": 82.24955749511719
+          },
+          "reinforcement_proposal": {
+            "count": 10350984,
+            "mean": -6.273376398776742e-08,
+            "rms": 0.00013342875406704253,
+            "mean_absolute": 2.3893230207143065e-05,
+            "minimum": -0.009796097874641418,
+            "maximum": 0.010336719453334808
+          },
+          "decay_removed": {
+            "count": 10350984,
+            "mean": -7.451174634555339e-09,
+            "rms": 3.916496642051504e-06,
+            "mean_absolute": 2.196623347585224e-06,
+            "minimum": -3.940864189644344e-05,
+            "maximum": 4.28999301220756e-05
+          },
+          "applied_weight_change": {
+            "count": 10350984,
+            "mean": -5.528261841558895e-08,
+            "rms": 0.00013336844258575342,
+            "mean_absolute": 2.4538589167705834e-05,
+            "minimum": -0.00978175736963749,
+            "maximum": 0.010343417525291443
+          },
+          "reward": {
+            "count": 44968,
+            "mean": 0.0006609808468672938,
+            "rms": 0.10444462412842007,
+            "mean_absolute": 0.02364067798861829,
+            "minimum": -0.24578620493412018,
+            "maximum": 2.0129427909851074
+          },
+          "raw_advantage": {
+            "count": 44968,
+            "mean": -0.0025554793714717837,
+            "rms": 0.10324414151414443,
+            "mean_absolute": 0.025997708439966665,
+            "minimum": -0.30199316143989563,
+            "maximum": 1.9974536895751953
+          },
+          "advantage": {
+            "count": 44968,
+            "mean": -0.0036995007233211743,
+            "rms": 0.08774478143558555,
+            "mean_absolute": 0.024853687088117273,
+            "minimum": -0.30199316143989563,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 44968,
+            "mean": 0.0034913716420565738,
+            "rms": 0.059087829898013464,
+            "mean_absolute": 0.0034913716420565738,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 44968,
+            "mean": 0.0999392249681595,
+            "rms": 0.099956264563711,
+            "mean_absolute": 0.0999392249681595,
+            "minimum": 0.03333333507180214,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 44968,
+            "mean": 0.0001792608083217083,
+            "rms": 0.00018211379223656462,
+            "mean_absolute": 0.0001792608083217083,
+            "minimum": 0.00014033842307981104,
+            "maximum": 0.00036866002483293414
+          },
+          "age": {
+            "count": 44968,
+            "mean": 101.589622480209,
+            "rms": 142.36782543262993,
+            "mean_absolute": 101.589622480209,
+            "minimum": 0.0,
+            "maximum": 629.83447265625
+          },
+          "offset_motor_effect": {
+            "count": 89936,
+            "mean": 3.5284783606999203e-06,
+            "rms": 0.00021450972917355898,
+            "mean_absolute": 0.00010211411114663464,
+            "minimum": -0.001296401023864746,
+            "maximum": 0.0019086003303527832
+          },
+          "noise_motor_effect": {
+            "count": 89936,
+            "mean": -1.13043789959764e-05,
+            "rms": 0.0014433618418330664,
+            "mean_absolute": 0.0011335160870557684,
+            "minimum": -0.007714271545410156,
+            "maximum": 0.007542818784713745
+          },
+          "motor_noise": {
+            "count": 89936,
+            "mean": -0.0005189297314835763,
+            "rms": 0.0726822484302298,
+            "mean_absolute": 0.05770711252752746,
+            "minimum": -0.33672642707824707,
+            "maximum": 0.3593946397304535
+          }
+        },
+        "under_30": {
+          "input_drive": {
+            "count": 253523,
+            "mean": -0.009008632374741258,
+            "rms": 0.2166169990200954,
+            "mean_absolute": 0.16264230630830598,
+            "minimum": -0.9268246293067932,
+            "maximum": 0.9107941389083862
+          },
+          "field_mean_drive": {
+            "count": 253523,
+            "mean": -0.019977396636254342,
+            "rms": 0.18176184203577855,
+            "mean_absolute": 0.13167613556746707,
+            "minimum": -0.8448830842971802,
+            "maximum": 0.6884719133377075
+          },
+          "field_contrast_drive": {
+            "count": 253523,
+            "mean": 0.0007628542640907335,
+            "rms": 0.0139443445912586,
+            "mean_absolute": 0.008230244239598686,
+            "minimum": -0.2624572515487671,
+            "maximum": 0.3164820075035095
+          },
+          "inherited_recurrent_drive": {
+            "count": 253523,
+            "mean": -0.018655718446425825,
+            "rms": 0.34405261922261293,
+            "mean_absolute": 0.25689743036444473,
+            "minimum": -0.9946784377098083,
+            "maximum": 1.4886668920516968
+          },
+          "local_recurrent_drive": {
+            "count": 253523,
+            "mean": 0.0007110065920258715,
+            "rms": 0.004929880540707531,
+            "mean_absolute": 0.0022658034145998777,
+            "minimum": -0.03468022495508194,
+            "maximum": 0.06868710368871689
+          },
+          "acquired_recurrent_drive": {
+            "count": 253523,
+            "mean": 2.2082145791845654e-05,
+            "rms": 0.018904508190985585,
+            "mean_absolute": 0.00783642619365418,
+            "minimum": -0.17873027920722961,
+            "maximum": 0.26834163069725037
+          },
+          "hidden_noise": {
+            "count": 253523,
+            "mean": 0.0001325463258848739,
+            "rms": 0.15000644299556254,
+            "mean_absolute": 0.11961086913098012,
+            "minimum": -0.7419765591621399,
+            "maximum": 0.6451410055160522
+          },
+          "hidden": {
+            "count": 253523,
+            "mean": -0.025095962812231053,
+            "rms": 0.3461731350977947,
+            "mean_absolute": 0.2793681579003877,
+            "minimum": -0.8511255383491516,
+            "maximum": 0.9045917391777039
+          },
+          "offset_hidden_effect": {
+            "count": 253523,
+            "mean": -3.4352090676646122e-06,
+            "rms": 0.0009984385222052954,
+            "mean_absolute": 0.00036101525267471173,
+            "minimum": -0.0180017352104187,
+            "maximum": 0.01911422610282898
+          },
+          "noise_hidden_effect": {
+            "count": 253523,
+            "mean": -2.0711733582335233e-05,
+            "rms": 0.008407594089310078,
+            "mean_absolute": 0.005764517481687807,
+            "minimum": -0.0901862233877182,
+            "maximum": 0.08304472267627716
+          },
+          "inherited_weight": {
+            "count": 2682637,
+            "mean": -0.015645506973892435,
+            "rms": 0.28446680284693987,
+            "mean_absolute": 0.23022657458373433,
+            "minimum": -1.0430667400360107,
+            "maximum": 0.9759684801101685
+          },
+          "acquired_weight": {
+            "count": 2682637,
+            "mean": 1.6696069244568917e-06,
+            "rms": 0.004364775349246344,
+            "mean_absolute": 0.001992709436803404,
+            "minimum": -0.05669846385717392,
+            "maximum": 0.05122222751379013
+          },
+          "old_score_trace": {
+            "count": 2682637,
+            "mean": -0.016129138119542058,
+            "rms": 7.449136909172349,
+            "mean_absolute": 4.849612247399648,
+            "minimum": -61.921875,
+            "maximum": 66.5980453491211
+          },
+          "reinforcement_proposal": {
+            "count": 2682637,
+            "mean": -2.982497016615185e-08,
+            "rms": 0.00015109514829130498,
+            "mean_absolute": 3.1649575901902096e-05,
+            "minimum": -0.008225822821259499,
+            "maximum": 0.008832594379782677
+          },
+          "decay_removed": {
+            "count": 2682637,
+            "mean": 9.819035119550753e-10,
+            "rms": 2.5146593375071127e-06,
+            "mean_absolute": 1.1459814557634836e-06,
+            "minimum": -3.27405177813489e-05,
+            "maximum": 2.9578264729934745e-05
+          },
+          "applied_weight_change": {
+            "count": 2682637,
+            "mean": -3.0806774173511384e-08,
+            "rms": 0.00015095093668900783,
+            "mean_absolute": 3.168789608447838e-05,
+            "minimum": -0.008207261562347412,
+            "maximum": 0.008837757632136345
+          },
+          "reward": {
+            "count": 11580,
+            "mean": 0.002921867899578897,
+            "rms": 0.13611267387978201,
+            "mean_absolute": 0.0295825594437912,
+            "minimum": -0.17306987941265106,
+            "maximum": 1.9808200597763062
+          },
+          "raw_advantage": {
+            "count": 11580,
+            "mean": -0.004927468801172693,
+            "rms": 0.13490567145982704,
+            "mean_absolute": 0.03615884748546659,
+            "minimum": -0.30199316143989563,
+            "maximum": 1.9626693725585938
+          },
+          "advantage": {
+            "count": 11580,
+            "mean": -0.007567818575541585,
+            "rms": 0.10625063996727394,
+            "mean_absolute": 0.033518497711097696,
+            "minimum": -0.30199316143989563,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 11580,
+            "mean": 0.0062176165803108805,
+            "rms": 0.07885186478651524,
+            "mean_absolute": 0.0062176165803108805,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 11580,
+            "mean": 0.09976396976305825,
+            "rms": 0.09983003141352775,
+            "mean_absolute": 0.09976396976305825,
+            "minimum": 0.03333333507180214,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 11580,
+            "mean": 0.00017295203963656539,
+            "rms": 0.00017421837051177587,
+            "mean_absolute": 0.00017295203963656539,
+            "minimum": 0.00014033842307981104,
+            "maximum": 0.00036866002483293414
+          },
+          "age": {
+            "count": 11580,
+            "mean": 15.836799052830251,
+            "rms": 17.919055040786056,
+            "mean_absolute": 15.836799052830251,
+            "minimum": 0.0,
+            "maximum": 29.966552734375
+          },
+          "offset_motor_effect": {
+            "count": 23160,
+            "mean": 4.7621987953087205e-06,
+            "rms": 0.00017306714945407393,
+            "mean_absolute": 7.09687811620083e-05,
+            "minimum": -0.0011336207389831543,
+            "maximum": 0.0018492341041564941
+          },
+          "noise_motor_effect": {
+            "count": 23160,
+            "mean": -1.7591924221610364e-05,
+            "rms": 0.0014606795331621892,
+            "mean_absolute": 0.0011475591442591168,
+            "minimum": -0.007354944944381714,
+            "maximum": 0.007117271423339844
+          },
+          "motor_noise": {
+            "count": 23160,
+            "mean": -0.0005231938906927347,
+            "rms": 0.0710979529264476,
+            "mean_absolute": 0.0565701286060487,
+            "minimum": -0.33149728178977966,
+            "maximum": 0.29260754585266113
+          }
+        },
+        "30_to_120": {
+          "input_drive": {
+            "count": 444849,
+            "mean": -0.01383336494761778,
+            "rms": 0.18025192862427844,
+            "mean_absolute": 0.1308070629970593,
+            "minimum": -1.0460312366485596,
+            "maximum": 0.8307340145111084
+          },
+          "field_mean_drive": {
+            "count": 444849,
+            "mean": -0.01927902142848012,
+            "rms": 0.15844284838992687,
+            "mean_absolute": 0.11155033541605786,
+            "minimum": -1.0198978185653687,
+            "maximum": 0.7609004974365234
+          },
+          "field_contrast_drive": {
+            "count": 444849,
+            "mean": 0.0005875338203190613,
+            "rms": 0.011313753290954603,
+            "mean_absolute": 0.007043709046540595,
+            "minimum": -0.22027555108070374,
+            "maximum": 0.2663363814353943
+          },
+          "inherited_recurrent_drive": {
+            "count": 444849,
+            "mean": -0.03179680538821994,
+            "rms": 0.29778849121190415,
+            "mean_absolute": 0.22639251160742563,
+            "minimum": -1.014163851737976,
+            "maximum": 1.3951908349990845
+          },
+          "local_recurrent_drive": {
+            "count": 444849,
+            "mean": -0.0002520624065153114,
+            "rms": 0.011820680474604649,
+            "mean_absolute": 0.006577090712772843,
+            "minimum": -0.10495804250240326,
+            "maximum": 0.10274257510900497
+          },
+          "acquired_recurrent_drive": {
+            "count": 444849,
+            "mean": 3.2226642916986616e-05,
+            "rms": 0.023429104460285087,
+            "mean_absolute": 0.010737348104127695,
+            "minimum": -0.24585512280464172,
+            "maximum": 0.20537452399730682
+          },
+          "hidden_noise": {
+            "count": 444849,
+            "mean": 5.186673133872983e-05,
+            "rms": 0.14994303941599965,
+            "mean_absolute": 0.1196206376622232,
+            "minimum": -0.7307003736495972,
+            "maximum": 0.6670900583267212
+          },
+          "hidden": {
+            "count": 444849,
+            "mean": -0.0457635044800935,
+            "rms": 0.30063735697196886,
+            "mean_absolute": 0.2396448097978569,
+            "minimum": -0.855329692363739,
+            "maximum": 0.8859859704971313
+          },
+          "offset_hidden_effect": {
+            "count": 444849,
+            "mean": 8.488669553150672e-06,
+            "rms": 0.0012736516568089453,
+            "mean_absolute": 0.0004989915617745944,
+            "minimum": -0.030721545219421387,
+            "maximum": 0.02277284860610962
+          },
+          "noise_hidden_effect": {
+            "count": 444849,
+            "mean": -1.1314959667292483e-05,
+            "rms": 0.008311162387934556,
+            "mean_absolute": 0.0057091679139415685,
+            "minimum": -0.09949080646038055,
+            "maximum": 0.09418518841266632
+          },
+          "inherited_weight": {
+            "count": 4707897,
+            "mean": -0.016791205413869827,
+            "rms": 0.28469064928691074,
+            "mean_absolute": 0.23061467772409183,
+            "minimum": -1.0430667400360107,
+            "maximum": 0.9759684801101685
+          },
+          "acquired_weight": {
+            "count": 4707897,
+            "mean": -4.226457507945388e-05,
+            "rms": 0.0070008106366438345,
+            "mean_absolute": 0.0038851792749638827,
+            "minimum": -0.06824600696563721,
+            "maximum": 0.07429204881191254
+          },
+          "old_score_trace": {
+            "count": 4707897,
+            "mean": -0.0005790567680315275,
+            "rms": 6.5197616932428275,
+            "mean_absolute": 4.223756786437182,
+            "minimum": -66.84532928466797,
+            "maximum": 61.79317855834961
+          },
+          "reinforcement_proposal": {
+            "count": 4707897,
+            "mean": -1.0919421342796412e-07,
+            "rms": 0.00012085098062832803,
+            "mean_absolute": 1.962244819547618e-05,
+            "minimum": -0.009796097874641418,
+            "maximum": 0.00909797940403223
+          },
+          "decay_removed": {
+            "count": 4707897,
+            "mean": -2.435668098632749e-08,
+            "rms": 4.0428487891026345e-06,
+            "mean_absolute": 2.2432499962973146e-06,
+            "minimum": -3.940864189644344e-05,
+            "maximum": 4.28999301220756e-05
+          },
+          "applied_weight_change": {
+            "count": 4707897,
+            "mean": -8.483746473946017e-08,
+            "rms": 0.00012083168315514409,
+            "mean_absolute": 2.033108765859384e-05,
+            "minimum": -0.00978175736963749,
+            "maximum": 0.009083595126867294
+          },
+          "reward": {
+            "count": 20334,
+            "mean": -0.0012902877130629264,
+            "rms": 0.09058901449956275,
+            "mean_absolute": 0.021326284721984397,
+            "minimum": -0.24578620493412018,
+            "maximum": 2.0129427909851074
+          },
+          "raw_advantage": {
+            "count": 20334,
+            "mean": -0.0007520626908042077,
+            "rms": 0.08966228633454325,
+            "mean_absolute": 0.02102616196337325,
+            "minimum": -0.2457389384508133,
+            "maximum": 1.9974536895751953
+          },
+          "advantage": {
+            "count": 20334,
+            "mean": -0.0016186132080716791,
+            "rms": 0.07593161189709527,
+            "mean_absolute": 0.020159611446105778,
+            "minimum": -0.2457389384508133,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 20334,
+            "mean": 0.00226222091078981,
+            "rms": 0.04756281016497879,
+            "mean_absolute": 0.00226222091078981,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 20334,
+            "mean": 0.10000000894069672,
+            "rms": 0.1000000089406969,
+            "mean_absolute": 0.10000000894069672,
+            "minimum": 0.10000000894069672,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 20334,
+            "mean": 0.00018070956548618574,
+            "rms": 0.0001829087979024202,
+            "mean_absolute": 0.00018070956548618574,
+            "minimum": 0.00014932233898434788,
+            "maximum": 0.00036866002483293414
+          },
+          "age": {
+            "count": 20334,
+            "mean": 70.91459024631368,
+            "rms": 75.1003556667999,
+            "mean_absolute": 70.91459024631368,
+            "minimum": 30.066551208496094,
+            "maximum": 119.96517944335938
+          },
+          "offset_motor_effect": {
+            "count": 40668,
+            "mean": 2.100651333896509e-05,
+            "rms": 0.0002412990818119469,
+            "mean_absolute": 0.00010482806375658217,
+            "minimum": -0.001296401023864746,
+            "maximum": 0.0019086003303527832
+          },
+          "noise_motor_effect": {
+            "count": 40668,
+            "mean": -6.387904440276775e-06,
+            "rms": 0.0014495299693604864,
+            "mean_absolute": 0.0011393260758535413,
+            "minimum": -0.007714271545410156,
+            "maximum": 0.006902784109115601
+          },
+          "motor_noise": {
+            "count": 40668,
+            "mean": -0.0005118435755914386,
+            "rms": 0.07261426075652544,
+            "mean_absolute": 0.05780500583079199,
+            "minimum": -0.31692376732826233,
+            "maximum": 0.35567963123321533
+          }
+        },
+        "at_least_120": {
+          "input_drive": {
+            "count": 281612,
+            "mean": -0.01616795030455189,
+            "rms": 0.16937963328778322,
+            "mean_absolute": 0.12271548815468399,
+            "minimum": -1.006268858909607,
+            "maximum": 0.8352141976356506
+          },
+          "field_mean_drive": {
+            "count": 281612,
+            "mean": -0.02083051944424978,
+            "rms": 0.14597558648693626,
+            "mean_absolute": 0.10382881524836603,
+            "minimum": -0.964790403842926,
+            "maximum": 0.7517074346542358
+          },
+          "field_contrast_drive": {
+            "count": 281612,
+            "mean": 0.0007057418669237583,
+            "rms": 0.011820726620813482,
+            "mean_absolute": 0.007290861933677245,
+            "minimum": -0.2323286533355713,
+            "maximum": 0.2030819058418274
+          },
+          "inherited_recurrent_drive": {
+            "count": 281612,
+            "mean": -0.032067119457467645,
+            "rms": 0.29700026483228253,
+            "mean_absolute": 0.22469973735216273,
+            "minimum": -1.2153904438018799,
+            "maximum": 1.4851425886154175
+          },
+          "local_recurrent_drive": {
+            "count": 281612,
+            "mean": -0.0002455842668699387,
+            "rms": 0.02098495989434023,
+            "mean_absolute": 0.013435203113327394,
+            "minimum": -0.1622612029314041,
+            "maximum": 0.1282128095626831
+          },
+          "acquired_recurrent_drive": {
+            "count": 281612,
+            "mean": -2.2778347060574025e-06,
+            "rms": 0.023989748564204424,
+            "mean_absolute": 0.013183725078546359,
+            "minimum": -0.2157367616891861,
+            "maximum": 0.1683397889137268
+          },
+          "hidden_noise": {
+            "count": 281612,
+            "mean": 0.00032238657135849044,
+            "rms": 0.15010714248199405,
+            "mean_absolute": 0.11980760552486214,
+            "minimum": -0.72231525182724,
+            "maximum": 0.6664859652519226
+          },
+          "hidden": {
+            "count": 281612,
+            "mean": -0.046813255789432864,
+            "rms": 0.29434256711161144,
+            "mean_absolute": 0.2360259095864261,
+            "minimum": -0.8237125873565674,
+            "maximum": 0.8838829398155212
+          },
+          "offset_hidden_effect": {
+            "count": 281612,
+            "mean": 2.3367433026855325e-05,
+            "rms": 0.0013627565516471513,
+            "mean_absolute": 0.0006136307367468724,
+            "minimum": -0.019961833953857422,
+            "maximum": 0.02045878767967224
+          },
+          "noise_hidden_effect": {
+            "count": 281612,
+            "mean": 1.241392102543297e-05,
+            "rms": 0.008157283392866465,
+            "mean_absolute": 0.005608971565426681,
+            "minimum": -0.10982026159763336,
+            "maximum": 0.08546853065490723
+          },
+          "inherited_weight": {
+            "count": 2960450,
+            "mean": -0.016010355063718278,
+            "rms": 0.28619749272219,
+            "mean_absolute": 0.2315082625960627,
+            "minimum": -1.0430667400360107,
+            "maximum": 0.9759684801101685
+          },
+          "acquired_weight": {
+            "count": 2960450,
+            "mean": 2.038921400070674e-05,
+            "rms": 0.00810562423387001,
+            "mean_absolute": 0.005324147941310983,
+            "minimum": -0.06027049198746681,
+            "maximum": 0.06714338064193726
+          },
+          "old_score_trace": {
+            "count": 2960450,
+            "mean": -0.02706903004982165,
+            "rms": 6.459741709039969,
+            "mean_absolute": 4.204603531088989,
+            "minimum": -62.116519927978516,
+            "maximum": 82.24955749511719
+          },
+          "reinforcement_proposal": {
+            "count": 2960450,
+            "mean": -1.8669968751598302e-08,
+            "rms": 0.00013540500146739845,
+            "mean_absolute": 2.365642224714689e-05,
+            "minimum": -0.008902563713490963,
+            "maximum": 0.010336719453334808
+          },
+          "decay_removed": {
+            "count": 2960450,
+            "mean": 1.1791337543413833e-08,
+            "rms": 4.680711628080048e-06,
+            "mean_absolute": 3.0745227727264286e-06,
+            "minimum": -3.4803182643372566e-05,
+            "maximum": 3.8771930121583864e-05
+          },
+          "applied_weight_change": {
+            "count": 2960450,
+            "mean": -3.046160574063071e-08,
+            "rms": 0.00013537038614664892,
+            "mean_absolute": 2.4751221866435316e-05,
+            "minimum": -0.008910623379051685,
+            "maximum": 0.010343417525291443
+          },
+          "reward": {
+            "count": 13054,
+            "mean": 0.001694841948998497,
+            "rms": 0.09143430033258242,
+            "mean_absolute": 0.021974819664183735,
+            "minimum": -0.17625007033348083,
+            "maximum": 1.1819261312484741
+          },
+          "raw_advantage": {
+            "count": 13054,
+            "mean": -0.0032604768579707834,
+            "rms": 0.08973150491673583,
+            "mean_absolute": 0.024728016078097617,
+            "minimum": -0.19362862408161163,
+            "maximum": 1.1774399280548096
+          },
+          "advantage": {
+            "count": 13054,
+            "mean": -0.0035093403132070975,
+            "rms": 0.08675428652158147,
+            "mean_absolute": 0.024479152622861305,
+            "minimum": -0.19362862408161163,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 13054,
+            "mean": 0.002987590010724682,
+            "rms": 0.05465885116543049,
+            "mean_absolute": 0.002987590010724682,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 13054,
+            "mean": 0.10000000894069672,
+            "rms": 0.10000000894069652,
+            "mean_absolute": 0.10000000894069672,
+            "minimum": 0.10000000894069672,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 13054,
+            "mean": 0.00018260051363743304,
+            "rms": 0.00018764092877789125,
+            "mean_absolute": 0.00018260051363743304,
+            "minimum": 0.00014932233898434788,
+            "maximum": 0.00036866002483293414
+          },
+          "age": {
+            "count": 13054,
+            "mean": 225.4416066025526,
+            "rms": 246.4758503438647,
+            "mean_absolute": 225.4416066025526,
+            "minimum": 120.06517791748047,
+            "maximum": 629.83447265625
+          },
+          "offset_motor_effect": {
+            "count": 26108,
+            "mean": -2.4791181964167086e-05,
+            "rms": 0.00020308210526701087,
+            "mean_absolute": 0.00012551516897192186,
+            "minimum": -0.0012305974960327148,
+            "maximum": 0.0011241436004638672
+          },
+          "noise_motor_effect": {
+            "count": 26108,
+            "mean": -1.3385106734811612e-05,
+            "rms": 0.0014180570892613111,
+            "mean_absolute": 0.0011120085863181638,
+            "minimum": -0.005790024995803833,
+            "maximum": 0.007542818784713745
+          },
+          "motor_noise": {
+            "count": 26108,
+            "mean": -0.0005261850501804261,
+            "rms": 0.07416310310712122,
+            "mean_absolute": 0.05856322646824625,
+            "minimum": -0.33672642707824707,
+            "maximum": 0.3593946397304535
+          }
+        }
+      },
+      "output": "trial-0",
+      "derived": {
+        "absolute_advantage_mass_clipped": 0.044004699663862334,
+        "offset_to_noise_motor_effect_ratio": 0.14861812399109298
+      }
+    },
+    {
+      "source": "runs/v25-learning-pilot/seed-2",
+      "source_checkpoint_sha256": "9826accf5f058f11991617b69612b0405875c144e201d93ccf378d0d5acdacb9",
+      "final_checkpoint_sha256": "fc83998c6444e0a88ca5d8879690f9e16db9c21d2fb5e9a1d923507c027b424c",
+      "completed": true,
+      "exactly_passive": true,
+      "controller_calls": 301,
+      "maximum_motor_reconstruction_error": 5.960464477539063e-08,
+      "exact_hidden_and_inherited_motor_reconstruction": true,
+      "initial": {
+        "time": 600.0,
+        "tick": 18000,
+        "population": 14,
+        "food_count": 909,
+        "food_energy": 26016.313616222113,
+        "living_energy": 666.4038581848145,
+        "mean_age": 175.2827606201172,
+        "generation_max": 16,
+        "generation_mean": 8.285714149475098,
+        "lineages": 2,
+        "genome_variance": 0.016107114031910896,
+        "contacts": 3,
+        "overlaps": 0,
+        "max_overlap": 0,
+        "births": 172,
+        "deaths": 350,
+        "blocked_births": 0,
+        "food_spawned": 396700.0,
+        "food_expired": 227908.833154363,
+        "food_absorbed": 34270.93013434905,
+        "maintenance": 37769.384626284314,
+        "propulsion": 4902.519313956868,
+        "reproduction": 1517.0484476089478,
+        "death_energy": 0.0,
+        "organism_steps": 1374451,
+        "distance": 688743.3659460226,
+        "digestion_loss": 108503.92309506536,
+        "detritus_created": 51706.363651751235,
+        "fresh_absorbed": 25017.658548875203,
+        "detritus_absorbed": 9253.271585473698,
+        "predation_absorbed": 15043.981444057148,
+        "predation_loss": 8100.606242314842,
+        "predation_kills": 121,
+        "signaling_cost": 1606.8872270092038,
+        "signal_emitted": 2678145.4377811747,
+        "signal_decayed": 2629393.286179197,
+        "quality_reversals": 2,
+        "high_quality_absorbed": 20864.011239973588,
+        "low_quality_absorbed": 4153.647308901497,
+        "plasticity_cost": 1048.0928123470953,
+        "plasticity_changes": 1586.9549248966277,
+        "neural_maintenance": 1087.6421314983781,
+        "neural_construction": 487.86501932144165,
+        "neural_structural_births": 24,
+        "shelter_agent_seconds": 1298.4366776195423,
+        "shelter_obstructed_demand": 594.7816647047875,
+        "fresh_processed": 147732.47009230033,
+        "detritus_processed": 46748.74678886515,
+        "motor_learning_cost": 1048.0928123470953,
+        "motor_learning_changes": 4028.076094444091,
+        "growths": 36,
+        "growth_attempts": 15194,
+        "growth_unaffordable": 15079,
+        "growth_blocked": 79,
+        "development_cost": 873.762246131897,
+        "module_mutation_events": 6,
+        "module_event_births": 6,
+        "internal_signaling_cost": 31.791899587797378,
+        "food_collected": 195394.8979982375,
+        "recurrent_learning_changes": 6088.184000034958,
+        "module_births_1": 172,
+        "planned_module_births_1": 161,
+        "structural_births": 7,
+        "planned_module_births_2": 11,
+        "energy_balance_error": -0.007845524025469786,
+        "ecology_version": 25,
+        "mean_radius": 3.3854572772979736,
+        "std_radius": 0.9550480842590332,
+        "mean_power": 0.8481125235557556,
+        "std_power": 0.14621873199939728,
+        "mean_diet": 0.7266314625740051,
+        "std_diet": 0.149192675948143,
+        "grazers": 13,
+        "scavengers": 1,
+        "generalists": 0,
+        "mean_attack": 0.2819708287715912,
+        "mean_armor": 0.4639419615268707,
+        "meat_eaters": 2,
+        "mean_memory_tau": 2.307469606399536,
+        "cue_patches": 0,
+        "module_histogram": [
+          13,
+          1,
+          0
+        ],
+        "mean_modules": 1.0714285373687744,
+        "signal_mass": 48752.16969109606,
+        "signal_balance_error": -0.018089118413627148,
+        "mean_secretion": 0.540776789188385,
+        "patch_stock": [
+          1400.0,
+          2100.0,
+          2300.0,
+          709.0922164916992,
+          2400.0,
+          1943.7343978881836,
+          2289.1419162750244,
+          2400.0,
+          2300.0,
+          2400.0
+        ],
+        "food_spawn_proposals": 12999,
+        "food_rejected_capacity": 8999,
+        "food_rejected_fertility": 33,
+        "fertility_spent": 396700.0,
+        "fertility_recovered": 326350.0859261627,
+        "fertility_remaining": 1582386.085926164,
+        "fertility_balance_error": -1.1641532182693481e-09,
+        "fertility_mean_fraction": 0.9574342701593984,
+        "fertility_depleted_fraction": 0.0003097893432465923,
+        "source_travel": 11994.516295909882,
+        "source_mean_displacement": 382.2655334472656,
+        "patch_positions": [
+          [
+            403.8271179199219,
+            119.56723022460938
+          ],
+          [
+            779.8739013671875,
+            740.5091552734375
+          ],
+          [
+            284.63214111328125,
+            766.4777221679688
+          ],
+          [
+            533.41259765625,
+            649.7127685546875
+          ],
+          [
+            773.0679931640625,
+            750.1237182617188
+          ],
+          [
+            197.305419921875,
+            764.6185913085938
+          ],
+          [
+            261.12066650390625,
+            703.0775146484375
+          ],
+          [
+            752.4154052734375,
+            432.2524108886719
+          ],
+          [
+            445.4580383300781,
+            552.3675537109375
+          ],
+          [
+            651.2689819335938,
+            699.9224853515625
+          ]
+        ],
+        "favorable_identity": 1,
+        "next_quality_reversal": 718.4666666666667,
+        "patch_identities": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0
+        ],
+        "mean_plastic_magnitude": 0.018561373224219985,
+        "mean_modulation": -0.04024467244744301,
+        "mean_neurons": 21.64285659790039,
+        "mean_connections": 1293.5714111328125,
+        "neuron_histogram": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          10,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "neural_timing_mean_seconds": 2.2931111866098033,
+        "neural_timing_std_seconds": 1.4121059125393434,
+        "neural_timing_min_seconds": 0.8398258686065674,
+        "neural_timing_max_seconds": 10.413596153259277,
+        "neural_timing_mean_within_log_std": 0.5030858809793106,
+        "mean_recurrent_plastic_magnitude": 0.009511264695319382,
+        "recurrent_rows_saturated_fraction": 0.0,
+        "recurrent_noise_rms": 0.1435686116815746,
+        "mean_recurrent_learning_rate": 0.0005837594508193433,
+        "juvenile_population": 0,
+        "adult_population": 14,
+        "adult_module_histogram": [
+          13,
+          1,
+          0
+        ],
+        "target_module_histogram": [
+          13,
+          1,
+          0
+        ],
+        "mean_internal_magnitude": 0.09137854708824307,
+        "mean_encoded_learning_rule": [
+          0.8159645199775696,
+          -0.05040047690272331,
+          -0.05099993944168091,
+          -0.021853774785995483
+        ],
+        "mean_learning_rule": [
+          0.8159645199775696,
+          -0.05040047690272331,
+          -0.05099993944168091,
+          -0.021853774785995483
+        ],
+        "mean_noncorrelation_rule_weight": 0.18320031464099884,
+        "trophic_fresh_uptake": [
+          22087.118435052944,
+          2042.1682642419034,
+          888.371849580426
+        ],
+        "trophic_detritus_introduced": [
+          38364.561039800035,
+          7263.7657914959545,
+          6078.036820454705,
+          0.0
+        ],
+        "trophic_detritus_uptake": [
+          [
+            2502.197035403303,
+            638.2076057318448,
+            3236.6220183879454
+          ],
+          [
+            242.1755238396678,
+            476.18995442465445,
+            938.7880721018424
+          ],
+          [
+            309.6402290592453,
+            206.46384054991196,
+            702.9873059753245
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "trophic_detritus_dissipated": [
+          27926.10515201999,
+          5142.469813078741,
+          4426.900238292549,
+          0.0
+        ],
+        "trophic_detritus_expired": [
+          1807.527914351156,
+          396.395142980397,
+          279.3487199871691,
+          0.0
+        ],
+        "trophic_predation_uptake": [
+          [
+            5082.694429555117,
+            1093.2349668866955,
+            2196.966034183046
+          ],
+          [
+            1018.7743042036891,
+            635.9506662683561,
+            874.6162345170742
+          ],
+          [
+            2014.548863601638,
+            937.2309866802773,
+            1189.9649584902445
+          ]
+        ],
+        "trophic_predation_kills": [
+          80.0,
+          16.0,
+          25.0
+        ],
+        "trophic_guilds": [
+          "grazer",
+          "generalist",
+          "scavenger"
+        ],
+        "trophic_producers": [
+          "grazer",
+          "generalist",
+          "scavenger",
+          "unattributed"
+        ],
+        "trophic_detritus_stock": [
+          2253.9013139059216,
+          67.74728507063583,
+          152.69648659064958,
+          0.0
+        ],
+        "trophic_detritus_balance_error": [
+          -1.2369127944111824e-10,
+          1.4551915228366852e-11,
+          -1.4370016288012266e-10,
+          0.0
+        ],
+        "shelter_patches": [
+          1,
+          2,
+          4,
+          7,
+          9
+        ],
+        "mean_shelter": 0.0,
+        "sheltered_population": 0,
+        "sheltered_guilds": [
+          0,
+          0,
+          0
+        ],
+        "mean_motor_plastic_magnitude": 0.01097017306330751,
+        "motor_saturated_fraction": 0.0,
+        "motor_rows_saturated_fraction": 0.0,
+        "mean_motor_learning_rate": 0.0044385395012795925,
+        "mean_exploration_sigma": 0.07198365032672882,
+        "motor_noise_rms": 0.05973796313816211,
+        "mean_motor_value_norm": 0.0,
+        "motor_value_saturated_fraction": 0.0,
+        "mean_motor_predicted_return": 0.0,
+        "motor_value_error_rms": 0.0,
+        "detritus_energy": 2474.3450855672063,
+        "carried_food_energy": 0.0,
+        "carried_food_count": 0,
+        "free_food_count": 909,
+        "free_food_energy": 26016.313616222113,
+        "mean_gut_fullness": [
+          0.0,
+          0.0
+        ]
+      },
+      "final": {
+        "time": 630.0,
+        "tick": 18900,
+        "population": 15,
+        "food_count": 822,
+        "food_energy": 18416.528960030515,
+        "living_energy": 537.2986931800842,
+        "mean_age": 193.2089080810547,
+        "generation_max": 16,
+        "generation_mean": 8.466666221618652,
+        "lineages": 2,
+        "genome_variance": 0.015185493044555187,
+        "contacts": 5,
+        "overlaps": 0,
+        "max_overlap": 0,
+        "births": 173,
+        "deaths": 350,
+        "blocked_births": 0,
+        "food_spawned": 409200.0,
+        "food_expired": 247319.19498146494,
+        "food_absorbed": 34498.023343673594,
+        "maintenance": 38056.951480671836,
+        "propulsion": 4944.755961261947,
+        "reproduction": 1525.4627876281738,
+        "death_energy": 0.0,
+        "organism_steps": 1387776,
+        "distance": 695931.7770993363,
+        "digestion_loss": 108966.25271483047,
+        "detritus_created": 51997.15867524706,
+        "fresh_absorbed": 25218.426315929624,
+        "detritus_absorbed": 9279.597027743766,
+        "predation_absorbed": 15077.374053414982,
+        "predation_loss": 8118.586880982783,
+        "predation_kills": 121,
+        "signaling_cost": 1618.7060853437074,
+        "signal_emitted": 2697843.535452266,
+        "signal_decayed": 2659151.9718577233,
+        "quality_reversals": 2,
+        "high_quality_absorbed": 21057.56094343969,
+        "low_quality_absorbed": 4160.865372489817,
+        "plasticity_cost": 1057.5761455788602,
+        "plasticity_changes": 1592.6421919372588,
+        "neural_maintenance": 1098.7196406916519,
+        "neural_construction": 490.28201937675476,
+        "neural_structural_births": 24,
+        "shelter_agent_seconds": 1301.2900540222038,
+        "shelter_obstructed_demand": 594.7816647047875,
+        "fresh_processed": 148563.31303072348,
+        "detritus_processed": 46898.12170302737,
+        "motor_learning_cost": 1057.5761455788602,
+        "motor_learning_changes": 4067.265538946215,
+        "growths": 36,
+        "growth_attempts": 15194,
+        "growth_unaffordable": 15079,
+        "growth_blocked": 79,
+        "development_cost": 873.762246131897,
+        "module_mutation_events": 6,
+        "module_event_births": 6,
+        "internal_signaling_cost": 31.902686530210428,
+        "food_collected": 196435.15666713004,
+        "recurrent_learning_changes": 6137.570259887356,
+        "module_births_1": 173,
+        "planned_module_births_1": 162,
+        "structural_births": 7,
+        "planned_module_births_2": 11,
+        "energy_balance_error": -0.007951574480102863,
+        "ecology_version": 25,
+        "mean_radius": 3.3662729263305664,
+        "std_radius": 0.925451934337616,
+        "mean_power": 0.8445965051651001,
+        "std_power": 0.14187197387218475,
+        "mean_diet": 0.7287160754203796,
+        "std_diet": 0.14434471726417542,
+        "grazers": 14,
+        "scavengers": 1,
+        "generalists": 0,
+        "mean_attack": 0.27825960516929626,
+        "mean_armor": 0.4634105861186981,
+        "meat_eaters": 2,
+        "mean_memory_tau": 2.306647300720215,
+        "cue_patches": 0,
+        "module_histogram": [
+          14,
+          1,
+          0
+        ],
+        "mean_modules": 1.0666667222976685,
+        "signal_mass": 38691.58141408395,
+        "signal_balance_error": -0.017819541040807962,
+        "mean_secretion": 0.5582754611968994,
+        "patch_stock": [
+          2300.0,
+          1000.0,
+          600.0,
+          2300.0,
+          700.0,
+          2342.0071744918823,
+          1100.0,
+          600.0,
+          1009.0922164916992,
+          1100.0
+        ],
+        "food_spawn_proposals": 13368,
+        "food_rejected_capacity": 9243,
+        "food_rejected_fertility": 33,
+        "fertility_spent": 409200.0,
+        "fertility_recovered": 343416.37999388896,
+        "fertility_remaining": 1586952.3799938895,
+        "fertility_balance_error": -4.656612873077393e-10,
+        "fertility_mean_fraction": 0.9601971397693823,
+        "fertility_depleted_fraction": 0.0,
+        "source_travel": 12594.414558321238,
+        "source_mean_displacement": 366.68011474609375,
+        "patch_positions": [
+          [
+            423.355712890625,
+            101.4996337890625
+          ],
+          [
+            722.6707153320312,
+            724.3547973632812
+          ],
+          [
+            337.57037353515625,
+            780.4833984375
+          ],
+          [
+            485.6379089355469,
+            619.9287109375
+          ],
+          [
+            788.9329833984375,
+            694.2374877929688
+          ],
+          [
+            168.05258178710938,
+            714.843017578125
+          ],
+          [
+            309.9649658203125,
+            734.63525390625
+          ],
+          [
+            706.7600708007812,
+            468.96600341796875
+          ],
+          [
+            396.4689636230469,
+            519.7649536132812
+          ],
+          [
+            706.2265625,
+            718.020751953125
+          ]
+        ],
+        "favorable_identity": 1,
+        "next_quality_reversal": 718.4666666666667,
+        "patch_identities": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0
+        ],
+        "mean_plastic_magnitude": 0.018094637058718832,
+        "mean_modulation": -0.08865736424922943,
+        "mean_neurons": 21.66666603088379,
+        "mean_connections": 1295.13330078125,
+        "neuron_histogram": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          11,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "neural_timing_mean_seconds": 2.2894964625285223,
+        "neural_timing_std_seconds": 1.4037449201818566,
+        "neural_timing_min_seconds": 0.8398258686065674,
+        "neural_timing_max_seconds": 10.413596153259277,
+        "neural_timing_mean_within_log_std": 0.5024582611492566,
+        "mean_recurrent_plastic_magnitude": 0.009639748282576193,
+        "recurrent_rows_saturated_fraction": 0.0,
+        "recurrent_noise_rms": 0.1443833180517944,
+        "mean_recurrent_learning_rate": 0.0005850791349075735,
+        "juvenile_population": 0,
+        "adult_population": 15,
+        "adult_module_histogram": [
+          14,
+          1,
+          0
+        ],
+        "target_module_histogram": [
+          14,
+          1,
+          0
+        ],
+        "mean_internal_magnitude": 0.08751804232451832,
+        "mean_encoded_learning_rule": [
+          0.8074743151664734,
+          -0.05867583304643631,
+          -0.05672373250126839,
+          -0.02039685659110546
+        ],
+        "mean_learning_rule": [
+          0.8074743151664734,
+          -0.05867583304643631,
+          -0.05672373250126839,
+          -0.02039685659110546
+        ],
+        "mean_noncorrelation_rule_weight": 0.19174614548683167,
+        "trophic_fresh_uptake": [
+          22280.20345962522,
+          2042.1682642419034,
+          896.0545920626082
+        ],
+        "trophic_detritus_introduced": [
+          38600.05857530976,
+          7263.7657914959545,
+          6133.334308440832,
+          0.0
+        ],
+        "trophic_detritus_uptake": [
+          [
+            2514.689280070835,
+            638.2076057318448,
+            3250.145259010506
+          ],
+          [
+            242.1755238396678,
+            476.18995442465445,
+            938.7880721018424
+          ],
+          [
+            309.95018603921085,
+            206.46384054991196,
+            702.9873059753245
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "trophic_detritus_dissipated": [
+          28046.649225114594,
+          5142.469813078741,
+          4429.405637090063,
+          0.0
+        ],
+        "trophic_detritus_expired": [
+          1883.0928461735762,
+          464.1424280510328,
+          286.37212894806635,
+          0.0
+        ],
+        "trophic_predation_uptake": [
+          [
+            5087.982149050711,
+            1093.2349668866955,
+            2220.043985971948
+          ],
+          [
+            1018.7743042036891,
+            635.9506662683561,
+            874.6162345170742
+          ],
+          [
+            2019.575801674975,
+            937.2309866802773,
+            1189.9649584902445
+          ]
+        ],
+        "trophic_predation_kills": [
+          80.0,
+          16.0,
+          25.0
+        ],
+        "trophic_guilds": [
+          "grazer",
+          "generalist",
+          "scavenger"
+        ],
+        "trophic_producers": [
+          "grazer",
+          "generalist",
+          "scavenger",
+          "unattributed"
+        ],
+        "trophic_detritus_stock": [
+          2267.2743592085294,
+          0.0,
+          198.15520983840375,
+          0.0
+        ],
+        "trophic_detritus_balance_error": [
+          -1.2005330063402653e-10,
+          1.546140993013978e-11,
+          -1.482476363889873e-10,
+          0.0
+        ],
+        "shelter_patches": [
+          1,
+          2,
+          4,
+          7,
+          9
+        ],
+        "mean_shelter": 0.03027692809700966,
+        "sheltered_population": 0,
+        "sheltered_guilds": [
+          0,
+          0,
+          0
+        ],
+        "mean_motor_plastic_magnitude": 0.012665900763734673,
+        "motor_saturated_fraction": 0.0,
+        "motor_rows_saturated_fraction": 0.0,
+        "mean_motor_learning_rate": 0.004431689158082008,
+        "mean_exploration_sigma": 0.07179471850395203,
+        "motor_noise_rms": 0.06302553517271892,
+        "mean_motor_value_norm": 0.0,
+        "motor_value_saturated_fraction": 0.0,
+        "mean_motor_predicted_return": 0.0,
+        "motor_value_error_rms": 0.0,
+        "detritus_energy": 2465.4295690469326,
+        "carried_food_energy": 60.040816307067864,
+        "carried_food_count": 6,
+        "free_food_count": 816,
+        "free_food_energy": 18356.488143723447,
+        "mean_gut_fullness": [
+          0.04367905110120773,
+          0.0
+        ]
+      },
+      "groups": {
+        "all": {
+          "input_drive": {
+            "count": 101024,
+            "mean": -0.011379668246906189,
+            "rms": 0.17770154382779502,
+            "mean_absolute": 0.137125950640062,
+            "minimum": -0.7154251337051392,
+            "maximum": 0.7291120290756226
+          },
+          "field_mean_drive": {
+            "count": 101024,
+            "mean": -0.018821767681939026,
+            "rms": 0.1379963871171149,
+            "mean_absolute": 0.10123297777993596,
+            "minimum": -0.623140275478363,
+            "maximum": 0.6726329326629639
+          },
+          "field_contrast_drive": {
+            "count": 101024,
+            "mean": 0.0011667485659062398,
+            "rms": 0.01374327134490127,
+            "mean_absolute": 0.009423415828296979,
+            "minimum": -0.12632128596305847,
+            "maximum": 0.12143527716398239
+          },
+          "inherited_recurrent_drive": {
+            "count": 101024,
+            "mean": -0.04799305306875478,
+            "rms": 0.25974424871329554,
+            "mean_absolute": 0.19507940952100927,
+            "minimum": -1.6129831075668335,
+            "maximum": 0.9151001572608948
+          },
+          "local_recurrent_drive": {
+            "count": 101024,
+            "mean": -0.012284614007646386,
+            "rms": 0.1463799594239425,
+            "mean_absolute": 0.05415276221593614,
+            "minimum": -1.0152621269226074,
+            "maximum": 0.8099159002304077
+          },
+          "acquired_recurrent_drive": {
+            "count": 101024,
+            "mean": 0.0012460185583654034,
+            "rms": 0.03350707863284285,
+            "mean_absolute": 0.020162279170550513,
+            "minimum": -0.1774192452430725,
+            "maximum": 0.22980523109436035
+          },
+          "hidden_noise": {
+            "count": 101024,
+            "mean": -0.00035355637227368284,
+            "rms": 0.14995076446702119,
+            "mean_absolute": 0.11969208569846036,
+            "minimum": -0.6820670962333679,
+            "maximum": 0.6351084113121033
+          },
+          "hidden": {
+            "count": 101024,
+            "mean": -0.05784244413968059,
+            "rms": 0.28863996512648593,
+            "mean_absolute": 0.21605095716821013,
+            "minimum": -0.987998902797699,
+            "maximum": 0.9517437219619751
+          },
+          "offset_hidden_effect": {
+            "count": 101024,
+            "mean": 4.062393292904388e-05,
+            "rms": 0.0015359752960675485,
+            "mean_absolute": 0.0008829585801095236,
+            "minimum": -0.010909035801887512,
+            "maximum": 0.013206064701080322
+          },
+          "noise_hidden_effect": {
+            "count": 101024,
+            "mean": 4.714060090230837e-05,
+            "rms": 0.008170743317725054,
+            "mean_absolute": 0.005872770519856436,
+            "minimum": -0.05386894941329956,
+            "maximum": 0.049359485507011414
+          },
+          "inherited_weight": {
+            "count": 1077538,
+            "mean": -0.009735776440469558,
+            "rms": 0.29192599658157337,
+            "mean_absolute": 0.23435167938862428,
+            "minimum": -0.8178746104240417,
+            "maximum": 0.802028238773346
+          },
+          "acquired_weight": {
+            "count": 1077538,
+            "mean": 8.84731838682774e-05,
+            "rms": 0.01489342536657243,
+            "mean_absolute": 0.00969334594969716,
+            "minimum": -0.08188793808221817,
+            "maximum": 0.09250206500291824
+          },
+          "old_score_trace": {
+            "count": 1077538,
+            "mean": 0.00916935076132603,
+            "rms": 6.124062719684108,
+            "mean_absolute": 3.6961641210121887,
+            "minimum": -86.5759048461914,
+            "maximum": 96.43197631835938
+          },
+          "reinforcement_proposal": {
+            "count": 1077538,
+            "mean": 5.964066844813098e-07,
+            "rms": 0.00024428865843066606,
+            "mean_absolute": 4.415858821737048e-05,
+            "minimum": -0.020312698557972908,
+            "maximum": 0.01424601674079895
+          },
+          "decay_removed": {
+            "count": 1077538,
+            "mean": 5.0774837772113466e-08,
+            "rms": 8.60125937378769e-06,
+            "mean_absolute": 5.595951977334275e-06,
+            "minimum": -4.7286172048188746e-05,
+            "maximum": 5.3415300499182194e-05
+          },
+          "applied_weight_change": {
+            "count": 1077538,
+            "mean": 5.437431537008713e-07,
+            "rms": 0.000244247457448247,
+            "mean_absolute": 4.5832499505728e-05,
+            "minimum": -0.020306460559368134,
+            "maximum": 0.014262905344367027
+          },
+          "reward": {
+            "count": 4742,
+            "mean": -0.003661086298546078,
+            "rms": 0.0857363867204105,
+            "mean_absolute": 0.018830954211371168,
+            "minimum": -0.41772618889808655,
+            "maximum": 1.1184089183807373
+          },
+          "raw_advantage": {
+            "count": 4742,
+            "mean": -0.005024593046450348,
+            "rms": 0.08443812091160162,
+            "mean_absolute": 0.021315764769556492,
+            "minimum": -0.3962998688220978,
+            "maximum": 1.104423999786377
+          },
+          "advantage": {
+            "count": 4742,
+            "mean": -0.005261880545086968,
+            "rms": 0.08146615027020959,
+            "mean_absolute": 0.02107847727091987,
+            "minimum": -0.3962998688220978,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 4742,
+            "mean": 0.003795866722901729,
+            "rms": 0.06161060560408191,
+            "mean_absolute": 0.003795866722901729,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 4742,
+            "mean": 0.09997892078956513,
+            "rms": 0.09998477744946298,
+            "mean_absolute": 0.09997892078956513,
+            "minimum": 0.03333333507180214,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 4742,
+            "mean": 0.0005920101429003074,
+            "rms": 0.000593649245435584,
+            "mean_absolute": 0.0005920101429003074,
+            "minimum": 0.000553275749552995,
+            "maximum": 0.0006982060149312019
+          },
+          "age": {
+            "count": 4742,
+            "mean": 208.00365811285812,
+            "rms": 284.28292528106465,
+            "mean_absolute": 208.00365811285812,
+            "minimum": 0.0,
+            "maximum": 629.83447265625
+          },
+          "offset_motor_effect": {
+            "count": 9484,
+            "mean": 8.223999255521044e-05,
+            "rms": 0.00039826919783819453,
+            "mean_absolute": 0.00025289580822996526,
+            "minimum": -0.0009492635726928711,
+            "maximum": 0.0023031234741210938
+          },
+          "noise_motor_effect": {
+            "count": 9484,
+            "mean": 1.5729432591704165e-05,
+            "rms": 0.0018982307212275732,
+            "mean_absolute": 0.0014799022721067757,
+            "minimum": -0.008314192295074463,
+            "maximum": 0.008592307567596436
+          },
+          "motor_noise": {
+            "count": 9484,
+            "mean": -0.0013145783034898635,
+            "rms": 0.07384305286933461,
+            "mean_absolute": 0.05840840388694333,
+            "minimum": -0.31052273511886597,
+            "maximum": 0.34527960419654846
+          }
+        },
+        "under_30": {
+          "input_drive": {
+            "count": 23694,
+            "mean": -0.009678973731138877,
+            "rms": 0.15937503752545773,
+            "mean_absolute": 0.11577048962457055,
+            "minimum": -0.7154251337051392,
+            "maximum": 0.5957261323928833
+          },
+          "field_mean_drive": {
+            "count": 23694,
+            "mean": -0.014132644097030089,
+            "rms": 0.15028009583871088,
+            "mean_absolute": 0.10538934158601602,
+            "minimum": -0.5545275807380676,
+            "maximum": 0.5396816730499268
+          },
+          "field_contrast_drive": {
+            "count": 23694,
+            "mean": 6.209838311121685e-06,
+            "rms": 0.010145227215118907,
+            "mean_absolute": 0.0065539732295062944,
+            "minimum": -0.11016180366277695,
+            "maximum": 0.09562375396490097
+          },
+          "inherited_recurrent_drive": {
+            "count": 23694,
+            "mean": -0.0590208537691159,
+            "rms": 0.2117331863823565,
+            "mean_absolute": 0.16706461420871255,
+            "minimum": -0.716158926486969,
+            "maximum": 0.6429908871650696
+          },
+          "local_recurrent_drive": {
+            "count": 23694,
+            "mean": 0.0006053444558605575,
+            "rms": 0.0013103883417145443,
+            "mean_absolute": 0.0007567043534604972,
+            "minimum": -0.003462646622210741,
+            "maximum": 0.008189376443624496
+          },
+          "acquired_recurrent_drive": {
+            "count": 23694,
+            "mean": 0.003569397446742855,
+            "rms": 0.01933493576418488,
+            "mean_absolute": 0.010946453688116062,
+            "minimum": -0.07331977784633636,
+            "maximum": 0.14142325520515442
+          },
+          "hidden_noise": {
+            "count": 23694,
+            "mean": -0.0003879169331181182,
+            "rms": 0.15037551227094526,
+            "mean_absolute": 0.11976401624069667,
+            "minimum": -0.6820670962333679,
+            "maximum": 0.6351084113121033
+          },
+          "hidden": {
+            "count": 23694,
+            "mean": -0.05109272465150743,
+            "rms": 0.21216549390975045,
+            "mean_absolute": 0.16392733424462833,
+            "minimum": -0.6665536165237427,
+            "maximum": 0.8073435425758362
+          },
+          "offset_hidden_effect": {
+            "count": 23694,
+            "mean": 0.0001597726440816241,
+            "rms": 0.001007221467008705,
+            "mean_absolute": 0.000543598784482635,
+            "minimum": -0.006416618824005127,
+            "maximum": 0.007647857069969177
+          },
+          "noise_hidden_effect": {
+            "count": 23694,
+            "mean": 3.354253037563429e-05,
+            "rms": 0.008703398609103595,
+            "mean_absolute": 0.006346491168299034,
+            "minimum": -0.05386894941329956,
+            "maximum": 0.049359485507011414
+          },
+          "inherited_weight": {
+            "count": 257682,
+            "mean": -0.007901946504207042,
+            "rms": 0.2931391251901313,
+            "mean_absolute": 0.2363882940635224,
+            "minimum": -0.8013666868209839,
+            "maximum": 0.802028238773346
+          },
+          "acquired_weight": {
+            "count": 257682,
+            "mean": -0.0001238395468533501,
+            "rms": 0.009865019552133593,
+            "mean_absolute": 0.005563107464261328,
+            "minimum": -0.08188793808221817,
+            "maximum": 0.0624883696436882
+          },
+          "old_score_trace": {
+            "count": 257682,
+            "mean": -0.028059608216389968,
+            "rms": 4.3638374656837415,
+            "mean_absolute": 2.7354350062802872,
+            "minimum": -41.88692855834961,
+            "maximum": 38.946319580078125
+          },
+          "reinforcement_proposal": {
+            "count": 257682,
+            "mean": -2.7112812671577466e-07,
+            "rms": 0.0004530217338027793,
+            "mean_absolute": 0.00010104536067206626,
+            "minimum": -0.020312698557972908,
+            "maximum": 0.01424601674079895
+          },
+          "decay_removed": {
+            "count": 257682,
+            "mean": -7.139578671437912e-08,
+            "rms": 5.684426269125995e-06,
+            "mean_absolute": 3.1983690132584034e-06,
+            "minimum": -4.7286172048188746e-05,
+            "maximum": 3.608389670262113e-05
+          },
+          "applied_weight_change": {
+            "count": 257682,
+            "mean": -1.9973191797203378e-07,
+            "rms": 0.00045285293503075265,
+            "mean_absolute": 0.00010112945355447249,
+            "minimum": -0.020306460559368134,
+            "maximum": 0.014262905344367027
+          },
+          "reward": {
+            "count": 1077,
+            "mean": 0.018645601503822534,
+            "rms": 0.17204652386232583,
+            "mean_absolute": 0.03884601506176288,
+            "minimum": -0.0811028778553009,
+            "maximum": 1.1184089183807373
+          },
+          "raw_advantage": {
+            "count": 1077,
+            "mean": -0.0025674056661800166,
+            "rms": 0.1689842556042599,
+            "mean_absolute": 0.057023540206553265,
+            "minimum": -0.1395409107208252,
+            "maximum": 1.104423999786377
+          },
+          "advantage": {
+            "count": 1077,
+            "mean": -0.0036121756926747713,
+            "rms": 0.16243379606526817,
+            "mean_absolute": 0.055978770180058514,
+            "minimum": -0.1395409107208252,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 1077,
+            "mean": 0.016713091922005572,
+            "rms": 0.12927912407657152,
+            "mean_absolute": 0.016713091922005572,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 1077,
+            "mean": 0.09990715841825848,
+            "rms": 0.09993292773118174,
+            "mean_absolute": 0.09990715841825848,
+            "minimum": 0.03333333507180214,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 1077,
+            "mean": 0.0005941880744632883,
+            "rms": 0.0005943991893530247,
+            "mean_absolute": 0.0005941880744632883,
+            "minimum": 0.0005673979758284986,
+            "maximum": 0.0006035545375198126
+          },
+          "age": {
+            "count": 1077,
+            "mean": 15.161603780558458,
+            "rms": 17.156248337070153,
+            "mean_absolute": 15.161603780558458,
+            "minimum": 0.0,
+            "maximum": 29.966552734375
+          },
+          "offset_motor_effect": {
+            "count": 2154,
+            "mean": -0.00010671613940289426,
+            "rms": 0.00026045711952941763,
+            "mean_absolute": 0.00014646391461265232,
+            "minimum": -0.0009492635726928711,
+            "maximum": 0.00047209858894348145
+          },
+          "noise_motor_effect": {
+            "count": 2154,
+            "mean": -4.608778346990587e-05,
+            "rms": 0.0020971921219227058,
+            "mean_absolute": 0.0016561311322887849,
+            "minimum": -0.008314192295074463,
+            "maximum": 0.008592307567596436
+          },
+          "motor_noise": {
+            "count": 2154,
+            "mean": -0.0023629642133408337,
+            "rms": 0.07205745531178513,
+            "mean_absolute": 0.05788516344842126,
+            "minimum": -0.23474933207035065,
+            "maximum": 0.23856033384799957
+          }
+        },
+        "30_to_120": {
+          "input_drive": {
+            "count": 20548,
+            "mean": -0.005083197241402286,
+            "rms": 0.1691362188599171,
+            "mean_absolute": 0.12852574193193683,
+            "minimum": -0.4817385673522949,
+            "maximum": 0.5641018748283386
+          },
+          "field_mean_drive": {
+            "count": 20548,
+            "mean": -0.016637534045788153,
+            "rms": 0.11551297651027176,
+            "mean_absolute": 0.0842660440978409,
+            "minimum": -0.48193955421447754,
+            "maximum": 0.43704068660736084
+          },
+          "field_contrast_drive": {
+            "count": 20548,
+            "mean": 0.0013750142270852557,
+            "rms": 0.013116837092566823,
+            "mean_absolute": 0.009522068924348735,
+            "minimum": -0.0766000896692276,
+            "maximum": 0.10627385228872299
+          },
+          "inherited_recurrent_drive": {
+            "count": 20548,
+            "mean": -0.054393675901573,
+            "rms": 0.23626460831415325,
+            "mean_absolute": 0.18535945695073353,
+            "minimum": -0.7417285442352295,
+            "maximum": 0.6569802761077881
+          },
+          "local_recurrent_drive": {
+            "count": 20548,
+            "mean": 0.0025605173316991473,
+            "rms": 0.009240843353514164,
+            "mean_absolute": 0.005982305629034136,
+            "minimum": -0.04009801894426346,
+            "maximum": 0.04067069664597511
+          },
+          "acquired_recurrent_drive": {
+            "count": 20548,
+            "mean": -0.0009877143110253459,
+            "rms": 0.02155380773414727,
+            "mean_absolute": 0.013052660015808222,
+            "minimum": -0.15212520956993103,
+            "maximum": 0.15186822414398193
+          },
+          "hidden_noise": {
+            "count": 20548,
+            "mean": 0.001959670005541121,
+            "rms": 0.1497785663637693,
+            "mean_absolute": 0.11957834774469189,
+            "minimum": -0.6243165135383606,
+            "maximum": 0.5439924001693726
+          },
+          "hidden": {
+            "count": 20548,
+            "mean": -0.050985178693908534,
+            "rms": 0.24313961592088632,
+            "mean_absolute": 0.19145754207445748,
+            "minimum": -0.711256742477417,
+            "maximum": 0.8276669979095459
+          },
+          "offset_hidden_effect": {
+            "count": 20548,
+            "mean": 6.954229481867084e-06,
+            "rms": 0.0013069709978628375,
+            "mean_absolute": 0.0007033175959635536,
+            "minimum": -0.008764311671257019,
+            "maximum": 0.012301266193389893
+          },
+          "noise_hidden_effect": {
+            "count": 20548,
+            "mean": 0.00015772848501070184,
+            "rms": 0.008662545043344499,
+            "mean_absolute": 0.006330472840046722,
+            "minimum": -0.04838310182094574,
+            "maximum": 0.04445921257138252
+          },
+          "inherited_weight": {
+            "count": 223247,
+            "mean": -0.008212544764927663,
+            "rms": 0.2933090712385716,
+            "mean_absolute": 0.23654470985975345,
+            "minimum": -0.8013666868209839,
+            "maximum": 0.802028238773346
+          },
+          "acquired_weight": {
+            "count": 223247,
+            "mean": -3.697647781764882e-05,
+            "rms": 0.017342133704674113,
+            "mean_absolute": 0.01063621839368361,
+            "minimum": -0.0784415751695633,
+            "maximum": 0.0864374116063118
+          },
+          "old_score_trace": {
+            "count": 223247,
+            "mean": -0.09328540652163896,
+            "rms": 5.183989587582887,
+            "mean_absolute": 3.3219479549747057,
+            "minimum": -52.93751525878906,
+            "maximum": 47.45037841796875
+          },
+          "reinforcement_proposal": {
+            "count": 223247,
+            "mean": 1.4237398149983571e-06,
+            "rms": 6.404072957547458e-05,
+            "mean_absolute": 2.7509092190581118e-05,
+            "minimum": -0.001211984665133059,
+            "maximum": 0.000995220267213881
+          },
+          "decay_removed": {
+            "count": 223247,
+            "mean": -2.218174397964055e-08,
+            "rms": 1.0018696517163791e-05,
+            "mean_absolute": 6.144857650588482e-06,
+            "minimum": -4.529607031145133e-05,
+            "maximum": 4.9913265684153885e-05
+          },
+          "applied_weight_change": {
+            "count": 223247,
+            "mean": 1.4368078642246938e-06,
+            "rms": 6.40385132315703e-05,
+            "mean_absolute": 2.85976624670702e-05,
+            "minimum": -0.00123581662774086,
+            "maximum": 0.0010194182395935059
+          },
+          "reward": {
+            "count": 934,
+            "mean": -0.010349848582877975,
+            "rms": 0.010718326443734293,
+            "mean_absolute": 0.010642588854522086,
+            "minimum": -0.011043484322726727,
+            "maximum": 0.029003707692027092
+          },
+          "raw_advantage": {
+            "count": 934,
+            "mean": -0.013578267520159852,
+            "rms": 0.021064781324368006,
+            "mean_absolute": 0.013969697974987075,
+            "minimum": -0.07255879044532776,
+            "maximum": 0.038918882608413696
+          },
+          "advantage": {
+            "count": 934,
+            "mean": -0.013578267520159852,
+            "rms": 0.021064781324368006,
+            "mean_absolute": 0.013969697974987075,
+            "minimum": -0.07255879044532776,
+            "maximum": 0.038918882608413696
+          },
+          "clipped": {
+            "count": 934,
+            "mean": 0.0,
+            "rms": 0.0,
+            "mean_absolute": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "elapsed": {
+            "count": 934,
+            "mean": 0.10000000894069672,
+            "rms": 0.10000000894069686,
+            "mean_absolute": 0.10000000894069672,
+            "minimum": 0.10000000894069672,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 934,
+            "mean": 0.00056910128280325,
+            "rms": 0.0005691528393651084,
+            "mean_absolute": 0.00056910128280325,
+            "minimum": 0.0005673979758284986,
+            "maximum": 0.0006035545375198126
+          },
+          "age": {
+            "count": 934,
+            "mean": 81.19874742659051,
+            "rms": 83.91821930491997,
+            "mean_absolute": 81.19874742659051,
+            "minimum": 30.066551208496094,
+            "maximum": 119.96517944335938
+          },
+          "offset_motor_effect": {
+            "count": 1868,
+            "mean": 0.0003496827737166999,
+            "rms": 0.0005660893128274508,
+            "mean_absolute": 0.0003773488375563693,
+            "minimum": -0.000568091869354248,
+            "maximum": 0.0023031234741210938
+          },
+          "noise_motor_effect": {
+            "count": 1868,
+            "mean": 2.018486725952181e-05,
+            "rms": 0.0019718967597103336,
+            "mean_absolute": 0.001589301518888494,
+            "minimum": -0.005489706993103027,
+            "maximum": 0.007287859916687012
+          },
+          "motor_noise": {
+            "count": 1868,
+            "mean": -0.0015826246985005603,
+            "rms": 0.07130579331188763,
+            "mean_absolute": 0.05642667320855674,
+            "minimum": -0.22685211896896362,
+            "maximum": 0.26076745986938477
+          }
+        },
+        "at_least_120": {
+          "input_drive": {
+            "count": 56782,
+            "mean": -0.014367871235136347,
+            "rms": 0.1876981913585413,
+            "mean_absolute": 0.14914936266914885,
+            "minimum": -0.614778459072113,
+            "maximum": 0.7291120290756226
+          },
+          "field_mean_drive": {
+            "count": 56782,
+            "mean": -0.021568865828824668,
+            "rms": 0.14009985959501692,
+            "mean_absolute": 0.10563852301043908,
+            "minimum": -0.623140275478363,
+            "maximum": 0.6726329326629639
+          },
+          "field_contrast_drive": {
+            "count": 56782,
+            "mean": 0.0015756521234725868,
+            "rms": 0.015193171530905557,
+            "mean_absolute": 0.010585077078659329,
+            "minimum": -0.12632128596305847,
+            "maximum": 0.12143527716398239
+          },
+          "inherited_recurrent_drive": {
+            "count": 56782,
+            "mean": -0.04107514408768498,
+            "rms": 0.2848282318461485,
+            "mean_absolute": 0.2102868369723774,
+            "minimum": -1.6129831075668335,
+            "maximum": 0.9151001572608948
+          },
+          "local_recurrent_drive": {
+            "count": 56782,
+            "mean": -0.023035422971670296,
+            "rms": 0.19516789807882548,
+            "mean_absolute": 0.09386557150305457,
+            "minimum": -1.0152621269226074,
+            "maximum": 0.8099159002304077
+          },
+          "acquired_recurrent_drive": {
+            "count": 56782,
+            "mean": 0.001084851350782468,
+            "rms": 0.040907089135532065,
+            "mean_absolute": 0.026580655123712545,
+            "minimum": -0.1774192452430725,
+            "maximum": 0.22980523109436035
+          },
+          "hidden_noise": {
+            "count": 56782,
+            "mean": -0.0011763177488136169,
+            "rms": 0.14983550878549873,
+            "mean_absolute": 0.11970322946243993,
+            "minimum": -0.6407149434089661,
+            "maximum": 0.598488986492157
+          },
+          "hidden": {
+            "count": 56782,
+            "mean": -0.06314044251826005,
+            "rms": 0.32871014762633255,
+            "mean_absolute": 0.24670085704665357,
+            "minimum": -0.987998902797699,
+            "maximum": 0.9517437219619751
+          },
+          "offset_hidden_effect": {
+            "count": 56782,
+            "mean": 3.089776055093564e-06,
+            "rms": 0.001776497930780463,
+            "mean_absolute": 0.0010895743023421832,
+            "minimum": -0.010909035801887512,
+            "maximum": 0.013206064701080322
+          },
+          "noise_hidden_effect": {
+            "count": 56782,
+            "mean": 1.2795788116561956e-05,
+            "rms": 0.007746912644445022,
+            "mean_absolute": 0.005509465170987623,
+            "minimum": -0.0439065620303154,
+            "maximum": 0.04680582880973816
+          },
+          "inherited_weight": {
+            "count": 596609,
+            "mean": -0.011097810649651282,
+            "rms": 0.2908803083909769,
+            "mean_absolute": 0.23265142609669393,
+            "minimum": -0.8178746104240417,
+            "maximum": 0.802028238773346
+          },
+          "acquired_weight": {
+            "count": 596609,
+            "mean": 0.00022711579519363187,
+            "rms": 0.01568591674640684,
+            "mean_absolute": 0.011124425046561989,
+            "minimum": -0.07396357506513596,
+            "maximum": 0.09250206500291824
+          },
+          "old_score_trace": {
+            "count": 596609,
+            "mean": 0.06358681648250337,
+            "rms": 7.032460715990838,
+            "mean_absolute": 4.251142735417462,
+            "minimum": -86.5759048461914,
+            "maximum": 96.43197631835938
+          },
+          "reinforcement_proposal": {
+            "count": 596609,
+            "mean": 6.615221383721281e-07,
+            "rms": 0.00013269365526001476,
+            "mean_absolute": 2.5818691802502097e-05,
+            "minimum": -0.007665108889341354,
+            "maximum": 0.010475333780050278
+          },
+          "decay_removed": {
+            "count": 596609,
+            "mean": 1.3084152946677817e-07,
+            "rms": 9.061071105502866e-06,
+            "mean_absolute": 6.42609773194411e-06,
+            "minimum": -4.2710253183031455e-05,
+            "maximum": 5.3415300499182194e-05
+          },
+          "applied_weight_change": {
+            "count": 596609,
+            "mean": 5.306795324489386e-07,
+            "rms": 0.00013280588293800903,
+            "mean_absolute": 2.839829377162184e-05,
+            "minimum": -0.007658781483769417,
+            "maximum": 0.010459743440151215
+          },
+          "reward": {
+            "count": 2731,
+            "mean": -0.010170423094439525,
+            "rms": 0.03242118615457703,
+            "mean_absolute": 0.013738208955942813,
+            "minimum": -0.41772618889808655,
+            "maximum": 0.26226606965065
+          },
+          "raw_advantage": {
+            "count": 2731,
+            "mean": -0.0030682616111176748,
+            "rms": 0.03109492689181943,
+            "mean_absolute": 0.00974635877925342,
+            "minimum": -0.3962998688220978,
+            "maximum": 0.27197954058647156
+          },
+          "advantage": {
+            "count": 2731,
+            "mean": -0.0030682616111176748,
+            "rms": 0.03109492689181943,
+            "mean_absolute": 0.00974635877925342,
+            "minimum": -0.3962998688220978,
+            "maximum": 0.27197954058647156
+          },
+          "clipped": {
+            "count": 2731,
+            "mean": 0.0,
+            "rms": 0.0,
+            "mean_absolute": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0
+          },
+          "elapsed": {
+            "count": 2731,
+            "mean": 0.10000000894069672,
+            "rms": 0.100000008940697,
+            "mean_absolute": 0.10000000894069672,
+            "minimum": 0.10000000894069672,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 2731,
+            "mean": 0.0005989860649205641,
+            "rms": 0.0006015062189624388,
+            "mean_absolute": 0.0005989860649205641,
+            "minimum": 0.000553275749552995,
+            "maximum": 0.0006982060149312019
+          },
+          "age": {
+            "count": 2731,
+            "mean": 327.4202377894823,
+            "rms": 371.2176267907764,
+            "mean_absolute": 327.4202377894823,
+            "minimum": 120.06517791748047,
+            "maximum": 629.83447265625
+          },
+          "offset_motor_effect": {
+            "count": 5462,
+            "mean": 6.52916939517859e-05,
+            "rms": 0.0003729207525765251,
+            "mean_absolute": 0.00025230555558807026,
+            "minimum": -0.0006804764270782471,
+            "maximum": 0.0014785528182983398
+          },
+          "noise_motor_effect": {
+            "count": 5462,
+            "mean": 3.858397880869879e-05,
+            "rms": 0.0017866968281485202,
+            "mean_absolute": 0.0013729900132601446,
+            "minimum": -0.007421374320983887,
+            "maximum": 0.007096827030181885
+          },
+          "motor_noise": {
+            "count": 5462,
+            "mean": -0.0008094640750572433,
+            "rms": 0.07537563814559867,
+            "mean_absolute": 0.059292499971125436,
+            "minimum": -0.31052273511886597,
+            "maximum": 0.34527960419654846
+          }
+        }
+      },
+      "output": "trial-1",
+      "derived": {
+        "absolute_advantage_mass_clipped": 0.011132019010433036,
+        "offset_to_noise_motor_effect_ratio": 0.20981074291150262
+      }
+    },
+    {
+      "source": "runs/v25-learning-pilot/seed-3",
+      "source_checkpoint_sha256": "d303a6c004c7d8e30f19bdb0c9c64b16e9014e720bacc44dc65deae64a3bc4c5",
+      "final_checkpoint_sha256": "05f2ab7ab05b8263b0fa93a767b178664e4be6b068fe72326103d16261efa7c7",
+      "completed": true,
+      "exactly_passive": true,
+      "controller_calls": 328,
+      "maximum_motor_reconstruction_error": 5.960464477539063e-08,
+      "exact_hidden_and_inherited_motor_reconstruction": true,
+      "initial": {
+        "time": 600.0,
+        "tick": 18000,
+        "population": 155,
+        "food_count": 1539,
+        "food_energy": 28435.49992027813,
+        "living_energy": 7838.620976448059,
+        "mean_age": 112.1531753540039,
+        "generation_max": 19,
+        "generation_mean": 7.354838848114014,
+        "lineages": 4,
+        "genome_variance": 0.02762765809893608,
+        "contacts": 16,
+        "overlaps": 0,
+        "max_overlap": 4.76837158203125e-07,
+        "births": 333,
+        "deaths": 370,
+        "blocked_births": 0,
+        "food_spawned": 450500.0,
+        "food_expired": 169900.2496434036,
+        "food_absorbed": 64512.47657177384,
+        "maintenance": 51870.72806593603,
+        "propulsion": 12843.424423854345,
+        "reproduction": 3059.3055362701416,
+        "death_energy": 0.0,
+        "organism_steps": 1990576,
+        "distance": 1428787.0978199295,
+        "digestion_loss": 187651.7738645436,
+        "detritus_created": 90752.39009717481,
+        "fresh_absorbed": 51547.12813250656,
+        "detritus_absorbed": 12965.348439267314,
+        "predation_absorbed": 14348.110495217086,
+        "predation_loss": 7725.906458596292,
+        "predation_kills": 98,
+        "signaling_cost": 1935.2996863377575,
+        "signal_emitted": 3225499.549686701,
+        "signal_decayed": 3018497.478125004,
+        "quality_reversals": 2,
+        "high_quality_absorbed": 43780.01088569943,
+        "low_quality_absorbed": 7767.117246806988,
+        "plasticity_cost": 1436.8014822483683,
+        "plasticity_changes": 1103.8162271660512,
+        "neural_maintenance": 1359.6701221464434,
+        "neural_construction": 745.2020226120949,
+        "neural_structural_births": 40,
+        "shelter_agent_seconds": 1395.825509698279,
+        "shelter_obstructed_demand": 320.55643975206533,
+        "fresh_processed": 259292.54755051085,
+        "detritus_processed": 83624.0929829817,
+        "motor_learning_cost": 1436.8014822483683,
+        "motor_learning_changes": 6561.502956648017,
+        "growths": 34,
+        "growth_attempts": 14760,
+        "growth_unaffordable": 14682,
+        "growth_blocked": 44,
+        "development_cost": 888.6187982559204,
+        "module_mutation_events": 6,
+        "module_event_births": 6,
+        "internal_signaling_cost": 30.719825293308002,
+        "food_collected": 344791.98590523715,
+        "recurrent_learning_changes": 7728.950401681008,
+        "module_births_1": 333,
+        "planned_module_births_1": 324,
+        "planned_module_births_3": 2,
+        "structural_births": 6,
+        "planned_module_births_2": 7,
+        "energy_balance_error": -0.002275598770211218,
+        "ecology_version": 25,
+        "mean_radius": 3.4509356021881104,
+        "std_radius": 0.38875532150268555,
+        "mean_power": 1.258606195449829,
+        "std_power": 0.13920018076896667,
+        "mean_diet": 0.7497484683990479,
+        "std_diet": 0.08226760476827621,
+        "grazers": 151,
+        "scavengers": 3,
+        "generalists": 1,
+        "mean_attack": 0.22445765137672424,
+        "mean_armor": 0.5616443753242493,
+        "meat_eaters": 10,
+        "mean_memory_tau": 3.398477554321289,
+        "cue_patches": 1,
+        "module_histogram": [
+          152,
+          3,
+          0
+        ],
+        "mean_modules": 1.0193548202514648,
+        "signal_mass": 207002.075902462,
+        "signal_balance_error": -0.004340765066444874,
+        "mean_secretion": 0.47604942321777344,
+        "patch_stock": [
+          1497.9582328796387,
+          2240.0283813476562,
+          1200.0,
+          2301.9695434570312,
+          1864.5782737731934,
+          2001.0485448033498,
+          2312.02134513855,
+          2200.9847717285156,
+          2371.5229539871216,
+          2364.4295123574766
+        ],
+        "food_spawn_proposals": 12999,
+        "food_rejected_capacity": 8457,
+        "food_rejected_fertility": 37,
+        "fertility_spent": 450500.0,
+        "fertility_recovered": 356568.3790949001,
+        "fertility_remaining": 1558804.3790949,
+        "fertility_balance_error": 0.0,
+        "fertility_mean_fraction": 0.9431659860346118,
+        "fertility_depleted_fraction": 0.0012391573729863693,
+        "source_travel": 11993.25062136352,
+        "source_mean_displacement": 327.41632080078125,
+        "patch_positions": [
+          [
+            794.4743041992188,
+            288.1086120605469
+          ],
+          [
+            616.77978515625,
+            862.5961303710938
+          ],
+          [
+            368.8349914550781,
+            294.54833984375
+          ],
+          [
+            922.1708984375,
+            592.5513916015625
+          ],
+          [
+            163.05865478515625,
+            609.7196655273438
+          ],
+          [
+            569.5861206054688,
+            515.69287109375
+          ],
+          [
+            753.441162109375,
+            847.5748901367188
+          ],
+          [
+            843.0374755859375,
+            731.2280883789062
+          ],
+          [
+            350.4255676269531,
+            608.4957885742188
+          ],
+          [
+            597.279296875,
+            527.9950561523438
+          ]
+        ],
+        "favorable_identity": 0,
+        "next_quality_reversal": 791.8,
+        "patch_identities": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "mean_plastic_magnitude": 0.007768615304454402,
+        "mean_modulation": -0.0800187960267067,
+        "mean_neurons": 19.167741775512695,
+        "mean_connections": 1127.0,
+        "neuron_histogram": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          91,
+          19,
+          29,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "neural_timing_mean_seconds": 4.1994606337837,
+        "neural_timing_std_seconds": 2.6983922908998386,
+        "neural_timing_min_seconds": 0.41914069652557373,
+        "neural_timing_max_seconds": 10.120850563049316,
+        "neural_timing_mean_within_log_std": 0.6021359558891815,
+        "mean_recurrent_plastic_magnitude": 0.009472535566506497,
+        "recurrent_rows_saturated_fraction": 0.006930693052709103,
+        "recurrent_noise_rms": 0.147900179312596,
+        "mean_recurrent_learning_rate": 0.0007006364758126438,
+        "juvenile_population": 3,
+        "adult_population": 152,
+        "adult_module_histogram": [
+          149,
+          3,
+          0
+        ],
+        "target_module_histogram": [
+          149,
+          5,
+          1
+        ],
+        "mean_internal_magnitude": 0.11176523880198999,
+        "mean_encoded_learning_rule": [
+          0.8293500542640686,
+          -0.003485926426947117,
+          0.011397705413401127,
+          0.005934839136898518
+        ],
+        "mean_learning_rule": [
+          0.8293500542640686,
+          -0.003485926426947117,
+          0.011397705413401127,
+          0.005934839136898518
+        ],
+        "mean_noncorrelation_rule_weight": 0.1704302430152893,
+        "trophic_fresh_uptake": [
+          48760.998877585786,
+          2004.859135531637,
+          781.2701193886045
+        ],
+        "trophic_detritus_introduced": [
+          75181.26189745804,
+          8595.532355897642,
+          6975.595843818984,
+          0.0
+        ],
+        "trophic_detritus_uptake": [
+          [
+            6684.315581248582,
+            645.1385294628327,
+            2409.6539468274127
+          ],
+          [
+            329.5296432654046,
+            647.8485371480792,
+            772.4033239227659
+          ],
+          [
+            394.729876223022,
+            241.07339110922584,
+            840.6556100601348
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "trophic_detritus_dissipated": [
+          59128.40483310803,
+          6227.596508970386,
+          5302.7432016360735,
+          0.0
+        ],
+        "trophic_detritus_expired": [
+          657.9837516240282,
+          447.35383013418533,
+          186.9946072356969,
+          0.0
+        ],
+        "trophic_predation_uptake": [
+          [
+            4860.342325104517,
+            1091.8580434691157,
+            1741.6804363359697
+          ],
+          [
+            1259.2603651052268,
+            650.804724755697,
+            950.8642447996958
+          ],
+          [
+            1385.802536841482,
+            886.2262821269687,
+            1521.2715364978533
+          ]
+        ],
+        "trophic_predation_kills": [
+          51.0,
+          19.0,
+          28.0
+        ],
+        "trophic_guilds": [
+          "grazer",
+          "generalist",
+          "scavenger"
+        ],
+        "trophic_producers": [
+          "grazer",
+          "generalist",
+          "scavenger",
+          "unattributed"
+        ],
+        "trophic_detritus_stock": [
+          5655.765255187428,
+          170.80051245688514,
+          9.399157554777046,
+          0.0
+        ],
+        "trophic_detritus_balance_error": [
+          -2.6921043172478676e-10,
+          -6.45741238258779e-11,
+          5.3660187404602766e-11,
+          0.0
+        ],
+        "shelter_patches": [
+          2,
+          4,
+          6,
+          7,
+          8
+        ],
+        "mean_shelter": 0.02199128456413746,
+        "sheltered_population": 3,
+        "sheltered_guilds": [
+          3,
+          0,
+          0
+        ],
+        "mean_motor_plastic_magnitude": 0.013916909377260643,
+        "motor_saturated_fraction": 0.0,
+        "motor_rows_saturated_fraction": 0.11392405063291139,
+        "mean_motor_learning_rate": 0.005865849554538727,
+        "mean_exploration_sigma": 0.0703863576054573,
+        "motor_noise_rms": 0.06682490364212748,
+        "mean_motor_value_norm": 0.0,
+        "motor_value_saturated_fraction": 0.0,
+        "mean_motor_predicted_return": 0.0,
+        "motor_value_error_rms": 0.0,
+        "detritus_energy": 5835.96492519909,
+        "carried_food_energy": 596.455908101269,
+        "carried_food_count": 64,
+        "free_food_count": 1475,
+        "free_food_energy": 27839.044012176862,
+        "mean_gut_fullness": [
+          0.028549350798130035,
+          0.02554064244031906
+        ]
+      },
+      "final": {
+        "time": 630.0,
+        "tick": 18900,
+        "population": 164,
+        "food_count": 1366,
+        "food_energy": 18952.72602276197,
+        "living_energy": 8071.0915315151215,
+        "mean_age": 111.61604309082031,
+        "generation_max": 19,
+        "generation_mean": 7.884146213531494,
+        "lineages": 4,
+        "genome_variance": 0.025155609473586082,
+        "contacts": 14,
+        "overlaps": 0,
+        "max_overlap": 0,
+        "births": 365,
+        "deaths": 393,
+        "blocked_births": 0,
+        "food_spawned": 467200.0,
+        "food_expired": 176880.55803627992,
+        "food_absorbed": 69766.05238914106,
+        "maintenance": 55158.16359095314,
+        "propulsion": 13959.414084671309,
+        "reproduction": 3352.247883796692,
+        "death_energy": 0.0,
+        "organism_steps": 2140633,
+        "distance": 1559551.2429322416,
+        "digestion_loss": 201600.6635518162,
+        "detritus_created": 97253.90518798072,
+        "fresh_absorbed": 55938.404231969806,
+        "detritus_absorbed": 13827.648157171208,
+        "predation_absorbed": 14951.194662283116,
+        "predation_loss": 8050.6441208753395,
+        "predation_kills": 103,
+        "signaling_cost": 2036.7691294300653,
+        "signal_emitted": 3394615.2919424633,
+        "signal_decayed": 3169102.5045459922,
+        "quality_reversals": 2,
+        "high_quality_absorbed": 47665.62679638484,
+        "low_quality_absorbed": 8272.777435584921,
+        "plasticity_cost": 1538.6332285102496,
+        "plasticity_changes": 1193.6714297345845,
+        "neural_maintenance": 1465.964498329443,
+        "neural_construction": 812.0800254940987,
+        "neural_structural_births": 44,
+        "shelter_agent_seconds": 1510.3227742330407,
+        "shelter_obstructed_demand": 366.8216558995688,
+        "fresh_processed": 277868.3052691567,
+        "detritus_processed": 90752.3158597816,
+        "motor_learning_cost": 1538.6332285102496,
+        "motor_learning_changes": 7202.799823045617,
+        "growths": 34,
+        "growth_attempts": 14850,
+        "growth_unaffordable": 14772,
+        "growth_blocked": 44,
+        "development_cost": 888.6187982559204,
+        "module_mutation_events": 6,
+        "module_event_births": 6,
+        "internal_signaling_cost": 32.40055205350467,
+        "food_collected": 370285.62043539324,
+        "recurrent_learning_changes": 8466.462191207565,
+        "module_births_1": 365,
+        "planned_module_births_1": 356,
+        "planned_module_births_3": 2,
+        "structural_births": 6,
+        "planned_module_births_2": 7,
+        "energy_balance_error": -0.002208938283729367,
+        "ecology_version": 25,
+        "mean_radius": 3.437201499938965,
+        "std_radius": 0.36754193902015686,
+        "mean_power": 1.2678471803665161,
+        "std_power": 0.132766991853714,
+        "mean_diet": 0.7525612711906433,
+        "std_diet": 0.07033766806125641,
+        "grazers": 161,
+        "scavengers": 2,
+        "generalists": 1,
+        "mean_attack": 0.21886709332466125,
+        "mean_armor": 0.5700219869613647,
+        "meat_eaters": 16,
+        "mean_memory_tau": 3.437562942504883,
+        "cue_patches": 0,
+        "module_histogram": [
+          161,
+          3,
+          0
+        ],
+        "mean_modules": 1.0182926654815674,
+        "signal_mass": 225512.79335403442,
+        "signal_balance_error": -0.005957563407719135,
+        "mean_secretion": 0.4793693721294403,
+        "patch_stock": [
+          2341.049722671509,
+          541.0750770568848,
+          1914.0482864379883,
+          2100.9847717285156,
+          300.0,
+          393.51554679870605,
+          430.0481643676758,
+          2314.521495819092,
+          480.28572082519537,
+          668.1879787445068
+        ],
+        "food_spawn_proposals": 13497,
+        "food_rejected_capacity": 8788,
+        "food_rejected_fertility": 37,
+        "fertility_spent": 467200.0,
+        "fertility_recovered": 378989.83987058396,
+        "fertility_remaining": 1564525.8398705842,
+        "fertility_balance_error": -2.3283064365386963e-10,
+        "fertility_mean_fraction": 0.9466277977067024,
+        "fertility_depleted_fraction": 0.0003097893432465923,
+        "source_travel": 12592.95721117407,
+        "source_mean_displacement": 330.4018249511719,
+        "patch_positions": [
+          [
+            741.3710327148438,
+            313.6826477050781
+          ],
+          [
+            615.6878662109375,
+            921.26171875
+          ],
+          [
+            321.78619384765625,
+            329.3042907714844
+          ],
+          [
+            916.8690795898438,
+            569.680419921875
+          ],
+          [
+            135.485595703125,
+            661.580322265625
+          ],
+          [
+            615.5960693359375,
+            549.8440551757812
+          ],
+          [
+            754.5629272460938,
+            789.240966796875
+          ],
+          [
+            783.59716796875,
+            730.1823120117188
+          ],
+          [
+            401.9912109375,
+            579.794189453125
+          ],
+          [
+            547.8641357421875,
+            552.7368774414062
+          ]
+        ],
+        "favorable_identity": 0,
+        "next_quality_reversal": 791.8,
+        "patch_identities": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "mean_plastic_magnitude": 0.007630338117503417,
+        "mean_modulation": -0.0779201090335846,
+        "mean_neurons": 19.170732498168945,
+        "mean_connections": 1126.73779296875,
+        "neuron_histogram": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          15,
+          102,
+          16,
+          28,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "neural_timing_mean_seconds": 4.254336354604735,
+        "neural_timing_std_seconds": 2.6962660833482808,
+        "neural_timing_min_seconds": 0.41914069652557373,
+        "neural_timing_max_seconds": 10.120850563049316,
+        "neural_timing_mean_within_log_std": 0.6045097725351641,
+        "mean_recurrent_plastic_magnitude": 0.009812106954451446,
+        "recurrent_rows_saturated_fraction": 0.005307523999363184,
+        "recurrent_noise_rms": 0.14801732112301677,
+        "mean_recurrent_learning_rate": 0.0007113749161362648,
+        "juvenile_population": 3,
+        "adult_population": 161,
+        "adult_module_histogram": [
+          158,
+          3,
+          0
+        ],
+        "target_module_histogram": [
+          158,
+          5,
+          1
+        ],
+        "mean_internal_magnitude": 0.11815191124158794,
+        "mean_encoded_learning_rule": [
+          0.8222411274909973,
+          -0.004837272223085165,
+          0.010603300295770168,
+          0.0077184829860925674
+        ],
+        "mean_learning_rule": [
+          0.8222411274909973,
+          -0.004837272223085165,
+          0.010603300295770168,
+          0.0077184829860925674
+        ],
+        "mean_noncorrelation_rule_weight": 0.17755115032196045,
+        "trophic_fresh_uptake": [
+          53106.801271224176,
+          2038.9900835467204,
+          792.6128771984736
+        ],
+        "trophic_detritus_introduced": [
+          81484.499928843,
+          8712.211017069016,
+          7057.194242068502,
+          0.0
+        ],
+        "trophic_detritus_uptake": [
+          [
+            7457.645577676338,
+            676.0658712234743,
+            2438.938077753453
+          ],
+          [
+            340.79892640094977,
+            657.4649503157272,
+            772.4033239227659
+          ],
+          [
+            402.6024287093924,
+            241.07339110922584,
+            840.6556100601348
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "trophic_detritus_dissipated": [
+          65227.26505878641,
+          6332.123372342887,
+          5365.279271481123,
+          0.0
+        ],
+        "trophic_detritus_expired": [
+          698.5017378791972,
+          447.35383013418533,
+          186.9946072356969,
+          0.0
+        ],
+        "trophic_predation_uptake": [
+          [
+            5397.601138292928,
+            1099.7683893997219,
+            1777.9718051631935
+          ],
+          [
+            1264.8450169404896,
+            650.804724755697,
+            950.8642447996958
+          ],
+          [
+            1401.8415241204202,
+            886.2262821269687,
+            1521.2715364978533
+          ]
+        ],
+        "trophic_predation_kills": [
+          56.0,
+          19.0,
+          28.0
+        ],
+        "trophic_guilds": [
+          "grazer",
+          "generalist",
+          "scavenger"
+        ],
+        "trophic_producers": [
+          "grazer",
+          "generalist",
+          "scavenger",
+          "unattributed"
+        ],
+        "trophic_detritus_stock": [
+          4986.083605524508,
+          162.0666139525792,
+          20.58893347287315,
+          0.0
+        ],
+        "trophic_detritus_balance_error": [
+          -3.7834979593753815e-10,
+          -7.821654435247183e-11,
+          5.547917680814862e-11,
+          0.0
+        ],
+        "shelter_patches": [
+          2,
+          4,
+          6,
+          7,
+          8
+        ],
+        "mean_shelter": 0.02435866743326187,
+        "sheltered_population": 4,
+        "sheltered_guilds": [
+          4,
+          0,
+          0
+        ],
+        "mean_motor_plastic_magnitude": 0.015056690759416267,
+        "motor_saturated_fraction": 0.0,
+        "motor_rows_saturated_fraction": 0.12275449101796407,
+        "mean_motor_learning_rate": 0.0058644721284508705,
+        "mean_exploration_sigma": 0.07005403935909271,
+        "motor_noise_rms": 0.06718904770794812,
+        "mean_motor_value_norm": 0.0,
+        "motor_value_saturated_fraction": 0.0,
+        "mean_motor_predicted_return": 0.0,
+        "motor_value_error_rms": 0.0,
+        "detritus_energy": 5168.73915294996,
+        "carried_food_energy": 325.2841915908144,
+        "carried_food_count": 59,
+        "free_food_count": 1307,
+        "free_food_energy": 18627.441831171156,
+        "mean_gut_fullness": [
+          0.011847062967717648,
+          0.024321021512150764
+        ]
+      },
+      "groups": {
+        "all": {
+          "input_drive": {
+            "count": 977422,
+            "mean": -0.010075561638736881,
+            "rms": 0.19458461821365153,
+            "mean_absolute": 0.1429227052481497,
+            "minimum": -1.3869813680648804,
+            "maximum": 1.30693519115448
+          },
+          "field_mean_drive": {
+            "count": 977422,
+            "mean": -0.0008983895264793387,
+            "rms": 0.17879952387840095,
+            "mean_absolute": 0.12906684605881077,
+            "minimum": -1.270500659942627,
+            "maximum": 1.226228952407837
+          },
+          "field_contrast_drive": {
+            "count": 977422,
+            "mean": 0.00043728812811473576,
+            "rms": 0.010578853416529631,
+            "mean_absolute": 0.006211951995819096,
+            "minimum": -0.2630939483642578,
+            "maximum": 0.235652357339859
+          },
+          "inherited_recurrent_drive": {
+            "count": 977422,
+            "mean": -0.06213239555199409,
+            "rms": 0.3270810709793407,
+            "mean_absolute": 0.24186082573218065,
+            "minimum": -2.6050667762756348,
+            "maximum": 1.2048379182815552
+          },
+          "local_recurrent_drive": {
+            "count": 977422,
+            "mean": 0.0017266132526917999,
+            "rms": 0.029549645892968362,
+            "mean_absolute": 0.0156754952820019,
+            "minimum": -0.2982558012008667,
+            "maximum": 0.20666861534118652
+          },
+          "acquired_recurrent_drive": {
+            "count": 977422,
+            "mean": -0.001386516714484943,
+            "rms": 0.04694586265254468,
+            "mean_absolute": 0.0282149671038446,
+            "minimum": -0.25591814517974854,
+            "maximum": 0.2713131606578827
+          },
+          "hidden_noise": {
+            "count": 977422,
+            "mean": -2.5744502057134137e-05,
+            "rms": 0.15010673965210364,
+            "mean_absolute": 0.11981743522300768,
+            "minimum": -0.7437227368354797,
+            "maximum": 0.7231206297874451
+          },
+          "hidden": {
+            "count": 977422,
+            "mean": -0.058216105442822,
+            "rms": 0.2980442808099833,
+            "mean_absolute": 0.2349145579451771,
+            "minimum": -0.9785324931144714,
+            "maximum": 0.8345765471458435
+          },
+          "offset_hidden_effect": {
+            "count": 977422,
+            "mean": -4.517543224213467e-05,
+            "rms": 0.001669389021068229,
+            "mean_absolute": 0.0008422906793959864,
+            "minimum": -0.026867300271987915,
+            "maximum": 0.029211342334747314
+          },
+          "noise_hidden_effect": {
+            "count": 977422,
+            "mean": 1.3959452618313007e-05,
+            "rms": 0.006592352001154233,
+            "mean_absolute": 0.004054155048285922,
+            "minimum": -0.10926559567451477,
+            "maximum": 0.10724110901355743
+          },
+          "inherited_weight": {
+            "count": 9597738,
+            "mean": 0.009133485950187172,
+            "rms": 0.30244544145262153,
+            "mean_absolute": 0.24679500932112164,
+            "minimum": -0.9938512444496155,
+            "maximum": 1.0662540197372437
+          },
+          "acquired_weight": {
+            "count": 9597738,
+            "mean": 5.3480733937932554e-05,
+            "rms": 0.016479334318787738,
+            "mean_absolute": 0.009523119345658634,
+            "minimum": -0.14416614174842834,
+            "maximum": 0.13110698759555817
+          },
+          "old_score_trace": {
+            "count": 9597738,
+            "mean": -0.013389876730849144,
+            "rms": 6.358600278006738,
+            "mean_absolute": 4.045899612858036,
+            "minimum": -69.89863586425781,
+            "maximum": 74.8615493774414
+          },
+          "reinforcement_proposal": {
+            "count": 9597738,
+            "mean": 4.361608527178366e-08,
+            "rms": 0.0004514495409987111,
+            "mean_absolute": 7.844762795980235e-05,
+            "minimum": -0.040775544941425323,
+            "maximum": 0.04410097748041153
+          },
+          "decay_removed": {
+            "count": 9597738,
+            "mean": 3.0950028222998203e-08,
+            "rms": 9.513162302155499e-06,
+            "mean_absolute": 5.495043548468564e-06,
+            "minimum": -8.346647518919781e-05,
+            "maximum": 7.570770685561001e-05
+          },
+          "applied_weight_change": {
+            "count": 9597738,
+            "mean": -1.1704785964088172e-07,
+            "rms": 0.0004257041267527074,
+            "mean_absolute": 7.684225069767038e-05,
+            "minimum": -0.04075006768107414,
+            "maximum": 0.044128283858299255
+          },
+          "reward": {
+            "count": 50938,
+            "mean": 0.0014529515219747966,
+            "rms": 0.11265297683631141,
+            "mean_absolute": 0.02676628339255378,
+            "minimum": -0.19351628422737122,
+            "maximum": 1.5389782190322876
+          },
+          "raw_advantage": {
+            "count": 50938,
+            "mean": -0.0028976458509470553,
+            "rms": 0.11181422161934969,
+            "mean_absolute": 0.029912254268737164,
+            "minimum": -0.29660823941230774,
+            "maximum": 1.4884015321731567
+          },
+          "advantage": {
+            "count": 50938,
+            "mean": -0.004087482868970203,
+            "rms": 0.09933415412485132,
+            "mean_absolute": 0.02872241725071402,
+            "minimum": -0.29660823941230774,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 50938,
+            "mean": 0.0068318347795359065,
+            "rms": 0.08265491382571218,
+            "mean_absolute": 0.0068318347795359065,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 50938,
+            "mean": 0.09993718746350265,
+            "rms": 0.09995462757688447,
+            "mean_absolute": 0.09993718746350265,
+            "minimum": 0.03333333507180214,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 50938,
+            "mean": 0.0007004307079163577,
+            "rms": 0.000737597947058117,
+            "mean_absolute": 0.0007004307079163577,
+            "minimum": 0.0001784628111636266,
+            "maximum": 0.0008607495110481977
+          },
+          "age": {
+            "count": 50938,
+            "mean": 108.59000128838383,
+            "rms": 153.5056502879439,
+            "mean_absolute": 108.59000128838383,
+            "minimum": 0.0,
+            "maximum": 629.83447265625
+          },
+          "offset_motor_effect": {
+            "count": 101876,
+            "mean": 1.7126395902315764e-05,
+            "rms": 0.00032230996964012455,
+            "mean_absolute": 0.00020064097229136683,
+            "minimum": -0.0034435391426086426,
+            "maximum": 0.0022714734077453613
+          },
+          "noise_motor_effect": {
+            "count": 101876,
+            "mean": -5.0275163137242026e-05,
+            "rms": 0.0014855942102695884,
+            "mean_absolute": 0.0009680571340761953,
+            "minimum": -0.011839956045150757,
+            "maximum": 0.011673808097839355
+          },
+          "motor_noise": {
+            "count": 101876,
+            "mean": 3.609167717143542e-05,
+            "rms": 0.07065039594306467,
+            "mean_absolute": 0.056036020907295724,
+            "minimum": -0.4358505606651306,
+            "maximum": 0.39529508352279663
+          }
+        },
+        "under_30": {
+          "input_drive": {
+            "count": 225877,
+            "mean": -0.0036314346285944207,
+            "rms": 0.19387892074638358,
+            "mean_absolute": 0.14432667013380038,
+            "minimum": -1.351544976234436,
+            "maximum": 1.262678623199463
+          },
+          "field_mean_drive": {
+            "count": 225877,
+            "mean": 0.005837615953433953,
+            "rms": 0.17294515181855197,
+            "mean_absolute": 0.12591244915579758,
+            "minimum": -1.260633111000061,
+            "maximum": 1.167413592338562
+          },
+          "field_contrast_drive": {
+            "count": 225877,
+            "mean": 0.001279101903955609,
+            "rms": 0.01163335463002389,
+            "mean_absolute": 0.0069525368582064075,
+            "minimum": -0.15333326160907745,
+            "maximum": 0.17241394519805908
+          },
+          "inherited_recurrent_drive": {
+            "count": 225877,
+            "mean": -0.04672151907628869,
+            "rms": 0.2610913493059775,
+            "mean_absolute": 0.18854432159346368,
+            "minimum": -2.0001096725463867,
+            "maximum": 1.0007325410842896
+          },
+          "local_recurrent_drive": {
+            "count": 225877,
+            "mean": 0.00019011772180269052,
+            "rms": 0.002656482470999485,
+            "mean_absolute": 0.0011343735362947124,
+            "minimum": -0.053119808435440063,
+            "maximum": 0.0354120209813118
+          },
+          "acquired_recurrent_drive": {
+            "count": 225877,
+            "mean": -0.0002618206118881285,
+            "rms": 0.018777245512444793,
+            "mean_absolute": 0.008389267824692175,
+            "minimum": -0.16836728155612946,
+            "maximum": 0.1772053837776184
+          },
+          "hidden_noise": {
+            "count": 225877,
+            "mean": -1.8739055816160194e-05,
+            "rms": 0.15015350971926072,
+            "mean_absolute": 0.11981468817396093,
+            "minimum": -0.6854531764984131,
+            "maximum": 0.7231206297874451
+          },
+          "hidden": {
+            "count": 225877,
+            "mean": -0.029354097159782717,
+            "rms": 0.2368734616828786,
+            "mean_absolute": 0.17901501506632725,
+            "minimum": -0.9475025534629822,
+            "maximum": 0.7498679161071777
+          },
+          "offset_hidden_effect": {
+            "count": 225877,
+            "mean": 3.4407566778719895e-06,
+            "rms": 0.0007089966886932398,
+            "mean_absolute": 0.0002502761210633923,
+            "minimum": -0.018041837960481644,
+            "maximum": 0.010375105775892735
+          },
+          "noise_hidden_effect": {
+            "count": 225877,
+            "mean": -4.701092983339629e-06,
+            "rms": 0.005750516270296725,
+            "mean_absolute": 0.003634862857125938,
+            "minimum": -0.10926559567451477,
+            "maximum": 0.09928396344184875
+          },
+          "inherited_weight": {
+            "count": 2202891,
+            "mean": 0.011506069056803743,
+            "rms": 0.2996497467461181,
+            "mean_absolute": 0.245766351383574,
+            "minimum": -0.9938512444496155,
+            "maximum": 0.9010953307151794
+          },
+          "acquired_weight": {
+            "count": 2202891,
+            "mean": 9.226685229858334e-05,
+            "rms": 0.0076147131174837054,
+            "mean_absolute": 0.0033225428603492597,
+            "minimum": -0.13052703440189362,
+            "maximum": 0.11437692493200302
+          },
+          "old_score_trace": {
+            "count": 2202891,
+            "mean": -0.004726202740465899,
+            "rms": 4.973617549253014,
+            "mean_absolute": 3.0148189352466352,
+            "minimum": -62.968292236328125,
+            "maximum": 74.8615493774414
+          },
+          "reinforcement_proposal": {
+            "count": 2202891,
+            "mean": 7.601097689809348e-07,
+            "rms": 0.00035035972402086454,
+            "mean_absolute": 6.271907590696333e-05,
+            "minimum": -0.035406939685344696,
+            "maximum": 0.025913743302226067
+          },
+          "decay_removed": {
+            "count": 2202891,
+            "mean": 5.285466574655056e-08,
+            "rms": 4.382901867073386e-06,
+            "mean_absolute": 1.9080450544276245e-06,
+            "minimum": -7.537280907854438e-05,
+            "maximum": 6.604693044209853e-05
+          },
+          "applied_weight_change": {
+            "count": 2202891,
+            "mean": 7.356648593957615e-07,
+            "rms": 0.00034138399567283694,
+            "mean_absolute": 6.203209182451833e-05,
+            "minimum": -0.02720261737704277,
+            "maximum": 0.025916237384080887
+          },
+          "reward": {
+            "count": 11772,
+            "mean": 0.001120977294597599,
+            "rms": 0.11255220714739764,
+            "mean_absolute": 0.02775320167471488,
+            "minimum": -0.1813543140888214,
+            "maximum": 1.3277603387832642
+          },
+          "raw_advantage": {
+            "count": 11772,
+            "mean": -0.004300589993441046,
+            "rms": 0.1116418813527168,
+            "mean_absolute": 0.031670933318455156,
+            "minimum": -0.2118876576423645,
+            "maximum": 1.3286937475204468
+          },
+          "advantage": {
+            "count": 11772,
+            "mean": -0.005414399256341183,
+            "rms": 0.1001164703160899,
+            "mean_absolute": 0.030557124055555024,
+            "minimum": -0.2118876576423645,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 11772,
+            "mean": 0.007135575942915392,
+            "rms": 0.08447233832986625,
+            "mean_absolute": 0.007135575942915392,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 11772,
+            "mean": 0.09972817744177456,
+            "rms": 0.09980349310080341,
+            "mean_absolute": 0.09972817744177456,
+            "minimum": 0.03333333507180214,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 11772,
+            "mean": 0.0007613780675408955,
+            "rms": 0.0007791096063483154,
+            "mean_absolute": 0.0007613780675408955,
+            "minimum": 0.0002270958066219464,
+            "maximum": 0.0008607495110481977
+          },
+          "age": {
+            "count": 11772,
+            "mean": 14.352270780397674,
+            "rms": 16.52756322246628,
+            "mean_absolute": 14.352270780397674,
+            "minimum": 0.0,
+            "maximum": 29.966552734375
+          },
+          "offset_motor_effect": {
+            "count": 23544,
+            "mean": -6.058475181759113e-06,
+            "rms": 0.0001486357830969419,
+            "mean_absolute": 6.479407289463203e-05,
+            "minimum": -0.0009462833404541016,
+            "maximum": 0.001372218132019043
+          },
+          "noise_motor_effect": {
+            "count": 23544,
+            "mean": -4.323039139325709e-05,
+            "rms": 0.0011922006040510284,
+            "mean_absolute": 0.0008111923662145001,
+            "minimum": -0.011305391788482666,
+            "maximum": 0.010443031787872314
+          },
+          "motor_noise": {
+            "count": 23544,
+            "mean": -6.503030987271649e-06,
+            "rms": 0.06931445431381755,
+            "mean_absolute": 0.055348704803880495,
+            "minimum": -0.27222704887390137,
+            "maximum": 0.3013404607772827
+          }
+        },
+        "30_to_120": {
+          "input_drive": {
+            "count": 447237,
+            "mean": -0.009024354653280857,
+            "rms": 0.19476430327610875,
+            "mean_absolute": 0.14243720589148595,
+            "minimum": -1.3869813680648804,
+            "maximum": 1.30693519115448
+          },
+          "field_mean_drive": {
+            "count": 447237,
+            "mean": -0.0005714489709342261,
+            "rms": 0.1825593279519509,
+            "mean_absolute": 0.1322663657531697,
+            "minimum": -1.270500659942627,
+            "maximum": 1.226228952407837
+          },
+          "field_contrast_drive": {
+            "count": 447237,
+            "mean": 0.00019018162053207588,
+            "rms": 0.009542322560432503,
+            "mean_absolute": 0.00571876046507127,
+            "minimum": -0.25242292881011963,
+            "maximum": 0.235652357339859
+          },
+          "inherited_recurrent_drive": {
+            "count": 447237,
+            "mean": -0.06853178520483577,
+            "rms": 0.3668645500009198,
+            "mean_absolute": 0.2766660279206824,
+            "minimum": -2.6050667762756348,
+            "maximum": 1.2048379182815552
+          },
+          "local_recurrent_drive": {
+            "count": 447237,
+            "mean": 0.0026266810787365412,
+            "rms": 0.023674697443877603,
+            "mean_absolute": 0.013837170819818457,
+            "minimum": -0.21802207827568054,
+            "maximum": 0.1442604959011078
+          },
+          "acquired_recurrent_drive": {
+            "count": 447237,
+            "mean": -0.0024957242518492896,
+            "rms": 0.05550601241175741,
+            "mean_absolute": 0.03501668511729986,
+            "minimum": -0.25591814517974854,
+            "maximum": 0.2713131606578827
+          },
+          "hidden_noise": {
+            "count": 447237,
+            "mean": -8.16655527471545e-05,
+            "rms": 0.15029630181418632,
+            "mean_absolute": 0.11997492588884737,
+            "minimum": -0.6844496726989746,
+            "maximum": 0.662714421749115
+          },
+          "hidden": {
+            "count": 447237,
+            "mean": -0.06597416631173329,
+            "rms": 0.33120380734223553,
+            "mean_absolute": 0.267809000262458,
+            "minimum": -0.9785324931144714,
+            "maximum": 0.8345765471458435
+          },
+          "offset_hidden_effect": {
+            "count": 447237,
+            "mean": -8.607615367382919e-05,
+            "rms": 0.001896111258815782,
+            "mean_absolute": 0.0009989521807113153,
+            "minimum": -0.017717063426971436,
+            "maximum": 0.029211342334747314
+          },
+          "noise_hidden_effect": {
+            "count": 447237,
+            "mean": 1.00790524179444e-05,
+            "rms": 0.006469302173105194,
+            "mean_absolute": 0.003959026898078961,
+            "minimum": -0.10455186665058136,
+            "maximum": 0.10724110901355743
+          },
+          "inherited_weight": {
+            "count": 4404434,
+            "mean": 0.008592696668862733,
+            "rms": 0.3020251616014507,
+            "mean_absolute": 0.2469530182849794,
+            "minimum": -0.9938512444496155,
+            "maximum": 0.9010953307151794
+          },
+          "acquired_weight": {
+            "count": 4404434,
+            "mean": 0.0001954927494776264,
+            "rms": 0.017610046215319634,
+            "mean_absolute": 0.010357499050316342,
+            "minimum": -0.14416614174842834,
+            "maximum": 0.13110698759555817
+          },
+          "old_score_trace": {
+            "count": 4404434,
+            "mean": -0.015191259627375376,
+            "rms": 7.058090769247034,
+            "mean_absolute": 4.615764920642344,
+            "minimum": -69.89863586425781,
+            "maximum": 64.97105407714844
+          },
+          "reinforcement_proposal": {
+            "count": 4404434,
+            "mean": -2.680269211594278e-07,
+            "rms": 0.0005186493191914648,
+            "mean_absolute": 9.312823370761253e-05,
+            "minimum": -0.040775544941425323,
+            "maximum": 0.04410097748041153
+          },
+          "decay_removed": {
+            "count": 4404434,
+            "mean": 1.1333641518678306e-07,
+            "rms": 1.0165825449303533e-05,
+            "mean_absolute": 5.977075242123645e-06,
+            "minimum": -8.346647518919781e-05,
+            "maximum": 7.570770685561001e-05
+          },
+          "applied_weight_change": {
+            "count": 4404434,
+            "mean": -7.778451047469448e-07,
+            "rms": 0.0004794405318106092,
+            "mean_absolute": 8.972219836008734e-05,
+            "minimum": -0.04075006768107414,
+            "maximum": 0.044128283858299255
+          },
+          "reward": {
+            "count": 23106,
+            "mean": 0.0011164856385537903,
+            "rms": 0.11258767034005107,
+            "mean_absolute": 0.026798247263905103,
+            "minimum": -0.192734032869339,
+            "maximum": 1.4874897003173828
+          },
+          "raw_advantage": {
+            "count": 23106,
+            "mean": -0.002921396025366056,
+            "rms": 0.11205587479878294,
+            "mean_absolute": 0.02981996157859749,
+            "minimum": -0.29660823941230774,
+            "maximum": 1.4744443893432617
+          },
+          "advantage": {
+            "count": 23106,
+            "mean": -0.004137758825054524,
+            "rms": 0.09928535827053768,
+            "mean_absolute": 0.02860359877890902,
+            "minimum": -0.29660823941230774,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 23106,
+            "mean": 0.006794771920713235,
+            "rms": 0.0824304065300738,
+            "mean_absolute": 0.006794771920713235,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 23106,
+            "mean": 0.10000000894069672,
+            "rms": 0.10000000894069662,
+            "mean_absolute": 0.10000000894069672,
+            "minimum": 0.10000000894069672,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 23106,
+            "mean": 0.0007041923775031599,
+            "rms": 0.0007411161965421819,
+            "mean_absolute": 0.0007041923775031599,
+            "minimum": 0.0001784628111636266,
+            "maximum": 0.0008607495110481977
+          },
+          "age": {
+            "count": 23106,
+            "mean": 69.28018291694286,
+            "rms": 72.60563982836695,
+            "mean_absolute": 69.28018291694286,
+            "minimum": 30.066551208496094,
+            "maximum": 119.96517944335938
+          },
+          "offset_motor_effect": {
+            "count": 46212,
+            "mean": -2.335770882580339e-06,
+            "rms": 0.0003495866968283739,
+            "mean_absolute": 0.00023484599378256944,
+            "minimum": -0.0034435391426086426,
+            "maximum": 0.0021067261695861816
+          },
+          "noise_motor_effect": {
+            "count": 46212,
+            "mean": -5.272662256286741e-05,
+            "rms": 0.001428785283067463,
+            "mean_absolute": 0.000924576621086352,
+            "minimum": -0.011408090591430664,
+            "maximum": 0.010519087314605713
+          },
+          "motor_noise": {
+            "count": 46212,
+            "mean": -0.00031638898527230463,
+            "rms": 0.06885561994479115,
+            "mean_absolute": 0.05487135684226477,
+            "minimum": -0.27367183566093445,
+            "maximum": 0.28242936730384827
+          }
+        },
+        "at_least_120": {
+          "input_drive": {
+            "count": 304308,
+            "mean": -0.01640375128614787,
+            "rms": 0.19484310835755525,
+            "mean_absolute": 0.1425941233485615,
+            "minimum": -1.080991506576538,
+            "maximum": 1.1300294399261475
+          },
+          "field_mean_drive": {
+            "count": 304308,
+            "mean": -0.00637878643693422,
+            "rms": 0.17748521741897016,
+            "mean_absolute": 0.12670595551277125,
+            "minimum": -1.039530634880066,
+            "maximum": 1.0812619924545288
+          },
+          "field_contrast_drive": {
+            "count": 304308,
+            "mean": 0.0001756085235237854,
+            "rms": 0.011188311238741783,
+            "mean_absolute": 0.006387078557314692,
+            "minimum": -0.2630939483642578,
+            "maximum": 0.23339462280273438
+          },
+          "inherited_recurrent_drive": {
+            "count": 304308,
+            "mean": -0.06416625176193584,
+            "rms": 0.3085730741061446,
+            "mean_absolute": 0.2302830748816017,
+            "minimum": -2.2199995517730713,
+            "maximum": 1.0834484100341797
+          },
+          "local_recurrent_drive": {
+            "count": 304308,
+            "mean": 0.0015442827412161487,
+            "rms": 0.0444480753411891,
+            "mean_absolute": 0.02917061100044716,
+            "minimum": -0.2982558012008667,
+            "maximum": 0.20666861534118652
+          },
+          "acquired_recurrent_drive": {
+            "count": 304308,
+            "mean": -0.0005911525774200029,
+            "rms": 0.04784527876790215,
+            "mean_absolute": 0.032934493100181886,
+            "minimum": -0.21968495845794678,
+            "maximum": 0.22256742417812347
+          },
+          "hidden_noise": {
+            "count": 304308,
+            "mean": 5.1241951689991034e-05,
+            "rms": 0.1497929178006504,
+            "mean_absolute": 0.11958801254032904,
+            "minimum": -0.7437227368354797,
+            "maximum": 0.6490007042884827
+          },
+          "hidden": {
+            "count": 304308,
+            "mean": -0.06823743901314806,
+            "rms": 0.2871453846712058,
+            "mean_absolute": 0.22806232056788883,
+            "minimum": -0.9695215225219727,
+            "maximum": 0.7523946762084961
+          },
+          "offset_hidden_effect": {
+            "count": 304308,
+            "mean": -2.115030951692725e-05,
+            "rms": 0.0018150113458030677,
+            "mean_absolute": 0.0010514789114790322,
+            "minimum": -0.026867300271987915,
+            "maximum": 0.014600694179534912
+          },
+          "noise_hidden_effect": {
+            "count": 304308,
+            "mean": 3.351347881307866e-05,
+            "rms": 0.007316683424400364,
+            "mean_absolute": 0.004505189167588586,
+            "minimum": -0.10681422054767609,
+            "maximum": 0.093314528465271
+          },
+          "inherited_weight": {
+            "count": 2990413,
+            "mean": 0.008182222270281836,
+            "rms": 0.3051022847137245,
+            "mean_absolute": 0.24732004758840886,
+            "minimum": -0.9938512444496155,
+            "maximum": 1.0662540197372437
+          },
+          "acquired_weight": {
+            "count": 2990413,
+            "mean": -0.00018425369963802094,
+            "rms": 0.01929078377290951,
+            "mean_absolute": 0.012861863456988837,
+            "minimum": -0.13573354482650757,
+            "maximum": 0.1253024935722351
+          },
+          "old_score_trace": {
+            "count": 2990413,
+            "mean": -0.017118812293887006,
+            "rms": 6.178268003129976,
+            "mean_absolute": 3.966119397870472,
+            "minimum": -69.55818176269531,
+            "maximum": 59.435089111328125
+          },
+          "reinforcement_proposal": {
+            "count": 2990413,
+            "mean": -2.5185927698293397e-08,
+            "rms": 0.0004092675719110926,
+            "mean_absolute": 6.84117321367104e-05,
+            "minimum": -0.03296809270977974,
+            "maximum": 0.037595346570014954
+          },
+          "decay_removed": {
+            "count": 2990413,
+            "mean": -1.0652895302117998e-07,
+            "rms": 1.1139995212423234e-05,
+            "mean_absolute": 7.427448844634772e-06,
+            "minimum": -7.837930752430111e-05,
+            "maximum": 7.235589873744175e-05
+          },
+          "applied_weight_change": {
+            "count": 2990413,
+            "mean": 2.2805653868139934e-07,
+            "rms": 0.0003965261248907502,
+            "mean_absolute": 6.878192133435727e-05,
+            "minimum": -0.032984957098960876,
+            "maximum": 0.03761809691786766
+          },
+          "reward": {
+            "count": 16060,
+            "mean": 0.0021803725249019534,
+            "rms": 0.11282061454290622,
+            "mean_absolute": 0.0259968836896245,
+            "minimum": -0.19351628422737122,
+            "maximum": 1.5389782190322876
+          },
+          "raw_advantage": {
+            "count": 16060,
+            "mean": -0.0018351159645482577,
+            "rms": 0.11159218011193904,
+            "mean_absolute": 0.028755924575405115,
+            "minimum": -0.23169006407260895,
+            "maximum": 1.4884015321731567
+          },
+          "advantage": {
+            "count": 16060,
+            "mean": -0.0030425179901772087,
+            "rms": 0.09882735124556201,
+            "mean_absolute": 0.02754852254977616,
+            "minimum": -0.23169006407260895,
+            "maximum": 1.0
+          },
+          "clipped": {
+            "count": 16060,
+            "mean": 0.006662515566625156,
+            "rms": 0.08162423394204173,
+            "mean_absolute": 0.006662515566625156,
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "elapsed": {
+            "count": 16060,
+            "mean": 0.10000000894069672,
+            "rms": 0.10000000894069695,
+            "mean_absolute": 0.10000000894069672,
+            "minimum": 0.10000000894069672,
+            "maximum": 0.10000000894069672
+          },
+          "rate": {
+            "count": 16060,
+            "mean": 0.0006503441914174344,
+            "rms": 0.000700296533686972,
+            "mean_absolute": 0.0006503441914174344,
+            "minimum": 0.0001784628111636266,
+            "maximum": 0.0008604177855886519
+          },
+          "age": {
+            "count": 16060,
+            "mean": 234.2225807921527,
+            "rms": 258.7547419474566,
+            "mean_absolute": 234.2225807921527,
+            "minimum": 120.06517791748047,
+            "maximum": 629.83447265625
+          },
+          "offset_motor_effect": {
+            "count": 32120,
+            "mean": 6.212173389319613e-05,
+            "rms": 0.0003707679934247313,
+            "mean_absolute": 0.00025100513624669904,
+            "minimum": -0.0011975765228271484,
+            "maximum": 0.0022714734077453613
+          },
+          "noise_motor_effect": {
+            "count": 32120,
+            "mean": -5.1912001959265094e-05,
+            "rms": 0.0017381228720948745,
+            "mean_absolute": 0.0011455959124330565,
+            "minimum": -0.011839956045150757,
+            "maximum": 0.011673808097839355
+          },
+          "motor_noise": {
+            "count": 32120,
+            "mean": 0.0005744380713725162,
+            "rms": 0.07408623823328588,
+            "mean_absolute": 0.05821546132174214,
+            "minimum": -0.4358505606651306,
+            "maximum": 0.39529508352279663
+          }
+        }
+      },
+      "output": "trial-2",
+      "derived": {
+        "absolute_advantage_mass_clipped": 0.039777577688843935,
+        "offset_to_noise_motor_effect_ratio": 0.21695693710440314
+      }
+    }
+  ],
+  "interpretation": "Passive forks of all three own-return pilot endpoints. Measurements are pooled module/neuron/edge-update samples, not independent organisms or replicates. Age buckets use current module owner's age. Instantaneous counterfactuals omit only current recurrent offsets or noise; they hold observed history, motor weights, and motor noise fixed and do not advance the environment. Differences measure expression, not usefulness. Each entire fork, including events and random streams, matches a plain replay.",
+  "report_sha256": "4b0ebdac5fab006e55524fd8606f3d4a5773e4f910bf5f8517138cfb96f4e3dd",
+  "path": "runs/v25-recurrent-credit-probe",
+  "archives_checked": true,
+  "endpoint_metrics_checked": true,
+  "age_bucket_accounting_checked": true
+}

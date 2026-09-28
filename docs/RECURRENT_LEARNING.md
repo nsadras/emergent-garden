@@ -166,16 +166,49 @@ cohorts are shared ecological starts, not independent organism replicates.
 The diagnostic task's stronger updates and 640-second training sequence cannot
 be treated as evidence of sufficiently fast adaptation in these lives.
 
-The next diagnostic will measure actual recurrent drive, perturbation effects,
-feedback clipping, and acquired changes on untouched replay forks. It will
-check whether the changed weights influence outputs and whether the energy
-signal can plausibly support learning before adding architecture or larger
-updates. The existing baseline and controls remain available throughout.
+## Passive replay diagnostic
+
+Three 30-second forks from the own-return pilot endpoints reproduce their full
+uninstrumented counterparts exactly, including events and random streams.
+Every sampled hidden transition and inherited motor logit reconstructs exactly;
+full motor reconstruction differs by at most 1e-7. Measurements include active
+modules/nodes/edges only, with separate age buckets. They are correlated samples
+within three communities, not independent replicates.
+
+| Seed | Acquired-offset motor effect (RMS) | Current hidden-noise motor effect (RMS) | Updates with clipped advantage |
+|---|---:|---:|---:|
+| 1 | .000215 | .001443 | .35% |
+| 2 | .000398 | .001898 | .38% |
+| 3 | .000322 | .001486 | .68% |
+
+The two motor effects omit the indicated contribution for **one current update**,
+retaining observed history, acquired motor weights, and motor perturbations.
+They do not measure the full accumulated influence of learning, navigation,
+or survival. The new offsets affect outputs, but their immediate effect is
+15–22% of the current hidden-noise effect in these samples.
+
+Hidden-noise drive RMS is .150 throughout, compared with spatial-contrast drive
+.012/.014/.011 and reward-acquired recurrent drive .023/.034/.047. Advantage
+clipping removes 4.4%/1.1%/4.0% of absolute signal mass. These limited snapshots
+motivate testing quieter hidden perturbations before changing clipping or adding
+architecture. They do not identify a single cause of the mixed ecological result.
+The [checked measurements](results/v25-recurrent-credit.json) retain every age
+bucket, source/endpoint hashes, replay checks, and intermediate quantities.
+Raw forks are in `runs/v25-recurrent-credit-probe`.
+
+The subsequent [quieter screen](QUIET_RECURRENT_LEARNING.md) lowers only hidden-noise
+sigma to .05, with matched noise-only and shuffled controls and unchanged .001
+maximum learning rate. All nine new pilots completed; own learning lowers
+births against noise-only in all three starts and again fails the screen.
+Acquired offsets and saturation increase as the score coefficient grows.
+The next comparison isolates a gentler rate at this lower noise level. Existing
+ecology, motor noise, and the mechanism-off baseline remain unchanged.
 
 ```bash
 uv run python scripts/audit_recurrent_learning.py --probe-only
 uv run python scripts/audit_recurrent_learning.py
 uv run python scripts/plot_recurrent_learning.py
+uv run python scripts/audit_recurrent_credit.py
 ```
 
 The wider objective remains adaptive behavior and a richer ecology. Recurrent

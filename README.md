@@ -51,6 +51,9 @@ recurrent connections. The native controller learns a supplied delayed-cue task;
 twelve matched ecological pilots show mixed results and fail the continuation
 screen. It remains optional; inherited timing with the new learner disabled
 is retained as the reference.
+Nine further [quieter-noise trials](docs/QUIET_RECURRENT_LEARNING.md) also fail
+the learning screen; the update/noise interaction is being examined with
+passive replay measurements and a planned gentler-rate comparison.
 The neural interface, inherited genome, and sparse-food ecology stay the same.
 The live inspector, leaderboard, and energy
 bar remain available. See [HANDOFF.md](HANDOFF.md) for current evidence and runs.

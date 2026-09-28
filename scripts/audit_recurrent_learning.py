@@ -227,7 +227,13 @@ def neutral_parity(old, new):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--probe-only", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--probe-only", action="store_true")
+    mode.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Audit nine quieter pilots and the three reused baselines",
+    )
     args = parser.parse_args()
     torch.set_num_threads(1)
     probe = native_probe(Path("runs/v25-native-recurrent-probe"))
@@ -237,14 +243,20 @@ def main():
     print("Audited nine native delayed-task runs and exact endpoint validation replay")
     if args.probe_only:
         return
+    groups = {
+        group: ("v25-quiet" if args.quiet and group != "baseline" else preset, mode)
+        for group, (preset, mode) in GROUPS.items()
+    }
+    prefix = "v25-quiet" if args.quiet else "v25"
+    sigma = 0.05 if args.quiet else 0.15
     configurations = {
         group: asdict(Config.load(f"configs/{preset}.toml"))
-        for group, (preset, _) in GROUPS.items()
+        for group, (preset, _) in groups.items()
     }
     shared = []
     for group, configured in configurations.items():
         values = configured.copy()
-        assert values.pop("recurrent_noise_sigma") == (0 if group == "baseline" else 0.15)
+        assert values.pop("recurrent_noise_sigma") == (0 if group == "baseline" else sigma)
         assert values.pop("recurrent_learning_rate") == (0 if group == "baseline" else 0.001)
         shared.append(values)
     assert all(values == shared[0] for values in shared)
@@ -252,18 +264,22 @@ def main():
     for seed in (1, 2, 3):
         old = Path(f"runs/v24-inherited-pilot/seed-{seed}")
         reference = torch.load(old / "founders.pt", weights_only=True)["genomes"]
-        for group, (_, mode) in GROUPS.items():
-            path = Path(f"runs/v25-{group}-pilot/seed-{seed}")
+        for group, (_, mode) in groups.items():
+            root = "v25" if group == "baseline" else prefix
+            path = Path(f"runs/{root}-{group}-pilot/seed-{seed}")
             assert asdict(Config.load(path / "config.toml")) == configurations[group], path
             founders = torch.load(path / "founders.pt", weights_only=True)["genomes"]
             assert torch.equal(founders, reference), path
             row = recurrent_run(path, 600)
             assert row["segments"][0]["metadata"]["ablation"] == mode, path
             row.update(treatment=group, seed=seed, matched_complete_founders=True)
+            if args.quiet:
+                row["reused_reference"] = group == "baseline"
             trials.append(row)
         compatibility.append(neutral_parity(old, Path(f"runs/v25-baseline-pilot/seed-{seed}")))
     comparisons = []
-    for control in ("noise-only", "shuffled"):
+    controls = ("noise-only", "shuffled", "baseline") if args.quiet else ("noise-only", "shuffled")
+    for control in controls:
         pairs = []
         for seed in (1, 2, 3):
             by_mode = {r["treatment"]: r["final"] for r in trials if r["seed"] == seed}
@@ -288,7 +304,7 @@ def main():
         "are retained. No new energy charge is added for the acquired recurrent matrices. "
         "These evolving communities are a screen, not fixed-genotype evidence of useful "
         "learning. The prospective continuation rule requires births AND fresh absorption "
-        "to improve in at least two matched starts against each noise control. Neutral "
+        "to improve in at least two matched starts against each listed control. Neutral "
         "compatibility excludes only version/configuration, the new RNG, four zero acquired "
         "states, four new metrics, and one zero cumulative counter. Genomes and event digests "
         "must match exactly. Extinctions remain in all comparisons.",
@@ -298,9 +314,19 @@ def main():
         comparisons=comparisons,
         continuation_screen_passed=all(r["passed"] for r in comparisons),
     )
-    output = Path("docs/results/v25-recurrent-learning.json")
+    if args.quiet:
+        report["interpretation"] += (
+            " This quieter screen changes only hidden sigma to .05, retaining the .001 maximum "
+            "rate. Its likelihood scores consequently scale differently. The three mechanism-off "
+            "references are reused from the original V25 screen, not new runs. The prospective "
+            "continuation criterion additionally requires beating that reference in two starts."
+        )
+        report["new_runs"] = 9
+        report["reused_references"] = 3
+    output = Path(f"docs/results/{prefix}-recurrent-learning.json")
     output.write_text(json.dumps(report, indent=2) + "\n")
-    print(f"Audited {len(trials)} pilots, {len(compatibility)} exact neutral comparisons: {output}")
+    label = "9 new pilots and 3 reused baselines" if args.quiet else f"{len(trials)} pilots"
+    print(f"Audited {label}, {len(compatibility)} exact neutral comparisons: {output}")
     print(f"Continuation screen passed: {report['continuation_screen_passed']}")
 
 

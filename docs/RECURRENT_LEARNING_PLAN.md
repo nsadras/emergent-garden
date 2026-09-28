@@ -169,3 +169,91 @@ The broader goal remains richer adaptive behavior and ecological diversity.
 Neither changed neural activity nor larger populations alone demonstrates
 intelligence, and recurrent learning does not by itself repair the loss of
 scavenger specialists in the current ecology.
+
+## Diagnostic follow-up after the completed screen
+
+The twelve pilots failed the stated continuation rule. No longer ecological
+trials are selected. Before changing noise, update scale, or architecture,
+instrument a separate 30-second replay fork of **each** own-return community
+at 600 seconds. This is measurement of all three completed treatments, not
+another evolutionary replicate or a continuation selected for performance.
+
+Observe actual controller boundaries, including newborn updates. Measure the
+inherited, older-local, and reward-acquired recurrent drive; total sensory
+drive and its spatial contrast; applied hidden noise; reward, raw advantage,
+clipping, score traces, reinforcement proposals, decay, and actual bounded
+offset changes. Include only expressed modules, neurons, and connections.
+Report pooled update-weighted summaries and separate ages below 30 seconds,
+30–120 seconds, and at least 120 seconds. These are correlated samples, not
+independent organisms or tests of fitness.
+
+At each observed boundary, recompute the actual transition and compare two
+instantaneous alternatives: omit acquired reward offsets, or omit current
+hidden noise. Keep inputs, previous hidden state, old local offsets, inherited
+genome, newly credited motor offsets, and motor perturbation fixed. Measure
+hidden and motor-output differences only. Do not advance either alternative
+through the environment or claim that a larger difference demonstrates benefit.
+
+Archive the diagnostic script, native source, source-checkpoint hashes, final
+forks, and summaries. Replay each fork again without instrumentation and require
+exact equality of its complete state, including random streams and events.
+Reconstruct the observed transition and motors at every sampled update. Preserve
+interrupted or failed diagnostics; do not silently replace a failed sample.
+
+## Quieter perturbations: prospective follow-up
+
+The passive diagnostic completed all three forks with exact full-state replay.
+Single-update motor effects from acquired recurrent offsets are 15–22% of the
+current hidden-noise effects. Fewer than .7% of sampled module updates clip their
+advantage, losing 1.1–4.4% of absolute advantage mass. These observations motivate
+a quieter perturbation screen; they do not establish the cause of the pilot's
+mixed results or the full historical influence of acquired weights.
+
+Keep the V25 ecology and maximum learning rate .001 unchanged, and reduce only
+`recurrent_noise_sigma` from .15 to .05 in `configs/v25-quiet.toml`. The likelihood
+score coefficient scales inversely with sigma, so the multiplier on
+`epsilon outer previous_hidden` rises threefold. Actual traces also depend on
+the changed activity. Retain the existing norm bound and
+measure saturation and actual offset changes. This is not a claim of equal
+learning variance or a calibrated optimal amplitude.
+
+Run nine new 600-second trials: seeds 1/2/3 crossed with noise-only, own-return,
+and shuffled-return conditions. Reuse the three completed mechanism-off V25
+runs as the reference; label this reuse explicitly. Match complete founder
+genomes, check every source archive and account, and retain all outcomes.
+No selected starts and no changes to inherited weights are allowed.
+
+Only consider longer runs if quiet own-return learning improves births AND
+fresh-food absorption in at least two starts against **each** of noise-only,
+shuffled feedback, and the reused mechanism-off baseline. This is a prospective
+screening rule, not proof of adaptive intelligence. Continue all three learning
+starts if that screen passes; otherwise retain the quieter variant as optional
+and reassess the measured effects before another change.
+
+The quieter screen subsequently completed and failed; see the
+[full results](QUIET_RECURRENT_LEARNING.md). Its own-return treatment improves
+both primary outcomes in 0/3 comparisons with noise-only, 1/3 with shuffled,
+and 0/3 with the reused baseline. No longer runs were launched.
+
+## Gentler learning at the quieter amplitude: prospective comparison
+
+Keep sigma .05 and reduce the maximum rate from .001 to `.001 / 3`, changing
+only that rate. Run six new 600-second trials: seeds 1/2/3 for own-return and
+shuffled recurrent feedback. Reuse the completed quiet noise-only and original
+mechanism-off references, labeling both. The disabled recurrent learner never
+uses the maximum rate for physics or costs; verify exact common-state replay
+with the lower rate, excluding only configuration and potential-rate telemetry,
+before accepting that reuse.
+
+The motivation is to restore the original .15-noise preset's rate/sigma
+coefficient for otherwise identical activity and returns. This does not ensure
+equal realized updates or variance. Retain the existing masks, row cap, decay,
+trace, baseline, and inherited allocation. Report both acquired magnitudes and
+ecological outcomes, including failures, with matching founders and archives.
+
+Only consider longer runs when births AND fresh uptake improve in at least two
+starts against each of quiet noise-only, matched gentle shuffled feedback, and
+the original mechanism-off baseline. Do not launch selected-winner continuations.
+If this candidate fails too, end this rate/noise screen and investigate the
+credit-assignment mechanism before another parameter grid. This ends neither
+the broader neural work nor the user's autonomous research request.

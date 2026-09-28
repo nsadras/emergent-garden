@@ -52,8 +52,48 @@ Acquired offsets are nonzero, but recorded saturation never exceeds 2.21% in
 the own-return pilots. Median founder survival is about 104/107/110 seconds;
 the stronger supplied task does not demonstrate learning within those lives.
 
-Next measure actual recurrent drive, noise effects, energetic feedback clipping,
-and acquired changes on passive replay forks before choosing further changes.
+The implementation and first screen are committed as `3aa2c30`. The subsequent
+passive credit diagnostic is also **complete**: all three own-return endpoints
+were forked for 30 seconds and match plain full-state replay exactly. Raw data
+are `runs/v25-recurrent-credit-probe`; its process is closed. The audit is
+`scripts/audit_recurrent_credit.py`, with checked results in
+`docs/results/v25-recurrent-credit.json`. Instantaneous motor effects of reward
+offsets are 15–22% of current hidden-noise effects. This holds observed history
+fixed and does not measure total historical influence or benefit. Advantage
+clipping affects .35%/.38%/.68% of module updates and removes 4.4%/1.1%/4.0% of
+absolute advantage mass. Full age buckets and provenance are retained.
+
+**All nine quieter pilots completed and are audited**, following the appended
+prospective plan. Their processes have exited and sessions are closed.
+`configs/v25-quiet.toml` changes only hidden-noise sigma .15 → .05; the maximum
+rate stays .001, so score magnitudes scale inversely with the smaller sigma.
+Each treatment runs seeds 1/2/3 for 600 seconds. Paths are
+`runs/v25-quiet-{noise-only,learning,shuffled}-pilot`; logs are
+`/tmp/emergent-garden-v25-quiet-{treatment}-pilot.log`. Do not restart them.
+The original three mechanism-off runs are explicitly reused references.
+`scripts/audit_recurrent_learning.py --quiet` audits all outcomes, and the figure
+from `scripts/plot_recurrent_learning.py --quiet` has been visually inspected.
+The [quieter-results guide](docs/QUIET_RECURRENT_LEARNING.md) records births
+461/151/424 for noise-only, 5/141/183 for own learning, and 103/90/352 for shuffled
+feedback. Own learning beats both primary outcomes in 0/3 noise-only comparisons,
+1/3 shuffled comparisons, and 0/3 baseline comparisons. The screen fails; no
+longer runs were launched. Peak row saturation is 7.29%/5.40%/6.43%, with larger
+acquired offsets than the original .15-noise trials. Twenty-one ecological runs
+have now been completed in V25; the reused references are not additional runs.
+
+Next run the prospective gentler comparison already appended to the plan.
+`configs/v25-quiet-gentle.toml` is created: sigma .05, maximum rate `.001 / 3`,
+all other settings unchanged. **No gentle trials have been launched yet.**
+First verify reuse of quiet noise-only references: with updates disabled, lower
+rate must preserve the entire physical state, excluding only configuration and
+potential-rate telemetry. Then run six 600-second trials, seeds 1/2/3 crossed
+with own-return and shuffled recurrent feedback, under
+`runs/v25-quiet-gentle-{learning,shuffled}-pilot`. Extend the audit to include
+their matched quiet noise-only and original mechanism-off references, labeled
+as reused. The screen requires births AND fresh absorption to improve in two
+starts against each of the three controls before longer runs are considered.
+If it also fails, end this rate/noise screen and reassess credit assignment;
+do not keep extending a parameter grid. No processes remain running.
 Do not infer weak or useful learning from magnitude alone. Preserve the user's
 V16 edits and unrelated notes. Research remains active.
 
